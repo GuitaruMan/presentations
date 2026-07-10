@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개인용 - My Presentations</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270;
+    --accent: #3a5ba0; --shadow: rgba(28, 34, 48, 0.10); --danger: #c0392b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8; --accent: #7fa2e0; --shadow: rgba(0,0,0,0.4); }
+  }
+  :root[data-theme="dark"] { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8; --accent: #7fa2e0; --shadow: rgba(0,0,0,0.4); }
+  :root[data-theme="light"] { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270; --accent: #3a5ba0; --shadow: rgba(28, 34, 48, 0.10); }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+    display: flex; flex-direction: column; align-items: center; padding: 6vh 5vw 4vh;
+  }
+  .top { width: 100%; max-width: 900px; margin-bottom: 1.5rem; }
+  a.back { color: var(--ink-soft); text-decoration: none; font-size: 0.9rem; }
+  a.back:hover { color: var(--accent); }
+  h1 { font-size: 1.6rem; margin: 0.5rem 0 2rem; }
+
+  #gate {
+    background: var(--card); border-radius: 16px; padding: 2.5rem 2rem;
+    box-shadow: 0 4px 16px var(--shadow); display: flex; flex-direction: column;
+    align-items: center; gap: 1rem; width: 100%; max-width: 320px; margin-top: 2rem;
+  }
+  #gate .icon { font-size: 2.2rem; }
+  #gate input {
+    width: 100%; padding: 0.7rem 1rem; font-size: 1rem; border-radius: 10px;
+    border: 1px solid var(--ink-soft); background: transparent; color: var(--ink);
+    text-align: center; letter-spacing: 0.2em;
+  }
+  #gate button {
+    width: 100%; padding: 0.7rem 1rem; font-size: 1rem; border-radius: 10px;
+    border: none; background: var(--accent); color: #fff; cursor: pointer; font-weight: 600;
+  }
+  #gate button:hover { opacity: 0.9; }
+  #error { color: var(--danger); font-size: 0.85rem; min-height: 1.2em; }
+
+  .grid {
+    display: none; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem; width: 100%; max-width: 900px;
+  }
+  a.card {
+    background: var(--card); border-radius: 16px; padding: 2rem 1.2rem; text-align: center;
+    text-decoration: none; color: var(--ink); box-shadow: 0 4px 16px var(--shadow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  }
+  a.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--shadow); }
+  .icon2 { font-size: 1.8rem; }
+  .label { font-size: 1.05rem; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="top"><a class="back" href="index.html">&larr; 홈으로</a></div>
+  <h1>🔒 개인용</h1>
+
+  <div id="gate">
+    <div class="icon">🔑</div>
+    <input type="password" id="pw" maxlength="10" placeholder="비밀번호" inputmode="numeric">
+    <button onclick="checkPw()">확인</button>
+    <div id="error"></div>
+  </div>
+
+  <div class="grid" id="content">
+    <a class="card" href="personal/주식.html"><div class="icon2">📈</div><div class="label">주식</div></a>
+    <a class="card" href="personal/게임.html"><div class="icon2">🎮</div><div class="label">게임</div></a>
+    <a class="card" href="personal/기타.html"><div class="icon2">📦</div><div class="label">기타</div></a>
+  </div>
+
+  <script>
+    const PW = "0910";
+    function checkPw() {
+      const val = document.getElementById('pw').value;
+      if (val === PW) {
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('content').style.display = 'grid';
+        sessionStorage.setItem('personalUnlocked', '1');
+      } else {
+        document.getElementById('error').textContent = '비밀번호가 틀렸습니다.';
+      }
+    }
+    document.getElementById('pw').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkPw();
+    });
+    if (sessionStorage.getItem('personalUnlocked') === '1') {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('content').style.display = 'grid';
+    }
+  </script>
+</body>
+</html>

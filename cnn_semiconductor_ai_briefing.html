@@ -1,0 +1,262 @@
+<meta charset="UTF-8">
+<title>미국 반도체·AI株 하락 브리핑</title>
+<style>
+  @font-face {
+    font-family: 'Source Serif';
+    src: local('Georgia');
+  }
+
+  :root {
+    --paper: #f3efe4;
+    --paper-raised: #fbf9f3;
+    --ink: #1c2230;
+    --ink-soft: #3d4353;
+    --rule: #c9c1ac;
+    --accent: #a13d2e;
+    --accent-soft: #c25a3f;
+    --meta: #6b6355;
+    --shadow: rgba(28, 34, 48, 0.12);
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #14171f;
+    --paper-raised: #1b1f29;
+    --ink: #e8e4d8;
+    --ink-soft: #b8b3a4;
+    --rule: #3a3f4c;
+    --accent: #d97a5f;
+    --accent-soft: #e2977f;
+    --meta: #8a8474;
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14171f;
+      --paper-raised: #1b1f29;
+      --ink: #e8e4d8;
+      --ink-soft: #b8b3a4;
+      --rule: #3a3f4c;
+      --accent: #d97a5f;
+      --accent-soft: #e2977f;
+      --meta: #8a8474;
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, 'Nanum Myeongjo', serif;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 1.75rem;
+    border-bottom: 3px double var(--rule);
+    margin-bottom: 2.5rem;
+  }
+
+  .kicker {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.6rem;
+  }
+
+  .masthead h1 {
+    font-size: clamp(1.7rem, 5vw, 2.4rem);
+    font-weight: 700;
+    margin: 0 0 0.65rem;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .masthead .sub {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: var(--meta);
+    letter-spacing: 0.03em;
+  }
+
+  .dispatch {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    box-shadow: 0 2px 10px var(--shadow);
+    margin-bottom: 2.25rem;
+    display: grid;
+    grid-template-columns: 84px 1fr;
+  }
+
+  .dispatch:last-child { margin-bottom: 0; }
+
+  .rail {
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem 0.5rem;
+  }
+
+  :root[data-theme="dark"] .rail { background: var(--accent); color: #14171f; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .rail { background: var(--accent); color: #14171f; }
+  }
+
+  .rail-time {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .story {
+    padding: 1.6rem 1.7rem 1.8rem;
+  }
+
+  .story-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .no {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .story h2 {
+    font-size: 1.28rem;
+    line-height: 1.35;
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .story p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+    max-width: 62ch;
+  }
+
+  .story p:last-of-type { margin-bottom: 0; }
+
+  .source-line {
+    margin-top: 1.15rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .source-line a {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+
+  .source-line a:hover,
+  .source-line a:focus-visible {
+    border-color: var(--accent);
+  }
+
+  .source-line a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .tag {
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--meta);
+  }
+
+  footer {
+    margin-top: 2.75rem;
+    padding-top: 1.25rem;
+    border-top: 3px double var(--rule);
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    color: var(--meta);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 520px) {
+    .dispatch { grid-template-columns: 56px 1fr; }
+    .rail-time { font-size: 0.64rem; }
+    .story { padding: 1.3rem 1.15rem 1.5rem; }
+  }
+</style>
+
+<div class="wrap">
+  <div class="masthead">
+    <p class="kicker">Wall Street &middot; Dispatch</p>
+    <h1>美 반도체&middot;AI株, 왜 흔들리나</h1>
+    <p class="sub">CNN 발 최신 보도 2건 &middot; 최근순 정렬 &middot; 한국어 요약</p>
+  </div>
+
+  <article class="dispatch">
+    <div class="rail"><span class="rail-time">JUL 09&nbsp;&middot;&nbsp;05:00 ET</span></div>
+    <div class="story">
+      <div class="story-meta"><span class="no">01</span><span class="tag">Investing</span></div>
+      <h2>올해 가장 뜨거웠던 랠리가 식고 있다&mdash;투자자들은 다음을 묻는다</h2>
+      <p>월가의 강력한 AI 랠리를 이끌어온 반도체株가 중동 지역 긴장 고조, 사상 최고치 이후 차익 실현, 새로운 투자처 모색이 겹치며 갑작스러운 하락 압력에 놓였다. S&amp;P500과 나스닥은 6월 2일 기록한 사상 최고치 대비 각각 약 2%, 5% 하락했다.</p>
+      <p>반도체&middot;반도체 장비 업종은 올해 S&amp;P500 시가총액 상승분의 거의 절반을 차지할 정도로 급등했으나, 그 속도와 규모 자체가 지속가능성 논란을 낳았다. LPL파이낸셜의 제프 부크빈더는 &lsquo;반도체 랠리는 너무 과도하게 앞서갔다&rsquo;고 평가했다. 마이크론은 6월 25일 사상 최고치 이후 20% 넘게 하락했고, PHLX 반도체지수도 6월 말 고점 대비 15% 빠졌다.</p>
+      <p>투자자들은 마이크로소프트&middot;메타&middot;구글 등 빅테크의 AI 인프라 투자가 실제 수익으로 이어지는지에 대한 검증을 강화하고 있으며, 이번 실적 시즌이 그 시험대가 될 전망이다. 호르무즈 해협을 둘러싼 중동 리스크가 지속되는 한 반도체株 흔들림이 증시 전반의 위험으로 번질 수 있다는 우려도 나온다.</p>
+      <div class="source-line">
+        <span class="tag">John Towfighi &middot; CNN</span>
+        <a href="https://www.cnn.com/2026/07/09/investing/ai-chip-stocks-market-volatility" target="_blank" rel="noopener">원문 읽기 →</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="rail"><span class="rail-time">JUN 26&nbsp;&middot;&nbsp;08:15 ET</span></div>
+    <div class="story">
+      <div class="story-meta"><span class="no">02</span><span class="tag">Investing &middot; AI</span></div>
+      <h2>AI株, 다시 폭락&mdash;무슨 일이 벌어지고 있나</h2>
+      <p>나스닥이 한국 코스피의 5.8% 급락 여파로 이날 1.2% 추가 하락하며 한 주 내내 하락 마감, 6월 2일 사상 최고치 대비 6% 넘게 빠졌다. AI 관련주 밸류에이션이 실제 이익 성장이 아닌 &lsquo;기술의 약속&rsquo;만으로 지나치게 부풀려졌다는 우려가 근본 원인으로 지목됐다.</p>
+      <p>AI 수요 자체는 견조하지만, 데이터센터 구축을 위해 빅테크가 수백억 달러를 쏟아부으면서도 즉각적인 수익화에는 이르지 못해 반도체 가격만 폭등하는 이른바 &lsquo;K자형&rsquo; 구도가 형성됐다. 이 여파로 마이크로소프트와 메타는 고점 대비 20% 하락해 약세장에 진입했고, 아마존&middot;애플&middot;구글&middot;엔비디아&middot;테슬라 등 나머지 매그니피센트7 종목들도 10% 이상 조정을 받았다.</p>
+      <p>메모리 부족 여파로 애플이 맥북&middot;아이패드 가격 인상을 발표해 주가가 6% 넘게 급락한 반면, 메모리 제조사 마이크론은 실적 호조에 힘입어 16% 급등하는 극명한 대비를 보였다. OpenAI는 이런 변동성으로 목표했던 1조 달러 밸류에이션 확보가 어려울 수 있다고 보고 IPO 연기를 검토 중인 것으로 전해졌다. 국채 금리 상승과 연준의 추가 금리 인상 가능성도 고금리에 취약한 기술주에 부담 요인으로 지목됐다.</p>
+      <div class="source-line">
+        <span class="tag">David Goldman &middot; CNN</span>
+        <a href="https://www.cnn.com/2026/06/26/investing/tech-stocks-nasdaq-kospi" target="_blank" rel="noopener">원문 읽기 →</a>
+      </div>
+    </div>
+  </article>
+
+  <footer>SOURCE: CNN.com &nbsp;/&nbsp; COMPILED &amp; TRANSLATED FOR BRIEFING USE</footer>
+</div>

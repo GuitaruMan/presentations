@@ -1,0 +1,277 @@
+<meta charset="UTF-8">
+<title>미국-이란 전쟁 속보 브리핑</title>
+<style>
+  @font-face {
+    font-family: 'Source Serif';
+    src: local('Georgia');
+  }
+
+  :root {
+    --paper: #f3efe4;
+    --paper-raised: #fbf9f3;
+    --ink: #1c2230;
+    --ink-soft: #3d4353;
+    --rule: #c9c1ac;
+    --accent: #a13d2e;
+    --accent-soft: #c25a3f;
+    --meta: #6b6355;
+    --shadow: rgba(28, 34, 48, 0.12);
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #14171f;
+    --paper-raised: #1b1f29;
+    --ink: #e8e4d8;
+    --ink-soft: #b8b3a4;
+    --rule: #3a3f4c;
+    --accent: #d97a5f;
+    --accent-soft: #e2977f;
+    --meta: #8a8474;
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14171f;
+      --paper-raised: #1b1f29;
+      --ink: #e8e4d8;
+      --ink-soft: #b8b3a4;
+      --rule: #3a3f4c;
+      --accent: #d97a5f;
+      --accent-soft: #e2977f;
+      --meta: #8a8474;
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, 'Nanum Myeongjo', serif;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 1.75rem;
+    border-bottom: 3px double var(--rule);
+    margin-bottom: 2.5rem;
+  }
+
+  .kicker {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.6rem;
+  }
+
+  .masthead h1 {
+    font-size: clamp(1.7rem, 5vw, 2.4rem);
+    font-weight: 700;
+    margin: 0 0 0.65rem;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .masthead .sub {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: var(--meta);
+    letter-spacing: 0.03em;
+  }
+
+  .dispatch {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    box-shadow: 0 2px 10px var(--shadow);
+    margin-bottom: 2.25rem;
+    display: grid;
+    grid-template-columns: 84px 1fr;
+  }
+
+  .dispatch:last-child { margin-bottom: 0; }
+
+  .rail {
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem 0.5rem;
+  }
+
+  :root[data-theme="dark"] .rail { background: var(--accent); color: #14171f; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .rail { background: var(--accent); color: #14171f; }
+  }
+
+  .rail-time {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .story {
+    padding: 1.6rem 1.7rem 1.8rem;
+  }
+
+  .story-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .no {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .story h2 {
+    font-size: 1.28rem;
+    line-height: 1.35;
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .story p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+    max-width: 62ch;
+  }
+
+  .story p:last-of-type { margin-bottom: 0; }
+
+  .source-line {
+    margin-top: 1.15rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .source-line a {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+
+  .source-line a:hover,
+  .source-line a:focus-visible {
+    border-color: var(--accent);
+  }
+
+  .source-line a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .tag {
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--meta);
+  }
+
+  footer {
+    margin-top: 2.75rem;
+    padding-top: 1.25rem;
+    border-top: 3px double var(--rule);
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    color: var(--meta);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 520px) {
+    .dispatch { grid-template-columns: 56px 1fr; }
+    .rail-time { font-size: 0.64rem; }
+    .story { padding: 1.3rem 1.15rem 1.5rem; }
+  }
+</style>
+
+<div class="wrap">
+  <div class="masthead">
+    <p class="kicker">Middle East &middot; Dispatch</p>
+    <h1>미국·이란 전쟁, 다시 격화</h1>
+    <p class="sub">CNN 발 최신 보도 3건 &middot; 2026-07-09 기준 &middot; 한국어 요약</p>
+  </div>
+
+  <article class="dispatch">
+    <div class="rail"><span class="rail-time">JUL 09&nbsp;&middot;&nbsp;03:17 ET</span></div>
+    <div class="story">
+      <div class="story-meta"><span class="no">01</span><span class="tag">Middle East</span></div>
+      <h2>美, 이란 재차 공습&mdash;과연 결정타를 날릴 수 있을까</h2>
+      <p>사실상 이미 유명무실했던 휴전이 완전히 무너지고 있다. 미국과 이란이 최근 48시간 동안 각각 수십 개의 표적을 공중&middot;드론&middot;미사일로 타격했다고 주장하면서, 4월 합의된 휴전과 6월 서명된 양해각서(MOU)가 사실상 붕괴 위기에 놓였다.</p>
+      <p>이란이 오만 해역 인근에서 상선 3척을 공격하자 미국은 이란 내 80개 표적에 대한 공습과 함께 원유 제재를 재개했고, 이란 혁명수비대(IRGC)는 바레인&middot;쿠웨이트의 미군 기지 85곳을 공격했다고 밝혔다. 트럼프 대통령은 NATO 정상회의 도중 이란과의 양해각서가 &lsquo;끝났다&rsquo;며 이란 지도부를 맹비난했다.</p>
+      <p>전문가들은 이란의 실질 군사력을 쥔 혁명수비대가 정권 생존을 최우선시해 협상에 소극적이며, 호르무즈 해협 통제권을 지렛대로 계속 활용할 것으로 전망했다. 11월 중간선거를 앞두고 전쟁 장기화에 대한 공화당 내부의 우려도 커지고 있다.</p>
+      <div class="source-line">
+        <span class="tag">Jessie Yeung, Brad Lendon &middot; CNN</span>
+        <a href="https://www.cnn.com/2026/07/09/middleeast/iran-us-ceasefire-attacks-resume-intl-hnk" target="_blank" rel="noopener">원문 읽기 →</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="rail"><span class="rail-time">JUL 09&nbsp;&middot;&nbsp;00:00 ET</span></div>
+    <div class="story">
+      <div class="story-meta"><span class="no">02</span><span class="tag">Politics &middot; Analysis</span></div>
+      <h2>트럼프, 이란에 대해 남은 선택지는 많지 않고 다 나쁘다</h2>
+      <p>트럼프 대통령의 이란 문제는 끝없이 제자리로 돌아오는 &lsquo;펜로즈의 계단&rsquo; 같은 딜레마에 빠졌다는 분석이다. 호르무즈 해협 인근 상선 공격에 대한 보복으로 새 공습을 단행한 뒤, 트럼프는 확전이냐 다시 결함투성이 휴전을 살리느냐의 기로에 섰다.</p>
+      <p>이란 민간 인프라 공습이나 카르그 섬 유전 허브 점거 등 확전 옵션은 막대한 인명&middot;경제적 비용과 함께 유가 급등발 국내 정치 역풍을 부를 위험이 크다. 반면 손을 떼고 현상을 방치하면 호르무즈 해협에 대한 이란의 지배력을 사실상 인정하는 셈이 되어 미국의 위신 실추로 이어진다.</p>
+      <p>전직 해군 제독 제임스 스타브리디스는 &lsquo;카르그 섬을 정복하긴 어렵지만 봉쇄는 가능하며, 이는 이란 경제에 치명타가 될 것&rsquo;이라고 조언했다. 트럼프는 공습 직후에도 &lsquo;또 공격하면 훨씬 심하게 갚아주겠다&rsquo;는 위협과 &lsquo;이란이 간절히 협상을 원한다&rsquo;는 발언을 반복하며 오락가락하는 모습을 보였다.</p>
+      <div class="source-line">
+        <span class="tag">Stephen Collinson &middot; CNN</span>
+        <a href="https://www.cnn.com/2026/07/09/politics/trump-iran-peace-deal-strait-analysis" target="_blank" rel="noopener">원문 읽기 →</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="rail"><span class="rail-time">JUL 09&nbsp;&middot;&nbsp;04:00 ET</span></div>
+    <div class="story">
+      <div class="story-meta"><span class="no">03</span><span class="tag">Politics &middot; Investigation</span></div>
+      <h2>이란 휴전, 핵협상으로 가는 길이었지만&hellip; 새 공습이 허점을 드러내다</h2>
+      <p>트럼프의 사위 재러드 쿠슈너와 특사 스티브 위트코프가 주도한 이란과의 양해각서(MOU) 서명 3주 만에 합의 전체가 흔들리고 있다. 이란이 호르무즈 해협에서 상선을 공격하자 미국이 보복 공습에 나섰고, 이란은 재보복을 다짐했다.</p>
+      <p>전직 국무부 이란 정책 고문 네이트 스완슨은 &lsquo;MOU는 사실상 아무것도 해결하지 못한 전적으로 희망사항에 가까운 합의&rsquo;였다고 비판했다. 국가안보회의 전 이란 담당 국장 리처드 네퓨는 협상팀의 미숙함을 문제 삼으며, 정작 핵심 쟁점인 호르무즈 해협 문제조차 명확히 규정하지 못했다고 지적했다.</p>
+      <p>쿠슈너와 위트코프는 오크리지 국립연구소를 비밀 방문해 핵물질 처리 전문가들과 접촉했고, 이란산 농축 핵물질을 미국 내 시설로 옮겨 처리하는 방안도 준비 중인 것으로 알려졌다. 그러나 20년 가까이 협상을 이끌어온 노련한 이란 협상팀에 비해 경험이 부족한 미국 팀이 밀릴 수 있다는 우려도 제기됐다. 백악관은 이런 비판에 대해 두 사람의 사업적 성과를 강조하며 반박했다.</p>
+      <div class="source-line">
+        <span class="tag">René Marsh, Jennifer Hansler, Zachary Cohen &middot; CNN</span>
+        <a href="https://www.cnn.com/2026/07/09/politics/iran-strikes-kushner-witkoff-flawed-ceasefire" target="_blank" rel="noopener">원문 읽기 →</a>
+      </div>
+    </div>
+  </article>
+
+  <footer>SOURCE: CNN.com &nbsp;/&nbsp; COMPILED &amp; TRANSLATED FOR BRIEFING USE</footer>
+</div>
