@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IREN Limited(IREN) 재무분석 및 향후 전망 보고서</title>
+<style>
+  :root {
+    --navy: #0f2942;
+    --navy-light: #1c3f5f;
+    --accent: #2166b0;
+    --accent-light: #4a90d9;
+    --green: #1a8754;
+    --red: #c0392b;
+    --amber: #b8860b;
+    --bg: #f6f8fa;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1a2332;
+    --text-muted: #5a6b7d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Malgun Gothic", "Segoe UI", -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 80px; }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: #fff;
+    padding: 56px 24px 40px;
+    margin-bottom: 32px;
+  }
+  header.hero .wrap { padding: 0; }
+  .hero-inner { max-width: 980px; margin: 0 auto; }
+  .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 30px; margin: 0 0 8px; font-weight: 700; }
+  .hero-sub { color: #b8c9dc; font-size: 15px; margin-bottom: 24px; }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 28px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 20px;
+    font-size: 13.5px;
+  }
+  .hero-meta div span.k { color: #93a9c0; display: block; font-size: 12px; margin-bottom: 3px; }
+  .hero-meta div span.v { font-weight: 600; font-size: 16px; }
+  .hero-meta .up { color: #7ee0a8; }
+  .hero-meta .down { color: #f4a3a3; }
+
+  h2.section-title {
+    font-size: 21px;
+    margin: 48px 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--navy);
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2.section-title .num {
+    background: var(--navy); color: #fff;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(15,41,66,0.04);
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .kpi {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .kpi .label { font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px; }
+  .kpi .value { font-size: 20px; font-weight: 700; color: var(--navy); }
+  .kpi .delta { font-size: 12.5px; margin-top: 4px; }
+  .kpi .delta.up { color: var(--green); }
+  .kpi .delta.down { color: var(--red); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 10px 0 6px;
+  }
+  th, td {
+    padding: 10px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; }
+  thead th {
+    background: #eef3f8;
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 13px;
+  }
+  tbody tr:hover { background: #fafcff; }
+  td.pos { color: var(--green); font-weight: 600; }
+  td.neg { color: var(--red); font-weight: 600; }
+  .table-scroll { overflow-x: auto; }
+
+  .note {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .report-list { display: flex; flex-direction: column; gap: 10px; }
+  .report-item {
+    display: grid;
+    grid-template-columns: 110px 1fr auto auto;
+    gap: 14px;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13.5px;
+  }
+  .report-item .firm { font-weight: 700; color: var(--navy); }
+  .report-item .opinion {
+    padding: 3px 10px; border-radius: 14px; font-size: 12px; font-weight: 700;
+    text-align: center; width: fit-content;
+  }
+  .opinion.buy { background: #e3f3ea; color: var(--green); }
+  .opinion.hold { background: #fdf1e0; color: var(--amber); }
+  .report-item .target { font-weight: 700; }
+  .report-item .date { color: var(--text-muted); font-size: 12px; }
+
+  .consensus-box {
+    display: flex; align-items: center; gap: 24px;
+    background: #eef6f1;
+    border: 1px solid #cbe6d5;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-top: 14px;
+  }
+  .consensus-box .big { font-size: 28px; font-weight: 800; color: var(--green); }
+  .consensus-box .desc { font-size: 13px; color: var(--text-muted); }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .persp-card {
+    border-radius: 10px;
+    padding: 20px 22px;
+    border: 1px solid var(--border);
+  }
+  .persp-card.bull { border-top: 4px solid var(--green); }
+  .persp-card.bear { border-top: 4px solid var(--red); }
+  .persp-card h3 { margin-top: 0; font-size: 16px; }
+  .persp-card ul { padding-left: 18px; margin: 10px 0; font-size: 14px; }
+  .persp-card li { margin-bottom: 8px; }
+
+  .verdict-box {
+    background: linear-gradient(135deg, #0f2942, #1c3f5f);
+    color: #fff;
+    border-radius: 12px;
+    padding: 28px 26px;
+    margin-top: 20px;
+  }
+  .verdict-box h3 { margin-top: 0; font-size: 17px; color: #cfe0f2; }
+  .verdict-box .scenario { margin-bottom: 16px; }
+  .verdict-box .scenario .label { font-size: 13px; color: #93a9c0; margin-bottom: 4px; }
+  .verdict-box .scenario .desc { font-size: 14.5px; }
+  .scale {
+    display: flex; align-items: center; gap: 10px; margin-top: 18px;
+  }
+  .scale-track {
+    flex: 1; height: 8px; background: rgba(255,255,255,0.15); border-radius: 5px; position: relative;
+  }
+  .scale-fill {
+    position: absolute; left: 0; top: 0; height: 100%;
+    background: linear-gradient(90deg, #4a90d9, #7ee0a8);
+    border-radius: 5px;
+  }
+  .scale-label { font-size: 12px; color: #b8c9dc; }
+
+  .price-chart-card { --pc-line: #2a78d6; --pc-fill: rgba(42,120,214,0.08); --pc-grid: #e2e8f0; --pc-axis: #5a6b7d; }
+  .price-chart-wrap { position: relative; }
+  .price-chart { width: 100%; height: auto; display: block; overflow: visible; }
+  .price-chart .grid-line { stroke: var(--pc-grid); stroke-width: 1; }
+  .price-chart .axis-label { fill: var(--pc-axis); font-size: 10.5px; font-family: inherit; }
+  .price-chart .price-line { fill: none; stroke: var(--pc-line); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .price-chart .price-area { fill: var(--pc-fill); stroke: none; }
+  .price-chart .price-dot { fill: var(--pc-line); }
+  .price-chart .hover-line { stroke: var(--pc-axis); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
+  .price-chart .hit-area { fill: transparent; }
+  .price-chart-tooltip {
+    position: absolute; pointer-events: none; opacity: 0; transition: opacity 0.1s ease;
+    background: var(--navy); color: #fff; padding: 6px 10px; border-radius: 6px;
+    font-size: 12px; white-space: nowrap; transform: translate(-50%, -110%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .price-chart-meta { display: flex; gap: 20px; font-size: 12.5px; color: var(--text-muted); margin-top: 6px; flex-wrap: wrap; }
+  .price-chart-meta strong { color: var(--text); }
+  .price-chart .vol-bar { fill: #9db8d6; }
+  .price-chart .vol-bar.hover { fill: #2a78d6; }
+  .price-chart .section-divider { stroke: var(--pc-grid); stroke-width: 1; }
+  .price-chart .vol-caption { fill: var(--text-muted); font-size: 10px; font-family: inherit; }
+
+  .risk-badge {
+    display: inline-block;
+    background: #fdeeee;
+    color: var(--red);
+    border: 1px solid #f3c9c9;
+    border-radius: 8px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .disclaimer {
+    margin-top: 50px;
+    padding: 16px 20px;
+    background: #fdf5e6;
+    border: 1px solid #f0dca0;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a5c00;
+  }
+  footer.foot {
+    text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 30px;
+  }
+
+  @media (max-width: 720px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .report-item { grid-template-columns: 1fr; text-align: left; }
+    .report-item td, .report-item .target { text-align: left; }
+    h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="tag">종목 분석 리포트 · AI 데이터센터 · 비트코인 채굴</span>
+    <h1>IREN Limited (IREN)</h1>
+    <div class="hero-sub">나스닥(NasdaqGS) · 舊 Iris Energy · 비트코인 채굴에서 AI 클라우드·데이터센터로 사업 피벗 중</div>
+    <div class="hero-meta">
+      <div><span class="k">현재가 (2026.07.10 장전)</span><span class="v">$41.72</span></div>
+      <div><span class="k">전일 대비</span><span class="v down">-$1.29 (-2.99%)</span></div>
+      <div><span class="k">시가총액</span><span class="v">약 $149.1억</span></div>
+      <div><span class="k">애널리스트 목표주가 평균</span><span class="v up">$80.93 (매수 우세)</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="risk-badge">⚠ 사업 전환기 종목 · 52주 변동폭 $14.72~$76.87 (극단적 고변동성)</div>
+
+  <h2 class="section-title"><span class="num">1</span>재무 실적 요약 (연결 기준, 회계연도 6월 결산)</h2>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="label">FY2025 매출액</div>
+      <div class="value">$5.01억</div>
+      <div class="delta up">▲ 167.6% YoY</div>
+    </div>
+    <div class="kpi">
+      <div class="label">FY2025 영업이익</div>
+      <div class="value">$2,212만</div>
+      <div class="delta up">흑자전환</div>
+    </div>
+    <div class="kpi">
+      <div class="label">FY2025 순이익</div>
+      <div class="value">$8,694만</div>
+      <div class="delta up">흑자전환</div>
+    </div>
+    <div class="kpi">
+      <div class="label">부채비율(D/E)</div>
+      <div class="value">148.8%</div>
+      <div class="delta down">공격적 설비투자 반영</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>구분 (단위: 백만 USD)</th>
+          <th>FY2022</th>
+          <th>FY2023</th>
+          <th>FY2024</th>
+          <th>FY2025</th>
+          <th>전년대비 증감</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>매출액</td><td>59.0</td><td>75.5</td><td>187.2</td><td>501.0</td><td class="pos">+167.6%</td></tr>
+        <tr><td>영업이익</td><td>0.5</td><td>-48.6</td><td>-27.3</td><td>22.1</td><td class="pos">흑자전환</td></tr>
+        <tr><td>EBITDA</td><td>16.1</td><td>-122.6</td><td>25.1</td><td>285.7</td><td class="pos">+1,038.2%</td></tr>
+        <tr><td>당기순이익</td><td>-419.8</td><td>-171.8</td><td>-28.9</td><td>86.9</td><td class="pos">흑자전환</td></tr>
+        <tr><td>영업현금흐름</td><td>-37.5</td><td>5.7</td><td>52.2</td><td>245.9</td><td class="pos">+371.0%</td></tr>
+        <tr><td>자본적지출(CAPEX)</td><td>-294.2</td><td>-116.1</td><td>-479.9</td><td>-1,372.6</td><td class="neg">투자 급증</td></tr>
+        <tr><td>잉여현금흐름(FCF)</td><td>-331.7</td><td>-110.3</td><td>-427.7</td><td>-1,126.7</td><td class="neg">적자 확대</td></tr>
+        <tr><td>자산총계</td><td>570.5</td><td>332.1</td><td>1,152.8</td><td>2,940.3</td><td class="pos">+155.0%</td></tr>
+        <tr><td>자본총계</td><td>437.4</td><td>305.4</td><td>1,097.5</td><td>1,817.5</td><td class="pos">+65.6%</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="note">출처: Yahoo Finance(yfinance) 연간 재무제표 · 회계연도는 매년 6월 30일 종료 · 원 단위 USD를 백만 달러로 환산</div>
+  </div>
+
+  <h2 class="section-title"><span class="num">2</span>핵심 재무 코멘트</h2>
+  <div class="card">
+    <ul style="margin:0; padding-left:20px; font-size:14.5px;">
+      <li><strong>극적인 턴어라운드.</strong> FY2022 순손실 $4.2억에서 FY2025 순이익 $8,694만으로 전환했습니다. 매출은 3년 연속 세 자릿수 성장률(FY2024 +147.9%, FY2025 +167.6%)을 기록하며 비트코인 채굴 매출에 AI 컴퓨팅 클라우드 매출이 더해지는 구조입니다.</li>
+      <li><strong>공격적인 설비투자가 계속됨.</strong> CAPEX가 FY2024 $4.8억에서 FY2025 $13.7억으로 급증했고, 이 결과 영업현금흐름이 크게 개선(+371%)됐음에도 잉여현금흐름은 오히려 적자가 확대(-$11.3억)되고 있습니다. AI 데이터센터 확장을 위한 선제 투자 국면입니다.</li>
+      <li><strong>재무 건전성은 아직 관리 가능한 수준.</strong> 유동비율 3.72배, 당좌비율 3.50배로 단기 지급여력은 우수하나, 부채총계가 급증(FY2024 대비 총부채 약 20배)하며 부채비율이 148.8%까지 상승했습니다. 총현금 $22.1억을 보유해 당장의 유동성 리스크는 낮습니다.</li>
+      <li><strong>밸류에이션 부담.</strong> 트레일링 PER 54.2배, PBR 5.34배, EV/EBITDA 113배로 이미 상당한 성장 기대가 주가에 반영되어 있습니다. 포워드 EPS는 -$0.94로 향후 12개월은 추가 투자로 인한 회계상 적자를 반영합니다.</li>
+    </ul>
+  </div>
+
+  <h2 class="section-title"><span class="num">3</span>최근 산업·뉴스 동향</h2>
+  <div class="card">
+    <ul style="margin:0; padding-left:20px; font-size:14.5px;">
+      <li><strong>Bernstein 매수 유지, 목표가 $100 (2026.07.10, Insider Monkey/TipRanks).</strong> 애널리스트 Gautam Chhugani가 IREN을 7월 데이터센터 우수 종목 10선에 포함하며 매수 등급을 재확인했습니다. Freedom Capital도 하루 앞서 Hold에서 Buy로 상향했습니다.</li>
+      <li><strong>C-suite 신규 영입 (2026.07.09, Simply Wall St.).</strong> Chief Product Officer와 Chief Development Officer를 새로 선임하며 AI 클라우드 제품·대규모 데이터센터 구축 역량을 강화하고 있습니다. 다만 이미 밸류에이션에 상당 부분 반영됐다는 평가도 병존합니다.</li>
+      <li><strong>공동창업자 4년치 $7.88억 스톡그랜트 논란 (2026.07.02~09, Forbes/Blockspace).</strong> 이사회가 공동 CEO 2인에게 2030년까지 베스팅되는 900만+ 주씩의 대규모 RSU를 승인했고, 이사회 의장이 "핵심 인력 유지를 위한 조치"라며 주주 서한으로 해명했습니다. 지배구조·희석 리스크로 주목할 부분입니다.</li>
+      <li><strong>비트코인 채굴주의 AI 인프라 피벗 랠리 (2026.07.09, BeInCrypto).</strong> TeraWulf, IREN, Hut 8 등이 AI 데이터센터로 사업을 전환하며 주가가 비트코인 가격과 탈동조화되는 랠리를 보이고 있습니다. 최근 1년 IREN 주가는 +154.6%, 경쟁사 Nebius +359.6% 대비로도 견조합니다.</li>
+      <li><strong>MARA 등 동종업계 대규모 데이터센터 계약 (2026.07.09, IBD).</strong> MARA Holdings가 텍사스 신규 데이터센터 부지 계약을 체결하며 업종 전반의 AI 인프라 투자 랠리를 견인하고 있습니다.</li>
+    </ul>
+  </div>
+
+  <h2 class="section-title"><span class="num">4</span>애널리스트 컨센서스 및 투자자 구성</h2>
+  <div class="card">
+    <div class="report-list">
+      <div class="report-item">
+        <div class="firm">Bernstein</div>
+        <div>7월 데이터센터 우수 종목 10선 포함, 매수 등급 재확인</div>
+        <div class="opinion buy">매수</div>
+        <div class="target">$100</div>
+      </div>
+      <div class="report-item">
+        <div class="firm">Freedom Capital</div>
+        <div>Hold → Buy 상향 조정 (2026.07.06)</div>
+        <div class="opinion buy">매수</div>
+        <div class="target">-</div>
+      </div>
+      <div class="report-item">
+        <div class="firm">애널리스트 컨센서스</div>
+        <div>15명 커버리지, 평균 추천도 1.625(Buy) — 목표가 밴드 $41.00~$126.00</div>
+        <div class="opinion buy">매수</div>
+        <div class="target">$80.93 (평균)</div>
+      </div>
+    </div>
+
+    <div class="consensus-box">
+      <div class="big">$80.93</div>
+      <div class="desc">
+        15명 애널리스트 평균 목표주가 (현재가 $41.72 대비 <strong style="color:var(--green)">+94.0%</strong> 상승여력)<br>
+        기관 보유율 49.1%(690개 기관), 내부자 보유율 3.5% · 공매도 비중 18.6%(플로트 대비) — 강세·약세 베팅이 공존하는 고변동성 구간
+      </div>
+    </div>
+    <div class="note">출처: Yahoo Finance(yfinance) 애널리스트 컨센서스 및 기관보유현황 · 2026년 7월 기준 데이터</div>
+  </div>
+
+  <div class="card price-chart-card">
+    <h3 style="margin-top:0;">최근 20영업일 주가·거래량 흐름</h3>
+    <div class="price-chart-wrap">
+      <svg class="price-chart" viewBox="0 0 720 340" preserveAspectRatio="xMidYMid meet" role="img" aria-label="IREN 최근 20영업일 종가 및 거래량 추이 차트">
+      </svg>
+      <div class="price-chart-tooltip" id="priceTooltip-IREN"></div>
+    </div>
+    <div class="price-chart-meta">
+      <span id="priceMeta-IREN"></span>
+    </div>
+    <div class="note">출처: Yahoo Finance(yfinance) 일별 시세 · 종가 및 거래량(단위: 주) 기준, 미국 동부시간(ET) 종가</div>
+  </div>
+
+  <h2 class="section-title"><span class="num">5</span>향후 전망 — 전문가 시각 vs 분석 시각</h2>
+
+  <div class="two-col">
+    <div class="persp-card bull">
+      <h3>📈 낙관 시나리오 (Bernstein 등 다수 애널리스트)</h3>
+      <ul>
+        <li>비트코인 채굴에서 AI 컴퓨팅 클라우드·데이터센터로의 사업 전환이 실적으로 증명되는 초입 국면 — FY2025 매출 168% 성장, 최초 연간 흑자 달성</li>
+        <li>15명 애널리스트 중 다수가 매수 의견, 평균 목표가가 현재가 대비 94% 높은 수준으로 컨센서스 자체가 강한 상승 여력을 시사</li>
+        <li>C-suite 강화(신규 CPO·CDO 영입)로 AI 클라우드 제품과 대규모 데이터센터 구축 실행력 보강</li>
+        <li>비트코인 채굴주 전반이 AI 인프라 피벗을 통해 암호화폐 가격과 탈동조화되는 리레이팅 랠리가 진행 중 (최근 1년 +154.6%)</li>
+      </ul>
+    </div>
+    <div class="persp-card bear">
+      <h3>📉 신중 요인</h3>
+      <ul>
+        <li>밸류에이션 부담: PER 54배, PBR 5.3배, EV/EBITDA 113배로 이미 상당한 미래 성장이 주가에 선반영 — 일부 분석(Simply Wall St.)은 "3년간 5배 상승 후 이미 완전히 밸류에이션됐다"고 평가</li>
+        <li>잉여현금흐름 적자 확대(-$11.3억)로 대규모 추가 자금조달(부채 또는 지분 희석) 필요 가능성 상존</li>
+        <li>공동 CEO 대상 4년 $7.88억 스톡그랜트는 향후 지분 희석 요인이자 지배구조 리스크로 해석될 여지</li>
+        <li>52주 변동폭이 $14.72~$76.87로 극도로 넓어(고점 대비 -46% 조정 중) 단기 변동성이 매우 크고, 베타 4.28로 시장 대비 민감도가 매우 높음</li>
+        <li>공매도 비중 18.6%(플로트 대비)로 약세 베팅도 상당 수준 존재</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;">
+    <h3 style="margin-top:0;">Claude의 데이터 기반 분석</h3>
+    <p style="font-size:14.5px;">
+      IREN의 재무 데이터는 <strong>사업 모델 전환이 숫자로 확인되고 있는 흔치 않은 사례</strong>를 보여줍니다. 비트코인 채굴 단일 사업이던 회사가 AI 컴퓨팅 클라우드를 더하면서 3년 연속 세 자릿수 매출 성장과 첫 연간 흑자를 동시에 달성했다는 점은, 단순한 기대감이 아니라 실제 매출 다각화가 진행되고 있음을 시사합니다.
+    </p>
+    <p style="font-size:14.5px;">
+      다만 잉여현금흐름이 오히려 악화(-$11.3억)되고 있다는 점은 주의 깊게 볼 필요가 있습니다. 이는 회사가 영업으로 벌어들이는 현금보다 훨씬 큰 규모를 데이터센터 확장에 재투자하고 있다는 뜻으로, <strong>단기적으로는 정상적인 고성장 인프라 기업의 투자 패턴</strong>이지만 이 투자가 예상대로 매출·이익으로 전환되지 못할 경우 추가 자금조달에 따른 주주가치 희석 리스크로 이어질 수 있습니다.
+    </p>
+    <p style="font-size:14.5px;">
+      애널리스트 목표가(평균 $80.93)와 현재가($41.72) 사이의 큰 괴리는 두 가지로 해석 가능합니다. 하나는 최근 조정(52주 고점 대비 -46%)이 과도해서 목표가가 아직 못 따라온 경우, 다른 하나는 애널리스트들의 기대가 이미 매우 낙관적인 시나리오를 전제하고 있어 목표가 자체가 하향 조정될 수 있는 경우입니다.
+      공동 CEO 스톡그랜트 논란과 극단적으로 높은 베타(4.28)를 감안하면, <strong>이 종목은 '검증된 성장'과 '아직 증명되지 않은 대규모 베팅'이 공존하는 고위험·고변동성 성장주</strong>로 접근하는 것이 합리적입니다. 다음 실적 발표(2026.08.28 예정)에서 CAPEX 대비 매출 전환 속도를 확인하는 것이 핵심 체크포인트입니다.
+    </p>
+  </div>
+
+  <div class="verdict-box">
+    <h3>종합 판단</h3>
+    <div class="scenario">
+      <div class="label">단기 (1~2분기)</div>
+      <div class="desc">최근 52주 고점 대비 -46% 조정 국면. 베타 4.28의 극심한 변동성 특성상 시장 전반의 리스크 선호도 변화에 민감하게 반응할 가능성이 높음.</div>
+    </div>
+    <div class="scenario">
+      <div class="label">중기 (2026년 하반기~2027년)</div>
+      <div class="desc">AI 데이터센터 CAPEX가 실제 매출·이익으로 전환되는 속도가 핵심 변수. 애널리스트 컨센서스대로면 상당한 재평가 여력이 있으나, 이는 실행 리스크를 안고 있는 시나리오.</div>
+    </div>
+    <div class="scenario">
+      <div class="label">리스크 요인</div>
+      <div class="desc">잉여현금흐름 적자 확대에 따른 추가 자금조달·지분 희석 가능성, 경영진 대규모 스톡그랜트에 따른 지배구조 리스크, 이미 높은 밸류에이션(PER 54배·EV/EBITDA 113배), 비트코인 가격 변동성에 대한 잔존 노출.</div>
+    </div>
+    <div class="scale">
+      <span class="scale-label">신중</span>
+      <div class="scale-track"><div class="scale-fill" style="width:55%;"></div></div>
+      <span class="scale-label">낙관</span>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ 본 보고서는 Yahoo Finance(yfinance MCP) 재무제표·시세 데이터와 공개된 뉴스 보도를 종합해 자동 생성된 자료로, 투자 판단을 돕기 위한 참고 정보일 뿐 투자 권유가 아닙니다. 목표주가·의견은 각 애널리스트가 발표 시점에 제시한 값이며 이후 변경되었을 수 있습니다. 특히 이 종목은 52주 변동폭이 극단적으로 크고 베타가 매우 높은 고변동성 종목이므로, 투자 결정 전 최신 공시와 리포트를 반드시 재확인하시기 바랍니다. 환율 변동 리스크(USD 표시)도 함께 고려하시기 바랍니다.
+  </div>
+
+  <footer class="foot">
+    생성일 2026년 7월 10일 · 데이터 출처: Yahoo Finance(yfinance), Insider Monkey, Simply Wall St., Blockspace, BeInCrypto, IBD 등 언론보도
+  </footer>
+
+</div>
+<script>
+(function () {
+  var data = [
+    {d:"06/10",c:51.52,v:40574500},{d:"06/11",c:56.71,v:48863200},{d:"06/12",c:59.77,v:45354100},{d:"06/15",c:60.85,v:33192900},{d:"06/16",c:59.18,v:32102100},
+    {d:"06/17",c:58.11,v:36100500},{d:"06/18",c:59.96,v:39394600},{d:"06/22",c:56.87,v:35086500},{d:"06/23",c:54.72,v:32248100},{d:"06/24",c:50.30,v:38885600},
+    {d:"06/25",c:47.74,v:36214700},{d:"06/26",c:47.21,v:50929300},{d:"06/29",c:45.91,v:34318400},{d:"06/30",c:45.73,v:28300000},{d:"07/01",c:43.32,v:41807500},
+    {d:"07/02",c:38.82,v:60144900},{d:"07/06",c:43.91,v:53915700},{d:"07/07",c:39.81,v:42364000},{d:"07/08",c:43.01,v:34991000},{d:"07/09",c:41.72,v:38468100}
+  ];
+  renderPriceChart('IREN', data);
+
+  function renderPriceChart(code, data) {
+    var tooltip = document.getElementById('priceTooltip-' + code);
+    if (!tooltip) return;
+    var svg = tooltip.closest('.price-chart-card').querySelector('svg.price-chart');
+    if (!svg) return;
+    var meta = document.getElementById('priceMeta-' + code);
+
+    var W = 720, H = 340;
+    var padL = 54, padR = 16, padT = 16;
+    var priceH = 190;
+    var gapH = 14;
+    var volH = 90;
+    var volLabelH = 18;
+    var priceTop = padT, priceBottom = padT + priceH;
+    var volTop = priceBottom + gapH, volBottom = volTop + volH;
+    var plotW = W - padL - padR;
+
+    var closes = data.map(function (d) { return d.c; });
+    var vols = data.map(function (d) { return d.v; });
+    var min = Math.min.apply(null, closes), max = Math.max.apply(null, closes);
+    var range = max - min || 1;
+    var padRange = range * 0.08;
+    min -= padRange; max += padRange;
+    var volMax = Math.max.apply(null, vols) * 1.12;
+
+    function x(i) { return padL + (i / (data.length - 1)) * plotW; }
+    function y(v) { return priceTop + priceH - ((v - min) / (max - min)) * priceH; }
+
+    var ns = 'http://www.w3.org/2000/svg';
+    function el(tag, attrs) {
+      var e = document.createElementNS(ns, tag);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+
+    var gridSteps = 4;
+    for (var g = 0; g <= gridSteps; g++) {
+      var gv = min + (range + 2 * padRange) * (g / gridSteps);
+      var gy = y(gv);
+      svg.appendChild(el('line', { class: 'grid-line', x1: padL, x2: W - padR, y1: gy, y2: gy }));
+      var lbl = el('text', { class: 'axis-label', x: padL - 8, y: gy + 3, 'text-anchor': 'end' });
+      lbl.textContent = '$' + gv.toFixed(1);
+      svg.appendChild(lbl);
+    }
+
+    var areaD = 'M' + x(0) + ',' + y(data[0].c);
+    data.forEach(function (d, i) { areaD += ' L' + x(i) + ',' + y(d.c); });
+    areaD += ' L' + x(data.length - 1) + ',' + priceBottom + ' L' + x(0) + ',' + priceBottom + ' Z';
+    svg.appendChild(el('path', { class: 'price-area', d: areaD }));
+
+    var lineD = 'M' + x(0) + ',' + y(data[0].c);
+    data.forEach(function (d, i) { if (i > 0) lineD += ' L' + x(i) + ',' + y(d.c); });
+    svg.appendChild(el('path', { class: 'price-line', d: lineD }));
+
+    var dots = data.map(function (d, i) {
+      var dot = el('circle', { class: 'price-dot', cx: x(i), cy: y(d.c), r: 3, opacity: 0 });
+      svg.appendChild(dot);
+      return dot;
+    });
+
+    var hoverLine = el('line', { class: 'hover-line', x1: 0, x2: 0, y1: priceTop, y2: volBottom });
+    svg.appendChild(hoverLine);
+
+    svg.appendChild(el('line', { class: 'section-divider', x1: padL, x2: W - padR, y1: priceBottom + gapH / 2, y2: priceBottom + gapH / 2 }));
+
+    var gap = plotW / data.length * 0.28;
+    var barW = (plotW / data.length) - gap;
+    var volBars = data.map(function (d, i) {
+      var barH = (d.v / volMax) * volH;
+      var bx = x(i) - barW / 2;
+      var by = volBottom - barH;
+      var bar = el('rect', { class: 'vol-bar', x: bx, y: by, width: barW, height: Math.max(barH, 1), rx: 2 });
+      svg.appendChild(bar);
+      return bar;
+    });
+
+    [0, Math.floor((data.length - 1) / 2), data.length - 1].forEach(function (i) {
+      var lbl = el('text', { class: 'axis-label', x: x(i), y: volBottom + volLabelH, 'text-anchor': 'middle' });
+      lbl.textContent = data[i].d;
+      svg.appendChild(lbl);
+    });
+
+    var volCaption = el('text', { class: 'vol-caption', x: padL, y: priceBottom + gapH / 2 - 4 });
+    volCaption.textContent = '거래량';
+    svg.appendChild(volCaption);
+
+    var hit = el('rect', { class: 'hit-area', x: padL, y: priceTop, width: plotW, height: volBottom - priceTop });
+    svg.appendChild(hit);
+
+    function fmtVol(v) {
+      if (v >= 1000000) return (v / 1000000).toFixed(1) + 'M';
+      if (v >= 1000) return (v / 1000).toFixed(0) + 'K';
+      return v.toLocaleString();
+    }
+
+    function showAt(i) {
+      dots.forEach(function (dot, idx) { dot.setAttribute('opacity', idx === i ? 1 : 0); });
+      volBars.forEach(function (bar, idx) { bar.classList.toggle('hover', idx === i); });
+      hoverLine.setAttribute('x1', x(i));
+      hoverLine.setAttribute('x2', x(i));
+      hoverLine.style.opacity = 1;
+      var rect = svg.getBoundingClientRect();
+      var scale = rect.width / W;
+      tooltip.style.left = (x(i) * scale) + 'px';
+      tooltip.style.top = (y(data[i].c) * scale) + 'px';
+      tooltip.textContent = data[i].d + '  $' + data[i].c.toFixed(2) + '  ·  거래량 ' + fmtVol(data[i].v);
+      tooltip.style.opacity = 1;
+    }
+    function hide() {
+      dots.forEach(function (dot) { dot.setAttribute('opacity', 0); });
+      volBars.forEach(function (bar) { bar.classList.remove('hover'); });
+      hoverLine.style.opacity = 0;
+      tooltip.style.opacity = 0;
+    }
+    hit.addEventListener('mousemove', function (e) {
+      var rect = svg.getBoundingClientRect();
+      var mx = (e.clientX - rect.left) * (W / rect.width);
+      var i = Math.round(((mx - padL) / plotW) * (data.length - 1));
+      i = Math.max(0, Math.min(data.length - 1, i));
+      showAt(i);
+    });
+    hit.addEventListener('mouseleave', hide);
+    hit.addEventListener('touchstart', function (e) {
+      var touch = e.touches[0];
+      var rect = svg.getBoundingClientRect();
+      var mx = (touch.clientX - rect.left) * (W / rect.width);
+      var i = Math.round(((mx - padL) / plotW) * (data.length - 1));
+      i = Math.max(0, Math.min(data.length - 1, i));
+      showAt(i);
+    }, { passive: true });
+
+    var first = data[0].c, last = data[data.length - 1].c;
+    var chg = last - first, pct = (chg / first * 100).toFixed(1);
+    var sign = chg >= 0 ? '+' : '-';
+    var pctAbs = Math.abs(pct);
+    var color = chg >= 0 ? 'var(--green)' : 'var(--red)';
+    if (meta) {
+      meta.innerHTML =
+        '<span>20일 전 <strong>$' + first.toFixed(2) + '</strong></span>' +
+        '<span>현재 <strong>$' + last.toFixed(2) + '</strong></span>' +
+        '<span>구간 변동 <strong style="color:' + color + '">' + sign + '$' + Math.abs(chg).toFixed(2) + ' (' + sign + pctAbs + '%)</strong></span>' +
+        '<span>구간 최고/최저 <strong>$' + Math.max.apply(null, closes).toFixed(2) + ' / $' + Math.min.apply(null, closes).toFixed(2) + '</strong></span>';
+    }
+  }
+})();
+</script>
+</body>
+</html>
