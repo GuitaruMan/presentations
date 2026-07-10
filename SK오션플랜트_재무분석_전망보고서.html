@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SK오션플랜트(100090) 재무분석 및 향후 전망 보고서</title>
+<style>
+  :root {
+    --navy: #0f2942;
+    --navy-light: #1c3f5f;
+    --accent: #2166b0;
+    --green: #1a8754;
+    --red: #c0392b;
+    --amber: #b8860b;
+    --bg: #f6f8fa;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #1a2332;
+    --text-muted: #5a6b7d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Malgun Gothic", "Segoe UI", -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 80px; }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: #fff;
+    padding: 56px 24px 40px;
+    margin-bottom: 32px;
+  }
+  header.hero .wrap { padding: 0; }
+  .hero-inner { max-width: 980px; margin: 0 auto; }
+  .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 30px; margin: 0 0 8px; font-weight: 700; }
+  .hero-sub { color: #b8c9dc; font-size: 15px; margin-bottom: 24px; }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 28px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 20px;
+    font-size: 13.5px;
+  }
+  .hero-meta div span.k { color: #93a9c0; display: block; font-size: 12px; margin-bottom: 3px; }
+  .hero-meta div span.v { font-weight: 600; font-size: 16px; }
+  .hero-meta .up { color: #7ee0a8; }
+  .hero-meta .down { color: #f4a3a3; }
+
+  h2.section-title {
+    font-size: 21px;
+    margin: 48px 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--navy);
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2.section-title .num {
+    background: var(--navy); color: #fff;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(15,41,66,0.04);
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .kpi {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .kpi .label { font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px; }
+  .kpi .value { font-size: 20px; font-weight: 700; color: var(--navy); }
+  .kpi .delta { font-size: 12.5px; margin-top: 4px; }
+  .kpi .delta.up { color: var(--green); }
+  .kpi .delta.down { color: var(--red); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 10px 0 6px;
+  }
+  th, td {
+    padding: 10px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; }
+  thead th {
+    background: #eef3f8;
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 13px;
+  }
+  tbody tr:hover { background: #fafcff; }
+  td.pos { color: var(--green); font-weight: 600; }
+  td.neg { color: var(--red); font-weight: 600; }
+  .table-scroll { overflow-x: auto; }
+
+  .note {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .report-list { display: flex; flex-direction: column; gap: 10px; }
+  .report-item {
+    display: grid;
+    grid-template-columns: 90px 1fr auto auto;
+    gap: 14px;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13.5px;
+  }
+  .report-item .firm { font-weight: 700; color: var(--navy); }
+  .report-item .opinion {
+    padding: 3px 10px; border-radius: 14px; font-size: 12px; font-weight: 700;
+    text-align: center; width: fit-content;
+  }
+  .opinion.buy { background: #e3f3ea; color: var(--green); }
+  .opinion.hold { background: #fdf1e0; color: var(--amber); }
+  .report-item .target { font-weight: 700; }
+  .report-item .date { color: var(--text-muted); font-size: 12px; }
+
+  .consensus-box {
+    display: flex; align-items: center; gap: 24px;
+    background: #eef6f1;
+    border: 1px solid #cbe6d5;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-top: 14px;
+  }
+  .consensus-box .big { font-size: 28px; font-weight: 800; color: var(--green); }
+  .consensus-box .desc { font-size: 13px; color: var(--text-muted); }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .persp-card {
+    border-radius: 10px;
+    padding: 20px 22px;
+    border: 1px solid var(--border);
+  }
+  .persp-card.bull { border-top: 4px solid var(--green); }
+  .persp-card.bear { border-top: 4px solid var(--red); }
+  .persp-card h3 { margin-top: 0; font-size: 16px; }
+  .persp-card ul { padding-left: 18px; margin: 10px 0; font-size: 14px; }
+  .persp-card li { margin-bottom: 8px; }
+
+  .verdict-box {
+    background: linear-gradient(135deg, #0f2942, #1c3f5f);
+    color: #fff;
+    border-radius: 12px;
+    padding: 28px 26px;
+    margin-top: 20px;
+  }
+  .verdict-box h3 { margin-top: 0; font-size: 17px; color: #cfe0f2; }
+  .verdict-box .scenario { margin-bottom: 16px; }
+  .verdict-box .scenario .label { font-size: 13px; color: #93a9c0; margin-bottom: 4px; }
+  .verdict-box .scenario .desc { font-size: 14.5px; }
+  .scale {
+    display: flex; align-items: center; gap: 10px; margin-top: 18px;
+  }
+  .scale-track {
+    flex: 1; height: 8px; background: rgba(255,255,255,0.15); border-radius: 5px; position: relative;
+  }
+  .scale-fill {
+    position: absolute; left: 0; top: 0; height: 100%;
+    background: linear-gradient(90deg, #4a90d9, #7ee0a8);
+    border-radius: 5px;
+  }
+  .scale-label { font-size: 12px; color: #b8c9dc; }
+
+  .risk-badge {
+    display: inline-block;
+    background: #fdeeee;
+    color: var(--red);
+    border: 1px solid #f3c9c9;
+    border-radius: 8px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .disclaimer {
+    margin-top: 50px;
+    padding: 16px 20px;
+    background: #fdf5e6;
+    border: 1px solid #f0dca0;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a5c00;
+  }
+  footer.foot {
+    text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 30px;
+  }
+
+  @media (max-width: 720px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .report-item { grid-template-columns: 1fr; text-align: left; }
+    .report-item td, .report-item .target { text-align: left; }
+    h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="tag">종목 분석 리포트 · 해상풍력·조선해양</span>
+    <h1>SK오션플랜트 (100090)</h1>
+    <div class="hero-sub">SK oceanplant Co., Ltd. · 코스피 · 해상풍력 하부구조물 및 특수선 전문기업</div>
+    <div class="hero-meta">
+      <div><span class="k">현재가 (2026.07.09 종가)</span><span class="v">13,300원</span></div>
+      <div><span class="k">전일 대비</span><span class="v down">-310원 (-2.28%)</span></div>
+      <div><span class="k">시가총액</span><span class="v">8,310억원</span></div>
+      <div><span class="k">증권사 목표주가</span><span class="v up">2.0만~2.5만원</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="risk-badge">⚠ 핵심 변수: 최대주주(SK에코플랜트) 매각 절차 진행 중</div>
+
+  <h2 class="section-title"><span class="num">1</span>재무 실적 요약 (연결 기준)</h2>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="label">2025년 매출액</div>
+      <div class="value">9,654억원</div>
+      <div class="delta up">▲ 45.7% YoY</div>
+    </div>
+    <div class="kpi">
+      <div class="label">2025년 영업이익</div>
+      <div class="value">595억원</div>
+      <div class="delta up">▲ 42.4% YoY</div>
+    </div>
+    <div class="kpi">
+      <div class="label">2025년 당기순이익</div>
+      <div class="value">375억원</div>
+      <div class="delta up">▲ 122.3% YoY</div>
+    </div>
+    <div class="kpi">
+      <div class="label">부채비율</div>
+      <div class="value">41.0%</div>
+      <div class="delta up">전년比 대폭 개선</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>구분 (단위: 억원)</th>
+          <th>제28기 (2023)</th>
+          <th>제29기 (2024)</th>
+          <th>제30기 (2025)</th>
+          <th>전년대비 증감</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>매출액</td><td>9,258</td><td>6,626</td><td>9,654</td><td class="pos">+45.7%</td></tr>
+        <tr><td>매출총이익</td><td>1,050</td><td>728</td><td>916</td><td class="pos">+25.9%</td></tr>
+        <tr><td>영업이익</td><td>756</td><td>418</td><td>595</td><td class="pos">+42.4%</td></tr>
+        <tr><td>세전이익</td><td>631</td><td>176</td><td>459</td><td class="pos">+160.5%</td></tr>
+        <tr><td>당기순이익</td><td>575</td><td>169</td><td>375</td><td class="pos">+122.3%</td></tr>
+        <tr><td>자산총계</td><td>14,319</td><td>14,219</td><td>11,482</td><td class="neg">-19.3%</td></tr>
+        <tr><td>부채총계</td><td>7,331</td><td>7,084</td><td>3,337</td><td class="neg">-52.9%</td></tr>
+        <tr><td>자본총계</td><td>6,988</td><td>7,135</td><td>8,145</td><td class="pos">+14.2%</td></tr>
+        <tr><td>기본주당순이익(EPS)</td><td>1,041원</td><td>277원</td><td>625원</td><td class="pos">+125.6%</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="note">출처: DART 전자공시(사업보고서, 접수번호 20260323000486) · 원 단위 금액은 백만원 단위 반올림하여 억원으로 환산</div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">2026년 1분기 잠정실적 (연결)</h3>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>구분 (단위: 억원)</th>
+          <th>26.1Q</th>
+          <th>25.4Q</th>
+          <th>QoQ</th>
+          <th>25.1Q</th>
+          <th>YoY</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>매출액</td><td>1,747</td><td>1,745</td><td class="pos">+0.1%</td><td>2,571</td><td class="neg">-32.1%</td></tr>
+        <tr><td>영업이익</td><td>169</td><td>137</td><td class="pos">+23.4%</td><td>110</td><td class="pos">+52.7%</td></tr>
+        <tr><td>당기순이익</td><td>99</td><td>137</td><td class="neg">-27.9%</td><td>43</td><td class="pos">+129.9%</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="note">출처: DART 연결재무제표 기준 영업(잠정)실적 공정공시(2026.05.12, 접수번호 20260512800366) · 외부감사인 검토 전 잠정치</div>
+  </div>
+
+  <h2 class="section-title"><span class="num">2</span>핵심 재무 코멘트</h2>
+  <div class="card">
+    <ul style="margin:0; padding-left:20px; font-size:14.5px;">
+      <li><strong>이익 성장세 뚜렷.</strong> 2024년 실적 부진(영업이익 -44.7% YoY)을 딛고 2025년 매출·영업이익·순이익 모두 두 자릿수 이상 반등했습니다. 특히 순이익은 122.3% 급증했습니다.</li>
+      <li><strong>재무구조 급격히 건전화.</strong> 부채총계가 2024년 7,084억원에서 2025년 3,337억원으로 절반 이상 줄면서 부채비율이 큰 폭으로 낮아졌습니다. 이는 유동부채(특히 계약부채) 감소가 주도했습니다.</li>
+      <li><strong>1분기 실적의 이면.</strong> 2026년 1분기 매출은 전년 동기 대비 -32.1%로 크게 줄었으나, 이는 해군 호위함 Batch-III 특수선 매출(진수 완료로 급감, -78.1%)의 기저효과이며, 핵심 성장동력인 해상풍력 매출은 오히려 +82.8% 급증(1,270억원)했습니다. 영업이익은 오히려 +52.7% 증가해 수익성은 개선되는 흐름입니다.</li>
+      <li><strong>사업 포트폴리오 전환 중.</strong> 특수선(방산) 비중이 축소되는 대신 해상풍력 하부구조물(대만 펑먀오·포모사4 프로젝트 등)이 실적의 중심으로 이동하고 있습니다.</li>
+    </ul>
+  </div>
+
+  <h2 class="section-title"><span class="num">3</span>최근 산업·뉴스 동향</h2>
+  <div class="card">
+    <ul style="margin:0; padding-left:20px; font-size:14.5px;">
+      <li><strong>[최대 리스크] 최대주주 매각 절차.</strong> 모회사 SK에코플랜트가 SK오션플랜트 매각을 추진 중이며, 2025년 9월 디오션자산운용을 우선협상대상자로 선정했습니다. 이 매각 협상의 불확실성이 안마도 해상풍력 프로젝트의 최대주주 변경 작업 지연으로 이어지며, 일부 기자재 공급업체의 계약 중단·해지 움직임까지 나타나는 등 실질적 사업 차질을 유발하고 있습니다(2026.05 하나증권).</li>
+      <li><strong>KF윈드(부유식 해상풍력) 우선협상자 선정 (2026.05).</strong> 울산 앞바다에서 추진되는 '한국부유식풍력(KF Wind)' 프로젝트의 우선협상자로 선정되며 세계 최대 규모의 부유식 해상풍력 시장 선점 교두보를 마련했습니다.</li>
+      <li><strong>해상풍력 수주·매출 역대 최대 (2026.05 하나증권).</strong> 대만 펑먀오·포모사4 프로젝트가 매출에 본격 반영되며 단일 연도 기준 해상풍력 수주·매출이 모두 역대 최대치를 기록했습니다.</li>
+      <li><strong>유럽·대만·미군 MRO 파이프라인 (2026.02).</strong> 유럽 해상변전소(OSS)용 자켓 구조물 공급, 대만 'Round 3.3' 해상풍력 개발사 선정, 미군 함정 MRO(정비·수리·정비overhaul) 사업 등 신규 파이프라인이 다수 대기 중입니다.</li>
+    </ul>
+  </div>
+
+  <h2 class="section-title"><span class="num">4</span>증권사 리포트 비교</h2>
+  <div class="card">
+    <div class="report-list">
+      <div class="report-item">
+        <div class="firm">하나증권</div>
+        <div>1분기 실적 기대치 상회, 해상풍력 수주·매출 역대 최대. 안마도 지연은 변수</div>
+        <div class="opinion buy">매수</div>
+        <div class="target">25,000원</div>
+      </div>
+      <div class="report-item">
+        <div class="firm">미래에셋증권</div>
+        <div>매각 불확실성이 최대 변수, 해소 시 강한 재평가 기대</div>
+        <div class="opinion buy">매수</div>
+        <div class="target">25,000원</div>
+      </div>
+      <div class="report-item">
+        <div class="firm">미래에셋증권 (2월)</div>
+        <div>유럽 OSS·대만 해상풍력 수주 임박, 미군 MRO 파이프라인 기대</div>
+        <div class="opinion buy">매수</div>
+        <div class="target">25,000원</div>
+      </div>
+    </div>
+
+    <div class="consensus-box">
+      <div class="big">약 20,000~25,000원</div>
+      <div class="desc">
+        복수 증권사 목표주가 밴드 (현재가 13,300원 대비 <strong style="color:var(--green)">+50~88%</strong> 상승여력)<br>
+        단, 목표가 대부분 <strong style="color:var(--red)">매각 불확실성 해소를 전제</strong>로 제시된 수치입니다.
+      </div>
+    </div>
+    <div class="note">출처: 한국경제·데일리인베스트·SNM뉴스·데이터투자 등 2026년 2~5월 보도 종합. 목표가는 각 리포트 발간 시점 기준.</div>
+  </div>
+
+  <h2 class="section-title"><span class="num">5</span>향후 전망 — 전문가 시각 vs 분석 시각</h2>
+
+  <div class="two-col">
+    <div class="persp-card bull">
+      <h3>📈 낙관 시나리오 (증권가 공통)</h3>
+      <ul>
+        <li>해상풍력 부문이 특수선 부진을 상쇄하고도 남을 만큼 고성장(1분기 +82.8% YoY) 중이며, 영업이익률도 개선세</li>
+        <li>대만(펑먀오·포모사4·Round 3.3), 유럽(OSS 자켓), 국내(KF윈드 부유식) 등 지역·기술 다변화된 수주 파이프라인 확보</li>
+        <li>미군 함정 MRO 사업까지 특수선 부문의 새로운 수익원으로 부상 가능</li>
+        <li>매각 불확실성이 해소될 경우 지배구조 리스크 프리미엄이 해소되며 주가 재평가(리레이팅) 가능성</li>
+      </ul>
+    </div>
+    <div class="persp-card bear">
+      <h3>📉 신중 시나리오</h3>
+      <ul>
+        <li>최대주주 매각 협상이 장기화되며 안마도 프로젝트 등 핵심 사업의 일정 차질이 이미 현실화 중 (강재 절단 일정 지연, 기자재 공급사 계약 이탈)</li>
+        <li>매각가·인수주체 불확실성이 지속되는 한 기관 수급 유입이 제한적일 수 있음</li>
+        <li>특수선(방산) 매출 공백을 신규 수주로 완전히 메울 수 있을지는 미확정 (회사는 연간 매출목표 8,217억원 유지하나 리스크 존재)</li>
+        <li>해상풍력은 정책·보조금 의존도가 높은 산업 특성상 각국 정책 변화에 민감</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;">
+    <h3 style="margin-top:0;">Claude의 데이터 기반 분석</h3>
+    <p style="font-size:14.5px;">
+      SK오션플랜트의 재무 데이터는 <strong>사업 구조 자체가 건강하게 개선되고 있다는 신호</strong>를 보여줍니다.
+      2025년 부채비율이 급격히 낮아지고 순이익이 두 배 이상 늘어난 것은 우연이 아니라, 수익성이 낮은 특수선 매출 비중이 줄고 해상풍력이라는 고성장 사업으로 무게중심이 이동한 결과로 해석하는 것이 합리적입니다.
+    </p>
+    <p style="font-size:14.5px;">
+      다만 이 종목의 주가를 설명하는 가장 큰 변수는 실적이 아니라 <strong>지배구조(매각) 이슈</strong>입니다. 여러 증권사가 목표주가는 2만원 이상으로 제시하면서도 공통적으로 "매각 불확실성 해소"를 전제조건으로 달고 있다는 점이 이를 뒷받침합니다.
+      실제로 매각 협상 지연이 안마도 프로젝트의 기자재 계약 해지로 이어지는 등, 지배구조 리스크가 이미 영업 현장에 실질적 영향을 미치고 있다는 점은 우려할 만합니다.
+    </p>
+    <p style="font-size:14.5px;">
+      결론적으로, <strong>펀더멘털(해상풍력 성장성)과 밸류에이션(목표가 대비 저평가) 측면에서는 매력적</strong>이나, <strong>매각 이슈가 해소되기 전까지는 주가가 실적을 온전히 반영하기 어려운 구조</strong>입니다.
+      투자자 입장에서는 최대주주 변경 관련 공시(매각 계약 체결 여부, 신규 대주주 확정 시점)를 가장 중요한 트리거로 모니터링해야 하며, 이 불확실성이 해소되는 시점이 곧 재평가의 신호탄이 될 가능성이 높습니다.
+    </p>
+  </div>
+
+  <div class="verdict-box">
+    <h3>종합 판단</h3>
+    <div class="scenario">
+      <div class="label">단기 (1~2분기)</div>
+      <div class="desc">매각 협상 진행 상황에 주가가 연동될 가능성이 높음. 안마도 프로젝트 등 일정 지연 리스크를 계속 모니터링 필요.</div>
+    </div>
+    <div class="scenario">
+      <div class="label">중기 (2026년 하반기~2027년)</div>
+      <div class="desc">해상풍력 매출 확대(대만·유럽·국내 부유식)가 지속되면 실적 개선 추세는 이어질 전망. 매각 이슈 해소 시 밸류에이션 재평가 기대.</div>
+    </div>
+    <div class="scenario">
+      <div class="label">리스크 요인</div>
+      <div class="desc">최대주주 매각 장기화, 특수선 매출 공백, 해상풍력 정책 리스크(국내외 보조금·입찰 제도 변화), 개별 프로젝트 일정 지연.</div>
+    </div>
+    <div class="scale">
+      <span class="scale-label">신중</span>
+      <div class="scale-track"><div class="scale-fill" style="width:58%;"></div></div>
+      <span class="scale-label">낙관</span>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ 본 보고서는 DART 전자공시(재무제표·잠정실적 공시), KRX 시세, 그리고 공개된 언론·증권사 리포트 보도를 종합해 자동 생성된 자료로, 투자 판단을 돕기 위한 참고 정보일 뿐 투자 권유가 아닙니다. 목표주가·의견은 각 증권사가 발간 시점에 제시한 값이며 이후 변경되었을 수 있습니다. 특히 이 종목은 최대주주 매각이라는 중대한 지배구조 이슈가 진행 중이므로, 투자 결정 전 최신 공시를 반드시 확인하시기 바랍니다.
+  </div>
+
+  <footer class="foot">
+    생성일 2026년 7월 10일 · 데이터 출처: DART 전자공시시스템, KRX 정보데이터시스템, 한국경제·데일리인베스트·SNM뉴스 등 언론보도
+  </footer>
+
+</div>
+</body>
+</html>
