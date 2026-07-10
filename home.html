@@ -84,7 +84,6 @@
       if (val === PW) {
         document.getElementById('gate').style.display = 'none';
         document.getElementById('content').style.display = 'grid';
-        sessionStorage.setItem('homeUnlocked', '1');
       } else {
         document.getElementById('error').textContent = '비밀번호가 틀렸습니다.';
       }
@@ -92,10 +91,6 @@
     document.getElementById('pw').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') checkPw();
     });
-    if (sessionStorage.getItem('homeUnlocked') === '1') {
-      document.getElementById('gate').style.display = 'none';
-      document.getElementById('content').style.display = 'grid';
-    }
   </script>
 </body>
 </html>
