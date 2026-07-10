@@ -221,12 +221,10 @@
   }
   .price-chart-meta { display: flex; gap: 20px; font-size: 12.5px; color: var(--text-muted); margin-top: 6px; flex-wrap: wrap; }
   .price-chart-meta strong { color: var(--text); }
-
-  .volume-chart-wrap { position: relative; }
-  .volume-chart { width: 100%; height: auto; display: block; }
-  .volume-chart .vol-axis-label { fill: var(--text-muted); font-size: 10.5px; font-family: inherit; }
-  .volume-chart .vol-bar { fill: #2a78d6; }
-  .volume-chart .vol-value-label { fill: var(--navy); font-size: 11px; font-weight: 700; font-family: inherit; text-anchor: middle; }
+  .price-chart .vol-bar { fill: #9db8d6; }
+  .price-chart .vol-bar.hover { fill: #2a78d6; }
+  .price-chart .section-divider { stroke: var(--pc-grid); stroke-width: 1; }
+  .price-chart .vol-caption { fill: var(--text-muted); font-size: 10px; font-family: inherit; }
 
   .disclaimer {
     margin-top: 50px;
@@ -406,25 +404,16 @@
   </div>
 
   <div class="card price-chart-card">
-    <h3 style="margin-top:0;">최근 20영업일 주가 흐름</h3>
+    <h3 style="margin-top:0;">최근 20영업일 주가·거래량 흐름</h3>
     <div class="price-chart-wrap">
-      <svg class="price-chart" viewBox="0 0 720 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="원익IPS 최근 20영업일 종가 추이 라인 차트">
+      <svg class="price-chart" viewBox="0 0 720 340" preserveAspectRatio="xMidYMid meet" role="img" aria-label="원익IPS 최근 20영업일 종가 및 거래량 추이 차트">
       </svg>
       <div class="price-chart-tooltip" id="priceTooltip-240810"></div>
     </div>
     <div class="price-chart-meta">
       <span id="priceMeta-240810"></span>
     </div>
-    <div class="note">출처: KRX 정보데이터시스템 일별매매정보 · 종가 기준</div>
-  </div>
-
-  <div class="card">
-    <h3 style="margin-top:0;">최근 5영업일 거래량</h3>
-    <div class="volume-chart-wrap">
-      <svg class="volume-chart" viewBox="0 0 720 200" preserveAspectRatio="xMidYMid meet" role="img" aria-label="원익IPS 최근 5영업일 거래량 막대 그래프">
-      </svg>
-    </div>
-    <div class="note">출처: KRX 정보데이터시스템 일별매매정보 · 단위: 주(株)</div>
+    <div class="note">출처: KRX 정보데이터시스템 일별매매정보 · 종가 및 거래량(단위: 주) 기준</div>
   </div>
 
   <h2 class="section-title"><span class="num">5</span>향후 전망 — 전문가 시각 vs 분석 시각</h2>
@@ -502,56 +491,14 @@
 <script>
 (function () {
   var data = [
-    {d:"06/04",c:127200},{d:"06/05",c:132700},{d:"06/08",c:104900},{d:"06/09",c:119100},{d:"06/10",c:116700},
-    {d:"06/11",c:141000},{d:"06/12",c:183300},{d:"06/15",c:174500},{d:"06/16",c:156100},{d:"06/17",c:161700},
-    {d:"06/18",c:163200},{d:"06/19",c:156000},{d:"06/22",c:172500},{d:"06/23",c:150100},{d:"06/24",c:150600},
-    {d:"06/25",c:154700},{d:"06/26",c:163800},{d:"06/29",c:159000},{d:"06/30",c:168100},{d:"07/01",c:165600},
-    {d:"07/02",c:131600},{d:"07/03",c:133100},{d:"07/06",c:124500},{d:"07/07",c:112700},{d:"07/08",c:102700},
-    {d:"07/09",c:104900}
+    {d:"06/04",c:127200,v:1192343},{d:"06/05",c:132700,v:3153461},{d:"06/08",c:104900,v:1615054},{d:"06/09",c:119100,v:1504096},{d:"06/10",c:116700,v:1538505},
+    {d:"06/11",c:141000,v:3560123},{d:"06/12",c:183300,v:4035281},{d:"06/15",c:174500,v:1797063},{d:"06/16",c:156100,v:1571107},{d:"06/17",c:161700,v:2517131},
+    {d:"06/18",c:163200,v:1560256},{d:"06/19",c:156000,v:1529659},{d:"06/22",c:172500,v:2030277},{d:"06/23",c:150100,v:1163952},{d:"06/24",c:150600,v:1016708},
+    {d:"06/25",c:154700,v:974435},{d:"06/26",c:163800,v:2934644},{d:"06/29",c:159000,v:1965141},{d:"06/30",c:168100,v:3030011},{d:"07/01",c:165600,v:6025100},
+    {d:"07/02",c:131600,v:2868694},{d:"07/03",c:133100,v:2257595},{d:"07/06",c:124500,v:1528327},{d:"07/07",c:112700,v:1550422},{d:"07/08",c:102700,v:1463822},
+    {d:"07/09",c:104900,v:1401408}
   ];
   renderPriceChart('240810', data);
-
-  var volumeData = [
-    {d:"07/03",v:2257595},{d:"07/06",v:1528327},{d:"07/07",v:1550422},{d:"07/08",v:1463822},{d:"07/09",v:1401408}
-  ];
-  renderVolumeChart(volumeData);
-
-  function renderVolumeChart(data) {
-    var svg = document.querySelector('svg.volume-chart[aria-label*="원익IPS"]');
-    if (!svg) return;
-
-    var W = 720, H = 200, padL = 16, padR = 16, padT = 16, padB = 32;
-    var plotW = W - padL - padR, plotH = H - padT - padB;
-    var gap = 18;
-    var barW = (plotW - gap * (data.length - 1)) / data.length;
-
-    var vols = data.map(function (d) { return d.v; });
-    var max = Math.max.apply(null, vols) * 1.18;
-
-    var ns = 'http://www.w3.org/2000/svg';
-    function el(tag, attrs) {
-      var e = document.createElementNS(ns, tag);
-      for (var k in attrs) e.setAttribute(k, attrs[k]);
-      return e;
-    }
-    function fmtVol(v) {
-      if (v >= 10000) return (v / 10000).toFixed(1) + '만';
-      return v.toLocaleString();
-    }
-
-    data.forEach(function (d, i) {
-      var barH = (d.v / max) * plotH;
-      var x = padL + i * (barW + gap);
-      var y = padT + plotH - barH;
-      svg.appendChild(el('rect', { class: 'vol-bar', x: x, y: y, width: barW, height: barH, rx: 4 }));
-      var valLbl = el('text', { class: 'vol-value-label', x: x + barW / 2, y: y - 8 });
-      valLbl.textContent = fmtVol(d.v);
-      svg.appendChild(valLbl);
-      var dateLbl = el('text', { class: 'vol-axis-label', x: x + barW / 2, y: H - 10, 'text-anchor': 'middle' });
-      dateLbl.textContent = d.d;
-      svg.appendChild(dateLbl);
-    });
-  }
 
   function renderPriceChart(code, data) {
     var tooltip = document.getElementById('priceTooltip-' + code);
@@ -559,17 +506,26 @@
     var svg = tooltip.closest('.price-chart-card').querySelector('svg.price-chart');
     if (!svg) return;
 
-    var W = 720, H = 260, padL = 54, padR = 16, padT = 16, padB = 28;
-    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var W = 720, H = 340;
+    var padL = 54, padR = 16, padT = 16;
+    var priceH = 190;      // 가격 라인차트 영역 높이
+    var gapH = 14;         // 두 영역 사이 간격
+    var volH = 90;         // 거래량 막대차트 영역 높이
+    var volLabelH = 18;    // 거래량 하단 날짜 라벨 공간
+    var priceTop = padT, priceBottom = padT + priceH;
+    var volTop = priceBottom + gapH, volBottom = volTop + volH;
+    var plotW = W - padL - padR;
 
     var closes = data.map(function (d) { return d.c; });
+    var vols = data.map(function (d) { return d.v; });
     var min = Math.min.apply(null, closes), max = Math.max.apply(null, closes);
     var range = max - min || 1;
     var padRange = range * 0.08;
     min -= padRange; max += padRange;
+    var volMax = Math.max.apply(null, vols) * 1.12;
 
     function x(i) { return padL + (i / (data.length - 1)) * plotW; }
-    function y(v) { return padT + plotH - ((v - min) / (max - min)) * plotH; }
+    function y(v) { return priceTop + priceH - ((v - min) / (max - min)) * priceH; }
 
     var ns = 'http://www.w3.org/2000/svg';
     function el(tag, attrs) {
@@ -578,6 +534,7 @@
       return e;
     }
 
+    // ── 가격 영역: 그리드 + y축 라벨 ──
     var gridSteps = 4;
     for (var g = 0; g <= gridSteps; g++) {
       var gv = min + (range + 2 * padRange) * (g / gridSteps);
@@ -588,23 +545,15 @@
       svg.appendChild(lbl);
     }
 
-    [0, Math.floor((data.length - 1) / 2), data.length - 1].forEach(function (i) {
-      var lbl = el('text', { class: 'axis-label', x: x(i), y: H - 8, 'text-anchor': 'middle' });
-      lbl.textContent = data[i].d;
-      svg.appendChild(lbl);
-    });
-
+    // ── 가격 영역: area + line ──
     var areaD = 'M' + x(0) + ',' + y(data[0].c);
     data.forEach(function (d, i) { areaD += ' L' + x(i) + ',' + y(d.c); });
-    areaD += ' L' + x(data.length - 1) + ',' + (padT + plotH) + ' L' + x(0) + ',' + (padT + plotH) + ' Z';
+    areaD += ' L' + x(data.length - 1) + ',' + priceBottom + ' L' + x(0) + ',' + priceBottom + ' Z';
     svg.appendChild(el('path', { class: 'price-area', d: areaD }));
 
     var lineD = 'M' + x(0) + ',' + y(data[0].c);
     data.forEach(function (d, i) { if (i > 0) lineD += ' L' + x(i) + ',' + y(d.c); });
     svg.appendChild(el('path', { class: 'price-line', d: lineD }));
-
-    var hoverLine = el('line', { class: 'hover-line', x1: 0, x2: 0, y1: padT, y2: padT + plotH });
-    svg.appendChild(hoverLine);
 
     var dots = data.map(function (d, i) {
       var dot = el('circle', { class: 'price-dot', cx: x(i), cy: y(d.c), r: 3, opacity: 0 });
@@ -612,11 +561,47 @@
       return dot;
     });
 
-    var hit = el('rect', { class: 'hit-area', x: padL, y: padT, width: plotW, height: plotH });
+    var hoverLine = el('line', { class: 'hover-line', x1: 0, x2: 0, y1: priceTop, y2: volBottom });
+    svg.appendChild(hoverLine);
+
+    // ── 구분선 ──
+    svg.appendChild(el('line', { class: 'section-divider', x1: padL, x2: W - padR, y1: priceBottom + gapH / 2, y2: priceBottom + gapH / 2 }));
+
+    // ── 거래량 영역: 막대 ──
+    var gap = plotW / data.length * 0.28;
+    var barW = (plotW / data.length) - gap;
+    var volBars = data.map(function (d, i) {
+      var barH = (d.v / volMax) * volH;
+      var bx = x(i) - barW / 2;
+      var by = volBottom - barH;
+      var bar = el('rect', { class: 'vol-bar', x: bx, y: by, width: barW, height: Math.max(barH, 1), rx: 2 });
+      svg.appendChild(bar);
+      return bar;
+    });
+
+    // ── x축 날짜 라벨 (처음/중간/끝) ──
+    [0, Math.floor((data.length - 1) / 2), data.length - 1].forEach(function (i) {
+      var lbl = el('text', { class: 'axis-label', x: x(i), y: volBottom + volLabelH, 'text-anchor': 'middle' });
+      lbl.textContent = data[i].d;
+      svg.appendChild(lbl);
+    });
+
+    var volCaption = el('text', { class: 'vol-caption', x: padL, y: priceBottom + gapH / 2 - 4 });
+    volCaption.textContent = '거래량';
+    svg.appendChild(volCaption);
+
+    // ── 히트 영역 (가격+거래량 전체) ──
+    var hit = el('rect', { class: 'hit-area', x: padL, y: priceTop, width: plotW, height: volBottom - priceTop });
     svg.appendChild(hit);
+
+    function fmtVol(v) {
+      if (v >= 10000) return (v / 10000).toFixed(1) + '만';
+      return v.toLocaleString();
+    }
 
     function showAt(i) {
       dots.forEach(function (dot, idx) { dot.setAttribute('opacity', idx === i ? 1 : 0); });
+      volBars.forEach(function (bar, idx) { bar.classList.toggle('hover', idx === i); });
       hoverLine.setAttribute('x1', x(i));
       hoverLine.setAttribute('x2', x(i));
       hoverLine.style.opacity = 1;
@@ -624,11 +609,12 @@
       var scale = rect.width / W;
       tooltip.style.left = (x(i) * scale) + 'px';
       tooltip.style.top = (y(data[i].c) * scale) + 'px';
-      tooltip.textContent = data[i].d + '  ' + data[i].c.toLocaleString() + '원';
+      tooltip.textContent = data[i].d + '  ' + data[i].c.toLocaleString() + '원  ·  거래량 ' + fmtVol(data[i].v);
       tooltip.style.opacity = 1;
     }
     function hide() {
       dots.forEach(function (dot) { dot.setAttribute('opacity', 0); });
+      volBars.forEach(function (bar) { bar.classList.remove('hover'); });
       hoverLine.style.opacity = 0;
       tooltip.style.opacity = 0;
     }
