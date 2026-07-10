@@ -185,7 +185,7 @@
   .report-list { display: flex; flex-direction: column; gap: 10px; }
   .report-item {
     display: grid;
-    grid-template-columns: 110px 1fr auto;
+    grid-template-columns: 110px 1fr auto auto;
     gap: 14px;
     align-items: center;
     padding: 12px 16px;
@@ -200,6 +200,8 @@
   }
   .opinion.buy { background: #e3f3ea; color: var(--green); }
   .opinion.none { background: #eef1f4; color: var(--text-muted); }
+  .report-item .target { font-weight: 700; color: var(--text); white-space: nowrap; }
+  .report-item .target.muted { font-weight: 400; color: var(--text-muted); }
 
   .consensus-box {
     background: #eef3f8;
@@ -287,21 +289,11 @@
   }
   .price-chart-meta { display: flex; gap: 20px; font-size: 12.5px; color: var(--text-muted); margin-top: 6px; flex-wrap: wrap; }
   .price-chart-meta strong { color: var(--text); }
-
-  /* volume subchart */
-  .volume-chart-wrap { position: relative; margin-top: 2px; }
-  .volume-chart { width: 100%; height: auto; display: block; overflow: visible; }
-  .volume-chart .grid-line { stroke: var(--pc-grid); stroke-width: 1; }
-  .volume-chart .axis-label { fill: var(--pc-axis); font-size: 10.5px; font-family: inherit; }
-  .volume-chart .vol-bar { fill: #7f92a6; }
-  .volume-chart .vol-bar.crash { fill: var(--down); }
-  .volume-chart .hit-area { fill: transparent; }
-  .volume-chart-tooltip {
-    position: absolute; pointer-events: none; opacity: 0; transition: opacity 0.1s ease;
-    background: var(--navy); color: #fff; padding: 6px 10px; border-radius: 6px;
-    font-size: 12px; white-space: nowrap; transform: translate(-50%, -110%);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
+  .price-chart .vol-bar { fill: #7f92a6; }
+  .price-chart .vol-bar.hover { fill: var(--pc-line); }
+  .price-chart .vol-bar.crash { fill: var(--down); }
+  .price-chart .section-divider { stroke: var(--pc-grid); stroke-width: 1; }
+  .price-chart .vol-caption { fill: var(--text-muted); font-size: 10px; font-family: inherit; }
   .chart-legend.vol-legend { margin-top: 14px; margin-bottom: 0; }
 
   /* TOC */
@@ -542,27 +534,20 @@
 
   <h2 class="section-title" id="sec-4"><span class="num">4</span>최근 20영업일 주가 추이</h2>
   <div class="card price-chart-card">
-    <h3 style="margin-top:0;">최근 20영업일 종가 흐름</h3>
+    <h3 style="margin-top:0;">최근 20영업일 주가·거래량 흐름</h3>
     <div class="price-chart-wrap">
-      <svg class="price-chart" viewBox="0 0 720 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="한화오션 최근 20영업일 종가 추이 차트, 7월 7일~9일 급락 구간 강조">
+      <svg class="price-chart" viewBox="0 0 720 340" preserveAspectRatio="xMidYMid meet" role="img" aria-label="한화오션 최근 20영업일 종가 및 거래량 추이 차트, 7월 7일~9일 급락 구간 강조">
       </svg>
       <div class="price-chart-tooltip" id="priceTooltip-042660"></div>
     </div>
     <div class="price-chart-meta">
       <span id="priceMeta-042660"></span>
     </div>
-
     <div class="chart-legend vol-legend">
       <span><span class="sw" style="background:#7f92a6;"></span>거래량</span>
-      <span><span class="sw" style="background:var(--down);"></span>급락 3거래일(7/7~7/9) 거래량</span>
+      <span><span class="sw" style="background:var(--down);"></span>급락 3거래일(7/7~7/9)</span>
     </div>
-    <div class="volume-chart-wrap">
-      <svg class="volume-chart" id="volumeChart-042660" viewBox="0 0 720 120" preserveAspectRatio="xMidYMid meet" role="img" aria-label="한화오션 최근 20영업일 거래량 차트, 7월 7일~9일 급락 구간 거래량 급증 강조">
-      </svg>
-      <div class="volume-chart-tooltip" id="volumeTooltip-042660"></div>
-    </div>
-
-    <div class="note">7/10은 반등 흐름(약 8만1천원대)이 보도되었으나 확정 종가·거래량 데이터 미확보로 차트에는 미반영했습니다. 파란 음영/막대는 7/7~7/9 급락 3거래일입니다. 해당 구간은 거래량도 평시 대비 크게 증가했습니다. 출처: KRX 정보데이터시스템 일별매매정보.</div>
+    <div class="note">7/10은 반등 흐름(약 8만1천원대)이 보도되었으나 확정 종가·거래량 데이터 미확보로 차트에는 미반영했습니다. 마우스를 주가 그래프 위에 올리면 해당일의 거래량이 함께 강조 표시됩니다. 진한 색으로 표시된 구간은 7/7~7/9 급락 3거래일이며, 해당 구간은 거래량도 평시 대비 크게 증가했습니다. 출처: KRX 정보데이터시스템 일별매매정보.</div>
   </div>
 
   <h2 class="section-title" id="sec-5"><span class="num">5</span>핵심 이슈 상세</h2>
@@ -582,28 +567,32 @@
     <div class="report-list">
       <div class="report-item">
         <div class="firm">NH투자증권</div>
-        <div>캐나다 수주 실패를 반영해 목표주가 하향</div>
-        <div class="opinion none">-</div>
+        <div>캐나다 수주 실패 및 특수선 불확실성 확대를 반영해 목표주가 하향(기존 대비 -28%)</div>
+        <div class="opinion buy">매수</div>
+        <div class="target">126,000원</div>
       </div>
       <div class="report-item">
         <div class="firm">대신증권</div>
-        <div>캐나다 실패가 사업 기반 전체를 훼손한 것은 아니다 — 이집트·콜롬비아·필리핀·사우디 등 추가 수주 가능성, 미국 필리조선소·호주 등 잔여 기회 존재. 과도한 디스카운트는 매수 기회</div>
+        <div>캐나다 실패가 사업 기반 전체를 훼손한 것은 아니다 — 이집트·콜롬비아·필리핀·사우디 등 추가 수주 가능성, 미국 필리조선소·호주 등 잔여 기회 존재. 과도한 디스카운트는 매수 기회. 목표가는 기존 대비 -15.2%</div>
         <div class="opinion buy">매수</div>
+        <div class="target">139,000원</div>
       </div>
       <div class="report-item">
-        <div class="firm">한화증권</div>
-        <div>목표주가는 하향하되 투자의견 BUY 유지</div>
+        <div class="firm">한화투자증권</div>
+        <div>목표주가는 하향하되 투자의견 BUY 유지 (구체 목표가 미확인)</div>
         <div class="opinion buy">매수</div>
+        <div class="target muted">-</div>
       </div>
       <div class="report-item">
         <div class="firm">한국투자증권</div>
-        <div>2분기 연결 매출 4조 8,193억원 전망 등 실적 기대감 제시</div>
-        <div class="opinion none">-</div>
+        <div>2분기 연결 매출 4조 8,193억원 전망 등 실적 기대감 제시. 함정 프리미엄 약화 반영해 목표가 하향(기존 163,000원 → -17.8%)</div>
+        <div class="opinion buy">매수</div>
+        <div class="target">134,000원</div>
       </div>
     </div>
 
     <div class="consensus-box">
-      증권사 목표주가는 상선 실적 가정 차이로 약 4만원의 편차를 보이는 중입니다. 다수 증권사가 목표가를 하향 조정했으나 투자의견(매수)은 유지하는 분위기입니다.
+      캐나다 수주 실패 이후 확인된 증권사 목표주가는 12만 6천~13만 9천원 구간으로 일제히 하향 조정되었습니다(구간 편차 약 1만 3천원). 목표가는 낮췄지만 투자의견(매수)은 대부분 유지하는 분위기입니다.
     </div>
     <div class="note">본 증권사 의견은 언론보도를 통해 확인된 내용을 요약한 것으로, 가공·재해석 없이 원문 취지를 전달합니다. 목표주가 구체 수치가 원자료에 없는 경우 표시하지 않았으며, 투자의견이 확인되지 않은 경우 "-"로 표기했습니다.</div>
   </div>
@@ -691,8 +680,8 @@
     {d:"06/29",v:1043494},{d:"06/30",v:1259330},{d:"07/01",v:1049667},{d:"07/02",v:3173366},{d:"07/03",v:1667061},
     {d:"07/06",v:5006929},{d:"07/07",v:5505662},{d:"07/08",v:3270283},{d:"07/09",v:4572496}
   ];
-  renderPriceChart('042660', priceData);
-  renderVolumeChart('042660', volumeData);
+  var data = priceData.map(function (d, i) { return { d: d.d, c: d.c, v: volumeData[i].v }; });
+  renderPriceChart('042660', data);
 
   function renderPriceChart(code, data) {
     var tooltip = document.getElementById('priceTooltip-' + code);
@@ -701,19 +690,26 @@
     if (!svg) return;
     var meta = document.getElementById('priceMeta-' + code);
 
-    var W = 720, H = 260;
-    var padL = 62, padR = 16, padT = 16, padB = 30;
+    var W = 720, H = 340;
+    var padL = 62, padR = 16, padT = 16;
+    var priceH = 190;
+    var gapH = 14;
+    var volH = 90;
+    var volLabelH = 18;
+    var priceTop = padT, priceBottom = padT + priceH;
+    var volTop = priceBottom + gapH, volBottom = volTop + volH;
     var plotW = W - padL - padR;
-    var plotH = H - padT - padB;
 
     var closes = data.map(function (d) { return d.c; });
+    var vols = data.map(function (d) { return d.v; });
     var min = Math.min.apply(null, closes), max = Math.max.apply(null, closes);
     var range = max - min || 1;
     var padRange = range * 0.10;
     min -= padRange; max += padRange;
+    var volMax = Math.max.apply(null, vols) * 1.12;
 
     function x(i) { return padL + (i / (data.length - 1)) * plotW; }
-    function y(v) { return padT + plotH - ((v - min) / (max - min)) * plotH; }
+    function y(v) { return priceTop + priceH - ((v - min) / (max - min)) * priceH; }
 
     var ns = 'http://www.w3.org/2000/svg';
     function el(tag, attrs) {
@@ -736,14 +732,14 @@
     var crashStart = 16, crashEnd = 18;
     var bandX = x(crashStart) - (x(crashStart) - x(crashStart - 1)) / 2;
     var bandX2 = x(crashEnd) + (x(crashEnd) - x(crashEnd - 1)) / 2;
-    svg.appendChild(el('rect', { class: 'crash-band', x: bandX, y: padT, width: (bandX2 - bandX), height: plotH }));
-    var crashLbl = el('text', { class: 'crash-label', x: (bandX + bandX2) / 2, y: padT + 14, 'text-anchor': 'middle' });
+    svg.appendChild(el('rect', { class: 'crash-band', x: bandX, y: priceTop, width: (bandX2 - bandX), height: volBottom - priceTop }));
+    var crashLbl = el('text', { class: 'crash-label', x: (bandX + bandX2) / 2, y: priceTop + 14, 'text-anchor': 'middle' });
     crashLbl.textContent = '급락 -30% (3거래일)';
     svg.appendChild(crashLbl);
 
     var areaD = 'M' + x(0) + ',' + y(data[0].c);
     data.forEach(function (d, i) { areaD += ' L' + x(i) + ',' + y(d.c); });
-    areaD += ' L' + x(data.length - 1) + ',' + (padT + plotH) + ' L' + x(0) + ',' + (padT + plotH) + ' Z';
+    areaD += ' L' + x(data.length - 1) + ',' + priceBottom + ' L' + x(0) + ',' + priceBottom + ' Z';
     svg.appendChild(el('path', { class: 'price-area', d: areaD }));
 
     var lineD = 'M' + x(0) + ',' + y(data[0].c);
@@ -760,23 +756,47 @@
       return dot;
     });
 
-    var hoverLine = el('line', { class: 'hover-line', x1: 0, x2: 0, y1: padT, y2: padT + plotH });
+    var hoverLine = el('line', { class: 'hover-line', x1: 0, x2: 0, y1: priceTop, y2: volBottom });
     svg.appendChild(hoverLine);
 
+    svg.appendChild(el('line', { class: 'section-divider', x1: padL, x2: W - padR, y1: priceBottom + gapH / 2, y2: priceBottom + gapH / 2 }));
+
+    var gap = plotW / data.length * 0.28;
+    var barW = (plotW / data.length) - gap;
+    var volBars = data.map(function (d, i) {
+      var isCrash = (i >= crashStart && i <= crashEnd);
+      var barH = (d.v / volMax) * volH;
+      var bx = x(i) - barW / 2;
+      var by = volBottom - barH;
+      var bar = el('rect', { class: 'vol-bar' + (isCrash ? ' crash' : ''), x: bx, y: by, width: barW, height: Math.max(barH, 1), rx: 2 });
+      svg.appendChild(bar);
+      return bar;
+    });
+
     [0, 5, 10, 15, data.length - 1].forEach(function (i) {
-      var lbl = el('text', { class: 'axis-label', x: x(i), y: padT + plotH + 20, 'text-anchor': 'middle' });
+      var lbl = el('text', { class: 'axis-label', x: x(i), y: volBottom + volLabelH, 'text-anchor': 'middle' });
       lbl.textContent = data[i].d;
       svg.appendChild(lbl);
     });
 
-    var hit = el('rect', { class: 'hit-area', x: padL, y: padT, width: plotW, height: plotH });
+    var volCaption = el('text', { class: 'vol-caption', x: padL, y: priceBottom + gapH / 2 - 4 });
+    volCaption.textContent = '거래량';
+    svg.appendChild(volCaption);
+
+    var hit = el('rect', { class: 'hit-area', x: padL, y: priceTop, width: plotW, height: volBottom - priceTop });
     svg.appendChild(hit);
+
+    function fmtVol(v) {
+      if (v >= 10000) return (v / 10000).toFixed(1) + '만';
+      return v.toLocaleString();
+    }
 
     function showAt(i) {
       dots.forEach(function (dot, idx) {
         var isCrash = (idx >= crashStart && idx <= crashEnd);
         dot.setAttribute('opacity', (idx === i || isCrash) ? 1 : 0);
       });
+      volBars.forEach(function (bar, idx) { bar.classList.toggle('hover', idx === i); });
       hoverLine.setAttribute('x1', x(i));
       hoverLine.setAttribute('x2', x(i));
       hoverLine.style.opacity = 1;
@@ -784,7 +804,7 @@
       var scale = rect.width / W;
       tooltip.style.left = (x(i) * scale) + 'px';
       tooltip.style.top = (y(data[i].c) * scale) + 'px';
-      tooltip.textContent = data[i].d + '  ' + data[i].c.toLocaleString() + '원';
+      tooltip.textContent = data[i].d + '  ' + data[i].c.toLocaleString() + '원  ·  거래량 ' + fmtVol(data[i].v);
       tooltip.style.opacity = 1;
     }
     function hide() {
@@ -792,6 +812,7 @@
         var isCrash = (idx >= crashStart && idx <= crashEnd);
         dot.setAttribute('opacity', isCrash ? 0.9 : 0);
       });
+      volBars.forEach(function (bar) { bar.classList.remove('hover'); });
       hoverLine.style.opacity = 0;
       tooltip.style.opacity = 0;
     }
@@ -824,97 +845,6 @@
         '<span>구간 최고/최저 <strong>' + Math.max.apply(null, closes).toLocaleString() + ' / ' + Math.min.apply(null, closes).toLocaleString() + '원</strong></span>';
     }
     hide();
-  }
-
-  // ---- Section 4: volume subchart (x-axis aligned with price chart) ----
-  function renderVolumeChart(code, data) {
-    var svg = document.getElementById('volumeChart-' + code);
-    if (!svg) return;
-    var tooltip = document.getElementById('volumeTooltip-' + code);
-
-    var W = 720, H = 120;
-    var padL = 62, padR = 16, padT = 10, padB = 24;
-    var plotW = W - padL - padR;
-    var plotH = H - padT - padB;
-
-    var vols = data.map(function (d) { return d.v; });
-    var maxV = Math.max.apply(null, vols) * 1.08;
-
-    function x(i) { return padL + (i / (data.length - 1)) * plotW; }
-    function y(v) { return padT + plotH - (v / maxV) * plotH; }
-
-    var ns = 'http://www.w3.org/2000/svg';
-    function el(tag, attrs) {
-      var e = document.createElementNS(ns, tag);
-      for (var k in attrs) e.setAttribute(k, attrs[k]);
-      return e;
-    }
-
-    var gridSteps = 2;
-    for (var g = 0; g <= gridSteps; g++) {
-      var gv = maxV * (g / gridSteps);
-      var gy = y(gv);
-      svg.appendChild(el('line', { class: 'grid-line', x1: padL, x2: W - padR, y1: gy, y2: gy }));
-      var lbl = el('text', { class: 'axis-label', x: padL - 8, y: gy + 3, 'text-anchor': 'end' });
-      lbl.textContent = (gv / 10000).toFixed(0) + '만';
-      svg.appendChild(lbl);
-    }
-
-    var crashStart = 16, crashEnd = 18;
-    var groupW = plotW / data.length;
-    var barW = Math.max(groupW * 0.6, 2);
-
-    var bars = data.map(function (d, i) {
-      var isCrash = (i >= crashStart && i <= crashEnd);
-      var bx = x(i) - barW / 2;
-      var by = y(d.v);
-      var bh = Math.max(plotH - (by - padT), 1);
-      var bar = el('rect', {
-        class: 'vol-bar' + (isCrash ? ' crash' : ''),
-        x: bx, y: by, width: barW, height: bh, rx: 1.5
-      });
-      svg.appendChild(bar);
-      return bar;
-    });
-
-    [0, 5, 10, 15, data.length - 1].forEach(function (i) {
-      var lbl = el('text', { class: 'axis-label', x: x(i), y: padT + plotH + 16, 'text-anchor': 'middle' });
-      lbl.textContent = data[i].d;
-      svg.appendChild(lbl);
-    });
-
-    var hit = el('rect', { class: 'hit-area', x: padL, y: padT, width: plotW, height: plotH });
-    svg.appendChild(hit);
-
-    function showAt(i) {
-      var rect = svg.getBoundingClientRect();
-      var scale = rect.width / W;
-      tooltip.style.left = (x(i) * scale) + 'px';
-      tooltip.style.top = (y(data[i].v) * scale) + 'px';
-      tooltip.textContent = data[i].d + '  ' + data[i].v.toLocaleString() + '주';
-      tooltip.style.opacity = 1;
-    }
-    function hide() { tooltip.style.opacity = 0; }
-
-    if (tooltip) {
-      hit.addEventListener('mousemove', function (e) {
-        var rect = svg.getBoundingClientRect();
-        var mx = (e.clientX - rect.left) * (W / rect.width);
-        var i = Math.round(((mx - padL) / plotW) * (data.length - 1));
-        i = Math.max(0, Math.min(data.length - 1, i));
-        showAt(i);
-      });
-      hit.addEventListener('mouseleave', hide);
-      hit.addEventListener('touchstart', function (e) {
-        var touch = e.touches[0];
-        var rect = svg.getBoundingClientRect();
-        var mx = (touch.clientX - rect.left) * (W / rect.width);
-        var i = Math.round(((mx - padL) / plotW) * (data.length - 1));
-        i = Math.max(0, Math.min(data.length - 1, i));
-        showAt(i);
-      }, { passive: true });
-      hide();
-    }
   }
 
   // ---- Section 3: 3-year revenue / operating profit bar chart ----
