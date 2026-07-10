@@ -32,6 +32,8 @@
   }
   a.item:hover { transform: translateX(4px); }
   .doc-icon { font-size: 1.5rem; }
+  .item-text { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
+  .date { font-size: 0.78rem; color: var(--ink-soft); }
 </style>
 </head>
 <body>
@@ -41,14 +43,29 @@
   </div>
   <h1>📈 주식</h1>
   <div class="list">
-    <a class="item" href="../cnn_iran_briefing.html">
+    <a class="item" href="../cnn_iran_briefing.html" data-file="cnn_iran_briefing.html">
       <span class="doc-icon">📄</span>
-      <span>미국-이란 전쟁 속보 브리핑</span>
+      <span class="item-text">
+        <span>미국-이란 전쟁 속보 브리핑</span>
+        <span class="date"></span>
+      </span>
     </a>
-    <a class="item" href="../cnn_semiconductor_ai_briefing.html">
+    <a class="item" href="../cnn_semiconductor_ai_briefing.html" data-file="cnn_semiconductor_ai_briefing.html">
       <span class="doc-icon">📄</span>
-      <span>미국 반도체·AI株 하락 브리핑</span>
+      <span class="item-text">
+        <span>미국 반도체·AI株 하락 브리핑</span>
+        <span class="date"></span>
+      </span>
     </a>
   </div>
+  <script>
+    fetch('../dates.json').then(r => r.json()).then(dates => {
+      document.querySelectorAll('[data-file]').forEach(el => {
+        const key = './' + el.getAttribute('data-file');
+        const d = dates[key] || dates[el.getAttribute('data-file')];
+        if (d) el.querySelector('.date').textContent = '업데이트: ' + d;
+      });
+    }).catch(() => {});
+  </script>
 </body>
 </html>

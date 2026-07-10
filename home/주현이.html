@@ -32,6 +32,8 @@
   }
   a.item:hover { transform: translateX(4px); }
   .doc-icon { font-size: 1.5rem; }
+  .item-text { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
+  .date { font-size: 0.78rem; color: var(--ink-soft); }
   .empty { color: var(--ink-soft); font-size: 0.95rem; margin-top: 2rem; }
 </style>
 </head>
@@ -42,10 +44,22 @@
   </div>
   <h1>👦 주현이</h1>
   <div class="list">
-    <a class="item" href="../겨울방학_탐구보고서_지브리풍.html">
+    <a class="item" href="../겨울방학_탐구보고서_지브리풍.html" data-file="겨울방학_탐구보고서_지브리풍.html">
       <span class="doc-icon">📄</span>
-      <span>겨울방학 탐구 보고서 - 다양한 직업 체험</span>
+      <span class="item-text">
+        <span>겨울방학 탐구 보고서 - 다양한 직업 체험</span>
+        <span class="date"></span>
+      </span>
     </a>
   </div>
+  <script>
+    fetch('../dates.json').then(r => r.json()).then(dates => {
+      document.querySelectorAll('[data-file]').forEach(el => {
+        const key = './' + el.getAttribute('data-file');
+        const d = dates[key] || dates[el.getAttribute('data-file')];
+        if (d) el.querySelector('.date').textContent = '업데이트: ' + d;
+      });
+    }).catch(() => {});
+  </script>
 </body>
 </html>
