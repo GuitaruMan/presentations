@@ -364,9 +364,52 @@ async function handleNewsForeign(query) {
   return { items, sourceType: "yahoo" };
 }
 
+// ---------- AI 분석 캐시 세션 판정 ----------
+// 장 마감 시간대(KST 기준, [[project_stock_dashboard]] 참고)에는 데이터가 갱신되지 않으므로
+// 굳이 Claude API를 다시 호출하지 않고 같은 세션의 캐시를 재사용해 토큰을 절약한다.
+// 국내: KST 19:00~05:00(다음날) 마감 / 해외: KST 08:00~20:00 마감.
+// 마감 구간에 새로 진입한 뒤 그 세션에서의 첫 조회는 캐시가 없으므로 자연히 1회 갱신된다.
+function kstNow() {
+  // Workers 런타임은 시스템 tz가 UTC이므로 KST(UTC+9)를 직접 더해 계산한다.
+  return new Date(Date.now() + 9 * 60 * 60 * 1000);
+}
+
+function analysisSession(market) {
+  const now = kstNow();
+  const hour = now.getUTCHours(); // kstNow는 이미 KST로 shift된 Date이므로 getUTCHours가 KST 시각
+  const dateStr = now.toISOString().slice(0, 10);
+
+  const isKR = market === "KR";
+  const closeStart = isKR ? 19 : 20; // 마감 시작 시각(KST)
+  const closeEnd = isKR ? 5 : 8;     // 마감 종료 시각(다음날, KST)
+
+  const isClosed = hour >= closeStart || hour < closeEnd;
+  if (!isClosed) {
+    // 장중: 캐시를 쓰지 않고 매번 갱신
+    return { cacheable: false, sessionId: null };
+  }
+
+  // 마감 세션의 대표 날짜: 자정 넘어 이어지는 새벽 시간대(hour < closeEnd)는
+  // 전날 저녁부터 시작된 같은 마감 세션이므로 하루 전 날짜로 묶는다.
+  let sessionDate = dateStr;
+  if (hour < closeEnd) {
+    const prev = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    sessionDate = prev.toISOString().slice(0, 10);
+  }
+  return { cacheable: true, sessionId: `${market}:${sessionDate}` };
+}
+
 // ---------- /analysis ----------
 async function handleAnalysis(body, env) {
   const { symbol, name, market, price, changePercent, candles = [], news = [] } = body;
+
+  const session = analysisSession(market);
+  const cacheKey = session.cacheable ? `analysis:${symbol}:${session.sessionId}` : null;
+
+  if (cacheKey && env.ANALYSIS_CACHE) {
+    const cached = await env.ANALYSIS_CACHE.get(cacheKey, "json");
+    if (cached) return { ...cached, cached: true };
+  }
 
   const candleSummary = candles.length
     ? `최근 ${candles.length}거래일: ${candles[0].date} 종가 ${candles[0].close} → ${candles[candles.length - 1].date} 종가 ${candles[candles.length - 1].close} (기간 등락 ${(((candles[candles.length - 1].close - candles[0].close) / candles[0].close) * 100).toFixed(2)}%)`
@@ -415,10 +458,16 @@ ${newsBlock}
     return { text: "AI 분석이 정책상의 이유로 생성되지 않았습니다.", generatedAt: new Date().toISOString() };
   }
   const textBlock = (data.content || []).find((b) => b.type === "text");
-  return {
+  const result = {
     text: textBlock ? textBlock.text : "",
     generatedAt: new Date().toISOString(),
   };
+
+  if (cacheKey && env.ANALYSIS_CACHE) {
+    // 마감 세션이 끝나는 시점(최대 24시간 후) 이후엔 자동 만료되도록 TTL을 넉넉히 둔다.
+    await env.ANALYSIS_CACHE.put(cacheKey, JSON.stringify(result), { expirationTtl: 60 * 60 * 24 });
+  }
+  return result;
 }
 
 // ---------- router ----------
