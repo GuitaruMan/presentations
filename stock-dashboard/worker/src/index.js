@@ -5,7 +5,8 @@
  *
  * Endpoints:
  *   GET  /search?q=          종목 검색 (한국/미국 공통, Yahoo Finance)
- *   GET  /quote?symbol=      현재가 + 최근 20거래일 OHLCV
+ *   GET  /quote?symbol=      현재가 + 최근 20거래일 OHLCV + 증권가 목표주가/투자의견
+ *   GET  /financials?symbol= 최근 4개년 연간 재무 정보 (매출/영업이익/순이익/자본/부채/FCF)
  *   GET  /news?symbol=&name= 관련 뉴스 (한국: 네이버 뉴스 화이트리스트 필터 / 해외: Yahoo Finance 뉴스)
  *   POST /analysis           전문가·AI 종합 분석 (Claude API)
  */
@@ -52,22 +53,142 @@ async function yahooFetch(url) {
   return res.json();
 }
 
+// Yahoo Finance의 quoteSummary / fundamentals-timeseries API는 crumb(쿠키+토큰) 인증을 요구한다.
+// 실패해도 호출부에서 crumb 없이 시도할 수 있도록 예외를 던지지 않고 null을 반환한다.
+function extractCookie(res) {
+  const setCookies = res.headers.getSetCookie
+    ? res.headers.getSetCookie()
+    : [res.headers.get("set-cookie")].filter(Boolean);
+  return setCookies.map((c) => c.split(";")[0]).join("; ");
+}
+
+async function getYahooCrumb() {
+  try {
+    // getcrumb는 쿠키 없이 콜드로 호출하면 401 "Invalid Cookie"를 반환하므로,
+    // 먼저 fc.yahoo.com에 방문해 세션 쿠키(A3 등)를 얻은 뒤 그 쿠키로 getcrumb를 호출해야 한다.
+    const preRes = await fetch("https://fc.yahoo.com", { headers: { "User-Agent": UA } });
+    const preCookie = extractCookie(preRes);
+
+    const res = await fetch("https://query2.finance.yahoo.com/v1/test/getcrumb", {
+      headers: { "User-Agent": UA, ...(preCookie ? { Cookie: preCookie } : {}) },
+    });
+    const cookie2 = extractCookie(res);
+    const cookie = [preCookie, cookie2].filter(Boolean).join("; ");
+    const crumb = (await res.text()).trim();
+    if (!crumb || !cookie) return { crumb: null, cookie: null };
+    return { crumb, cookie };
+  } catch {
+    return { crumb: null, cookie: null };
+  }
+}
+
 // ---------- /search ----------
+// 네이버 증권 자동완성 → Yahoo Finance 심볼로 매핑.
+// 한국(KOSPI/KOSDAQ)과 해외 종목을 한 소스로 처리하며 한글 검색을 지원한다.
+const EXCHANGE_SUFFIX = {
+  KOSPI: ".KS", KOSDAQ: ".KQ",
+  TOKYO: ".T", HONGKONG: ".HK", HK: ".HK",
+  SHANGHAI: ".SS", SHENZHEN: ".SZ", LONDON: ".L", LSE: ".L",
+};
+
+function naverToYahoo(item) {
+  const code = item.code;
+  const type = (item.typeCode || "").toUpperCase();
+  const nation = (item.nationCode || "").toUpperCase();
+  if (nation === "KOR") {
+    return { symbol: code + (type === "KOSDAQ" ? ".KQ" : ".KS"), market: "KR" };
+  }
+  if (nation === "USA") {
+    return { symbol: code, market: "US" }; // NASDAQ/NYSE: 접미사 없음
+  }
+  const suf = EXCHANGE_SUFFIX[type];
+  return { symbol: suf ? code + suf : code, market: "FOREIGN" };
+}
+
 async function handleSearch(query) {
-  const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=10&newsCount=0&lang=ko-KR&region=KR`;
-  const data = await yahooFetch(url);
-  const quotes = (data.quotes || [])
-    .filter((q) => q.quoteType === "EQUITY" && q.symbol)
-    .map((q) => ({
-      symbol: q.symbol,
-      name: q.longname || q.shortname || q.symbol,
-      exchange: q.exchDisp || q.exchange || "",
-      market: marketOf(q.symbol),
-    }));
-  return { results: quotes };
+  const url = `https://ac.stock.naver.com/ac?q=${encodeURIComponent(query)}&target=stock,index`;
+  const res = await fetch(url, { headers: { "User-Agent": UA, Accept: "application/json" } });
+  if (!res.ok) throw new Error(`naver ac fetch failed: ${res.status}`);
+  const data = await res.json();
+  const seen = new Set();
+  const results = [];
+  for (const item of data.items || []) {
+    if (item.category !== "stock") continue;
+    const { symbol, market } = naverToYahoo(item);
+    if (seen.has(symbol)) continue;
+    seen.add(symbol);
+    results.push({
+      symbol,
+      name: item.name,
+      exchange: item.typeName || item.typeCode || "",
+      nation: item.nationName || "",
+      market,
+    });
+    if (results.length >= 10) break;
+  }
+  return { results };
 }
 
 // ---------- /quote ----------
+function pickRaw(field) {
+  if (field == null) return null;
+  if (typeof field === "object") return field.raw ?? null;
+  return field;
+}
+
+async function fetchAnalystInfo(symbol) {
+  const fields = {
+    targetMeanPrice: null,
+    targetHighPrice: null,
+    targetLowPrice: null,
+    targetMedianPrice: null,
+    recommendationKey: null,
+    recommendationMean: null,
+    numberOfAnalystOpinions: null,
+    trailingPE: null,
+    forwardPE: null,
+    dividendYield: null,
+    payoutRatio: null,
+    priceToBook: null,
+    pegRatio: null,
+  };
+  try {
+    const { crumb, cookie } = await getYahooCrumb();
+    const url = `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${encodeURIComponent(symbol)}?modules=financialData,defaultKeyStatistics,summaryDetail${crumb ? `&crumb=${encodeURIComponent(crumb)}` : ""}`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": UA, Accept: "application/json", ...(cookie ? { Cookie: cookie } : {}) },
+    });
+    if (!res.ok) throw new Error(`yahoo fetch failed: ${res.status} ${url}`);
+    const data = await res.json();
+    const result = data.quoteSummary && data.quoteSummary.result && data.quoteSummary.result[0];
+    if (!result) return fields;
+
+    const financialData = result.financialData || {};
+    const summaryDetail = result.summaryDetail || {};
+    const defaultKeyStatistics = result.defaultKeyStatistics || {};
+
+    fields.targetMeanPrice = pickRaw(financialData.targetMeanPrice);
+    fields.targetHighPrice = pickRaw(financialData.targetHighPrice);
+    fields.targetLowPrice = pickRaw(financialData.targetLowPrice);
+    fields.targetMedianPrice = pickRaw(financialData.targetMedianPrice);
+    fields.recommendationKey = pickRaw(financialData.recommendationKey);
+    fields.recommendationMean = pickRaw(financialData.recommendationMean);
+    fields.numberOfAnalystOpinions = pickRaw(financialData.numberOfAnalystOpinions);
+
+    fields.trailingPE = pickRaw(summaryDetail.trailingPE);
+    fields.forwardPE = pickRaw(summaryDetail.forwardPE);
+    fields.dividendYield = pickRaw(summaryDetail.dividendYield);
+    fields.payoutRatio = pickRaw(summaryDetail.payoutRatio);
+
+    fields.priceToBook = pickRaw(defaultKeyStatistics.priceToBook);
+    fields.pegRatio = pickRaw(defaultKeyStatistics.pegRatio);
+
+    return fields;
+  } catch {
+    return fields;
+  }
+}
+
 async function handleQuote(symbol) {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1mo&interval=1d`;
   const data = await yahooFetch(url);
@@ -99,6 +220,8 @@ async function handleQuote(symbol) {
   const change = price != null && prevClose != null ? price - prevClose : null;
   const changePercent = change != null && prevClose ? (change / prevClose) * 100 : null;
 
+  const analystInfo = await fetchAnalystInfo(symbol);
+
   return {
     symbol,
     name: meta.longName || meta.shortName || symbol,
@@ -114,7 +237,72 @@ async function handleQuote(symbol) {
     fiftyTwoWeekLow: meta.fiftyTwoWeekLow,
     marketTime: meta.regularMarketTime ? new Date(meta.regularMarketTime * 1000).toISOString() : null,
     candles,
+    ...analystInfo,
   };
+}
+
+// ---------- /financials ----------
+async function handleFinancials(symbol) {
+  const empty = {
+    symbol,
+    years: [],
+    revenue: [],
+    operatingIncome: [],
+    netIncome: [],
+    equity: [],
+    debt: [],
+    freeCashFlow: [],
+  };
+  try {
+    const types = "annualTotalRevenue,annualOperatingIncome,annualNetIncome,annualStockholdersEquity,annualTotalDebt,annualFreeCashFlow";
+    const { crumb, cookie } = await getYahooCrumb();
+    // period1=0(1970-01-01)은 Yahoo API가 결과를 비워서 반환하므로 실제 존재 가능한 과거 시점을 써야 한다.
+    const period1 = Math.floor(new Date("2000-01-01").getTime() / 1000);
+    const period2 = Math.floor(Date.now() / 1000);
+    const url = `https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${encodeURIComponent(symbol)}?type=${types}&period1=${period1}&period2=${period2}${crumb ? `&crumb=${encodeURIComponent(crumb)}` : ""}`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": UA, Accept: "application/json", ...(cookie ? { Cookie: cookie } : {}) },
+    });
+    if (!res.ok) throw new Error(`yahoo fetch failed: ${res.status} ${url}`);
+    const data = await res.json();
+    const results = (data.timeseries && data.timeseries.result) || [];
+
+    const typeToKey = {
+      annualTotalRevenue: "revenue",
+      annualOperatingIncome: "operatingIncome",
+      annualNetIncome: "netIncome",
+      annualStockholdersEquity: "equity",
+      annualTotalDebt: "debt",
+      annualFreeCashFlow: "freeCashFlow",
+    };
+
+    // year -> { revenue, operatingIncome, ... }
+    const byYear = new Map();
+    const yearSet = new Set();
+
+    for (const item of results) {
+      const metaType = item.meta && item.meta.type && item.meta.type[0];
+      const key = typeToKey[metaType];
+      if (!key) continue;
+      const entries = item[metaType] || [];
+      for (const entry of entries) {
+        if (!entry || !entry.asOfDate) continue;
+        const year = entry.asOfDate.slice(0, 4);
+        yearSet.add(year);
+        if (!byYear.has(year)) byYear.set(year, {});
+        byYear.get(year)[key] = pickRaw(entry.reportedValue);
+      }
+    }
+
+    const years = Array.from(yearSet).sort().slice(-4);
+    const out = { symbol, years };
+    for (const key of Object.values(typeToKey)) {
+      out[key] = years.map((y) => (byYear.get(y) && byYear.get(y)[key] != null ? byYear.get(y)[key] : null));
+    }
+    return out;
+  } catch {
+    return empty;
+  }
 }
 
 // ---------- /news ----------
@@ -250,6 +438,12 @@ export default {
         const symbol = url.searchParams.get("symbol") || "";
         if (!symbol) return json({ error: "symbol required" }, origin, env, 400);
         return json(await handleQuote(symbol), origin, env);
+      }
+
+      if (url.pathname === "/financials" && request.method === "GET") {
+        const symbol = url.searchParams.get("symbol") || "";
+        if (!symbol) return json({ error: "symbol required" }, origin, env, 400);
+        return json(await handleFinancials(symbol), origin, env);
       }
 
       if (url.pathname === "/news" && request.method === "GET") {
