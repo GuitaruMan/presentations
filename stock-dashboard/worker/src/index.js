@@ -311,7 +311,7 @@ function stripHtml(s) {
 }
 
 async function handleNewsKR(name, env) {
-  const url = `https://openapi.naver.com/v1/search/news.json?query=${encodeURIComponent(name)}&display=30&sort=date`;
+  const url = `https://openapi.naver.com/v1/search/news.json?query=${encodeURIComponent(name)}&display=50&sort=date`;
   const res = await fetch(url, {
     headers: {
       "X-Naver-Client-Id": env.NAVER_CLIENT_ID,
@@ -337,6 +337,9 @@ async function handleNewsKR(name, env) {
       };
     })
     .filter((it) => NEWS_WHITELIST.some((domain) => it.source.endsWith(domain)))
+    // 화이트리스트 매체라도 종목명이 본문 주제와 무관하게 스쳐 지나가듯 언급된 기사가 섞여든다.
+    // 제목 또는 설명에 종목명이 실제로 등장하는 기사만 남겨 관련도를 높인다.
+    .filter((it) => it.title.includes(name) || it.description.includes(name))
     .slice(0, 12);
   return { items, sourceType: "naver" };
 }
@@ -389,10 +392,8 @@ ${newsBlock}
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-opus-4-8",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 1500,
-      thinking: { type: "adaptive" },
-      output_config: { effort: "medium" },
       system,
       messages: [{ role: "user", content: userMsg }],
     }),
@@ -450,7 +451,9 @@ export default {
         const symbol = url.searchParams.get("symbol") || "";
         const name = url.searchParams.get("name") || symbol;
         const market = marketOf(symbol);
-        const result = market === "KR" ? await handleNewsKR(name, env) : await handleNewsForeign(name || symbol);
+        // 해외 종목은 name이 한글 표기(예: "엔비디아")일 수 있어 Yahoo 검색에 맞지 않는다.
+        // 티커 심볼 자체로 검색해야 안정적으로 뉴스가 잡힌다.
+        const result = market === "KR" ? await handleNewsKR(name, env) : await handleNewsForeign(symbol.replace(/\.[A-Z]+$/, ""));
         return json(result, origin, env);
       }
 
