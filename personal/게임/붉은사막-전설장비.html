@@ -140,6 +140,28 @@
   .callout-box b { color: var(--accent-bright); }
   .callout-box .violet { color: var(--violet-bright); }
 
+  .ref-video {
+    max-width: 980px; margin: 0 auto 6vh; padding: 0 5vw;
+  }
+  .ref-video a {
+    display: flex; align-items: center; gap: 0.9rem;
+    background: var(--card); border: 1px solid var(--rule); border-radius: 14px;
+    padding: 1.1rem 1.4rem; text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+  .ref-video a:hover { background: var(--card-hover); border-color: var(--accent); transform: translateY(-2px); }
+  .ref-video .yticon {
+    flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px;
+    background: #ff3b30; display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; color: #fff;
+  }
+  .ref-video .text { display: flex; flex-direction: column; gap: 0.15rem; }
+  .ref-video .eyebrow2 {
+    font-family: "Consolas", monospace; font-size: 0.72rem; letter-spacing: 0.1em;
+    color: var(--ink-faint); text-transform: uppercase;
+  }
+  .ref-video .title2 { font-size: 1rem; font-weight: 600; color: var(--accent-bright); }
+
   footer {
     max-width: 980px; margin: 0 auto; padding: 2rem 5vw 4rem;
     color: var(--ink-faint); font-size: 0.78rem; font-family: "Consolas", monospace;
@@ -297,9 +319,18 @@
     </div>
   </div>
 
+  <div class="ref-video">
+    <a href="https://www.youtube.com/watch?v=j0lLIPSJlPM&list=PLPZdW-lG9wDpn98sHYN2P8vb49ugcd9Im" target="_blank" rel="noopener">
+      <span class="yticon">▶</span>
+      <span class="text">
+        <span class="eyebrow2">참고 주소</span>
+        <span class="title2">YouTube 재생목록 — 붉은사막 전설 장비 영상 가이드</span>
+      </span>
+    </a>
+  </div>
+
   <footer>
     <span>원문: 네이버 카페 '풍월량 공식 팬카페' (회원 전용, 원문 URL 비공개)</span>
-    <span>참고 주소: <a href="https://www.youtube.com/watch?v=j0lLIPSJlPM&list=PLPZdW-lG9wDpn98sHYN2P8vb49ugcd9Im" target="_blank" rel="noopener">YouTube 재생목록</a></span>
   </footer>
 
   <script>
