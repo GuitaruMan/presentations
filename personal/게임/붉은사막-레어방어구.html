@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>붉은사막 레어 방어구 획득 가이드</title>
+<style>
+  @font-face {
+    font-family: 'system-serif';
+    src: local('Noto Serif KR');
+  }
+  :root {
+    --bg: #1a1410;
+    --bg-deep: #120d0a;
+    --card: #241c16;
+    --card-hover: #2c2219;
+    --ink: #e8ddd0;
+    --ink-soft: #9c8b78;
+    --ink-faint: #6b5d4e;
+    --accent: #c2542a;
+    --accent-bright: #e0703f;
+    --teal: #4a7a6f;
+    --teal-bright: #6ba396;
+    --rule: #3a2f26;
+    --shadow: rgba(0,0,0,0.5);
+  }
+  :root[data-theme="light"] {
+    --bg: #ece4d6;
+    --bg-deep: #dcd2bf;
+    --card: #f7f1e6;
+    --card-hover: #fffaf0;
+    --ink: #2b2016;
+    --ink-soft: #6b5d4e;
+    --ink-faint: #a3927c;
+    --rule: #d3c4ab;
+    --shadow: rgba(60,45,25,0.15);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(ellipse at top left, rgba(194,84,42,0.08), transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(74,122,111,0.06), transparent 50%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans KR", "Malgun Gothic", -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  a { color: inherit; }
+
+  .topbar {
+    max-width: 980px; margin: 0 auto; padding: 1.4rem 5vw 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.85rem;
+  }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--accent-bright); }
+  .topbar .crumbs span { color: var(--ink-faint); margin: 0 0.4em; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    max-width: 980px; margin: 0 auto; padding: 4vh 5vw 5vh;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .hero .eyebrow {
+    font-family: "Consolas", "D2Coding", monospace;
+    font-size: 0.78rem; letter-spacing: 0.18em; color: var(--accent-bright);
+    text-transform: uppercase; margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.6em;
+  }
+  .hero .eyebrow::before { content: "◆"; font-size: 0.7em; }
+  h1.title {
+    font-family: "Georgia", "Noto Serif KR", serif;
+    font-weight: 900; font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    letter-spacing: -0.01em; margin: 0 0 1.1rem; color: var(--ink);
+    text-shadow: 0 2px 20px var(--shadow);
+  }
+  h1.title em {
+    font-style: normal; color: var(--accent-bright);
+  }
+  .hero p.lede {
+    max-width: 640px; color: var(--ink-soft); font-size: 1.05rem; margin: 0 0 1.6rem;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem;
+    font-family: "Consolas", "D2Coding", monospace; font-size: 0.8rem; color: var(--ink-faint);
+  }
+  .hero-meta b { color: var(--ink-soft); font-weight: 600; }
+
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--rule); border: 1px solid var(--rule); border-radius: 10px;
+    overflow: hidden; margin-top: 2rem;
+  }
+  .stat-strip .cell {
+    background: var(--card); padding: 1rem 1.2rem;
+  }
+  .stat-strip .num {
+    font-family: "Consolas", monospace; font-size: 1.6rem; font-weight: 700; color: var(--accent-bright);
+  }
+  .stat-strip .lbl { font-size: 0.78rem; color: var(--ink-faint); margin-top: 0.2rem; }
+
+  /* ---------- SECTION ---------- */
+  .section {
+    max-width: 980px; margin: 0 auto; padding: 5vh 5vw;
+    border-bottom: 1px solid var(--rule);
+  }
+  .section:last-of-type { border-bottom: none; }
+  .section-head {
+    display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 0.6rem;
+  }
+  .section-head .idx {
+    font-family: "Consolas", monospace; font-size: 0.95rem; color: var(--teal-bright);
+    border: 1px solid var(--teal); border-radius: 6px; padding: 0.15em 0.55em;
+  }
+  .section-head h2 {
+    font-family: "Georgia", "Noto Serif KR", serif; font-size: 1.55rem; margin: 0; color: var(--ink);
+  }
+  .section-sub { color: var(--ink-soft); font-size: 0.92rem; margin: 0 0 2rem 2.7rem; }
+
+  .cards { display: flex; flex-direction: column; gap: 1.6rem; }
+
+  .item-card {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 14px;
+    padding: 1.6rem 1.7rem; box-shadow: 0 4px 18px var(--shadow);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .item-card:hover { background: var(--card-hover); transform: translateY(-2px); }
+
+  .item-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 1rem; margin-bottom: 0.7rem; flex-wrap: wrap;
+  }
+  .item-name {
+    font-family: "Georgia", "Noto Serif KR", serif; font-weight: 700;
+    font-size: 1.22rem; color: var(--accent-bright);
+  }
+  .item-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tag {
+    font-family: "Consolas", monospace; font-size: 0.72rem; letter-spacing: 0.03em;
+    padding: 0.22em 0.6em; border-radius: 999px; border: 1px solid var(--teal);
+    color: var(--teal-bright); white-space: nowrap;
+  }
+  .tag.hot { border-color: var(--accent); color: var(--accent-bright); }
+
+  .item-body { display: grid; grid-template-columns: 1fr 220px; gap: 1.4rem; }
+  @media (max-width: 640px) { .item-body { grid-template-columns: 1fr; } }
+
+  .item-desc { font-size: 0.95rem; color: var(--ink); }
+  .item-desc p { margin: 0 0 0.7rem; }
+
+  .spec-row {
+    display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.6rem 0 1rem;
+  }
+  .spec {
+    font-family: "Consolas", monospace; font-size: 0.78rem;
+    background: var(--bg-deep); border: 1px solid var(--rule); border-radius: 6px;
+    padding: 0.3em 0.6em; color: var(--ink-soft);
+  }
+  .spec b { color: var(--ink); }
+
+  .loc-box {
+    background: var(--bg-deep); border: 1px dashed var(--ink-faint); border-radius: 10px;
+    padding: 0.8rem 0.9rem; font-size: 0.86rem;
+  }
+  .loc-box .loc-label {
+    font-family: "Consolas", monospace; font-size: 0.72rem; letter-spacing: 0.1em;
+    color: var(--accent-bright); text-transform: uppercase; margin-bottom: 0.4em;
+    display: flex; align-items: center; gap: 0.4em;
+  }
+  .loc-box .loc-label::before { content: "📍"; font-size: 0.9em; }
+  .loc-box p { margin: 0; color: var(--ink-soft); }
+
+  .img-row { display: flex; gap: 0.7rem; margin-top: 1rem; flex-wrap: wrap; }
+  .img-row figure {
+    margin: 0; flex: 1 1 140px; min-width: 120px;
+    background: var(--bg-deep); border: 1px solid var(--rule); border-radius: 8px;
+    overflow: hidden;
+  }
+  .img-row img {
+    display: block; width: 100%; height: 110px; object-fit: cover;
+    filter: saturate(0.92) contrast(1.03);
+  }
+  .img-row figcaption {
+    font-family: "Consolas", monospace; font-size: 0.68rem; color: var(--ink-faint);
+    padding: 0.3em 0.5em; text-align: center;
+  }
+
+  /* ---------- TIPS ---------- */
+  .tips {
+    max-width: 980px; margin: 0 auto; padding: 5vh 5vw;
+  }
+  .tips h2 {
+    font-family: "Georgia", "Noto Serif KR", serif; font-size: 1.4rem; margin: 0 0 1.4rem;
+    color: var(--ink);
+  }
+  .tips h2 .mark { color: var(--accent-bright); }
+  .tip-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;
+  }
+  .tip {
+    background: var(--card); border-left: 3px solid var(--teal);
+    border-radius: 0 10px 10px 0; padding: 1rem 1.2rem; font-size: 0.9rem;
+  }
+  .tip .tip-num {
+    font-family: "Consolas", monospace; color: var(--teal-bright); font-size: 0.78rem;
+    display: block; margin-bottom: 0.4em;
+  }
+
+  .callout {
+    max-width: 980px; margin: 0 auto 6vh; padding: 0 5vw;
+  }
+  .callout-box {
+    background: linear-gradient(135deg, rgba(194,84,42,0.14), rgba(74,122,111,0.08));
+    border: 1px solid var(--accent); border-radius: 14px;
+    padding: 1.6rem 1.8rem; font-size: 0.95rem;
+  }
+  .callout-box b { color: var(--accent-bright); }
+
+  footer {
+    max-width: 980px; margin: 0 auto; padding: 2rem 5vw 4rem;
+    color: var(--ink-faint); font-size: 0.78rem; font-family: "Consolas", monospace;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  footer a { color: var(--ink-faint); text-decoration: none; }
+  footer a:hover { color: var(--accent-bright); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="crumbs">
+      <a href="../../index.html">홈</a><span>/</span>
+      <a href="../../personal.html">개인용</a><span>/</span>
+      <a href="../게임.html">게임</a>
+    </div>
+    <span id="updated" style="color:var(--ink-faint)"></span>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">CRIMSON DESERT · FIELD NOTES</div>
+    <h1 class="title">붉은사막, <em>레어 방어구</em>는<br>어디에 숨어 있는가</h1>
+    <p class="lede">
+      폭포 뒤, 바위틈, 유적 옥상의 숨겨진 공간까지 — 초반부터 종결까지 반드시 챙겨야 할
+      레어 방어구 12종의 획득 위치와 스펙을 정리했다. 원문:
+      <a href="https://blog.naver.com/q3857/224264164074" target="_blank" rel="noopener" style="color:var(--teal-bright)">돈 캐는 두더지 블로그</a>
+    </p>
+    <div class="hero-meta">
+      <span><b>부위</b> 장갑 3 · 갑옷/투구 5 · 부츠/망토 4</span>
+      <span><b>주요 지역</b> 에르난도 · 데메니스 · 호헨마르크 · 탈리브 · 파일론</span>
+    </div>
+    <div class="stat-strip">
+      <div class="cell"><div class="num">12</div><div class="lbl">레어 방어구 총 개수</div></div>
+      <div class="cell"><div class="num">15</div><div class="lbl">얼음의 날개 망토 — 필요 성역 수</div></div>
+      <div class="cell"><div class="num">Lv7</div><div class="lbl">저주 접시 세트 최대 내성 수치</div></div>
+    </div>
+  </header>
+
+  <!-- 1. 장갑 -->
+  <section class="section">
+    <div class="section-head">
+      <span class="idx">01</span>
+      <h2>공격과 유틸리티의 핵심 — 장갑</h2>
+    </div>
+    <p class="section-sub">초반 화력, 생활 자원 수급, 생존력을 각각 담당하는 세 가지 장갑</p>
+
+    <div class="cards">
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">타는 불꽃의 플레이트 장갑</span>
+          <div class="item-tags"><span class="tag hot">화염 속성 추가타</span><span class="tag">정신력 회복</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>초반 화력 보강용 1순위 장갑. 어비스 기어 효과 '작열의 화산'으로 화염 속성 공격 시 추가 타격이 발생해, 화염 원소를 습득한 유저라면 반드시 챙겨야 한다.</p>
+            <div class="spec-row">
+              <span class="spec">공격력 <b>14</b></span>
+              <span class="spec">정신력 회복 <b>+0.1/초</b></span>
+            </div>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>에르난도 북동쪽, 거대한 강 폭포 인근 <b>'황혼의 고리 동굴'</b>. 계곡 바닥에 있어 찾기 어려우니 근처 민가를 이정표 삼아 폭포 안쪽으로 진입.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/38703bddd069f5b6257797ccb9d8c93e.png" alt="타는 불꽃의 플레이트 장갑 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/8b2ddb104e3dcc8efb57c09d25dab6f9.png" alt="황혼의 고리 동굴 위치" loading="lazy"><figcaption>동굴 위치</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">황동의 번인의 플레이트 글러브</span>
+          <div class="item-tags"><span class="tag">목재 10% 추가획득</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>전투보다 '내실'을 다지는 유저용. 10% 확률로 목재를 추가 획득하는 생활형 옵션이 붙어 있어 초반 기지 건설·제작에 유용하다.</p>
+            <div class="spec-row">
+              <span class="spec">공격력 <b>13</b></span>
+              <span class="spec">담금질 <b>1단계</b></span>
+            </div>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>에르난도 성 좌측 상단 <b>'사자 크레스트 저택'</b>. 정문은 위병이 지키므로 왼쪽 담벼락을 타고 2층 창문으로 침입 → 1층 통로 우측 방 보물상자 확인.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/e0bea446a18e4dc8cb09edd9cbcdb261.png" alt="황동의 번인의 플레이트 글러브 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/9747eb8d3dbc77c5e3a6f3316bed22ac.png" alt="사자 크레스트 저택 위치" loading="lazy"><figcaption>저택 위치</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">망국의 플레이트 장갑</span>
+          <div class="item-tags"><span class="tag">생명력 자동회복</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>전투가 서툰 초보자의 '생존줄'. 생명력이 자동 회복되고 음식 회복 효율도 올려줘 포션 소모를 줄여준다.</p>
+            <div class="spec-row">
+              <span class="spec">생명력 회복 <b>+0.2/초</b></span>
+              <span class="spec">음식 회복 효율 <b>상승</b></span>
+            </div>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>에르난도 서부 '킬덴 공방'에서 서쪽 강가로 이동하면 나오는 <b>'별 폭풍의 동굴'</b>. 폭포 앞 특이한 표식 바위가 이정표.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/ba9e05719aeb6287ab43772189a5250e.png" alt="망국의 플레이트 장갑 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/3fea1775de14d5ffaf0cd994abf00dcf.png" alt="별 폭풍의 동굴 위치" loading="lazy"><figcaption>동굴 위치</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 2. 갑옷/투구 -->
+  <section class="section">
+    <div class="section-head">
+      <span class="idx">02</span>
+      <h2>생존과 탐험의 필수품 — 갑옷 &amp; 투구</h2>
+    </div>
+    <p class="section-sub">자금 수급, 스킬 빌드 특화, 방한, 기믹용까지 목적별로 나뉘는 다섯 장비</p>
+
+    <div class="cards">
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">망국의 가죽 아머</span>
+          <div class="item-tags"><span class="tag hot">은화 획득률 +10%</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>초반 자금난 해결용. 은화 획득률 보너스에 수영 속도·기력 회복량도 소폭 상승해 탐험 효율이 좋다.</p>
+            <div class="spec-row">
+              <span class="spec">은화 획득 <b>+10%</b></span>
+              <span class="spec">수영 속도 <b>소폭 상승</b></span>
+            </div>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>에르난도 서부 강줄기 <b>'얼어붙은 심장 동굴'</b>. 망국의 장갑을 얻은 뒤 강을 따라 조금 더 이동하면 도착 — 세트로 함께 파밍 추천.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/e00536cd818acc8107cd382db05e1cd2.png" alt="망국의 가죽 아머 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/820b6f7d7d0428c1439a094d76a07fe0.png" alt="얼어붙은 심장 동굴 위치" loading="lazy"><figcaption>동굴 위치</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">망국의 가죽 투구</span>
+          <div class="item-tags"><span class="tag hot">회전 할당 데미지 +35%</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>스킬 '회전 할당'을 주력으로 쓰는 빌드 전용 장비. 해당 스킬 데미지를 35%나 올려주는 대체 불가 옵션.</p>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>에르난도 북서쪽 끝 <b>'축복의 성역'</b>. 마녀 세력 퀘스트를 진행하다 자연스럽게 방문 — 성역 중앙 닫힌 문 앞 등불에 불을 밝히면 문이 열림.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/1120b06f253f584093a4c1dade1aac6f.png" alt="망국의 가죽 투구 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/efa2568963bc2d4a6f7347092a7336ee.png" alt="축복의 성역 위치" loading="lazy"><figcaption>성역 위치</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">저주 접시 투구 &amp; 장갑</span>
+          <div class="item-tags"><span class="tag hot">빙결 내성 Lv7</span><span class="tag">이명 무효화</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>중반 이후 설원 탐색 필수 방한 세트. 장갑은 빙결 내성 Lv7의 압도적 수치를, 투구는 특정 상태이상을 막는 '이명 무효화' 옵션을 가진다.</p>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치 · 투구</div>
+              <p><b>'속죄의 성역'</b> 근처 '말의 바위' 부근. 집 옆 바위밭 안쪽 덩굴로 가려진 공동 안 보물상자.</p>
+            </div>
+            <div class="loc-box" style="margin-top:0.6rem;">
+              <div class="loc-label">획득 위치 · 장갑</div>
+              <p>데메니스 북부 강의 <b>'안개 조각의 동굴'</b> 폭포 안쪽.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/0a38ea3f3da61871772676a7454c632c.png" alt="저주 접시 투구 외형" loading="lazy"><figcaption>투구 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/f27104a15c71cc8a0c32a730b8a8fc69.png" alt="저주 접시 장갑 외형" loading="lazy"><figcaption>장갑 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/6f0b016ccc5cf6288c31fc9446f9d0b3.png" alt="속죄의 성역 위치" loading="lazy"><figcaption>속죄의 성역</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/e1112ca5f82ddca54394abcd206a044c.png" alt="안개 조각의 동굴 위치" loading="lazy"><figcaption>안개 조각의 동굴</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">보스 늑대의 피물</span>
+          <div class="item-tags"><span class="tag">늑대 변장 기믹</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>성능보다 '기믹' 특화 투구. 방어력은 낮지만 늑대로 변장해 적 시야를 피하거나 특정 퀘스트 수행에 요긴하다.</p>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>에르난도 북쪽 <b>'구호 성역'</b> 첫 번째 건물 2층. 적이 떼로 몰려오니 광역 스킬을 준비할 것.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/f9d763f119d38cc34e6c8fea98358f3d.png" alt="보스 늑대의 피물 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/a0c420c079fbe93f826e8fe33a04dbe0.png" alt="구호 성역 위치" loading="lazy"><figcaption>구호 성역 위치</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 3. 부츠/망토 -->
+  <section class="section">
+    <div class="section-head">
+      <span class="idx">03</span>
+      <h2>기동성과 경험치의 완성 — 부츠 &amp; 망토</h2>
+    </div>
+    <p class="section-sub">스킬 성장, 환경 내성, 영지 공헌도, 그리고 최종 보상까지</p>
+
+    <div class="cards">
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">차가운 어둠의 부츠</span>
+          <div class="item-tags"><span class="tag hot">스킬 경험치 +10%</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>붉은사막 전체에서 가장 중요하다고 꼽히는 장비. 스킬 경험치 보너스 10%가 캐릭터 성장에 큰 차이를 만들고, 등반 속도 증가로 절벽 지형 극복에도 최고다.</p>
+            <div class="spec-row">
+              <span class="spec">스킬 경험치 <b>+10%</b></span>
+              <span class="spec">등반 속도 <b>+2%</b></span>
+            </div>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>에르난도 서쪽 끝 <b>'서리 손톱 동굴'</b>. 망국의 가죽 아머를 얻은 뒤 강을 따라 계속 서쪽으로 가면 나오는 폭포 속 보물상자.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/31bf67c1f0949e524353bf0a1c51f141.png" alt="차가운 어둠의 부츠 외형 및 위치" loading="lazy"><figcaption>장비 · 동굴 위치</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">차가운 어둠의 망토</span>
+          <div class="item-tags"><span class="tag hot">화염 내성 Lv7</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>사막 지대의 살인적인 열기를 견디게 해주는 필수 장비. 화염 내성 Lv7로 사막에서 기력이 빠르게 소모되는 현상을 막아준다.</p>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>호헨마르크 유적 큰 건물 옥상. 바닥 무늬가 다른 특정 지점에서 <b>'쪼그리고 장파'</b> 액션을 사용하면 바닥이 뒤집히며 숨겨진 방으로 연결.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/fb173a94010efd3439d9f5499db19471.png" alt="차가운 어둠의 망토 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/aeb75398cdb220ed29d5ee34104c3388.png" alt="호헨마르크 유적 위치" loading="lazy"><figcaption>호헨마르크 유적</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">저주 접시 부츠</span>
+          <div class="item-tags"><span class="tag">공헌도 경험치 +10%</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>영지 공헌도를 높이고 싶은 유저 필수템. 공헌도 경험치 보너스 10%로 마을 평판 작업에 유리하다.</p>
+            <div class="loc-box">
+              <div class="loc-label">획득 위치</div>
+              <p>탈리브 마을 근처 <b>'비극의 샘 동굴'</b> 폭포 내부.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/f27104a15c71cc8a0c32a730b8a8fc69.png" alt="저주 접시 부츠 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/e1112ca5f82ddca54394abcd206a044c.png" alt="비극의 샘 동굴 위치" loading="lazy"><figcaption>비극의 샘 동굴</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card">
+        <div class="item-head">
+          <span class="item-name">얼음의 날개 망토</span>
+          <div class="item-tags"><span class="tag hot">사막 탐험 최종 보상</span></div>
+        </div>
+        <div class="item-body">
+          <div class="item-desc">
+            <p>사막 탐험의 최종 보상 격 장비. 화염 내성이 높고 디자인도 유니크하다.</p>
+            <div class="loc-box">
+              <div class="loc-label">획득 조건</div>
+              <p>월드 전역의 <b>성역 15개소</b>를 모두 정화 → 파일론 지역 미로 숲 <b>'마녀의 집'</b>으로 이동 → 4명의 마녀에게 받은 표식을 문에 꽂고 입장.</p>
+            </div>
+          </div>
+          <div class="img-row">
+            <figure><img src="https://img.gamewith.jp/img/5bc84c8f1f96cfd58196adbe5e7dd658.png" alt="얼음의 날개 망토 외형" loading="lazy"><figcaption>장비 외형</figcaption></figure>
+            <figure><img src="https://img.gamewith.jp/img/9cee7957d335cb77026efca60199a940.png" alt="마녀의 집 위치" loading="lazy"><figcaption>마녀의 집 위치</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- TIPS -->
+  <section class="tips">
+    <h2><span class="mark">🔍</span> 실패 없는 레어 장비 파밍법</h2>
+    <div class="tip-grid">
+      <div class="tip"><span class="tip-num">TIP 1</span>폭포를 의심하라 — 지도상 폭포 표시가 있다면 일단 몸으로 부딪쳐 볼 것. 상당수의 레어 장비가 폭포 뒤에 숨어 있다.</div>
+      <div class="tip"><span class="tip-num">TIP 2</span>표식 바위를 찾아라 — 동굴 입구 근처엔 항상 인위적으로 배치된 바위가 있다. 풀숲에 가려 입구가 안 보일 때 이정표로 삼을 것.</div>
+      <div class="tip"><span class="tip-num">TIP 3</span>장파(Shockwave)를 활용하라 — 보물상자가 안 보이거나 길이 막혔다면 장파 스킬이나 쪼그려 앉기 등 상호작용을 시도. 숨겨진 공간이 열리는 경우가 많다.</div>
+      <div class="tip"><span class="tip-num">TIP 4</span>세트 효과를 고려하라 — 사막에서는 화염 내성 셋, 설원에서는 빙결 내성 셋을 맞추면 생존 시간 자체가 늘어난다.</div>
+    </div>
+  </section>
+
+  <div class="callout">
+    <div class="callout-box">
+      우선순위를 하나만 꼽는다면 <b>'차가운 어둠의 부츠'</b>와 <b>'망국의 가죽 아머'</b>. 스킬 경험치와 은화 획득률 보너스가 초반 성장 속도를 비약적으로 높여주니 가장 먼저 챙길 것.
+    </div>
+  </div>
+
+  <footer>
+    <span>원문: <a href="https://blog.naver.com/q3857/224264164074" target="_blank" rel="noopener">돈 캐는 두더지 — 붉은사막 공략</a></span>
+    <span>이미지 출처: gamewith.jp</span>
+  </footer>
+
+  <script>
+    document.getElementById('updated').textContent =
+      "업데이트: " + new Date().toLocaleString("ko-KR");
+  </script>
+
+</body>
+</html>

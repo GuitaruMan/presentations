@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>붉은사막 전설 장비 위치 정리</title>
+<style>
+  :root {
+    --bg: #14110d;
+    --bg-deep: #0d0a08;
+    --card: #211c14;
+    --card-hover: #29231a;
+    --ink: #ece3d0;
+    --ink-soft: #a3947c;
+    --ink-faint: #6e6252;
+    --accent: #c9972f;
+    --accent-bright: #e8b84c;
+    --violet: #7a5ab0;
+    --violet-bright: #9c7cd4;
+    --rule: #3a3123;
+    --shadow: rgba(0,0,0,0.5);
+  }
+  :root[data-theme="light"] {
+    --bg: #efe8d8;
+    --bg-deep: #e2d9c2;
+    --card: #faf5e8;
+    --card-hover: #fffcf2;
+    --ink: #2c2416;
+    --ink-soft: #6e6252;
+    --ink-faint: #a3947c;
+    --rule: #d8cba7;
+    --shadow: rgba(60,45,10,0.14);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(ellipse at top left, rgba(201,151,47,0.09), transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(122,90,176,0.08), transparent 50%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans KR", "Malgun Gothic", -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  a { color: inherit; }
+
+  .topbar {
+    max-width: 980px; margin: 0 auto; padding: 1.4rem 5vw 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.85rem;
+  }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--accent-bright); }
+  .topbar .crumbs span { color: var(--ink-faint); margin: 0 0.4em; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    max-width: 980px; margin: 0 auto; padding: 4vh 5vw 5vh;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero .eyebrow {
+    font-family: "Consolas", "D2Coding", monospace;
+    font-size: 0.78rem; letter-spacing: 0.18em; color: var(--violet-bright);
+    text-transform: uppercase; margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.6em;
+  }
+  .hero .eyebrow::before { content: "★"; font-size: 0.7em; color: var(--accent-bright); }
+  h1.title {
+    font-family: "Georgia", "Noto Serif KR", serif;
+    font-weight: 900; font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    letter-spacing: -0.01em; margin: 0 0 1.1rem; color: var(--ink);
+    text-shadow: 0 2px 20px var(--shadow);
+  }
+  h1.title em { font-style: normal; color: var(--accent-bright); }
+  .hero p.lede { max-width: 640px; color: var(--ink-soft); font-size: 1.05rem; margin: 0 0 1.6rem; }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem;
+    font-family: "Consolas", "D2Coding", monospace; font-size: 0.8rem; color: var(--ink-faint);
+  }
+  .hero-meta b { color: var(--ink-soft); font-weight: 600; }
+
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+    background: var(--rule); border: 1px solid var(--rule); border-radius: 10px;
+    overflow: hidden; margin-top: 2rem;
+  }
+  @media (max-width: 640px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+  .stat-strip .cell { background: var(--card); padding: 0.9rem 1rem; }
+  .stat-strip .num { font-family: "Consolas", monospace; font-size: 1.5rem; font-weight: 700; color: var(--accent-bright); }
+  .stat-strip .lbl { font-size: 0.74rem; color: var(--ink-faint); margin-top: 0.2rem; }
+
+  /* ---------- nav pills ---------- */
+  .catnav {
+    max-width: 980px; margin: 0 auto; padding: 2rem 5vw 0;
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .catnav a {
+    text-decoration: none; font-size: 0.82rem; font-family: "Consolas", monospace;
+    color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 999px;
+    padding: 0.35em 0.9em; transition: all 0.15s ease;
+  }
+  .catnav a:hover { border-color: var(--accent); color: var(--accent-bright); }
+
+  /* ---------- SECTION ---------- */
+  .section { max-width: 980px; margin: 0 auto; padding: 5vh 5vw; border-bottom: 1px solid var(--rule); scroll-margin-top: 1rem; }
+  .section:last-of-type { border-bottom: none; }
+  .section-head { display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 1.6rem; }
+  .section-head .idx {
+    font-family: "Consolas", monospace; font-size: 0.95rem; color: var(--violet-bright);
+    border: 1px solid var(--violet); border-radius: 6px; padding: 0.15em 0.55em;
+  }
+  .section-head h2 { font-family: "Georgia", "Noto Serif KR", serif; font-size: 1.5rem; margin: 0; color: var(--ink); }
+  .section-head .count { font-size: 0.8rem; color: var(--ink-faint); font-family: "Consolas", monospace; }
+
+  .item-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .item-row {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 10px;
+    padding: 0.9rem 1.2rem; display: flex; gap: 1rem; align-items: flex-start;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .item-row:hover { background: var(--card-hover); transform: translateX(3px); }
+  .item-row .pin { flex-shrink: 0; margin-top: 0.15em; }
+  .item-row .pin::before { content: "📍"; font-size: 0.85em; opacity: 0.85; }
+  .item-row .body { flex: 1; min-width: 0; }
+  .item-row .name {
+    font-family: "Georgia", "Noto Serif KR", serif; font-weight: 700; font-size: 1.02rem;
+    color: var(--accent-bright); margin-right: 0.5em;
+  }
+  .item-row .loc { color: var(--ink-soft); font-size: 0.92rem; }
+  .item-row .loc b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- TIPS ---------- */
+  .callout { max-width: 980px; margin: 0 auto 6vh; padding: 0 5vw; }
+  .callout-box {
+    background: linear-gradient(135deg, rgba(201,151,47,0.14), rgba(122,90,176,0.1));
+    border: 1px solid var(--accent); border-radius: 14px;
+    padding: 1.6rem 1.8rem; font-size: 0.95rem;
+  }
+  .callout-box b { color: var(--accent-bright); }
+  .callout-box .violet { color: var(--violet-bright); }
+
+  footer {
+    max-width: 980px; margin: 0 auto; padding: 2rem 5vw 4rem;
+    color: var(--ink-faint); font-size: 0.78rem; font-family: "Consolas", monospace;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  footer a { color: var(--ink-faint); text-decoration: none; }
+  footer a:hover { color: var(--accent-bright); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="crumbs">
+      <a href="../../index.html">홈</a><span>/</span>
+      <a href="../../personal.html">개인용</a><span>/</span>
+      <a href="../게임.html">게임</a>
+    </div>
+    <span id="updated" style="color:var(--ink-faint)"></span>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">CRIMSON DESERT · LEGENDARY CACHE</div>
+    <h1 class="title">붉은사막, <em>전설 장비</em>는<br>이 자리에 잠들어 있다</h1>
+    <p class="lede">
+      금고, 벽 속, 폭포 뒤, 보스의 전리품까지 — 무기부터 부속품, 탈것까지 전설 등급 41종의
+      획득 위치를 한 화면에 모았다. 원문: <span style="color:var(--ink-faint)">네이버 카페 '풍월량 공식 팬카페' (회원 전용 게시글, 본문 텍스트 기반 정리)</span>
+    </p>
+    <div class="hero-meta">
+      <span><b>총 41종</b> 무기 10 · 방패 2 · 갑옷 22 · 부속품 5 · 탈것 2</span>
+    </div>
+    <div class="stat-strip">
+      <div class="cell"><div class="num">10</div><div class="lbl">무기</div></div>
+      <div class="cell"><div class="num">2</div><div class="lbl">방패</div></div>
+      <div class="cell"><div class="num">22</div><div class="lbl">갑옷</div></div>
+      <div class="cell"><div class="num">5</div><div class="lbl">부속품</div></div>
+      <div class="cell"><div class="num">2</div><div class="lbl">탈것/차량</div></div>
+    </div>
+  </header>
+
+  <nav class="catnav">
+    <a href="#weapons">무기</a>
+    <a href="#shields">방패</a>
+    <a href="#armor">갑옷</a>
+    <a href="#accessories">부속품</a>
+    <a href="#mounts">탈것/차량</a>
+  </nav>
+
+  <!-- 무기 -->
+  <section class="section" id="weapons">
+    <div class="section-head">
+      <span class="idx">01</span>
+      <h2>무기</h2>
+      <span class="count">10종</span>
+    </div>
+    <div class="item-list">
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">고블린 왕의 보물 단검</span><div class="loc">머드리지 오두막 아래 <b>상자</b> 안에 있음</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">폴른 킹덤 하츠: 엘더 월드의 레이피어</span><div class="loc"><b>아이스무어 성 유적</b>의 상자에서 획득 가능</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">공허한 얼굴</span><div class="loc">잃어버린 영혼들의 산, <b>폭포 뒤 새벽 동굴</b>에서</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">환도</span><div class="loc"><b>사자문장 저택</b> 부속 건물 안의 보물 상자 안에 있음</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">레전더리 글라디우스</span><div class="loc"><b>세 성인의 폭포</b>에서 조각상 퍼즐을 풀면 획득</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">채굴용 너클드릴</span><div class="loc">도난당한 채석장 팩션 퀘스트 도중 <b>마니의 엑스카바트론</b> 보스 처치</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">흙의 고리</span><div class="loc"><b>갈대밭 묘지</b>에 있는 무덤 속</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">군주의 검</span><div class="loc">메인 퀘스트 '절벽에서 울려 퍼지는 환호' 도중 <b>뿔 쪼개는 자 카일록</b> 처치</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">시드몬 스피어</span><div class="loc"><b>아이스무어 성 유적</b>의 벽 속에</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">토마소 경비병의 단검, 뾰족한 창</span><div class="loc"><b>아이스무어 성 유적</b>의 벽에서 발견됨</div></div></div>
+    </div>
+  </section>
+
+  <!-- 방패 -->
+  <section class="section" id="shields">
+    <div class="section-head">
+      <span class="idx">02</span>
+      <h2>방패</h2>
+      <span class="count">2종</span>
+    </div>
+    <div class="item-list">
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">로니드 대형 방패</span><div class="loc"><b>라이온크레스트 저택</b> 1층 상자 안</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">밤의 방패 거울</span><div class="loc"><b>속죄의 성소</b>에서 발견됨</div></div></div>
+    </div>
+  </section>
+
+  <!-- 갑옷 -->
+  <section class="section" id="armor">
+    <div class="section-head">
+      <span class="idx">03</span>
+      <h2>갑옷</h2>
+      <span class="count">22종</span>
+    </div>
+    <div class="item-list">
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">양봉복</span><div class="loc">하우스 오브 그레이스의 <b>폴렌그라스 양봉장</b>에서</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">블랙윙 가죽 부츠</span><div class="loc"><b>치유의 집 교회 탑</b>의 가짜 바닥에서 발견됨</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">황동 경비병 장갑</span><div class="loc"><b>라이온크레스트 저택</b> 위층 상자 안 (열쇠 필요)</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">위장복</span><div class="loc"><b>뒷골목 상점</b>에서 판매</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">어둠의 우두머리 천 갑옷</span><div class="loc"><b>폭포 뒤 칼날 동굴</b>에서 획득 가능</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">어둠의 우두머리 천 망토</span><div class="loc"><b>폭포 뒤편 메아리치는 터널</b> 속에서</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">어둠의 우두머리 장갑</span><div class="loc"><b>폭포 뒤 안개 낀 동굴</b>에서</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">어둠의 우두머리 투구</span><div class="loc"><b>폭포 뒤 그림자심장 동굴</b>에서 획득 가능</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">변장 망토</span><div class="loc"><b>뒷골목 상점</b> 상인이 판매</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">황혼송곳니 가죽 갑옷</span><div class="loc">세니아 근처 <b>폭포 뒤편 속삭이는 동굴</b></div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">황혼송곳니 가죽 망토</span><div class="loc"><b>블러드험 하우스 북서쪽 절벽</b>의 작은 동굴에서 발견</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">황혼송곳니 가죽 장갑</span><div class="loc">그레이스 영지 <b>캐슬우드 유적</b>의 상자 안</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">페르멘 판금 투구</span><div class="loc"><b>속죄의 성소</b>에서 발견됨</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">에르난디안 연회 망토</span><div class="loc"><b>금박 상인 임무 7개</b>를 모두 완료하면 획득 가능한 보상</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">점화의 투구</span><div class="loc"><b>횃불 신호</b> 근처 텐트 안</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">지식의 투구</span><div class="loc"><b>스콜라스톤 연구소 도서관</b> 위쪽에 위치</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">폴른 킹덤의 가죽 망토</span><div class="loc"><b>아이스무어 성 유적</b>의 상자에서 획득 가능</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">오덱의 수호자 판금 부츠</span><div class="loc"><b>절제의 성소</b> 안 상자 안</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">해적왕 모자</span><div class="loc"><b>해적선</b> 안에서 '노래하는 메기'</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">몰락한 왕국의 판금 장화</span><div class="loc"><b>나이트스톰 동굴</b>에서 발견</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">순록 망토</span><div class="loc">스콜라스톤 연구소 서쪽 작은 마을, <b>비밀의 벽 뒤편</b></div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">성 할시우스 복장</span><div class="loc"><b>치유의 집</b> 밖에 있는 수상한 남자가 판매</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">스콜라스톤 의상</span><div class="loc">스콜라스톤 퀘스트(메인 미션) 보상, 나머지 세트는 <b>스콜라스톤 연구소 내부 상인</b>에게서 구입</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">석양 갈대 천 장갑</span><div class="loc"><b>갈대 악마 보스</b> 처치 (메인 미션)</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">석양 갈대 가죽 갑옷</span><div class="loc">얼어붙은 영혼의 산 지역, <b>폭포 뒤편 메아리치는 파도 동굴</b>에서 획득 가능</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">석양빛 갈대 가죽 망토</span><div class="loc"><b>성곽 숲 유적</b>의 문 뒤편</div></div></div>
+    </div>
+  </section>
+
+  <!-- 부속품 -->
+  <section class="section" id="accessories">
+    <div class="section-head">
+      <span class="idx">04</span>
+      <h2>부속품</h2>
+      <span class="count">5종</span>
+    </div>
+    <div class="item-list">
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">금으로 조각된 귀걸이</span><div class="loc"><b>라이온크레스트 저택</b> 위층의 금고 안</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">정교하게 제작된 금 목걸이</span><div class="loc"><b>블루몬트 저택</b> 침실의 금고 안에 보관</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">꽃잎 모양 귀걸이</span><div class="loc"><b>머드리지 오두막</b>의 금고 안</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">어둠의 맹세</span><div class="loc"><b>블루몬트 저택</b> 침실의 잠금 상자 안</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">성자의 목걸이</span><div class="loc"><b>언덕 위 저택</b> 2층 금고 안</div></div></div>
+    </div>
+  </section>
+
+  <!-- 탈것 -->
+  <section class="section" id="mounts">
+    <div class="section-head">
+      <span class="idx">05</span>
+      <h2>탈것 / 차량</h2>
+      <span class="count">2종</span>
+    </div>
+    <div class="item-list">
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">클라우드카트</span><div class="loc"><b>글렌브라이트 저택</b>의 비밀 지하실에서 발견된 설계도</div></div></div>
+      <div class="item-row"><span class="pin"></span><div class="body"><span class="name">전설적인 말 로일러</span><div class="loc">지도에서 'P'자 바로 남쪽, <b>'파일룬(Pailune)'</b>이라는 단어가 있는 호수 근처</div></div></div>
+    </div>
+  </section>
+
+  <div class="callout">
+    <div class="callout-box">
+      <span class="violet">전설 장비는 대부분 '금고·잠금 상자·벽 속·폭포 뒤'에 숨어 있다.</span>
+      <b>레어 방어구</b> 파밍과 마찬가지로 폭포와 유적 벽을 의심하고, 저택류는 열쇠나 잠금 해제 아이템을 먼저 챙길 것.
+    </div>
+  </div>
+
+  <footer>
+    <span>원문: 네이버 카페 '풍월량 공식 팬카페' (회원 전용, 원문 URL 비공개)</span>
+    <span>참고 주소: <a href="https://www.youtube.com/watch?v=j0lLIPSJlPM&list=PLPZdW-lG9wDpn98sHYN2P8vb49ugcd9Im" target="_blank" rel="noopener">YouTube 재생목록</a></span>
+  </footer>
+
+  <script>
+    document.getElementById('updated').textContent =
+      "업데이트: " + new Date().toLocaleString("ko-KR");
+  </script>
+
+</body>
+</html>

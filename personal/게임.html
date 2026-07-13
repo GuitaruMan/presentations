@@ -16,6 +16,20 @@
   a.back:hover { color: var(--accent); }
   h1 { font-size: 1.6rem; margin: 0.5rem 0 2.5rem; }
   .empty { color: var(--ink-soft); font-size: 0.95rem; margin-top: 2rem; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem; width: 100%; max-width: 700px;
+  }
+  a.card {
+    background: var(--card); border-radius: 16px; padding: 1.6rem 1.4rem; text-align: left;
+    text-decoration: none; color: var(--ink); box-shadow: 0 4px 16px var(--shadow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  a.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--shadow); }
+  .card .icon2 { font-size: 1.6rem; }
+  .card .label { font-size: 1.02rem; font-weight: 600; }
+  .card .updated { font-size: 0.75rem; color: var(--ink-soft); }
 </style>
 </head>
 <body>
@@ -24,6 +38,23 @@
     <a class="back" href="../index.html">홈으로</a>
   </div>
   <h1>🎮 게임</h1>
-  <div class="empty">아직 등록된 자료가 없습니다.</div>
+  <div class="grid">
+    <a class="card" href="게임/붉은사막-레어방어구.html">
+      <div class="icon2">🛡️</div>
+      <div class="label">붉은사막 - 레어 방어구 획득 가이드</div>
+      <div class="updated" data-updated></div>
+    </a>
+    <a class="card" href="게임/붉은사막-전설장비.html">
+      <div class="icon2">⚔️</div>
+      <div class="label">붉은사막 - 전설 장비 위치 정리</div>
+      <div class="updated" data-updated></div>
+    </a>
+  </div>
+  <script>
+    const now = new Date().toLocaleString("ko-KR");
+    document.querySelectorAll('[data-updated]').forEach(el => {
+      el.textContent = "업데이트: " + now;
+    });
+  </script>
 </body>
 </html>
