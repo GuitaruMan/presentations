@@ -14,12 +14,19 @@
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
 
 // [[feedback_news_source_restriction]] 화이트리스트 — 통신사/경제지/증권사만 허용
+// mk.co.kr(매일경제)은 제외 — 같은 도메인 경로로 매경스포츠/연예 기사(mksports.co.kr로 리다이렉트되는 것 포함)가
+// 섞여 들어와 종목과 무관한 가십성 기사가 다수 노출되는 문제가 있었다.
 const NEWS_WHITELIST = [
   "yna.co.kr", "newsis.com", "news1.kr",
-  "hankyung.com", "markets.hankyung.com", "mk.co.kr", "mt.co.kr",
+  "hankyung.com", "markets.hankyung.com", "mt.co.kr",
   "biz.chosun.com", "edaily.co.kr", "fnnews.com", "sedaily.com", "biz.heraldcorp.com",
+  "asiae.co.kr", "news.einfomax.co.kr", "wowtv.co.kr", "ajunews.com",
+  // 증권사 리서치/뉴스
   "invest.truefriend.com", "file.truefriend.com",
-  "invest.kiwoom.com", "bbn.kiwoom.com", "home.imeritz.com", "samsungpop.com",
+  "invest.kiwoom.com", "bbn.kiwoom.com", "kiwoom.com",
+  "home.imeritz.com", "samsungpop.com",
+  "nhqv.com", "miraeassetsecurities.com", "kbsec.com", "hanaw.com",
+  "meritz.co.kr", "koreainvestment.com", "kiscred.co.kr",
   "thebell.co.kr", "dealsite.co.kr", "smarttoday.co.kr",
   "kind.krx.co.kr",
 ];
