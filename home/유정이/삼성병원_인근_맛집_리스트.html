@@ -78,13 +78,20 @@
   }
   .hero .note {
     display: inline-block;
-    margin-top: 22px;
+    margin-top: 10px;
     font-size: 13px;
     color: var(--ink-soft);
     background: var(--card);
     border: 1px solid var(--line);
     padding: 10px 18px;
     border-radius: 10px;
+  }
+  .hero .note:first-of-type { margin-top: 22px; }
+  .hero .note.updated {
+    color: var(--gold);
+    font-weight: 600;
+    border-color: var(--gold);
+    background: rgba(201,166,107,0.08);
   }
 
   /* ---------- LEGEND / RULE ---------- */
@@ -286,6 +293,7 @@
     <p class="sub">진료 전후 짧은 시간에도 부담 없이 들를 수 있는 곳들로 골랐습니다.<br>
     회식·술자리 느낌의 가게는 빼고, 가까운 순서대로 담았어요.</p>
     <div class="note">📍 기준 지점 : 삼성서울병원 정문(일원로 81) · 거리는 도보 환산 추정치</div>
+    <div class="note updated">업데이트: 2026. 7. 14.</div>
   </header>
 
   <div class="rule"><span>가까운 순</span></div>
