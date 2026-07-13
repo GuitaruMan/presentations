@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>삼성병원 인근 맛집 리스트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF6EF;
+    --card: #FFFFFF;
+    --ink: #2C3B32;
+    --ink-soft: #5C6B60;
+    --coral: #E8785A;
+    --coral-deep: #C85A3E;
+    --gold: #C9A66B;
+    --line: #E7DFD0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(44,59,50,0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ---------- HERO ---------- */
+  header.hero {
+    padding: 72px 0 56px;
+    text-align: center;
+    position: relative;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: var(--coral-deep);
+    font-weight: 600;
+    margin-bottom: 18px;
+    padding: 6px 16px;
+    border: 1px solid var(--coral);
+    border-radius: 999px;
+    background: rgba(232,120,90,0.06);
+  }
+  .hero h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    font-size: clamp(34px, 5.2vw, 54px);
+    line-height: 1.25;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--coral-deep);
+    position: relative;
+  }
+  .hero p.sub {
+    margin-top: 18px;
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .hero .note {
+    display: inline-block;
+    margin-top: 22px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 10px 18px;
+    border-radius: 10px;
+  }
+
+  /* ---------- LEGEND / RULE ---------- */
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 8px 0 34px;
+    color: var(--gold);
+  }
+  .rule::before, .rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .rule span {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  /* ---------- CARD LIST ---------- */
+  main { padding-bottom: 90px; }
+  .list { display: flex; flex-direction: column; gap: 20px; }
+
+  .card {
+    display: grid;
+    grid-template-columns: 156px 1fr;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 1px 2px rgba(44,59,50,0.04);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    position: relative;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(44,59,50,0.12);
+    border-color: var(--coral);
+  }
+  .card:focus-visible {
+    outline: 3px solid var(--coral-deep);
+    outline-offset: 2px;
+  }
+
+  .card .thumb {
+    position: relative;
+    background: #EFE8DA;
+  }
+  .card .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rank-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+
+  .card .body {
+    padding: 18px 22px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+  }
+  .body .top-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .body h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .category-tag {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--coral-deep);
+    background: rgba(232,120,90,0.1);
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .menu-line {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .walk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    border: 1px solid var(--gold);
+    background: rgba(201,166,107,0.12);
+    padding: 4px 11px;
+    border-radius: 999px;
+  }
+  .walk-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .go-hint {
+    margin-left: auto;
+    font-size: 12.5px;
+    color: var(--coral-deep);
+    font-weight: 600;
+    opacity: 0.75;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .card:hover .go-hint { opacity: 1; }
+  .go-hint svg { width: 13px; height: 13px; transition: transform 0.2s ease; }
+  .card:hover .go-hint svg { transform: translateX(3px); }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    text-align: center;
+    padding: 30px 0 60px;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    line-height: 1.8;
+  }
+  footer strong { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    .card { grid-template-columns: 104px 1fr; }
+    .card .body { padding: 14px 16px; }
+    .body h2 { font-size: 18px; }
+    .menu-line { font-size: 13.5px; }
+    .hero { padding: 52px 0 40px; }
+    .go-hint span { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .go-hint svg { transition: none; }
+  }
+
+  .top-nav {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px 24px 0;
+    display: flex;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .top-nav a {
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .top-nav a:hover { color: var(--coral-deep); }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="../유정이.html">&larr; 유정이</a>
+  <a href="../../home.html">가정용</a>
+  <a href="../../index.html">홈으로</a>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="hero-eyebrow">🏥 삼성서울병원 도보권 · 7곳 셀렉션</span>
+    <h1>병원 앞에서,<br><em>혼자여도 편안한</em> 한 끼</h1>
+    <p class="sub">진료 전후 짧은 시간에도 부담 없이 들를 수 있는 곳들로 골랐습니다.<br>
+    회식·술자리 느낌의 가게는 빼고, 가까운 순서대로 담았어요.</p>
+    <div class="note">📍 기준 지점 : 삼성서울병원 정문(일원로 81) · 거리는 도보 환산 추정치</div>
+  </header>
+
+  <div class="rule"><span>가까운 순</span></div>
+
+  <main>
+    <div class="list">
+
+      <a class="card" href="https://map.naver.com/p/search/분타 일원점" target="_blank" rel="noopener">
+        <div class="thumb">
+          <span class="rank-badge">1</span>
+          <img src="https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20250819_285%2F1755576059228LJNtY_JPEG%2Fimage.jpg" alt="분타 일원점" loading="lazy">
+        </div>
+        <div class="body">
+          <div class="top-row">
+            <h2>분타 일원점</h2>
+            <span class="category-tag">베트남음식</span>
+          </div>
+          <p class="menu-line">차돌양지 쌀국수 · 팟타이 · 분짜 · 나시고랭</p>
+          <div class="meta-row">
+            <span class="walk-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              도보 5분 · 약 250m
+            </span>
+            <span class="go-hint">네이버 지도에서 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://map.naver.com/p/search/시올돈 일원점" target="_blank" rel="noopener">
+        <div class="thumb">
+          <span class="rank-badge">2</span>
+          <img src="https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20250417_30%2F1744853008591MgLJz_JPEG%2FIMG_8734.jpg" alt="시올돈 일원점" loading="lazy">
+        </div>
+        <div class="body">
+          <div class="top-row">
+            <h2>시올돈 일원점</h2>
+            <span class="category-tag">돈가스</span>
+          </div>
+          <p class="menu-line">등심카츠정식 · 안심카츠정식 · 치즈카츠정식</p>
+          <div class="meta-row">
+            <span class="walk-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              도보 5분 · 약 260m
+            </span>
+            <span class="go-hint">네이버 지도에서 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://map.naver.com/p/search/신의주찹쌀순대 일원동" target="_blank" rel="noopener">
+        <div class="thumb">
+          <span class="rank-badge">3</span>
+          <img src="https://search.pstatic.net/common?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNjA1MTFfNjYg%2FMDAxNzc4NDc3ODQ2MDQx.2UcXjWrjLOFCT-b0o3IVE7DFvQABHzH62GhQQwdQkkEg.Sua7Hzk-utL923d3bNckWlclz29_CMrd0tB-UObIZ8Qg.JPEG%2F7.JPG&type=fff208_208_ar" alt="신의주찹쌀순대" loading="lazy">
+        </div>
+        <div class="body">
+          <div class="top-row">
+            <h2>신의주찹쌀순대</h2>
+            <span class="category-tag">순대 · 순댓국</span>
+          </div>
+          <p class="menu-line">순대국밥 · 찹쌀순대 · 수육</p>
+          <div class="meta-row">
+            <span class="walk-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              도보 6분 · 약 310m
+            </span>
+            <span class="go-hint">네이버 지도에서 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://map.naver.com/p/search/파파손돈까스 일원점" target="_blank" rel="noopener">
+        <div class="thumb">
+          <span class="rank-badge">4</span>
+          <img src="https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220414_129%2F1649903798756XXJXL_PNG%2F20220413_124051-removebg-preview.png" alt="파파손돈까스" loading="lazy">
+        </div>
+        <div class="body">
+          <div class="top-row">
+            <h2>파파손돈까스</h2>
+            <span class="category-tag">돈가스</span>
+          </div>
+          <p class="menu-line">등심돈까스 · 치즈돈까스 · 미트스파게티 세트</p>
+          <div class="meta-row">
+            <span class="walk-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              도보 7분 · 약 380m
+            </span>
+            <span class="go-hint">네이버 지도에서 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://map.naver.com/p/search/그로타 지간테 파스타" target="_blank" rel="noopener">
+        <div class="thumb">
+          <span class="rank-badge">5</span>
+          <img src="https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20250701_110%2F17513770007332s8s0_JPEG%2F06220104.jpg" alt="그로타 지간테 파스타" loading="lazy">
+        </div>
+        <div class="body">
+          <div class="top-row">
+            <h2>그로타 지간테 파스타</h2>
+            <span class="category-tag">이탈리아음식</span>
+          </div>
+          <p class="menu-line">생트러플 파스타(시그니처) · 봉골레 파스타</p>
+          <div class="meta-row">
+            <span class="walk-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              도보 8분 · 약 400m
+            </span>
+            <span class="go-hint">네이버 지도에서 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://map.naver.com/p/search/사리정 일원동" target="_blank" rel="noopener">
+        <div class="thumb">
+          <span class="rank-badge">6</span>
+          <img src="https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240612_207%2F1718193987287sC5hw_JPEG%2F1686828019406.jpg" alt="사리정" loading="lazy">
+        </div>
+        <div class="body">
+          <div class="top-row">
+            <h2>사리정</h2>
+            <span class="category-tag">국수 전문</span>
+          </div>
+          <p class="menu-line">고기국수 · 유부국수 · 메밀비빔국수</p>
+          <div class="meta-row">
+            <span class="walk-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              도보 9분 · 약 470m
+            </span>
+            <span class="go-hint">네이버 지도에서 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="https://map.naver.com/p/search/장수순대국 일원동" target="_blank" rel="noopener">
+        <div class="thumb">
+          <span class="rank-badge">7</span>
+          <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNjA2MTZfNjEg%2FMDAxNzgxNTczNTU0NzA2.HQHwdqlVIJM47DrvwuU9rFPYc-ab8GtYPOW2PaxzyVUg.sqiKBqswLGxuTpn_3L7R4siBvfnENNRCLvZ7d4YPM0Ag.PNG%2F%25B0%25A5%25BB%25F6_%25C8%25F2%25BB%25F6_%25C0%25BD%25BD%25C4_%25B8%25C0%25C1%25FD_%25C3%25DF%25C3%25B5_%25C0%25CE%25BD%25BA%25C5%25B8%25B1%25D7%25B7%25A5_%25C6%25F7%25BD%25BA%25C6%25AE.png%23900x900&type=f250_208" alt="장수순대국" loading="lazy">
+        </div>
+        <div class="body">
+          <div class="top-row">
+            <h2>장수순대국</h2>
+            <span class="category-tag">순대국</span>
+          </div>
+          <p class="menu-line">순댓국밥 · 내장탕 · 수육</p>
+          <div class="meta-row">
+            <span class="walk-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              도보 13분 · 약 700m
+            </span>
+            <span class="go-hint">네이버 지도에서 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    거리는 병원 정문 좌표 기준 직선거리에 도보 보정을 더한 <strong>추정치</strong>이며, 실제 동선과 다소 차이가 있을 수 있어요.<br>
+    카드를 누르면 네이버 지도에서 해당 가게를 바로 검색해 볼 수 있습니다.
+  </footer>
+</div>
+
+</body>
+</html>
