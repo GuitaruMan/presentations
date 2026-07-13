@@ -79,6 +79,8 @@
   .refresh-btn .spin { display: inline-block; }
   .refresh-btn.loading .spin { animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .home-btn { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); color: var(--accent); }
+  .home-btn:hover { background: var(--accent-soft); }
 
   /* ---------- views ---------- */
   .view { display: none; }
@@ -241,6 +243,7 @@
         <div id="dropdown" class="dropdown"></div>
       </div>
       <button id="refreshAll" class="refresh-btn"><span class="spin">↻</span> 전체 새로고침</button>
+      <button id="homeBtn" class="refresh-btn home-btn" title="워치리스트 홈으로">🏠 홈으로</button>
     </div>
   </header>
 
@@ -437,7 +440,7 @@ function sparkline(candles, cc) {
   </svg>`;
 }
 
-/* ---------- 상세 뷰 (화면 전환) ---------- */
+/* ---------- 상세 뷰 (화면 전환 + 브라우저 히스토리 연동) ---------- */
 let detailSymbol = null;
 
 function showView(name) {
@@ -445,10 +448,15 @@ function showView(name) {
   $("detailView").classList.toggle("active", name === "detail");
 }
 
-function openDetail(w) {
+// 상세 화면 진입 시 히스토리에 상태를 쌓아서, 브라우저 "뒤로가기"가
+// 페이지를 벗어나지 않고 그리드로 돌아오도록 한다.
+function openDetail(w, pushHistory = true) {
   detailSymbol = w.symbol;
   showView("detail");
   window.scrollTo(0, 0);
+  if (pushHistory) {
+    history.pushState({ view: "detail", symbol: w.symbol }, "", "");
+  }
   renderDetailHead(w, quoteCache[w.symbol]);
   $("d-chart").innerHTML = '<div class="muted-note">불러오는 중…</div>';
   $("d-target").innerHTML = '<div class="muted-note">불러오는 중…</div>';
@@ -458,10 +466,31 @@ function openDetail(w) {
   loadDetail(w, false);
 }
 function closeDetail() {
+  // 뒤로가기 버튼 클릭 시: 상세 진입 때 쌓은 히스토리 엔트리를 되돌려
+  // popstate가 실제 뒤로가기와 동일하게 그리드 복귀를 처리하게 한다.
+  if (history.state && history.state.view === "detail") {
+    history.back();
+  } else {
+    showView("grid");
+    detailSymbol = null;
+  }
+}
+function goHome() {
+  // 어느 화면에서 눌러도 워치리스트 홈으로. 상세용 히스토리 엔트리가 쌓여있으면
+  // 그대로 두지 않고 정리해서, 이후 뒤로가기가 다시 상세로 튀지 않게 한다.
+  if (history.state && history.state.view === "detail") {
+    history.back();
+  } else {
+    showView("grid");
+    detailSymbol = null;
+  }
+}
+window.addEventListener("popstate", () => {
   showView("grid");
   detailSymbol = null;
-}
+});
 $("backBtn").addEventListener("click", closeDetail);
+$("homeBtn").addEventListener("click", goHome);
 $("detailRefresh").addEventListener("click", () => {
   const w = watchlist.find((x) => x.symbol === detailSymbol);
   if (w) loadDetail(w, true);
