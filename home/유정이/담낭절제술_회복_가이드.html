@@ -141,6 +141,10 @@
   .why-card svg{ flex:0 0 130px; width:130px; height:130px; }
   .why-card p{ margin:0; font-size:16.5px; color:var(--ink); }
   .why-card strong{ color:var(--berry); }
+  @media (max-width:600px){
+    .why-card{ flex-direction:column; padding:28px 24px; text-align:center; }
+    .why-card svg{ flex:0 0 auto; width:100px; height:100px; }
+  }
 
   /* ===== 타임라인 ===== */
   .timeline{ position:relative; padding-left:2px; }
@@ -253,6 +257,18 @@
   .topnav a{ color:var(--ink-soft); text-decoration:none; }
   .topnav a:hover{ color:var(--leaf-dark); }
   .updated-badge{ font-size:12.5px; color:var(--ink-soft); }
+
+  @media (max-width:600px){
+    .wrap{ padding:0 18px; }
+    section{ padding:60px 0; }
+    .hero{ min-height:auto; padding:50px 18px 40px; }
+    .hero p.lead{ font-size:16px; }
+    .stage{ padding-left:64px; }
+    .stage-dot{ width:48px; height:48px; font-size:12.5px; }
+    .timeline::before{ left:23px; }
+    .stage-body{ padding:18px 20px; }
+    .topnav{ padding:16px 18px 0; font-size:13px; flex-direction:column; align-items:flex-start; gap:6px; }
+  }
 </style>
 </head>
 <body>
