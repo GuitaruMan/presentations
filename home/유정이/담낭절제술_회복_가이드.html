@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>담낭 수술 후, 천천히 회복하는 이야기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6EC;
+    --paper-card:#FFFDF7;
+    --ink:#4A4032;
+    --ink-soft:#7A6E5C;
+    --leaf:#8AA678;
+    --leaf-dark:#5E7A4E;
+    --sun:#E3A857;
+    --sun-soft:#F3D9A8;
+    --sky:#7FA8B8;
+    --sky-soft:#D9E7EA;
+    --berry:#C97B63;
+    --line:#E4DAC4;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Gowun Dodum', sans-serif;
+    line-height:1.75;
+    overflow-x:hidden;
+  }
+  h1,h2,h3, .brush{
+    font-family:'Gaegu', cursive;
+    font-weight:700;
+  }
+  .serif{ font-family:'Gowun Batang', serif; }
+
+  /* 배경 결 텍스처 */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(138,166,120,0.06) 0, transparent 40%),
+      radial-gradient(circle at 85% 60%, rgba(227,168,87,0.08) 0, transparent 45%),
+      radial-gradient(circle at 50% 90%, rgba(127,168,184,0.06) 0, transparent 40%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{ position:relative; z-index:1; max-width:920px; margin:0 auto; padding:0 24px; }
+
+  /* ===== 히어로 ===== */
+  .hero{
+    min-height:92vh;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    text-align:center;
+    position:relative;
+    padding:60px 24px;
+  }
+  .hero-clouds{ position:absolute; inset:0; overflow:hidden; z-index:0; pointer-events:none; }
+  .cloud{ position:absolute; opacity:0.55; animation:drift 60s linear infinite; }
+  .cloud svg{ width:140px; height:auto; }
+  .cloud.c1{ top:8%; left:-10%; animation-duration:70s; }
+  .cloud.c2{ top:20%; left:-15%; animation-duration:90s; animation-delay:-20s; opacity:0.4;}
+  .cloud.c3{ top:55%; left:-12%; animation-duration:80s; animation-delay:-40s; opacity:0.3;}
+  @keyframes drift{ from{ transform:translateX(0);} to{ transform:translateX(130vw);} }
+  @media (prefers-reduced-motion: reduce){ .cloud{ animation:none; } }
+
+  .day-badge{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--paper-card);
+    border:1.5px solid var(--line);
+    border-radius:999px;
+    padding:10px 22px;
+    font-family:'Gowun Dodum', sans-serif;
+    font-size:15px;
+    color:var(--leaf-dark);
+    box-shadow:0 3px 0 rgba(74,64,50,0.06);
+    margin-bottom:28px;
+    z-index:1;
+  }
+  .hero h1{
+    font-size:clamp(34px, 6vw, 58px);
+    line-height:1.35;
+    margin:0 0 20px;
+    color:var(--ink);
+    z-index:1;
+  }
+  .hero h1 .accent{ color:var(--berry); }
+  .hero p.lead{
+    font-size:18px;
+    color:var(--ink-soft);
+    max-width:520px;
+    margin:0 auto;
+    z-index:1;
+  }
+  .hero-bowl{ margin-top:44px; z-index:1; }
+
+  /* ===== 섹션 공통 ===== */
+  section{ position:relative; padding:90px 0; }
+  .eyebrow{
+    font-family:'Gowun Dodum', sans-serif;
+    font-size:14px;
+    letter-spacing:0.08em;
+    color:var(--leaf-dark);
+    background:rgba(138,166,120,0.14);
+    display:inline-block;
+    padding:5px 14px;
+    border-radius:8px;
+    margin-bottom:16px;
+  }
+  h2.section-title{
+    font-size:clamp(26px, 4vw, 36px);
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  .section-desc{
+    color:var(--ink-soft);
+    font-size:16.5px;
+    max-width:640px;
+    margin:0 0 44px;
+  }
+  .reveal{
+    opacity:0; transform:translateY(24px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ===== 왜 저지방인지 섹션 ===== */
+  .why-card{
+    background:var(--paper-card);
+    border:1.5px solid var(--line);
+    border-radius:24px;
+    padding:36px 40px;
+    display:flex; gap:32px; align-items:center;
+    box-shadow:0 6px 0 rgba(74,64,50,0.05);
+  }
+  .why-card svg{ flex:0 0 130px; width:130px; height:130px; }
+  .why-card p{ margin:0; font-size:16.5px; color:var(--ink); }
+  .why-card strong{ color:var(--berry); }
+
+  /* ===== 타임라인 ===== */
+  .timeline{ position:relative; padding-left:2px; }
+  .timeline::before{
+    content:"";
+    position:absolute; left:27px; top:12px; bottom:12px;
+    width:3px;
+    background:repeating-linear-gradient(to bottom, var(--sun-soft) 0 10px, transparent 10px 18px);
+    border-radius:3px;
+  }
+  .stage{ position:relative; padding-left:76px; margin-bottom:40px; }
+  .stage:last-child{ margin-bottom:0; }
+  .stage-dot{
+    position:absolute; left:0; top:0;
+    width:56px; height:56px; border-radius:50%;
+    background:var(--paper-card); border:2.5px solid var(--sun);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Gaegu', cursive; font-size:15px; font-weight:700;
+    color:var(--berry);
+    box-shadow:0 4px 0 rgba(74,64,50,0.06);
+    text-align:center; line-height:1.15;
+  }
+  .stage-body{
+    background:var(--paper-card);
+    border:1.5px solid var(--line);
+    border-radius:18px;
+    padding:22px 26px;
+  }
+  .stage-body h3{ margin:0 0 8px; font-size:21px; color:var(--ink); }
+  .stage-body .tag{
+    display:inline-block; font-family:'Gowun Dodum',sans-serif; font-size:12.5px;
+    background:var(--sky-soft); color:#3D6A78; padding:3px 10px; border-radius:6px; margin-bottom:10px;
+  }
+  .stage-body ul{ margin:10px 0 0; padding-left:20px; }
+  .stage-body li{ margin-bottom:5px; }
+
+  /* ===== 카드 그리드 (좋은음식/피할음식) ===== */
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  @media (max-width:720px){ .grid2{ grid-template-columns:1fr; } }
+  .food-card{
+    border-radius:22px;
+    padding:28px 26px;
+    border:1.5px solid var(--line);
+  }
+  .food-card.good{ background:linear-gradient(180deg, rgba(138,166,120,0.10), rgba(138,166,120,0.02)); }
+  .food-card.bad{ background:linear-gradient(180deg, rgba(201,123,99,0.10), rgba(201,123,99,0.02)); }
+  .food-card h3{ margin:0 0 4px; font-size:22px; display:flex; align-items:center; gap:8px; }
+  .food-card .sub{ font-size:13.5px; color:var(--ink-soft); margin-bottom:16px; }
+  .food-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .food-list li{ display:flex; align-items:flex-start; gap:10px; font-size:15.5px; }
+  .food-list .ico{ flex:0 0 auto; margin-top:1px; }
+  .food-card.good .ico{ color:var(--leaf-dark); }
+  .food-card.bad .ico{ color:var(--berry); }
+
+  /* ===== 운동 섹션 ===== */
+  .exercise-row{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; margin-bottom:20px;
+  }
+  @media (max-width:760px){ .exercise-row{ grid-template-columns:1fr; } }
+  .ex-card{
+    background:var(--paper-card); border:1.5px solid var(--line); border-radius:20px;
+    padding:24px 22px; text-align:center;
+  }
+  .ex-card svg{ width:72px; height:72px; margin-bottom:12px; }
+  .ex-card h4{ margin:0 0 6px; font-family:'Gaegu',cursive; font-size:19px; }
+  .ex-card .when{ font-size:12.5px; color:var(--sky); font-weight:700; margin-bottom:8px; display:block;}
+  .ex-card p{ margin:0; font-size:14.5px; color:var(--ink-soft); }
+  .ex-avoid{
+    background:rgba(201,123,99,0.08);
+    border:1.5px dashed var(--berry);
+    border-radius:18px;
+    padding:20px 24px;
+    font-size:15px;
+    color:var(--ink);
+    display:flex; gap:14px; align-items:flex-start;
+  }
+
+  /* ===== 주의 신호 ===== */
+  .alert-box{
+    background:#FBEDE8;
+    border:1.5px solid #E3B7A8;
+    border-radius:22px;
+    padding:30px 34px;
+  }
+  .alert-box h3{ margin:0 0 14px; color:var(--berry); font-size:22px; display:flex; align-items:center; gap:8px;}
+  .alert-list{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:10px 24px; }
+  @media (max-width:600px){ .alert-list{ grid-template-columns:1fr; } }
+  .alert-list li{ font-size:15px; padding-left:22px; position:relative; }
+  .alert-list li::before{ content:"●"; color:var(--berry); font-size:8px; position:absolute; left:0; top:8px; }
+
+  /* ===== 마무리 ===== */
+  .closing{ text-align:center; padding:80px 0 100px; }
+  .closing svg{ width:110px; height:110px; margin-bottom:20px; }
+  .closing h2{ font-size:28px; margin:0 0 12px; }
+  .closing p{ color:var(--ink-soft); font-size:15.5px; }
+  .disclaimer{
+    max-width:640px; margin:36px auto 0; padding:16px 22px;
+    background:var(--paper-card); border:1px solid var(--line); border-radius:14px;
+    font-size:13px; color:var(--ink-soft); line-height:1.6;
+  }
+
+  footer{ text-align:center; padding:30px 0 50px; font-size:13px; color:var(--ink-soft); }
+
+  .topnav{
+    display:flex; justify-content:space-between; align-items:center;
+    max-width:920px; margin:0 auto; padding:20px 24px 0;
+    font-family:'Gowun Dodum', sans-serif; font-size:14px;
+    position:relative; z-index:2;
+  }
+  .topnav a{ color:var(--ink-soft); text-decoration:none; }
+  .topnav a:hover{ color:var(--leaf-dark); }
+  .updated-badge{ font-size:12.5px; color:var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <span><a href="../유정이.html">&larr; 유정이</a> &nbsp;|&nbsp; <a href="../home.html">가정용</a> &nbsp;|&nbsp; <a href="../../index.html">홈으로</a></span>
+  <span class="updated-badge" id="updated"></span>
+</div>
+
+<div class="wrap">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-clouds">
+      <div class="cloud c1"><svg viewBox="0 0 200 100"><ellipse cx="60" cy="60" rx="55" ry="30" fill="#FFFDF7"/><ellipse cx="110" cy="45" rx="45" ry="35" fill="#FFFDF7"/><ellipse cx="150" cy="65" rx="40" ry="25" fill="#FFFDF7"/></svg></div>
+      <div class="cloud c2"><svg viewBox="0 0 200 100"><ellipse cx="60" cy="60" rx="55" ry="30" fill="#FFFDF7"/><ellipse cx="110" cy="45" rx="45" ry="35" fill="#FFFDF7"/></svg></div>
+      <div class="cloud c3"><svg viewBox="0 0 200 100"><ellipse cx="60" cy="60" rx="45" ry="24" fill="#FFFDF7"/><ellipse cx="105" cy="50" rx="38" ry="28" fill="#FFFDF7"/></svg></div>
+    </div>
+
+    <div class="day-badge">🌿 수술 후 4일째, 이제부터가 진짜 시작이에요</div>
+    <h1>담낭 수술 후,<br><span class="accent">천천히 다시</span> 먹고 걷는 이야기</h1>
+    <p class="lead">담낭을 떼어냈다고 해서 예전처럼 못 먹는 건 아니에요. 다만 몸이 지방을 소화하는 방식이 조금 바뀌었을 뿐이니, 계절이 바뀌듯 천천히 적응해가면 됩니다.</p>
+
+    <div class="hero-bowl">
+      <svg width="150" height="120" viewBox="0 0 150 120" fill="none">
+        <ellipse cx="75" cy="95" rx="55" ry="10" fill="#E4DAC4" opacity="0.5"/>
+        <path d="M20 55 Q20 95 75 95 Q130 95 130 55 Z" fill="#F3D9A8" stroke="#E3A857" stroke-width="2.5"/>
+        <ellipse cx="75" cy="55" rx="55" ry="14" fill="#FBF0DC" stroke="#E3A857" stroke-width="2.5"/>
+        <ellipse cx="75" cy="53" rx="42" ry="9" fill="#FFF8E7"/>
+        <circle cx="60" cy="51" r="3" fill="#8AA678"/>
+        <circle cx="88" cy="49" r="3" fill="#8AA678"/>
+        <circle cx="75" cy="55" r="2.5" fill="#C97B63"/>
+        <path d="M100 30 Q105 20 100 10" stroke="#D9CBB0" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <path d="M75 26 Q80 14 75 4" stroke="#D9CBB0" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ===== 왜 저지방인지 ===== -->
+  <section id="why" class="reveal">
+    <span class="eyebrow">왜 저지방식이 필요할까요</span>
+    <h2 class="section-title">담즙이 쉬어갈 곳을 잃었기 때문이에요</h2>
+    <p class="section-desc">담낭은 간에서 만든 담즙(지방을 분해하는 소화액)을 모아두었다가 기름진 음식이 들어올 때 한꺼번에 내보내는 작은 저장고였어요. 그 저장고가 없어진 지금, 담즙은 간에서 조금씩 계속 흘러나와요. 그래서 한 번에 많은 지방이 들어오면 미처 다 처리하지 못해 설사, 복통, 더부룩함으로 이어질 수 있답니다.</p>
+
+    <div class="why-card">
+      <svg viewBox="0 0 130 130" fill="none">
+        <path d="M65 15 C40 15 25 35 25 60 C25 85 45 110 65 110 C85 110 105 85 105 60 C105 35 90 15 65 15 Z" fill="#F3D9A8" stroke="#E3A857" stroke-width="2.5"/>
+        <path d="M50 45 Q65 35 80 45 Q80 65 65 75 Q50 65 50 45 Z" fill="#8AA678" opacity="0.35"/>
+        <circle cx="65" cy="60" r="6" fill="#7FA8B8"/>
+        <path d="M65 66 L65 90" stroke="#7FA8B8" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+        <path d="M20 60 Q10 60 8 50" stroke="#C97B63" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <p>그래서 지금 필요한 건 금지가 아니라 <strong>속도 조절</strong>이에요. 지방을 아예 끊는 게 아니라, 몸이 새 방식에 익숙해질 때까지 적은 양을 여러 번 나눠 먹는 연습이라고 생각하시면 마음이 한결 편해질 거예요.</p>
+    </div>
+  </section>
+
+  <!-- ===== 타임라인 ===== -->
+  <section id="timeline" class="reveal">
+    <span class="eyebrow">회복 단계별 식단</span>
+    <h2 class="section-title">계절이 바뀌듯, 단계를 밟아가요</h2>
+    <p class="section-desc">지금은 4일째 — 가장 조심스러운 시기예요. 아래 흐름을 참고하되, 몸이 보내는 신호(속이 불편한지, 편한지)를 가장 우선으로 여겨주세요.</p>
+
+    <div class="timeline">
+      <div class="stage">
+        <div class="stage-dot">지금<br>4~7일</div>
+        <div class="stage-body">
+          <span class="tag">🌱 새싹 단계</span>
+          <h3>부드럽게, 소량씩 자주</h3>
+          <ul>
+            <li>죽, 미음, 두부, 삶은 흰살생선, 껍질 벗긴 닭가슴살</li>
+            <li>하루 3끼보다 5~6번으로 나눠서 소량씩</li>
+            <li>기름기 있는 국물보다 맑은 국, 물 자주 마시기</li>
+            <li>급하게 먹지 않고 천천히, 꼭꼭 씹어서</li>
+          </ul>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-dot">1~2<br>주</div>
+        <div class="stage-body">
+          <span class="tag">🌿 잎이 자라는 단계</span>
+          <h3>증상이 없다면 조금씩 다양하게</h3>
+          <ul>
+            <li>밥, 나물, 살코기 반찬 등 일반식에 가까워지되 여전히 저지방 유지</li>
+            <li>기름진 음식을 먹었을 때 몸의 반응을 유심히 살피기</li>
+            <li>설사·복통이 있었던 음식은 잠시 목록에서 빼두기</li>
+          </ul>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-dot">2~3<br>주</div>
+        <div class="stage-body">
+          <span class="tag">🌤 볕이 드는 단계</span>
+          <h3>지방 섭취를 서서히 늘려가요</h3>
+          <ul>
+            <li>견과류, 약간의 기름을 쓴 조리도 소량씩 시도</li>
+            <li>한 번에 많이 늘리지 말고, 하나씩 추가해보며 반응 확인</li>
+          </ul>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-dot">3주~</div>
+        <div class="stage-body">
+          <span class="tag">☀️ 일상으로</span>
+          <h3>대부분 평소 식사로 돌아갈 수 있어요</h3>
+          <ul>
+            <li>다만 튀김·기름진 고기는 여전히 과식하지 않는 습관이 좋아요</li>
+            <li>사람마다 속도가 다르니 조급해하지 않기</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 음식 카드 ===== -->
+  <section id="foods" class="reveal">
+    <span class="eyebrow">무엇을 먹을까요</span>
+    <h2 class="section-title">식탁 위의 두 갈래 길</h2>
+    <div class="grid2">
+      <div class="food-card good">
+        <h3>🍵 곁에 두면 좋은 것</h3>
+        <div class="sub">부드럽고, 소화가 편안한 음식들</div>
+        <ul class="food-list">
+          <li><span class="ico">🌾</span>흰죽, 미음, 진밥</li>
+          <li><span class="ico">🥬</span>삶거나 찐 부드러운 채소</li>
+          <li><span class="ico">🐟</span>흰살생선, 껍질 벗긴 닭가슴살</li>
+          <li><span class="ico">🥣</span>두부, 계란찜 등 순한 단백질</li>
+          <li><span class="ico">💧</span>물, 보리차 등 충분한 수분</li>
+          <li><span class="ico">🍚</span>기름기 없는 맑은 국물</li>
+        </ul>
+      </div>
+      <div class="food-card bad">
+        <h3>🚫 잠시 멀리할 것</h3>
+        <div class="sub">지금 당장은 몸에 부담이 되는 음식들</div>
+        <ul class="food-list">
+          <li><span class="ico">🍤</span>튀김류, 전 종류</li>
+          <li><span class="ico">🥓</span>삼겹살·갈비 등 기름진 고기</li>
+          <li><span class="ico">🧈</span>버터·크림이 많이 든 음식</li>
+          <li><span class="ico">🌶️</span>맵고 짜고 자극적인 양념</li>
+          <li><span class="ico">🥤</span>탄산음료, 카페인</li>
+          <li><span class="ico">🍶</span>술, 과식·급히 먹기</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 운동 섹션 ===== -->
+  <section id="exercise" class="reveal">
+    <span class="eyebrow">몸을 다시 움직이는 법</span>
+    <h2 class="section-title">걷는 것부터, 서두르지 않고</h2>
+    <p class="section-desc">복강경 수술이라도 배 속은 회복 중이에요. 무리한 근력 운동보다는 가벼운 움직임으로 혈액순환을 돕고, 장 운동을 자연스럽게 깨워주는 것이 지금 단계에 가장 좋은 운동이에요.</p>
+
+    <div class="exercise-row">
+      <div class="ex-card">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="20" r="9" fill="#E3A857"/>
+          <path d="M50 30 L50 60" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 38 L30 50" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 38 L70 30" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 60 L35 85" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 60 L65 82" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M15 90 Q50 96 85 90" stroke="#8AA678" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="1 8"/>
+        </svg>
+        <span class="when">지금 ~ 2주</span>
+        <h4>짧은 실내 걷기</h4>
+        <p>하루 여러 번, 5~10분씩 집 안이나 복도를 천천히 걷기. 배에 힘이 들어가지 않게 자세를 편안히.</p>
+      </div>
+      <div class="ex-card">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M20 70 Q50 20 80 70" stroke="#7FA8B8" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="50" cy="30" r="8" fill="#E3A857"/>
+          <path d="M50 38 L50 58" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 45 L38 55" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 45 L62 55" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 58 L42 78" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 58 L58 78" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <span class="when">2주 ~ 4주</span>
+        <h4>산책 & 스트레칭</h4>
+        <p>통증이 없다면 동네 산책으로 시간을 조금씩 늘려요. 목·어깨를 부드럽게 돌리는 가벼운 스트레칭도 좋아요.</p>
+      </div>
+      <div class="ex-card">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="22" r="9" fill="#E3A857"/>
+          <path d="M50 32 L50 55" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 38 L28 30" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 38 L72 30" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 55 L38 80" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 55 L62 80" stroke="#4A4032" stroke-width="4" stroke-linecap="round"/>
+          <path d="M20 60 h14 M66 60 h14" stroke="#C97B63" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="when">4~6주 이후</span>
+        <h4>가벼운 근력 운동</h4>
+        <p>의료진 확인 후 요가, 가벼운 맨몸 운동 등을 조금씩 추가. 복부에 힘이 들어가는 동작은 아직 조심해요.</p>
+      </div>
+    </div>
+
+    <div class="ex-avoid">
+      <span style="font-size:22px;">⚠️</span>
+      <div><strong>지금은 피해주세요 —</strong> 무거운 물건 들기, 윗몸일으키기 등 복압이 강하게 들어가는 동작, 격렬한 유산소 운동. 특히 60대 이후에는 무리보다 꾸준함이 회복에 더 큰 도움이 됩니다.</div>
+    </div>
+  </section>
+
+  <!-- ===== 주의 신호 ===== -->
+  <section id="alert" class="reveal">
+    <div class="alert-box">
+      <h3>🔔 이런 신호가 있다면 병원에 연락하세요</h3>
+      <ul class="alert-list">
+        <li>38도 이상의 발열</li>
+        <li>점점 심해지는 복통</li>
+        <li>피부나 눈이 노랗게 변함 (황달)</li>
+        <li>수술 부위가 붉게 붓거나 진물이 남</li>
+        <li>먹지 못하는 상태가 며칠째 지속</li>
+        <li>심한 구토나 탈수 증상</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 마무리 ===== -->
+  <section class="closing reveal">
+    <svg viewBox="0 0 130 100" fill="none">
+      <ellipse cx="65" cy="90" rx="60" ry="8" fill="#E4DAC4" opacity="0.5"/>
+      <path d="M30 60 Q30 20 65 20 Q100 20 100 60" stroke="#8AA678" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="65" cy="20" r="7" fill="#5E7A4E"/>
+      <circle cx="30" cy="60" r="6" fill="#5E7A4E"/>
+      <circle cx="100" cy="60" r="6" fill="#5E7A4E"/>
+      <path d="M20 75 Q65 95 110 75" stroke="#7FA8B8" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <h2 class="serif">서두르지 않아도 괜찮아요</h2>
+    <p>오늘 하루 잘 드시고, 잠깐 걸으신 것만으로도 충분히 잘하고 계신 거예요.<br>몸이 보내는 신호에 귀 기울이며, 한 걸음씩 나아가시길 바랍니다.</p>
+    <div class="disclaimer">
+      본 페이지는 일반적인 회복 정보를 정리한 참고 자료이며, 의학적 진단이나 처방을 대신하지 않습니다. 실제 식단과 운동 계획은 반드시 수술을 담당한 의료진(외과·영양팀)과 상의하여 결정해 주세요.
+    </div>
+  </section>
+
+</div>
+
+<footer>담낭 절제술 회복을 응원합니다 🌿</footer>
+
+<script>
+  const items = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold:0.12 });
+  items.forEach(el=>io.observe(el));
+
+  document.getElementById('updated').textContent = "업데이트: " + new Date().toLocaleString("ko-KR");
+</script>
+
+</body>
+</html>
