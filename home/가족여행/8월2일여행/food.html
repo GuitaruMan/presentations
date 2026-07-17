@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>맛집 가이드 · 순천 사천 통영 가족여행</title>
+<style>
+  :root{
+    --navy:#0B4F6C; --navy-deep:#083A50; --cream:#F7F3E8;
+    --coral:#FF6B4A; --teal:#2D8577; --ink:#1C2B2E; --paper:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Noto Sans KR','Malgun Gothic',sans-serif;
+    background:var(--cream); color:var(--ink);
+  }
+  a{ color:inherit; }
+  .topbar{
+    position:sticky; top:0; z-index:10;
+    background:rgba(247,243,232,0.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(11,79,108,0.12);
+    padding:16px 24px;
+  }
+  .topbar-inner{
+    max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:10px;
+  }
+  .back{
+    text-decoration:none; font-weight:700; font-size:14px; color:var(--navy);
+    display:flex; align-items:center; gap:6px;
+  }
+  .nav-tabs{ display:flex; gap:8px; }
+  .nav-tabs a{
+    text-decoration:none; font-size:13px; font-weight:700; padding:6px 14px;
+    border-radius:999px; color:var(--navy);
+  }
+  .nav-tabs a.active{ background:var(--coral); color:white; }
+
+  .container{ max-width:900px; margin:0 auto; padding:50px 24px 100px; }
+  .page-title{
+    font-family:'Noto Serif KR', serif; font-weight:900;
+    font-size:clamp(30px,5vw,44px); color:var(--navy-deep); margin-bottom:8px;
+  }
+  .page-sub{ color:#5a6a6d; font-size:15px; margin-bottom:50px; }
+
+  .meal-section{ margin-bottom:56px; }
+  .meal-head{
+    display:flex; align-items:center; gap:12px; margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+  .meal-badge{
+    font-family:'Noto Serif KR', serif; font-weight:800; font-size:13px;
+    color:white; background:var(--navy); padding:6px 14px; border-radius:999px;
+  }
+  .meal-place{ font-size:13px; color:#8a9a9d; font-weight:600; }
+  .meal-title{ font-family:'Noto Serif KR', serif; font-weight:800; font-size:21px; color:var(--navy-deep); }
+  .scroll-hint{ font-size:12px; color:#8a9a9d; font-weight:600; margin-left:auto; }
+  .scroll-hint::before{ content:'← 좌우로 스크롤 →  '; }
+
+  .restaurant-scroll{
+    display:flex; gap:16px; overflow-x:auto; overflow-y:hidden;
+    padding:4px 4px 16px; margin:0 -4px;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+  }
+  .restaurant-scroll::-webkit-scrollbar{ height:8px; }
+  .restaurant-scroll::-webkit-scrollbar-track{ background:rgba(11,79,108,0.06); border-radius:8px; }
+  .restaurant-scroll::-webkit-scrollbar-thumb{ background:rgba(11,79,108,0.25); border-radius:8px; }
+  .restaurant-scroll::-webkit-scrollbar-thumb:hover{ background:rgba(11,79,108,0.4); }
+  .r-card{
+    background:var(--paper); border-radius:16px; padding:20px;
+    box-shadow:0 4px 16px rgba(11,79,108,0.07);
+    border-top:4px solid var(--teal);
+    position:relative;
+    flex:0 0 250px; scroll-snap-align:start;
+  }
+  .r-card.pick{ border-top-color:var(--coral); }
+  .r-card.pick::after{
+    content:'추천'; position:absolute; top:14px; right:14px;
+    font-size:10px; font-weight:900; color:white; background:var(--coral);
+    padding:2px 8px; border-radius:6px;
+  }
+  .r-name{ font-weight:800; font-size:16px; margin-bottom:6px; }
+  .r-loc{ font-size:12px; color:var(--teal); font-weight:700; margin-bottom:8px; }
+  .r-desc{ font-size:13.5px; color:#5a6a6d; line-height:1.55; margin-bottom:10px; }
+  .r-price{
+    font-size:12px; font-weight:800; color:var(--navy);
+    background:rgba(11,79,108,0.06); display:inline-block; padding:3px 9px; border-radius:6px;
+  }
+
+  .market-block{
+    margin-top:70px; background:var(--navy-deep); border-radius:24px; padding:40px 32px; color:white;
+  }
+  .market-block .meal-badge{ background:var(--coral); }
+  .market-block .market-title{
+    font-family:'Noto Serif KR', serif; font-weight:900; font-size:26px; margin:14px 0 6px;
+  }
+  .market-block .market-sub{ font-size:14px; color:rgba(255,255,255,0.7); margin-bottom:26px; }
+  .market-grid{
+    display:flex; gap:16px; overflow-x:auto; overflow-y:hidden;
+    padding:4px 4px 16px; margin:0 -4px;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+  }
+  .market-grid::-webkit-scrollbar{ height:8px; }
+  .market-grid::-webkit-scrollbar-track{ background:rgba(255,255,255,0.08); border-radius:8px; }
+  .market-grid::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.3); border-radius:8px; }
+  .m-card{
+    background:rgba(255,255,255,0.08); border-radius:14px; padding:18px;
+    border:1px solid rgba(255,255,255,0.12);
+    flex:0 0 230px; scroll-snap-align:start;
+  }
+  .m-name{ font-weight:800; font-size:15px; margin-bottom:6px; color:#FFD9CC; }
+  .m-desc{ font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; }
+  .market-info{
+    margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .market-info span{
+    font-size:12px; font-weight:700; background:rgba(255,255,255,0.1);
+    padding:5px 12px; border-radius:8px;
+  }
+  .market-note{
+    margin-top:20px; font-size:13px; color:rgba(255,255,255,0.75); line-height:1.6;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="index.html">← 홈</a>
+    <div class="nav-tabs">
+      <a href="itinerary.html">일정표</a>
+      <a class="active" href="food.html">맛집 가이드</a>
+    </div>
+    <a class="back" href="../가족여행.html">가족 여행 목록</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="page-title">맛집 가이드</div>
+  <div class="page-sub">끼니별로 골라둔 순천 · 사천 · 통영 맛집</div>
+
+  <!-- 1일차 점심 -->
+  <div class="meal-section">
+    <div class="meal-head">
+      <span class="meal-badge">DAY1 점심</span>
+      <span class="meal-title">순천 웃장 국밥거리</span>
+      <span class="meal-place">북문길 40 일대</span>
+      <span class="scroll-hint"></span>
+    </div>
+    <div class="restaurant-scroll">
+      <div class="r-card pick">
+        <div class="r-name">웃장가마솥국밥</div>
+        <div class="r-loc">북문길 40, 조선다방 앞</div>
+        <div class="r-desc">가마솥 방식 돼지국밥. 무난한 대중적 맛으로 확정 선택.</div>
+        <span class="r-price">국밥 9천원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">제일식당</div>
+        <div class="r-loc">같은 국밥거리</div>
+        <div class="r-desc">원조격 돼지국밥, 수육 기본 제공. 회전 빠른 편이라 늦은 점심 단체석에 안정적.</div>
+        <span class="r-price">국밥 9천~1만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">순복식당</div>
+        <div class="r-loc">같은 국밥거리</div>
+        <div class="r-desc">국밥거리의 시초격. 오후 3시경 조기 마감이 잦아 늦은 점심엔 다소 위험.</div>
+        <span class="r-price">국밥 9천~1만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">신화식당</div>
+        <div class="r-loc">웃장 국밥거리, 북문길 40</div>
+        <div class="r-desc">돼지국밥, 국밥 2개 주문 시 수육 서비스로 인심 좋기로 유명.</div>
+        <span class="r-price">국밥 1만원 내외</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">괴목국밥</div>
+        <div class="r-loc">신화식당 인근, 같은 국밥거리</div>
+        <div class="r-desc">현지인 이용 많은 국밥거리 내 또 다른 노포.</div>
+        <span class="r-price">국밥 9천~1만원대</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1일차 저녁 -->
+  <div class="meal-section">
+    <div class="meal-head">
+      <span class="meal-badge">DAY1 저녁</span>
+      <span class="meal-title">순천 시내 (국가정원 야간개장 전)</span>
+      <span class="meal-place">연향동 일대</span>
+      <span class="scroll-hint"></span>
+    </div>
+    <div class="restaurant-scroll">
+      <div class="r-card pick">
+        <div class="r-name">맛꾼</div>
+        <div class="r-loc">연향3지구, 국가정원 도보권</div>
+        <div class="r-desc">코다리찜/조림 전문. 단체룸 있어 전화 예약 시 지정 가능, 아이들도 무난.</div>
+        <span class="r-price">1인 1.5만원 내외</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">풍미통닭</div>
+        <div class="r-loc">연향동 팔마1길</div>
+        <div class="r-desc">순천 현지인 통닭 맛집. 인기가 많아 웨이팅 있음, 예약 권장.</div>
+        <span class="r-price">통닭 2만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">순천조개창고</div>
+        <div class="r-loc">해룡면 신대2길 15, 신대지구</div>
+        <div class="r-desc">조개구이+삼겹살 육해공 무한리필, 아이들 좋아하는 인형뽑기 비치.</div>
+        <span class="r-price">1인 3만원대 무한리필</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">신화정</div>
+        <div class="r-loc">연향동</div>
+        <div class="r-desc">한정식 상차림, 단체석 보유해 4가족 함께 앉기 좋음.</div>
+        <span class="r-price">1인 2만원대</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2일차 점심 -->
+  <div class="meal-section">
+    <div class="meal-head">
+      <span class="meal-badge">DAY2 점심</span>
+      <span class="meal-title">사천 (아쿠아리움 · 항공우주박물관 인근)</span>
+      <span class="meal-place">사천시</span>
+      <span class="scroll-hint"></span>
+    </div>
+    <div class="restaurant-scroll">
+      <div class="r-card pick">
+        <div class="r-name">우도전복죽</div>
+        <div class="r-loc">노산공원길 53, 아쿠아리움 인근</div>
+        <div class="r-desc">전복죽·전복물회 전문. 아기의자 있음, 죽 형태라 유치원생도 먹기 쉬움.</div>
+        <span class="r-price">전복죽 1.6만원 / 물회 1.9만원</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">앞뜰식당</div>
+        <div class="r-loc">항공우주박물관 인근</div>
+        <div class="r-desc">백반 스타일, 브레이크타임 없이 영업해 단체 시간 조율이 쉬움.</div>
+        <span class="r-price">백반 1만원 내외</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">진가옥</div>
+        <div class="r-loc">항공우주박물관 인근</div>
+        <div class="r-desc">돼지국밥 전문, 한옥풍 인테리어.</div>
+        <span class="r-price">국밥 1만원 내외</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">제주전복물회</div>
+        <div class="r-loc">사천대로 762</div>
+        <div class="r-desc">전복물회·전복솥밥·굴솥밥, 아기의자 있어 유아 동반 용이.</div>
+        <span class="r-price">1인 1.5~2만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">배말칼국수김밥 사천케이블카점</div>
+        <div class="r-loc">군영숲길 73</div>
+        <div class="r-desc">배말톳김밥+칼국수, 현지인 줄서는 가성비 맛집.</div>
+        <span class="r-price">1인 1만원 내외</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2일차 저녁 -->
+  <div class="meal-section">
+    <div class="meal-head">
+      <span class="meal-badge">DAY2 저녁</span>
+      <span class="meal-title">통영 강구안 · 중앙동</span>
+      <span class="meal-place">항남동 일대</span>
+      <span class="scroll-hint"></span>
+    </div>
+    <div class="restaurant-scroll">
+      <div class="r-card pick">
+        <div class="r-name">일미삼겹살 항남점</div>
+        <div class="r-loc">여객선터미널 인근</div>
+        <div class="r-desc">삼겹살+장어구이 조합, 가성비 좋고 아이들도 무난히 먹을 수 있음.</div>
+        <span class="r-price">1인 2만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">들물다찌</div>
+        <div class="r-loc">강구안, 항남동</div>
+        <div class="r-desc">신상 다찌집, 한상차림. 초등학생 이하도 이용 가능한 후기 다수.</div>
+        <span class="r-price">1인 5~6만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">해송다찌</div>
+        <div class="r-loc">강구안·중앙시장 인근</div>
+        <div class="r-desc">물회, 간장게장, 멍게비빔밥 등 추가 가능한 해산물 코스.</div>
+        <span class="r-price">1인 5만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">다담아해물뚝배기</div>
+        <div class="r-loc">항남5길 12-5</div>
+        <div class="r-desc">굴·해물 가득한 뚝배기, 재방문 후기 많은 스테디 맛집. 국물요리라 아이도 먹기 편함.</div>
+        <span class="r-price">2인 4~5만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">동피랑전복마을</div>
+        <div class="r-loc">동호동 해송정2길 29, 대풍관 2층</div>
+        <div class="r-desc">전복돌솥밥 전문, 방송 출연으로 유명. 웨이팅 있어 예약 권장.</div>
+        <span class="r-price">1인 2~3만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">회운정</div>
+        <div class="r-loc">항남동 동충2길 39, 여객선터미널 인근</div>
+        <div class="r-desc">갈치조림 등 솥밥 정식, 좌식·단체석 가능한 가족모임 맛집.</div>
+        <span class="r-price">1인 2만원대</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3일차 점심 -->
+  <div class="meal-section">
+    <div class="meal-head">
+      <span class="meal-badge">DAY3 점심</span>
+      <span class="meal-title">통영 (여객선터미널 근처, 귀가 전 마지막 식사)</span>
+      <span class="meal-place">서호동 일대</span>
+      <span class="scroll-hint"></span>
+    </div>
+    <div class="restaurant-scroll">
+      <div class="r-card pick">
+        <div class="r-name">원조소문난3대김밥</div>
+        <div class="r-loc">통영여객선터미널 인근</div>
+        <div class="r-desc">충무김밥+시락국. 회전 빠르고 포장도 가능해 배 시간에 쫓길 때 실용적.</div>
+        <span class="r-price">1인 7천~9천원</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">나포리 충무김밥</div>
+        <div class="r-loc">서호동, 서호시장 인근</div>
+        <div class="r-desc">정통 충무김밥, 포장 용이.</div>
+        <span class="r-price">1인 7천~9천원</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">문수랑 생선구이</div>
+        <div class="r-loc">중앙시장2길 15</div>
+        <div class="r-desc">생선구이+멸치쌈밥 계절밥상, 동피랑·서피랑 관광 동선과 가까움.</div>
+        <span class="r-price">1인 1.5만원대</span>
+      </div>
+      <div class="r-card">
+        <div class="r-name">충청도회초장 통영행복밥상</div>
+        <div class="r-loc">강구안길 29-1</div>
+        <div class="r-desc">회+초장 밥상, 강구안 인근이라 접근성 좋음.</div>
+        <span class="r-price">1인 1.5~2만원대</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 통영 중앙시장 -->
+  <div class="market-block">
+    <span class="meal-badge">DAY2 저녁 · DAY3 아침 산책</span>
+    <div class="market-title">통영 중앙시장</div>
+    <div class="market-sub">숙소 바로 근처 · 강구안 옆, 동피랑까지 도보 3~7분</div>
+    <div class="market-grid">
+      <div class="m-card">
+        <div class="m-name">뚱보할매김밥집</div>
+        <div class="m-desc">통영해안로 325. 충무김밥+시락국, 06:00~22:00 영업. 웨이팅 있지만 회전 빠름.</div>
+      </div>
+      <div class="m-card">
+        <div class="m-name">오미사꿀빵</div>
+        <div class="m-desc">중앙시장1길 14-18 인근. 꿀빵·멍게꿀빵 등, 아이 간식·선물용으로 좋음.</div>
+      </div>
+      <div class="m-card">
+        <div class="m-name">동피랑쭈굴</div>
+        <div class="m-desc">중앙시장 도보 3~5분. 굴/쭈꾸미 요리 전문, 가족 단위 식사에 적합.</div>
+      </div>
+      <div class="m-card">
+        <div class="m-name">충무멸치쌈밥</div>
+        <div class="m-desc">중앙시장2길 22, 시장 내. 멸치쌈밥+멸치회, 접근 쉽고 최신 후기 다수.</div>
+      </div>
+      <div class="m-card">
+        <div class="m-name">명가꿀빵</div>
+        <div class="m-desc">시장 입구, 통영해안로 337-2. 백년가게 지정, 수제 반죽 꿀빵.</div>
+      </div>
+      <div class="m-card">
+        <div class="m-name">중앙활어시장</div>
+        <div class="m-desc">중앙시장1길 일대. 활어 직접 골라 회+매운탕, 아이는 매운탕·튀김 위주로 즐길 수 있음.</div>
+      </div>
+    </div>
+    <div class="market-info">
+      <span>운영 08:30~21:30 (점포별 상이)</span>
+      <span>정기휴일 없음 (상점별 자율휴무)</span>
+      <span>야시장 형태 아님, 저녁도 정상영업</span>
+    </div>
+    <div class="market-note">
+      숙소가 강구안·중앙동 근처라 2일차 저녁식사 후, 또는 3일차 아침 장사도 배 타기 전 짧게 들르기 좋습니다. 충무김밥·꿀빵·오징어순대 등 아이들도 부담 없이 먹을 수 있는 먹거리가 많고, 동피랑 벽화마을까지 걸어서 이어지니 저녁 산책 코스로 묶어도 좋습니다.
+    </div>
+  </div>
+</div>
+</body>
+</html>
