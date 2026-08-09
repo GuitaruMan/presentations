@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영덕 1박 2일 — 선택지 정리</title>
+<style>
+  :root{
+    --deep:#0E2438;
+    --deep-2:#16344E;
+    --shell:#D9532F;
+    --shell-soft:#E8825F;
+    --foam:#EAF0F4;
+    --paper:#FFFFFF;
+    --ink:#14202C;
+    --ink-soft:#5A6B7A;
+    --line:#C9D6DF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --foam:#0D1922; --paper:#152431; --ink:#E6EDF3; --ink-soft:#9AAAB8;
+      --line:#294055; --deep:#DCE7EF; --deep-2:#B9CCDC;
+    }
+  }
+  :root[data-theme="dark"]{
+    --foam:#0D1922; --paper:#152431; --ink:#E6EDF3; --ink-soft:#9AAAB8;
+    --line:#294055; --deep:#DCE7EF; --deep-2:#B9CCDC;
+  }
+  :root[data-theme="light"]{
+    --foam:#EAF0F4; --paper:#FFFFFF; --ink:#14202C; --ink-soft:#5A6B7A;
+    --line:#C9D6DF; --deep:#0E2438; --deep-2:#16344E;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Noto Sans KR','Malgun Gothic',sans-serif;
+    background:var(--foam); color:var(--ink);
+    line-height:1.7; -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px;}
+
+  .nav{display:flex; gap:18px; padding:18px 0; font-size:.85rem;}
+  .nav a{color:var(--ink-soft); text-decoration:none;}
+  .nav a:hover,.nav a:focus-visible{color:var(--shell);}
+
+  header{padding:48px 0 40px; border-bottom:3px solid var(--deep);}
+  .kicker{
+    font-size:.72rem; letter-spacing:.26em; font-weight:800;
+    color:var(--shell); margin-bottom:14px;
+  }
+  h1{
+    font-family:'Noto Serif KR',serif; font-weight:900;
+    font-size:clamp(30px,5.4vw,52px); line-height:1.18;
+    color:var(--deep); letter-spacing:-.02em;
+  }
+  .sub{margin-top:16px; color:var(--ink-soft); max-width:62ch; font-size:1rem;}
+  .meta{
+    margin-top:22px; display:flex; flex-wrap:wrap; gap:10px 22px;
+    font-size:.82rem; color:var(--ink-soft);
+  }
+  .meta b{color:var(--ink); font-weight:700;}
+
+  .notice{
+    margin:28px 0 0; padding:16px 18px; background:var(--paper);
+    border-left:4px solid var(--shell); border-radius:0 8px 8px 0;
+    font-size:.9rem; color:var(--ink-soft);
+  }
+  .notice b{color:var(--ink);}
+
+  section{padding:52px 0; border-bottom:1px solid var(--line);}
+  h2{
+    font-family:'Noto Serif KR',serif; font-size:clamp(21px,3vw,29px);
+    color:var(--deep); font-weight:800; letter-spacing:-.01em;
+  }
+  .lead{margin-top:10px; color:var(--ink-soft); font-size:.94rem; max-width:66ch;}
+
+  .cards{display:grid; gap:18px; margin-top:28px;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+  .card{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:12px; padding:22px; display:flex; flex-direction:column;
+  }
+
+  /* 좁은 화면: 카드를 가로 스와이프 캐러셀로 전환 */
+  @media (max-width:760px){
+    .cards{
+      display:flex; gap:14px; margin-top:22px;
+      overflow-x:auto; scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      padding:4px 20px 14px; margin-left:-20px; margin-right:-20px;
+      scrollbar-width:none;
+    }
+    .cards::-webkit-scrollbar{display:none;}
+    .card{
+      flex:0 0 85%; scroll-snap-align:center; margin:0;
+    }
+  }
+  .swipe-hint{display:none; font-size:.76rem; color:var(--ink-soft); margin-top:18px;}
+  @media (max-width:760px){ .swipe-hint{display:block;} }
+
+  .price{
+    margin-top:14px; padding:10px 12px; border-radius:8px;
+    background:var(--foam); border:1px dashed var(--line);
+    font-size:.85rem;
+  }
+  .price b{color:var(--shell); font-weight:800;}
+  .price span{display:block; font-size:.76rem; color:var(--ink-soft); margin-top:3px;}
+  .card h3{font-size:1.08rem; color:var(--deep); font-weight:800; letter-spacing:-.01em;}
+  .tag{
+    display:inline-block; font-size:.68rem; font-weight:800; letter-spacing:.1em;
+    padding:4px 9px; border-radius:99px; margin-bottom:12px;
+    background:var(--shell); color:#fff; align-self:flex-start;
+  }
+  .tag.alt{background:var(--deep-2);}
+  .tag.plain{background:transparent; color:var(--ink-soft); border:1px solid var(--line);}
+  .card dl{margin-top:14px; font-size:.87rem; display:grid; gap:8px;}
+  .card dl div{display:grid; grid-template-columns:74px 1fr; gap:10px;}
+  .card dt{color:var(--ink-soft); font-weight:600;}
+  .card dd{color:var(--ink);}
+  .note{
+    margin-top:14px; padding-top:13px; border-top:1px dashed var(--line);
+    font-size:.83rem; color:var(--ink-soft);
+  }
+
+  table{width:100%; min-width:620px; border-collapse:collapse; margin-top:24px; font-size:.87rem;}
+  th,td{padding:11px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{background:var(--deep); color:var(--paper); font-weight:700; font-size:.8rem; letter-spacing:.03em;}
+  td b{color:var(--deep);}
+  th, td:first-child{white-space:nowrap;}
+  .scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .scroll-hint{display:none; font-size:.76rem; color:var(--ink-soft); margin-top:16px;}
+  @media (max-width:700px){ .scroll-hint{display:block;} }
+
+  .plan{margin-top:26px; background:var(--paper); border:1px solid var(--line);
+    border-radius:12px; padding:24px;}
+  .plan h3{font-size:1.05rem; color:var(--deep); font-weight:800;}
+  .plan .why{font-size:.85rem; color:var(--ink-soft); margin-top:6px;}
+  .steps{margin-top:16px; display:grid; gap:0;}
+  .step{display:grid; grid-template-columns:82px 1fr; gap:14px;
+    padding:12px 0; border-top:1px solid var(--line);}
+  .step:first-child{border-top:none;}
+  .when{font-size:.78rem; font-weight:800; color:var(--shell); letter-spacing:.04em; padding-top:2px;}
+  .what b{display:block; color:var(--ink); font-weight:700; font-size:.94rem;}
+  .what span{font-size:.85rem; color:var(--ink-soft);}
+
+  ul.checks{margin-top:18px; padding-left:0; list-style:none; display:grid; gap:10px;}
+  ul.checks li{padding-left:22px; position:relative; font-size:.9rem; color:var(--ink-soft);}
+  ul.checks li::before{content:"—"; position:absolute; left:0; color:var(--shell); font-weight:800;}
+  ul.checks b{color:var(--ink);}
+
+  footer{padding:38px 0 60px; font-size:.8rem; color:var(--ink-soft);}
+  footer a{color:var(--ink-soft);}
+  .srcs{margin-top:10px; display:grid; gap:5px;}
+
+  @media (max-width:560px){
+    .card dl div{grid-template-columns:66px 1fr;}
+    .step{grid-template-columns:64px 1fr; gap:10px;}
+  }
+  a:focus-visible{outline:2px solid var(--shell); outline-offset:3px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a href="../../가족여행.html">← 가족 여행</a>
+    <a href="../../../home.html">가정용</a>
+    <a href="../../../index.html">홈</a>
+  </nav>
+
+  <header>
+    <div class="kicker">2027년 2월 · 1박 2일 · 상주 출발</div>
+    <h1>영덕, 대게철에<br>열여섯 명이 갈 만한 곳들</h1>
+    <p class="sub">장인어른 생신 여행을 위해 숙소·식당·산책 코스를 후보별로 모았습니다.
+       하나로 정해둔 일정이 아니라, 고르기 위한 비교표입니다.</p>
+    <div class="meta">
+      <span><b>16명</b> 어른 10 · 아이 6</span>
+      <span><b>상주 → 영덕</b> 약 1시간</span>
+      <span><b>2월</b> 대게 성수기</span>
+      <span class="updated" id="updated"></span>
+    </div>
+  </header>
+
+  <div class="notice">
+    <b>가격은 대략적인 시세입니다.</b> 방문까지 약 6개월이 남아 2027년 2월 요금은 아직
+    공개되지 않았습니다. 아래 금액은 규모를 가늠하기 위한 참고치일 뿐 견적이 아니며,
+    특히 대게는 매일 시세가 달라집니다. 예약 시점에 각 숙소·식당으로 직접 확인해 주세요.
+  </div>
+
+  <section>
+    <h2>숙소 후보</h2>
+    <p class="lead">영덕군 안에는 4성급 이상 호텔이 사실상 없습니다. 예약 사이트가 "4성급 22곳"처럼
+      표시하지만 개별 확인 결과 모텔·펜션·골프리조트를 등급 없이 묶은 집계였습니다.
+      실제 등급을 갖춘 곳은 포항과 경주에 있습니다.</p>
+    <p class="swipe-hint">카드를 옆으로 밀어 4곳을 비교해 보세요.</p>
+
+    <div class="cards">
+      <div class="card">
+        <span class="tag">영덕 최근접</span>
+        <h3>라한호텔 포항</h3>
+        <dl>
+          <div><dt>위치</dt><dd>포항 북구 삼호로265번길 1<br>영일대 해수욕장 북단</dd></div>
+          <div><dt>영덕까지</dt><dd>강구항 기준 약 40분</dd></div>
+          <div><dt>객실</dt><dd>전 객실 오션뷰. 패밀리 스위트 최대 5인(엑스트라 베드 가능), 온돌 스위트 보유</dd></div>
+          <div><dt>조식</dt><dd>뷔페 '파티오' — 투숙객 할인가 대인 22,000원 / 소인 15,000원</dd></div>
+          <div><dt>접근성</dt><dd>엘리베이터, 턱 없는 출입구, 로비 장애인 화장실, 핸디캡 룸, 지하 장애인 주차</dd></div>
+          <div><dt>문의</dt><dd>054-230-7000</dd></div>
+        </dl>
+        <div class="price"><b>1박 12만~18만 원선</b>
+          <span>일반 객실 기준 대략치. 스위트·온돌은 더 높고, 대게철 주말은 더 오릅니다.</span></div>
+        <p class="note">온돌 스위트가 있어 아이들과 바닥에서 지내기 편하고, 무장애 시설이 확인된
+          유일한 후보입니다. 어르신 두 분이 함께라면 이 점이 크게 작용합니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag alt">등급 최상</span>
+        <h3>라한셀렉트 경주</h3>
+        <dl>
+          <div><dt>위치</dt><dd>경주 보문로 338 · 보문관광단지</dd></div>
+          <div><dt>등급</dt><dd>5성급</dd></div>
+          <div><dt>영덕까지</dt><dd>편도 약 1시간 20분 추가</dd></div>
+          <div><dt>성격</dt><dd>가족·키즈 친화형. 키즈풀, 키즈 테마룸, 패밀리룸, 온천, 볼링장</dd></div>
+          <div><dt>온돌</dt><dd>온돌 객실 최대 5인</dd></div>
+          <div><dt>기타</dt><dd>2020년 리모델링 완료</dd></div>
+        </dl>
+        <div class="price"><b>1박 18만~28만 원선</b>
+          <span>5성급 · 패밀리/온돌 기준 대략치. 성수기·주말 편차가 큽니다.</span></div>
+        <p class="note">아이 6명에게는 부대시설이 가장 강력한 선택입니다. 대신 영덕 왕복이
+          길어지므로, 이 숙소를 고른다면 2일차를 경주 중심으로 짜는 편이 자연스럽습니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag alt">전통 강자</span>
+        <h3>힐튼 경주</h3>
+        <dl>
+          <div><dt>위치</dt><dd>보문관광단지 · 보문호 인근</dd></div>
+          <div><dt>등급</dt><dd>5성급</dd></div>
+          <div><dt>성격</dt><dd>글로벌 체인. 디럭스·온돌 등 객실 구성 다양</dd></div>
+          <div><dt>특징</dt><dd>전통적인 미감을 살린 인테리어</dd></div>
+        </dl>
+        <div class="price"><b>1박 17만~26만 원선</b>
+          <span>5성급 기준 대략치. 객실 타입에 따라 폭이 넓습니다.</span></div>
+        <p class="note">라한셀렉트와 같은 보문단지 안에 있어 위치 조건은 비슷합니다.
+          키즈 시설보다 격식과 정취를 우선한다면 이쪽이 맞습니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag plain">참고 · 등급 외</span>
+        <h3>오션비치 골프앤리조트</h3>
+        <dl>
+          <div><dt>위치</dt><dd>영덕군 강구면 동해대로 4265-43</dd></div>
+          <div><dt>성격</dt><dd>골프 리조트. 성급 호텔 아님</dd></div>
+          <div><dt>장점</dt><dd>영덕 안에 있어 이동이 가장 짧고, 객실이 넓은 편</dd></div>
+        </dl>
+        <div class="price"><b>1박 10만~20만 원선</b>
+          <span>객실형에 따라 편차가 큽니다. 골프 패키지는 별도.</span></div>
+        <p class="note">"4성급 이상" 조건에는 맞지 않지만, 영덕 경내에 머무는 유일한
+          현실적 대안이라 참고용으로 남깁니다. 삼사해상공원과 매우 가깝습니다.</p>
+      </div>
+    </div>
+
+    <p class="scroll-hint">표는 옆으로 밀어서 볼 수 있습니다.</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>비교 축</th><th>라한호텔 포항</th><th>라한셀렉트 경주</th><th>힐튼 경주</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>영덕 접근성</b></td><td>가장 좋음 (약 40분)</td><td>1시간 20분 추가</td><td>1시간 20분 추가</td></tr>
+          <tr><td><b>등급</b></td><td>4성급대</td><td>5성급</td><td>5성급</td></tr>
+          <tr><td><b>아이 6명</b></td><td>온돌 스위트</td><td>키즈풀·테마룸으로 가장 강함</td><td>보통</td></tr>
+          <tr><td><b>어르신 동반</b></td><td>무장애 시설 확인됨</td><td>온천 보유</td><td>정취 좋음</td></tr>
+          <tr><td><b>어울리는 경우</b></td><td>영덕을 온전히 즐기고 싶을 때</td><td>숙소 자체가 목적지일 때</td><td>격식 있는 생신상을 차릴 때</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>식사 후보</h2>
+    <p class="lead">2월은 영덕 대게가 가장 좋은 철입니다. 대신 성수기라 16명 자리는
+      예약 없이 어렵습니다. 아래는 위치가 확인된 강구항 일대와 북부 해안의 후보들입니다.</p>
+    <p class="swipe-hint">카드를 옆으로 밀어 4곳을 비교해 보세요.</p>
+
+    <div class="cards">
+      <div class="card">
+        <span class="tag">대게 · 강구항</span>
+        <h3>강구대게길 직판장 일대</h3>
+        <dl>
+          <div><dt>후보</dt><dd>사계절대게직판장(강구대게길 52)<br>착한대게(강구대게길 47)<br>남은대게(강구대게길 43-1)<br>대왕대게직판장(영덕대게로 91-1)</dd></div>
+          <div><dt>성격</dt><dd>대게 직판 중심. 도보권에 몰려 있어 비교 후 선택 가능</dd></div>
+          <div><dt>단체</dt><dd>대형 매장이 많고 공영주차 연계</dd></div>
+        </dl>
+        <div class="price"><b>국내산 박달대게 kg당 10만 원 안팎</b>
+          <span>수입산은 kg당 6만~9만 원선. 시세는 매일 조업 상황에 따라 달라집니다.</span></div>
+        <p class="note">직판장 방식은 게를 고른 뒤 쪄 먹는 구조라 인원이 많을수록 단가 조절이
+          쉽습니다. 다만 상차림 격식은 코스 전문점보다 소박합니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag alt">코스 · 격식</span>
+        <h3>대게 코스 전문점</h3>
+        <dl>
+          <div><dt>구성</dt><dd>소라초회 · 물회 · 광어회 · 대게찜 · 대게다리튀김 · 치즈구이 · 게딱지볶음밥</dd></div>
+          <div><dt>후보</dt><dd>태왕대게회(오션뷰·단체석·룸)<br>한바다수산대게회(물회 강점)</dd></div>
+          <div><dt>단체</dt><dd>1·2층 운영으로 단체 수용 수월, 전용 주차</dd></div>
+        </dl>
+        <div class="price"><b>2인 15만~25만 원선</b>
+          <span>코스 기준 일반적인 예산대. 대게 크기를 올리면 더 올라갑니다.</span></div>
+        <p class="note">생신상 성격을 살리려면 코스 쪽이 맞습니다. 순서대로 나오는 구성이라
+          아이들도 지루해하지 않고, 어른 상차림으로도 모양이 납니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag plain">회 · 대안</span>
+        <h3>회 · 물회 계열</h3>
+        <dl>
+          <div><dt>후보</dt><dd>명성회타운(남정면 동해대로 4096)<br>고래불회대게(병곡면 병곡1길 110)</dd></div>
+          <div><dt>위치</dt><dd>명성회타운은 남쪽 관문, 고래불은 북부 해안</dd></div>
+        </dl>
+        <p class="note">대게를 두 끼 연속 먹기 부담스러울 때의 대안입니다.
+          고래불회대게는 고래불해수욕장 산책과 묶기 좋습니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag plain">쉬어가기</span>
+        <h3>그리가다</h3>
+        <dl>
+          <div><dt>위치</dt><dd>영덕군 병곡면 흰돌로 102</dd></div>
+          <div><dt>성격</dt><dd>카페 · 디저트</dd></div>
+        </dl>
+        <p class="note">고래불 쪽으로 올라갔을 때 아이들이 몸을 녹이며
+          쉴 수 있는 지점으로 넣어둡니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>산책 코스 후보</h2>
+    <p class="lead">2월 동해안은 체감온도가 크게 떨어집니다. 아래 네 곳은 모두 위치를 확인했고,
+      난이도와 바람 노출 정도가 서로 다릅니다.</p>
+
+    <p class="scroll-hint">표는 옆으로 밀어서 볼 수 있습니다.</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>장소</th><th>위치</th><th>성격</th><th>2월 고려사항</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>삼사해상공원</b></td>
+            <td>강구면 삼사리 185-1</td>
+            <td>바다 조망 데크. 경사가 완만하고 공연장·주차장 완비</td>
+            <td>가장 무난. 유치원생과 어르신이 함께 걷기 좋음</td>
+          </tr>
+          <tr>
+            <td><b>영덕해맞이공원</b></td>
+            <td>영덕읍 대탄리</td>
+            <td>블루로드와 연결되는 해안 산책로</td>
+            <td>바람 노출이 큼. 전 구간이 아니라 일부만 걷는 편이 안전</td>
+          </tr>
+          <tr>
+            <td><b>영덕풍력발전단지</b></td>
+            <td>영덕읍 창포리 328-1 (주차장)</td>
+            <td>능선 위 풍차 조망. 아이들이 좋아하는 풍경</td>
+            <td>고지대라 가장 춥고 바람이 강함. 짧게 보고 이동</td>
+          </tr>
+          <tr>
+            <td><b>고래불해수욕장</b></td>
+            <td>병곡면 고래불로 68</td>
+            <td>긴 백사장. 한적하고 시야가 트임</td>
+            <td>북부라 이동이 길어짐. 강구항 일정과 묶기엔 먼 편</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <section>
+    <h2>바람 심한 날 대체 코스</h2>
+    <p class="lead">2월 동해안은 해안 산책이 아예 힘든 날이 드물지 않습니다. 아이 전용 체험 시설과
+      어른 전용 관람 시설로 나누기보다, <b>16명이 한 공간에서 같이 앉아 쉴 수 있는 곳</b>을
+      기준으로 골랐습니다. 다들 걷는 속도나 관심사가 달라도 부담 없이 어울리는 곳들입니다.</p>
+    <p class="swipe-hint">카드를 옆으로 밀어 4곳을 비교해 보세요.</p>
+
+    <div class="cards">
+      <div class="card">
+        <span class="tag alt">경주 · 온천</span>
+        <h3>더케이호텔 경주 스파온천</h3>
+        <dl>
+          <div><dt>위치</dt><dd>경주 엑스포로 45</dd></div>
+          <div><dt>운영</dt><dd>실내 온천사우나, <b>매주 월요일 휴관</b></dd></div>
+          <div><dt>구성</dt><dd>온천탕 · 사우나 · 찜질 공간</dd></div>
+          <div><dt>문의</dt><dd>공식 홈페이지 예약 안내</dd></div>
+        </dl>
+        <div class="price"><b>성인 10,000원 · 소인 7,000원</b>
+          <span>0~3세는 4,000원. 투숙객 할인가 기준</span></div>
+        <p class="note">어르신은 몸을 지지며 쉬고, 아이들은 물놀이하듯 즐기는
+          같은 공간입니다. 뛰어다니지 않아도 되니 다 같이 가장 오래 머물 수 있는 곳입니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag alt">경주 · 정원</span>
+        <h3>경주 동궁원 · 버드파크</h3>
+        <dl>
+          <div><dt>위치</dt><dd>경주 보문로 74-14</dd></div>
+          <div><dt>운영</dt><dd>09:30~19:00(입장 마감 18:00), <b>매주 월요일 휴관</b></dd></div>
+          <div><dt>구성</dt><dd>실내 아열대 식물원 + 새·수족관이 있는 버드파크</dd></div>
+        </dl>
+        <div class="price"><b>통합권 성인 18,000원</b>
+          <span>식물원 단독 5,000원. <b>경로·장애인은 식물원 무료</b></span></div>
+        <p class="note">천천히 걷는 산책로라 어르신도 무리 없고, 새와 물고기가 있어
+          아이들도 지루해하지 않습니다. 실내라 바람과 무관하고, 벤치가 많아 앉아 쉬기도 좋습니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag">영덕 · 체험</span>
+        <h3>신재생에너지전시관</h3>
+        <dl>
+          <div><dt>위치</dt><dd>영덕읍 창포리, 풍력발전단지 내</dd></div>
+          <div><dt>운영</dt><dd>09:00~18:00, <b>매주 월요일 휴관</b></dd></div>
+          <div><dt>내용</dt><dd>바람개비 돌리기, 태양열 조리기 만들기 등 체험 위주</dd></div>
+        </dl>
+        <div class="price"><b>성인 1,500원 · 어린이 800원</b>
+          <span>문의 054-730-7025</span></div>
+        <p class="note">영덕을 벗어나지 않고 짧게 들를 수 있는 실내 대안입니다.
+          체험 자체는 아이 쪽에 더 맞지만, 규모가 작아 오래 머무는 곳이 아니라
+          이동 동선 상 잠깐 들르기에 부담이 없습니다.</p>
+      </div>
+
+      <div class="card">
+        <span class="tag plain">경주 · 무료</span>
+        <h3>국립경주박물관</h3>
+        <dl>
+          <div><dt>위치</dt><dd>경주 일정로 186</dd></div>
+          <div><dt>운영</dt><dd>10:00~18:00. 1월 1일·설날·추석만 휴관</dd></div>
+          <div><dt>구성</dt><dd>상설전시관 + 어린이박물관 병설</dd></div>
+        </dl>
+        <div class="price"><b>무료</b>
+          <span>상설전시·어린이박물관 기준. 특별전시만 유료</span></div>
+        <p class="note">비용 부담이 없고 공간이 넓어 그룹이 흩어졌다 모이기 편합니다.
+          어린이박물관 쪽과 상설전시관 쪽으로 나뉘어 둘러봐도 되고, 로비에 앉아 쉬는 분들이
+          있어도 자연스러운 곳입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>코스 조합 세 가지</h2>
+    <p class="lead">위 후보들을 어떻게 묶느냐에 따라 성격이 달라집니다. 정답은 없고,
+      무엇을 우선하느냐의 문제입니다.</p>
+
+    <div class="plan">
+      <h3>A안 · 영덕에 집중</h3>
+      <p class="why">숙소 라한호텔 포항. 이동을 최소화하고 영덕을 온전히 보는 구성.</p>
+      <div class="steps">
+        <div class="step"><div class="when">1일 오전</div><div class="what"><b>상주 출발 → 영덕</b><span>당진영덕고속도로로 약 1시간</span></div></div>
+        <div class="step"><div class="when">1일 점심</div><div class="what"><b>강구항 대게</b><span>직판장 또는 코스 전문점</span></div></div>
+        <div class="step"><div class="when">1일 오후</div><div class="what"><b>삼사해상공원 산책</b><span>완만한 데크. 어르신·아이 모두 무난</span></div></div>
+        <div class="step"><div class="when">1일 늦오후</div><div class="what"><b>풍력발전단지 · 전시관</b><span>추우면 실내 체험 위주로</span></div></div>
+        <div class="step"><div class="when">1일 저녁</div><div class="what"><b>포항 체크인 · 영일대 야경</b><span>호텔 앞이 곧 해변</span></div></div>
+        <div class="step"><div class="when">2일 오전</div><div class="what"><b>조식 후 해맞이공원</b><span>블루로드 일부 구간만</span></div></div>
+        <div class="step"><div class="when">2일 점심</div><div class="what"><b>강구항에서 한 끼 더</b><span>회 또는 물회로 변화</span></div></div>
+      </div>
+    </div>
+
+    <div class="plan">
+      <h3>B안 · 숙소가 목적지</h3>
+      <p class="why">숙소 라한셀렉트 경주 또는 힐튼 경주. 아이들이 숙소에서 노는 시간을 길게.</p>
+      <div class="steps">
+        <div class="step"><div class="when">1일 오전</div><div class="what"><b>상주 → 영덕 직행</b><span>중간 경유 없이</span></div></div>
+        <div class="step"><div class="when">1일 점심</div><div class="what"><b>대게 코스 상차림</b><span>생신상 성격을 이 끼니에 집중</span></div></div>
+        <div class="step"><div class="when">1일 오후</div><div class="what"><b>삼사해상공원 짧게</b><span>바다는 보되 길게 걷지 않음</span></div></div>
+        <div class="step"><div class="when">1일 저녁</div><div class="what"><b>경주 체크인</b><span>이동 1시간 20분. 키즈풀·온천 이용</span></div></div>
+        <div class="step"><div class="when">2일</div><div class="what"><b>보문호 산책 후 귀가</b><span>호수 둘레길은 바람이 덜함</span></div></div>
+      </div>
+    </div>
+
+    <div class="plan">
+      <h3>C안 · 북부 해안</h3>
+      <p class="why">강구항이 붐빌 때의 우회로. 한적한 쪽을 택하는 구성.</p>
+      <div class="steps">
+        <div class="step"><div class="when">1일 오전</div><div class="what"><b>상주 → 영덕 북부</b><span>병곡면 방향</span></div></div>
+        <div class="step"><div class="when">1일 점심</div><div class="what"><b>고래불회대게</b><span>회와 대게를 한자리에서</span></div></div>
+        <div class="step"><div class="when">1일 오후</div><div class="what"><b>고래불해수욕장 · 그리가다</b><span>넓은 백사장, 추우면 카페로</span></div></div>
+        <div class="step"><div class="when">1일 저녁</div><div class="what"><b>포항 또는 경주 체크인</b><span>북부에서는 이동이 더 걸림</span></div></div>
+        <div class="step"><div class="when">2일</div><div class="what"><b>강구항 들러 귀가</b><span>대게는 돌아가는 길에</span></div></div>
+      </div>
+    </div>
+
+    <div class="plan">
+      <h3>D안 · 바람 심한 날, 다 같이 힐링</h3>
+      <p class="why">해안 산책을 걷어내고, 세대 구분 없이 한 공간에서 같이 쉬는 순서로 채운 구성.
+        숙소를 경주로 잡을 때 가장 자연스럽게 이어집니다.</p>
+      <div class="steps">
+        <div class="step"><div class="when">1일 오전</div><div class="what"><b>상주 → 영덕</b><span>고속도로는 날씨 영향이 적음</span></div></div>
+        <div class="step"><div class="when">1일 점심</div><div class="what"><b>강구항 대게</b><span>실내 매장이라 날씨 무관</span></div></div>
+        <div class="step"><div class="when">1일 오후</div><div class="what"><b>신재생에너지전시관 잠깐</b><span>영덕을 벗어나기 전 짧게 들름. 월요일이면 생략</span></div></div>
+        <div class="step"><div class="when">1일 저녁</div><div class="what"><b>경주 체크인</b><span>편도 1시간 20분</span></div></div>
+        <div class="step"><div class="when">2일 오전</div><div class="what"><b>더케이호텔 경주 스파온천</b><span>어르신은 온천, 아이들은 물놀이. 다 같이 가장 오래 머무는 시간</span></div></div>
+        <div class="step"><div class="when">2일 점심</div><div class="what"><b>보문단지에서 식사</b><span>이동 없이 여유 있게</span></div></div>
+        <div class="step"><div class="when">2일 오후</div><div class="what"><b>동궁원·버드파크</b><span>천천히 걷는 산책. 벤치가 많아 쉬어가기 좋음</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>예약 전 확인할 것</h2>
+    <ul class="checks">
+      <li><b>2월은 대게 성수기입니다.</b> 강구항 식당과 호텔 모두 사전 예약이 사실상 필수이고, 16명 자리는 더 일찍 잡아야 합니다.</li>
+      <li><b>방풍 준비.</b> 2월 동해안 해안 산책로는 체감온도가 크게 떨어집니다. 산책은 기온이 오르는 오후 시간대가 낫습니다.</li>
+      <li><b>전시관 휴관일.</b> 신재생에너지전시관은 월요일에 문을 닫습니다. 일정이 월요일에 걸리면 실내 대안을 다시 잡아야 합니다.</li>
+      <li><b>강풍 시 대체.</b> 해안 산책이 힘들 정도로 바람이 강하면 D안(다 같이 힐링 코스)으로 통째로 바꾸거나,
+        산책 시간만 줄이고 온천·동궁원·박물관 중 한 곳을 끼워 넣는 편이 낫습니다. 온천과 동궁원 모두
+        월요일 휴관이니 요일도 함께 확인해 주세요.</li>
+      <li><b>객실 배분.</b> 16명이면 최대 5인 객실 기준으로 4실 안팎이 필요합니다. 온돌과 침대 비율을 미리 정해두면 예약이 빠릅니다.</li>
+      <li><b>대게 시세.</b> 직판장은 시세로 움직입니다. 예산을 정해두고 가면 현장에서 흔들리지 않습니다.</li>
+      <li><b>총액 감 잡기.</b> 16명이면 객실 4실 안팎에 대게 한 끼가 가장 큰 두 항목입니다.
+        객실 4실이 대략 50만~90만 원, 대게는 어른 10명 기준 상차림 방식에 따라 80만~150만 원 정도로
+        폭이 잡힙니다. 어디에 힘을 줄지 미리 정해두는 편이 좋습니다.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <div>조사 기준 시점의 공개 정보를 정리한 문서입니다. 요금·영업일은 방문 전 재확인이 필요합니다.</div>
+    <div class="srcs">
+      <a href="https://www.lahanhotels.com/pohang/ko/main.do">라한호텔 포항 공식</a>
+      <a href="https://access.visitkorea.or.kr/acm/detail.do?cotId=6b28d454-98a9-433b-9b3a-77dc3ad2f444">한국관광공사 열린관광 — 라한호텔 포항 무장애 정보</a>
+      <a href="https://www.lahanhotels.com/gyeongju/ko/rooms/family/ondol.do">라한셀렉트 경주 온돌 객실</a>
+      <a href="https://www.yd.go.kr/?page_id=9302">영덕군청 — 신재생에너지전시관</a>
+      <a href="https://korean.visitkorea.or.kr/detail/ms_detail.do?cotid=9f3c5316-4806-4516-b1dc-f0840348ab1c">대한민국 구석구석 — 영덕 신재생에너지전시관</a>
+      <a href="https://www.siksinhot.com/theme/magazine/14500">식신 — 영덕 대게 코스 맛집</a>
+      <a href="https://www.wegive.co.kr/wezine/detail/1352">영덕 대게 제철 시기와 시장 시세</a>
+      <a href="https://kr.trip.com/hotels/pohang-hotel-detail-3423440/lahan-hotel-pohang/">트립닷컴 — 라한호텔 포항 요금대</a>
+      <a href="https://gyeongju.museum.go.kr/kor/html/sub01/0101.html">국립경주박물관 — 관람안내</a>
+      <a href="http://www.thek-hotel.co.kr/gyeongju/spa/n_sub1.asp">더케이호텔 경주 — 스파온천</a>
+      <a href="https://gyeongjuepg.kr/">경주 동궁원</a>
+      <a href="https://encykorea.aks.ac.kr/Article/E0081059">한국민족문화대백과사전 — 당진영덕고속도로</a>
+      <div>장소 위치·주소는 네이버 지역검색으로 대조 확인했습니다.</div>
+    </div>
+  </footer>
+
+</div>
+<script>
+  document.getElementById('updated').innerHTML =
+    '업데이트: <b>' + new Date().toLocaleDateString('ko-KR') + '</b>';
+</script>
+</body>
+</html>
