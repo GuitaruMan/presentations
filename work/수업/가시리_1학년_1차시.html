@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가시리 (1학년-1차시)</title>
+<style>
+  /* Noto Serif KR은 옛한글(첫가끝 조합형) 자모를 지원 — 원문 표기용 */
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --paper: #f4efe4;
+    --paper-edge: #e8dfcc;
+    --ink: #22201c;
+    --ink-soft: #6b6559;
+    --ink-faint: #9a9184;
+    --danchung: #a8322a;
+    --danchung-soft: #c4635c;
+    --rule: #cbc0aa;
+    --card: #fbf8f1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #2b2724;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(43,39,36,0.92); z-index: 50;
+  }
+  .nav-top a { color: #b9b0a0; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #e6dcc8; }
+  .nav-meta { color: #857c6e; font-size: 0.78rem; }
+
+  .stage {
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 18% 12%, rgba(255,255,255,0.55) 0%, transparent 55%),
+      radial-gradient(ellipse at 82% 88%, rgba(200,186,160,0.30) 0%, transparent 60%);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.2% 5.4%;
+  }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(2.2rem, 5.2vw, 4rem); line-height: 1.15; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 2.9vw, 2.3rem);
+    padding-bottom: 0.5rem; margin-bottom: 1.6rem;
+    border-bottom: 2px solid var(--ink); display: inline-block;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--danchung);
+    font-size: clamp(0.8rem, 1.5vw, 1rem); letter-spacing: 0.32em;
+    margin-bottom: 1.4rem;
+  }
+  .lead { font-size: clamp(0.95rem, 1.8vw, 1.3rem); color: var(--ink-soft); line-height: 1.75; }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 74px; height: 3px; background: var(--danchung); margin: 1.7rem 0 1.5rem; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.2vw, 1.6rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 5.4%; right: 5.4%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.3vw, 0.92rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 0.8rem;
+    padding-right: 4.5em;
+  }
+
+  .body-area { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2%; flex: 1; min-height: 0; }
+  .col-head {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.9rem, 1.65vw, 1.18rem);
+    color: var(--danchung); margin-bottom: 0.9rem;
+    padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule);
+  }
+
+  /* 원문 — 옛한글(아래아 등) 표기를 위해 함초롬바탕 계열 우선 지정 */
+  .verse {
+    font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
+    font-size: clamp(1.05rem, 2.35vw, 1.72rem);
+    line-height: 2.05; letter-spacing: 0.01em;
+  }
+  .verse .refrain { color: var(--danchung); }
+  .modern {
+    font-size: clamp(0.98rem, 2vw, 1.42rem);
+    line-height: 2.0; color: var(--ink);
+  }
+
+  /* 정서 해설 박스 */
+  .emotion {
+    margin-top: auto; background: var(--card);
+    border-left: 4px solid var(--danchung);
+    padding: 1.05rem 1.3rem;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.92rem, 1.7vw, 1.2rem); color: var(--danchung);
+    margin-bottom: 0.5rem;
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.82rem, 1.5vw, 1.05rem); line-height: 1.7;
+    color: var(--ink-soft); padding-left: 1.35rem; position: relative;
+  }
+  .emotion li + li { margin-top: 0.28rem; }
+  .emotion li::before { content: "—"; position: absolute; left: 0; color: var(--ink-faint); }
+
+  /* 기본 정보 표 */
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.85rem 0.7rem; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.85rem, 1.55vw, 1.08rem); line-height: 1.65;
+  }
+  .info-table th {
+    width: 5.2em; font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--danchung); white-space: nowrap;
+  }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.85rem, 1.6vw, 1.1rem); line-height: 1.7;
+    padding-left: 2.1rem; position: relative; margin-bottom: 1.15rem;
+  }
+  .num-list li .n {
+    position: absolute; left: 0; top: 0.05em;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--danchung); font-size: 1.05em;
+  }
+
+  /* 3음보 */
+  .def-box {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.4rem 1.6rem;
+  }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--danchung);
+    font-size: clamp(0.95rem, 1.75vw, 1.22rem); margin-bottom: 0.6rem;
+  }
+  .def-box p { font-size: clamp(0.85rem, 1.6vw, 1.1rem); line-height: 1.85; color: var(--ink-soft); }
+  .meter {
+    display: flex; align-items: flex-start; justify-content: center;
+    gap: clamp(0.7rem, 2vw, 1.8rem);
+    margin: auto 0; padding: 1.5rem 0;
+    font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
+    font-size: clamp(1.2rem, 3vw, 2.3rem);
+  }
+  .meter .beat { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .meter .beat .lbl {
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.62rem, 1.1vw, 0.8rem);
+    color: var(--ink-faint); letter-spacing: 0.08em; white-space: nowrap;
+  }
+  .meter .bar { color: var(--danchung); font-size: 0.85em; line-height: 1.4; }
+
+  /* 정서 흐름도 */
+  .flow { display: flex; align-items: stretch; gap: 0.55rem; flex: 1; min-height: 0; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 3px solid var(--danchung);
+    padding: 1.15rem 0.95rem; display: flex; flex-direction: column;
+  }
+  .flow-step .stage-label {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.85rem, 1.55vw, 1.1rem); margin-bottom: 0.15rem;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; color: var(--danchung);
+    font-size: clamp(1.05rem, 2.1vw, 1.5rem); margin-bottom: 0.75rem;
+  }
+  .flow-step .quote {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.78rem, 1.4vw, 1rem); line-height: 1.6;
+    color: var(--ink); padding-bottom: 0.6rem; margin-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .flow-step .desc {
+    font-size: clamp(0.72rem, 1.3vw, 0.92rem); line-height: 1.6; color: var(--ink-soft);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; color: var(--danchung);
+    font-size: clamp(0.9rem, 1.8vw, 1.4rem);
+  }
+
+  /* 3단 카드 */
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; flex: 1; min-height: 0; }
+  .c3 { background: var(--card); border-top: 3px solid var(--danchung); padding: 1.3rem 1.15rem; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+    margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule);
+  }
+  .c3 p { font-size: clamp(0.78rem, 1.4vw, 1rem); line-height: 1.75; color: var(--ink-soft); }
+
+  /* 질문 강조 */
+  .question-hero {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.3rem, 3.4vw, 2.6rem); line-height: 1.5;
+    margin-bottom: 1.1rem;
+  }
+  .question-hero em { font-style: normal; color: var(--danchung); }
+  .refrain-note {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.88rem, 1.7vw, 1.18rem);
+    color: var(--ink-soft); margin-bottom: 2rem;
+  }
+
+  /* 단계 흐름 (민요→궁중) */
+  .steps { display: flex; flex-direction: column; gap: 1.15rem; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.3rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.1rem, 2.3vw, 1.75rem); color: var(--danchung);
+    width: 1.9em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 1.1rem; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.98rem, 1.9vw, 1.3rem);
+    margin-bottom: 0.35rem;
+  }
+  .step p { font-size: clamp(0.8rem, 1.45vw, 1.03rem); line-height: 1.75; color: var(--ink-soft); }
+
+  /* 퀴즈 */
+  .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .quiz-guide { font-size: clamp(0.88rem, 1.7vw, 1.2rem); color: var(--ink-soft); margin-bottom: 1.8rem; }
+  .quiz-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1.15rem, 2.7vw, 2rem); line-height: 1.75;
+    padding: 1.7rem 1.9rem; background: var(--card); border: 1px solid var(--rule);
+  }
+  .blank {
+    display: inline-block; min-width: 4.5em; text-align: center;
+    color: var(--danchung); border-bottom: 3px solid var(--danchung);
+  }
+  .ox-row {
+    display: flex; gap: clamp(2rem, 8vw, 6rem); justify-content: center;
+    margin-top: 2rem;
+    font-family: "Gowun Batang", serif; font-size: clamp(2rem, 6vw, 4.5rem);
+    color: var(--ink-faint);
+  }
+  .answer-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.5rem, 3.8vw, 2.9rem); color: var(--paper);
+    background: var(--danchung); padding: 0.55rem 2rem; margin-bottom: 1.6rem;
+  }
+  .answer-desc {
+    font-size: clamp(0.88rem, 1.7vw, 1.2rem); line-height: 1.95; color: var(--ink-soft);
+    max-width: 46em;
+  }
+
+  /* 핵심 정리 */
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5rem; }
+  .srow { display: flex; gap: 1.6rem; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--danchung);
+    font-size: clamp(0.92rem, 1.8vw, 1.25rem); width: 6.2em; flex-shrink: 0;
+    text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.85rem, 1.6vw, 1.12rem); line-height: 1.85; }
+  .srow .sval ul { list-style: none; margin-top: 0.5rem; }
+  .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
+  .srow .sval li + li { margin-top: 0.3rem; }
+  .srow .sval li::before { content: "·"; position: absolute; left: 0.2rem; color: var(--danchung); }
+
+  /* 슬라이드 번호 / 컨트롤 */
+  .page-num {
+    position: absolute; right: 3.2%; bottom: 3%;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #b9b0a0; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #3b3630; color: #e6dcc8; border: 1px solid #56504a;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #4a443c; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #7d746a; font-size: 0.78rem; }
+
+  @media (max-width: 720px) {
+    .cols, .cards3 { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../work.html">업무용</a>
+    <a href="../index.html">홈</a>
+  </div>
+  <div class="nav-meta">가시리 · 1학년 1차시 · 업데이트 2026. 8. 12.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">고 려 속 요</div>
+    <h1 class="title-main">가시리</h1>
+    <div class="rule"></div>
+    <div class="sub">이별의 정한(情恨)을 노래하다</div>
+    <div class="foot">
+      <span>작자 미상</span>
+      <span>1학년 · 1차시</span>
+    </div>
+    <div class="page-num">1 / 15</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <h2 class="slide-title">작품의 기본 골격</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">기본 정보</div>
+          <table class="info-table">
+            <tr><th>작품명</th><td>가시리 (작자 미상)</td></tr>
+            <tr><th>갈래</th><td>고려 속요<br><span style="color:var(--ink-soft);font-size:0.92em;">평민들의 노래가 구전되어 오다가 조선 시대 궁중의 음악으로 채택되어 정착됨</span></td></tr>
+            <tr><th>성격</th><td>서정적, 애상적, 민요적</td></tr>
+            <tr><th>주제</th><td>이별의 정한(情恨)과<br>임에 대한 간절한 그리움</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="col-head">핵심 특징</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>소박하고 진솔한 우리말로 이별의 아픔을 표현</li>
+            <li><span class="n">2</span>연이 나누어진 &lsquo;분연체&rsquo; 형식</li>
+            <li><span class="n">3</span>후렴구 사용으로 고려 속요의 전형적인 특징을 보여줌</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">2 / 15</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <h2 class="slide-title">운율의 기본: 3음보</h2>
+    <div class="body-area">
+      <p class="lead" style="margin-bottom:1.5rem;">
+        &lt;가시리&gt;는 한국 시가 문학의 가장 전통적인 운율인 &lsquo;3음보&rsquo;의 율격을 지님
+      </p>
+      <div class="def-box">
+        <div class="dt">3음보란?</div>
+        <p>
+          시를 소리 내어 읽을 때, 한 행을 <strong style="color:var(--danchung);">세 번의 호흡으로 끊어 읽는</strong> 리듬<br>
+          걸음을 걷듯 자연스럽고 경쾌한 리듬감을 부여함
+        </p>
+      </div>
+      <div class="meter">
+        <span class="beat"><span>가시리</span><span class="lbl">첫째 호흡</span></span>
+        <span class="bar">/</span>
+        <span class="beat"><span>가시리잇고</span><span class="lbl">둘째 호흡</span></span>
+        <span class="bar">/</span>
+        <span class="beat"><span>&#45208;&#4354;&#4510;&#4523;</span><span class="lbl">셋째 호흡</span></span>
+      </div>
+    </div>
+    <div class="page-num">3 / 15</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <h2 class="slide-title">텍스트 정밀 분석 &middot; 1연 (기)</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">원문</div>
+          <div class="verse">
+            가시리 가시리잇고 &#45208;&#4354;&#4510;&#4523;<br>
+            &#4359;&#4510;리고 가시리잇고 &#45208;&#4354;&#4510;&#4523;<br>
+            <span class="refrain">위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;</span>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">현대어 풀이</div>
+          <div class="modern">
+            가시렵니까, 가시렵니까?<br>
+            나를 버리고 가시렵니까?
+          </div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">정서 &middot; 애원</div>
+        <ul>
+          <li>떠나려는 임을 믿지 못하며 가지 말라고 애절하게 매달리고 붙잡고 싶은 마음</li>
+          <li>&lsquo;나난&rsquo;은 의미 없이 리듬을 맞추기 위한 여음구</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">4 / 15</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <h2 class="slide-title">텍스트 정밀 분석 &middot; 2연 (승)</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">원문</div>
+          <div class="verse">
+            날러는 엇디 살라 &#4370;&#4510;고<br>
+            &#4359;&#4510;리고 가시리잇고 &#45208;&#4354;&#4510;&#4523;<br>
+            <span class="refrain">위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;</span>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">현대어 풀이</div>
+          <div class="modern">
+            나더러는 어찌 살라 하고<br>
+            버리고 가시렵니까?
+          </div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">정서 &middot; 원망</div>
+        <ul>
+          <li>자신을 홀로 두고 떠나는 임에 대한 슬픔이 고조됨</li>
+          <li>원망 섞인 탄식을 통해 화자의 절망적인 상황을 강조</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 15</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <h2 class="slide-title">텍스트 정밀 분석 &middot; 3연 (전)</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">원문</div>
+          <div class="verse">
+            &#51105;&#4361;&#4510;와 &#46160;&#50612;&#47532;&#47560;&#4354;&#4510;&#4354;&#4510;&#4523;<br>
+            &#49440;&#4370;&#4510;면 아니 올셰라<br>
+            <span class="refrain">위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;</span>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">현대어 풀이</div>
+          <div class="modern">
+            붙잡아 두고 싶지만<br>
+            (임이) 서운하면 다시 오지 않을까 두려워
+          </div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">정서 &middot; 체념과 걱정</div>
+        <ul>
+          <li>임을 억지로 붙잡으면 마음이 상해 영영 돌아오지 않을까 염려함</li>
+          <li>후일을 위해 자신의 슬픔을 억누르고 감정을 절제하며 임을 보내기로 체념함</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">6 / 15</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <h2 class="slide-title">텍스트 정밀 분석 &middot; 4연 (결)</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">원문</div>
+          <div class="verse">
+            &#49500;&#50728; 님 &#48372;&#45236;&#4363;&#4510;&#4536;노니 &#45208;&#4354;&#4510;&#4523;<br>
+            &#44032;&#49884;&#4354;&#4510;&#4523; &#4355;&#4510;&#4538; 도셔 오쇼셔 &#45208;&#4354;&#4510;&#4523;<br>
+            <span class="refrain">위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;</span>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">현대어 풀이</div>
+          <div class="modern">
+            서러운 임을 보내 드리오니<br>
+            가시자마자 (가시는 듯이)<br>돌아서서 다시 오십시오.
+          </div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">정서 &middot; 염원</div>
+        <ul>
+          <li>이별을 수용하지만, 임이 곧바로 다시 돌아오기를 간절히 바라고 소망함</li>
+          <li>재회에 대한 강한 기원이 담겨 있음</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">7 / 15</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <h2 class="slide-title">화자의 정서 흐름도</h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="flow-step">
+          <div class="stage-label">기(起) &middot; 1연</div>
+          <div class="emo">애원</div>
+          <div class="quote">&ldquo;가시렵니까,<br>버리고 가시렵니까&rdquo;</div>
+          <div class="desc">붙잡고 싶은 간절함</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">승(承) &middot; 2연</div>
+          <div class="emo">원망</div>
+          <div class="quote">&ldquo;나더러는<br>어찌 살라 하고&rdquo;</div>
+          <div class="desc">슬픔과 원망의 고조</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">전(轉) &middot; 3연</div>
+          <div class="emo">체념과 걱정</div>
+          <div class="quote">&ldquo;서운하면<br>아니 올까 두려워&rdquo;</div>
+          <div class="desc">돌아오지 않을까 봐 감정을 절제함</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">결(結) &middot; 4연</div>
+          <div class="emo">염원</div>
+          <div class="quote">&ldquo;가시는 듯<br>돌아서서 오십시오&rdquo;</div>
+          <div class="desc">재회에 대한 간절한 소망</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">8 / 15</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <h2 class="slide-title">이면의 역사: 후렴구의 의문</h2>
+    <div class="body-area">
+      <div class="question-hero">슬픈 이별의 노래에<br>왜 <em>&lsquo;태평성대&rsquo;</em>가 등장할까?</div>
+      <div class="refrain-note">후렴구 &mdash; &lsquo;위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;(大平盛代)&rsquo;</div>
+      <div class="cards3">
+        <div class="c3">
+          <h3>1. 내용의 부조화</h3>
+          <p>이별의 애절한 분위기나 화자의 정서와 전혀 어울리지 않는 긍정적이고 경쾌한 내용</p>
+        </div>
+        <div class="c3">
+          <h3>2. 원래의 모습</h3>
+          <p>&lt;가시리&gt;는 원래 민간에서 백성들이 부르던 소박한 노래(민요)</p>
+        </div>
+        <div class="c3">
+          <h3>3. 궁중 음악 편입</h3>
+          <p>이 노래가 고려 시대 궁중의 속악(궁중 음악)으로 편입되어 불리는 과정에서, 왕의 덕을 칭송하고 나라의 태평성대를 기원하기 위해 의도적으로 덧붙여진 구절로 추정됨</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">9 / 15</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <h2 class="slide-title">민요에서 궁중 음악으로</h2>
+    <div class="body-area">
+      <div class="steps">
+        <div class="step">
+          <div class="sn">一</div>
+          <div class="sbody">
+            <h3>민간의 노래 (민요)</h3>
+            <p>백성들 사이에서 불리던 소박한 민요. 이별의 슬픔과 그리움을 진솔한 우리말로 노래한 평민의 노래</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">二</div>
+          <div class="sbody">
+            <h3>궁중 음악(속악) 편입</h3>
+            <p>고려 궁중에서 속악(俗樂)으로 수용되어 공식 음악으로 정착. 민간의 정서를 담은 노랫말이 궁중 의례 음악의 형식으로 편입되는 과정을 거침</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">三</div>
+          <div class="sbody">
+            <h3>후렴구 삽입</h3>
+            <p>이 과정에서 임금의 덕을 송축하고 태평성대를 기원하는 &lsquo;위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;&rsquo;가 덧붙여짐. 그 결과 작품 본래의 애절한 정서와 후렴구 사이에 이질감이 발생</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">10 / 15</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 퀴즈 1</h2>
+    <div class="body-area quiz-wrap">
+      <div class="quiz-guide">다음 빈칸에 들어갈 알맞은 말을 생각해 봅시다.</div>
+      <div class="quiz-q">
+        <span class="blank">&nbsp;?&nbsp;</span> 은/는 고려시대 궁중 음악의 하나로, 노랫말이 우리말로 되어 있으며 민간의 노래에서 온 것도 있다.
+      </div>
+    </div>
+    <div class="page-num">11 / 15</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 퀴즈 1 &middot; 정답</h2>
+    <div class="body-area quiz-wrap">
+      <div><span class="answer-badge">고려 속요</span></div>
+      <div class="answer-desc">
+        고려 시대에 평민들이 부르던 민요가 궁중 음악으로 편입되면서 형성된 우리 시가 문학의 중요한 갈래
+      </div>
+    </div>
+    <div class="page-num">12 / 15</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 퀴즈 2</h2>
+    <div class="body-area quiz-wrap">
+      <div class="quiz-guide">다음 설명이 맞으면 O, 틀리면 X를 선택해 봅시다.</div>
+      <div class="quiz-q">
+        &lt;가시리&gt;의 화자는 이별의 슬픔을 드러내면서도 임이 다시 돌아오기를 기원하고 있다.
+      </div>
+      <div class="ox-row"><span>O</span><span>X</span></div>
+    </div>
+    <div class="page-num">13 / 15</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 퀴즈 2 &middot; 정답</h2>
+    <div class="body-area quiz-wrap">
+      <div><span class="answer-badge">O</span></div>
+      <div class="answer-desc">
+        임을 떠나보내는 화자의 슬픔과 원망을 보여주면서도, 마지막 4연 &lsquo;&#44032;&#49884;&#4354;&#4510;&#4523; &#4355;&#4510;&#4538; 도셔 오쇼셔&rsquo;에서 재회에 대한 소망과 간절함을 압축적으로 노래함
+      </div>
+    </div>
+    <div class="page-num">14 / 15</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide">
+    <h2 class="slide-title">&lt;가시리&gt; 핵심 정리</h2>
+    <div class="body-area">
+      <div class="summary-list">
+        <div class="srow">
+          <div class="skey">주제</div>
+          <div class="sval">임을 떠나보내는 이별의 슬픔과 재회에 대한 간절한 소망</div>
+        </div>
+        <div class="srow">
+          <div class="skey">화자의 정서</div>
+          <div class="sval">슬픔, 원망, 그리고 기다림<br>
+            <span style="color:var(--ink-soft);font-size:0.94em;">애원(1연) &rarr; 원망(2연) &rarr; 체념·걱정(3연) &rarr; 염원(4연)</span>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="skey">후렴구</div>
+          <div class="sval">
+            &lsquo;위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;&rsquo;
+            <ul>
+              <li>각 연마다 반복되어 운율을 형성함</li>
+              <li>민간의 노래가 궁중 음악으로 편입되는 과정에서 추가된 것으로 추정됨 (임금의 덕을 송축하기 위함)</li>
+              <li>작품의 애절한 분위기와는 이질적임</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">15 / 15</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 15</span>
+  <button id="next">다음 &rarr;</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', () => show(idx - 1));
+  nextBtn.addEventListener('click', () => show(idx + 1));
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
