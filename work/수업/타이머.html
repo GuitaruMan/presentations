@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>문제풀이 타이머</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --ink: #e8edf5;
+    --ink-soft: #8b95a7;
+    --key: #4a9eff;
+    --run: #2fbf71;
+    --warn: #ffa726;
+    --danger: #ff4d4f;
+    --panel: #161b24;
+    --line: #2a3240;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    display: flex; flex-direction: column;
+    min-height: 100vh; overflow: hidden;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(13,17,23,0.94); z-index: 50;
+    transition: opacity 0.3s;
+  }
+  .nav-top a { color: #7c8798; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #d5deea; }
+  .nav-meta { color: #5d6677; font-size: 0.78rem; }
+  body.running .nav-top { opacity: 0; pointer-events: none; }
+
+  .wrap {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 4vh 3vw; gap: 3vh;
+  }
+
+  /* 문제 개수 선택 */
+  .picker { width: 100%; max-width: 1100px; text-align: center; }
+  .picker .lb {
+    font-size: clamp(1rem, 1.9vw, 1.5rem); color: var(--ink-soft);
+    letter-spacing: 0.15em; margin-bottom: 2.2vh;
+  }
+  .qbtns {
+    display: flex; flex-wrap: wrap; gap: clamp(0.6rem, 1.1vw, 1rem);
+    justify-content: center;
+  }
+  .qbtn {
+    background: var(--panel); color: var(--ink);
+    border: 2px solid var(--line); border-radius: 12px;
+    font-family: inherit; font-weight: 700;
+    font-size: clamp(1.2rem, 2.3vw, 2rem);
+    width: clamp(4rem, 7.5vw, 6.5rem);
+    height: clamp(4rem, 7.5vw, 6.5rem);
+    cursor: pointer; transition: all 0.12s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qbtn:hover { border-color: var(--key); transform: translateY(-3px); }
+  .qbtn.sel { background: var(--key); border-color: var(--key); color: #fff; }
+
+  /* 타이머 표시 */
+  .display {
+    font-variant-numeric: tabular-nums;
+    font-weight: 900; letter-spacing: 0.02em;
+    line-height: 1; font-size: min(38vh, 26vw);
+    transition: color 0.3s;
+  }
+  .display.warn { color: var(--warn); }
+  .display.danger { color: var(--danger); }
+  .display.done { color: var(--danger); animation: flash 0.65s infinite; }
+  @keyframes flash { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+  .meta {
+    font-size: clamp(1rem, 2vw, 1.6rem); color: var(--ink-soft);
+    letter-spacing: 0.1em; margin-top: -1vh;
+  }
+
+  /* 진행 바 */
+  .bar-wrap {
+    width: min(88vw, 1400px); height: clamp(8px, 1.1vh, 14px);
+    background: var(--panel); border-radius: 99px; overflow: hidden;
+  }
+  .bar {
+    height: 100%; width: 100%; background: var(--run);
+    transition: width 0.25s linear, background 0.3s;
+  }
+  .bar.warn { background: var(--warn); }
+  .bar.danger { background: var(--danger); }
+
+  /* 컨트롤 */
+  .controls { display: flex; gap: clamp(0.8rem, 1.4vw, 1.4rem); flex-wrap: wrap; justify-content: center; }
+  .btn {
+    font-family: inherit; font-weight: 700; cursor: pointer;
+    border-radius: 12px; border: 2px solid transparent;
+    font-size: clamp(1.05rem, 1.9vw, 1.6rem);
+    padding: clamp(0.7rem, 1.4vh, 1.2rem) clamp(1.8rem, 3.5vw, 3.2rem);
+    transition: all 0.12s;
+  }
+  .btn.primary { background: var(--run); color: #06210f; }
+  .btn.primary:hover { filter: brightness(1.12); }
+  .btn.ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  .btn.ghost:hover { color: var(--ink); border-color: #47526a; }
+  .btn:disabled { opacity: 0.3; cursor: default; filter: none; }
+
+  .hint {
+    position: fixed; bottom: 1.1rem; left: 0; right: 0; text-align: center;
+    font-size: 0.8rem; color: #4d5566; transition: opacity 0.3s;
+  }
+  body.running .hint { opacity: 0; }
+
+  /* 알림음 조절 */
+  .sound-row {
+    display: flex; align-items: center; gap: 0.9rem;
+    color: var(--ink-soft); font-size: 0.9rem;
+    transition: opacity 0.3s;
+  }
+  body.running .sound-row { opacity: 0; pointer-events: none; }
+  .sound-row .sl { letter-spacing: 0.08em; }
+  .sound-row input[type=range] { width: clamp(120px, 14vw, 200px); accent-color: var(--key); cursor: pointer; }
+  .mini {
+    background: transparent; color: var(--ink-soft);
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 0.35rem 0.9rem; font-family: inherit; font-size: 0.85rem; cursor: pointer;
+  }
+  .mini:hover { color: var(--ink); border-color: #47526a; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../work.html">업무용</a>
+    <a href="../index.html">홈</a>
+  </div>
+  <div class="nav-meta">문제당 1분 50초</div>
+</div>
+
+<div class="wrap">
+
+  <!-- 문제 개수 선택 화면 -->
+  <div class="picker" id="picker">
+    <div class="lb">문 제 개 수 를 선 택 하 세 요</div>
+    <div class="qbtns" id="qbtns"></div>
+  </div>
+
+  <!-- 타이머 화면 -->
+  <div class="hidden" id="timer" style="display:flex; flex-direction:column; align-items:center; gap:2.5vh;">
+    <div class="display" id="display">00:00</div>
+    <div class="meta" id="meta"></div>
+    <div class="bar-wrap"><div class="bar" id="bar"></div></div>
+  </div>
+
+  <div class="controls" id="controls"></div>
+
+  <div class="sound-row" id="soundRow">
+    <span class="sl">알림음</span>
+    <input type="range" id="vol" min="0" max="100" value="45" step="5">
+    <button class="mini" id="test">미리듣기</button>
+  </div>
+</div>
+
+<div class="hint">스페이스 시작·일시정지 · R 다시 · Esc 처음으로 · F 전체화면</div>
+
+<script>
+  const PER_Q = 110;              // 1문제당 초 (1분 50초)
+  const MAX_Q = 12;
+
+  const picker   = document.getElementById('picker');
+  const qbtns    = document.getElementById('qbtns');
+  const timerBox = document.getElementById('timer');
+  const display  = document.getElementById('display');
+  const metaEl   = document.getElementById('meta');
+  const bar      = document.getElementById('bar');
+  const controls = document.getElementById('controls');
+  const volEl    = document.getElementById('vol');
+  const testBtn  = document.getElementById('test');
+
+  // 볼륨 설정 기억
+  const savedVol = localStorage.getItem('timerVol');
+  if (savedVol !== null) volEl.value = savedVol;
+  volEl.addEventListener('change', () => localStorage.setItem('timerVol', volEl.value));
+  testBtn.addEventListener('click', () => { ensureAudio(); beep(); });
+
+  let count = 0;        // 선택한 문제 수
+  let total = 0;        // 총 초
+  let left = 0;         // 남은 초
+  let endAt = 0;        // 종료 시각(ms)
+  let tick = null;
+  let state = 'idle';   // idle | ready | running | paused | done
+  let audioCtx = null;
+
+  /* ── 문제 개수 버튼 ── */
+  for (let i = 1; i <= MAX_Q; i++) {
+    const b = document.createElement('button');
+    b.className = 'qbtn';
+    b.textContent = i;
+    b.addEventListener('click', () => selectCount(i));
+    qbtns.appendChild(b);
+  }
+
+  function selectCount(n) {
+    count = n;
+    total = n * PER_Q;
+    left = total;
+    state = 'ready';
+    [...qbtns.children].forEach((b, i) => b.classList.toggle('sel', i + 1 === n));
+    picker.classList.add('hidden');
+    timerBox.classList.remove('hidden');
+    render();
+    renderControls();
+  }
+
+  /* ── 표시 ── */
+  function fmt(sec) {
+    sec = Math.max(0, Math.ceil(sec));
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function render() {
+    display.textContent = fmt(left);
+    const mm = Math.floor(total / 60), ss = total % 60;
+    metaEl.textContent = count + '문제 · 총 ' + mm + '분 ' + (ss ? ss + '초' : '');
+
+    const ratio = total > 0 ? left / total : 0;
+    bar.style.width = (ratio * 100) + '%';
+
+    display.classList.remove('warn', 'danger', 'done');
+    bar.classList.remove('warn', 'danger');
+    if (state === 'done') {
+      display.classList.add('done');
+      bar.style.width = '0%';
+    } else if (left <= 30) {
+      display.classList.add('danger'); bar.classList.add('danger');
+    } else if (left <= 60) {
+      display.classList.add('warn'); bar.classList.add('warn');
+    }
+  }
+
+  function renderControls() {
+    controls.innerHTML = '';
+    const mk = (txt, cls, fn) => {
+      const b = document.createElement('button');
+      b.className = 'btn ' + cls;
+      b.textContent = txt;
+      b.addEventListener('click', fn);
+      controls.appendChild(b);
+      return b;
+    };
+    if (state === 'idle') return;
+    if (state === 'ready')   { mk('시작', 'primary', start); mk('처음으로', 'ghost', reset); }
+    if (state === 'running') { mk('일시정지', 'ghost', pause); mk('다시', 'ghost', restart); }
+    if (state === 'paused')  { mk('계속', 'primary', start); mk('다시', 'ghost', restart); mk('처음으로', 'ghost', reset); }
+    if (state === 'done')    { mk('다시', 'primary', restart); mk('처음으로', 'ghost', reset); }
+  }
+
+  /* ── 동작 ── */
+  function start() {
+    if (state === 'done') return;
+    ensureAudio();
+    endAt = Date.now() + left * 1000;
+    state = 'running';
+    document.body.classList.add('running');
+    clearInterval(tick);
+    tick = setInterval(step, 200);
+    step();
+    renderControls();
+  }
+
+  function step() {
+    left = (endAt - Date.now()) / 1000;
+    if (left <= 0) {
+      left = 0;
+      clearInterval(tick);
+      state = 'done';
+      document.body.classList.remove('running');
+      render();
+      renderControls();
+      beep();
+      return;
+    }
+    render();
+  }
+
+  function pause() {
+    clearInterval(tick);
+    left = Math.max(0, (endAt - Date.now()) / 1000);
+    state = 'paused';
+    document.body.classList.remove('running');
+    render();
+    renderControls();
+  }
+
+  function restart() {
+    clearInterval(tick);
+    left = total;
+    state = 'ready';
+    document.body.classList.remove('running');
+    render();
+    renderControls();
+  }
+
+  function reset() {
+    clearInterval(tick);
+    count = 0; total = 0; left = 0;
+    state = 'idle';
+    document.body.classList.remove('running');
+    [...qbtns.children].forEach(b => b.classList.remove('sel'));
+    timerBox.classList.add('hidden');
+    picker.classList.remove('hidden');
+    controls.innerHTML = '';
+  }
+
+  /* ── 알림음: 삐비비빅 ── */
+  function ensureAudio() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  function beep() {
+    ensureAudio();
+    if (!audioCtx) return;
+    const vol = Number(volEl.value) / 100 * 0.4;
+    if (vol <= 0) return;
+    // 짧은 삐 3번 + 긴 빅 1번을 3세트 반복
+    const pattern = [
+      [0.00, 0.12, 880], [0.18, 0.12, 880], [0.36, 0.12, 880], [0.54, 0.42, 1175],
+      [1.20, 0.12, 880], [1.38, 0.12, 880], [1.56, 0.12, 880], [1.74, 0.42, 1175],
+      [2.40, 0.12, 880], [2.58, 0.12, 880], [2.76, 0.12, 880], [2.94, 0.60, 1175]
+    ];
+    const t0 = audioCtx.currentTime + 0.05;
+    pattern.forEach(([offset, dur, freq]) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t0 + offset);
+      gain.gain.linearRampToValueAtTime(vol, t0 + offset + 0.012);
+      gain.gain.setValueAtTime(vol, t0 + offset + dur - 0.02);
+      gain.gain.linearRampToValueAtTime(0, t0 + offset + dur);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(t0 + offset);
+      osc.stop(t0 + offset + dur + 0.02);
+    });
+  }
+
+  /* ── 전체화면 ── */
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+  }
+
+  /* ── 키보드 ── */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === ' ') {
+      e.preventDefault();
+      if (state === 'ready' || state === 'paused') start();
+      else if (state === 'running') pause();
+    } else if (e.key === 'r' || e.key === 'R') {
+      if (state !== 'idle') restart();
+    } else if (e.key === 'Escape') {
+      if (!document.fullscreenElement && state !== 'idle') reset();
+    } else if (e.key === 'f' || e.key === 'F') {
+      e.preventDefault(); toggleFullscreen();
+    } else if (/^[0-9]$/.test(e.key) && state === 'idle') {
+      const n = e.key === '0' ? 10 : Number(e.key);
+      if (n <= MAX_Q) selectCount(n);
+    }
+  });
+</script>
+</body>
+</html>
