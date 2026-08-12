@@ -69,7 +69,13 @@
   h2.slide-title .q {
     color: var(--key); margin-right: 0.5em;
   }
-  .body-area { flex: 1; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  /* 제목은 고정 높이를 유지(flex-shrink:0)하고, 본문은 남은 공간 안에서만 중앙 정렬.
+     내용이 많아도 본문이 제목 영역을 침범하지 않는다. */
+  h2.slide-title { flex-shrink: 0; }
+  .body-area {
+    flex: 1 1 0; display: flex; flex-direction: column;
+    min-height: 0; justify-content: center; overflow: hidden;
+  }
 
   /* 표지 */
   .cover { justify-content: center; align-items: flex-start; }
@@ -170,6 +176,14 @@
     flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
     font-size: 2.3cqw; width: 1.6em;
   }
+  /* 5행 구조도 슬라이드: 제목과 겹치지 않도록 여백·행높이 축약 */
+  .slide.s-flow h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide.s-flow .para-flow { gap: 0.85cqw; }
+  .slide.s-flow .para-body { padding: 1cqw 1.4cqw; }
+  .slide.s-flow .para-body .t { font-size: 2.2cqw; line-height: 1.4; }
+  .slide.s-flow .para-body .d { font-size: 1.8cqw; line-height: 1.45; }
+  .slide.s-flow .para-no { font-size: 2cqw; width: 5.6cqw; }
+
   /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
   .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
   .slide.q-slide .choices { gap: 0.35cqw; }
@@ -177,7 +191,8 @@
   .slide.q-slide .choices .n { font-size: 2.02cqw; }
   .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
   .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
-  .slide.q-slide .bogi { font-size: 1.85cqw; padding: 1.2cqw 1.5cqw; }
+  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
   .choices li.ans {
     background: var(--warn-bg); border-color: #f0c0bc;
   }
@@ -308,11 +323,11 @@
       <span>고3 · 수능 대비 문제풀이</span>
       <span>1~3번 · 배점 2 / 2 / 3점</span>
     </div>
-    <div class="page-num">1 / 12</div>
+    <div class="page-num">1 / 11</div>
   </section>
 
   <!-- 2 지문 구조 -->
-  <section class="slide">
+  <section class="slide s-flow">
     <h2 class="slide-title">지문 구조 한눈에 보기</h2>
     <div class="body-area">
       <div class="para-flow">
@@ -353,7 +368,7 @@
         </div>
       </div>
     </div>
-    <div class="page-num">2 / 12</div>
+    <div class="page-num">2 / 11</div>
   </section>
 
   <!-- 4 요약 4규칙 -->
@@ -387,7 +402,7 @@
         <p>삭제와 선택은 <b class="u-warn">서로 반대되는 작용처럼 보이지만 동시에 일어남</b> &mdash; 지문에 명시된 서술. 이 부분을 뒤집어 놓은 선택지가 자주 출제됨</p>
       </div>
     </div>
-    <div class="page-num">3 / 12</div>
+    <div class="page-num">3 / 11</div>
   </section>
 
   <!-- 5 내재적·외재적 -->
@@ -418,7 +433,7 @@
         <p>판단의 시선이 <b class="u-key">글 안</b>에 머무르면 내재적, <b class="u-warn">글 밖(삶·사회)</b>으로 나가면 외재적. &lsquo;출처가 없어 신뢰성이 낮다&rsquo;는 글 안의 문제이므로 <b class="u-key">내재적</b></p>
       </div>
     </div>
-    <div class="page-num">4 / 12</div>
+    <div class="page-num">4 / 11</div>
   </section>
 
   <!-- 6 1번 문제 -->
@@ -433,7 +448,7 @@
         <li><span class="n">⑤</span><span class="txt">요약 과정에서 중요하지 않은 정보를 기억하지 않는 일과 중요하다고 판단한 정보를 기억하는 일은 동시에 일어날 수 없다.</span></li>
       </ul>
     </div>
-    <div class="page-num">5 / 12</div>
+    <div class="page-num">5 / 11</div>
   </section>
 
   <!-- 7 1번 해설 -->
@@ -461,25 +476,10 @@
         <p>선택지가 지문의 <b>개념 정의를 그대로 옮겨 놓았을 때</b>는 마지막 서술어까지 확인할 것. 앞부분이 지문과 똑같으면 뒷부분을 뒤집어 놓는 것이 출제의 기본 수법</p>
       </div>
     </div>
-    <div class="page-num">6 / 12</div>
+    <div class="page-num">6 / 11</div>
   </section>
 
-  <!-- 8 1번 오답 정리 -->
-  <section class="slide">
-    <h2 class="slide-title"><span class="q">01</span>선택지별 확인</h2>
-    <div class="body-area">
-      <table class="otable">
-        <tr><th>①</th><td>2문단 &ldquo;질적인 왜곡 없이 중요한 정보를 중심으로 압축&rdquo; &rarr; <b class="u-ok">적절</b></td></tr>
-        <tr><th>②</th><td>2문단 &ldquo;지식과 정보의 양이 기억의 용량을 초과하는 경우가 많아&rdquo; &rarr; <b class="u-ok">적절</b></td></tr>
-        <tr><th>③</th><td>3문단 &ldquo;구성은 &hellip; 여러 정보를 묶어 새로운 명제로 대체&rdquo; &rarr; <b class="u-ok">적절</b></td></tr>
-        <tr><th>④</th><td>4문단 &ldquo;하이퍼링크로 다른 글과 연결되어 &hellip; 본래의 독서 목적을 잃기 쉬우며&rdquo; &rarr; <b class="u-ok">적절</b></td></tr>
-        <tr class="ans"><th>⑤</th><td>3문단은 &ldquo;삭제와 <b>동시에 일어난다</b>&rdquo;고 명시 &rarr; <b>적절하지 않음 (정답)</b></td></tr>
-      </table>
-    </div>
-    <div class="page-num">7 / 12</div>
-  </section>
-
-  <!-- 9 2번 문제 -->
+  <!-- 7 2번 문제 -->
   <section class="slide q-slide">
     <h2 class="slide-title"><span class="q">02</span>㉠을 이해한 내용으로 가장 적절한 것은?</h2>
     <div class="body-area">
@@ -495,7 +495,7 @@
         <li><span class="n">⑤</span><span class="txt">요약은 독서 중에 중요도가 낮은 정보에 대한 이해를 보류하고, 독서가 완료된 후 이해를 보류한 정보를 체계적으로 정리하는 활동이다.</span></li>
       </ul>
     </div>
-    <div class="page-num">8 / 12</div>
+    <div class="page-num">7 / 11</div>
   </section>
 
   <!-- 10 2번 해설 -->
@@ -522,7 +522,7 @@
         <p>밑줄 문항은 <b>밑줄 문장을 두 부분으로 쪼개는</b> 것이 출발점. &lsquo;과정&rsquo;과 &lsquo;결과&rsquo; 두 요소를 <b class="u-key">모두 만족하는</b> 선택지를 찾으면 ④만 남음</p>
       </div>
     </div>
-    <div class="page-num">9 / 12</div>
+    <div class="page-num">8 / 11</div>
   </section>
 
   <!-- 11 2번 오답 정리 -->
@@ -537,7 +537,7 @@
         <tr><th>⑤</th><td><b class="u-warn">&lsquo;이해를 보류&rsquo;</b>했다가 나중에 정리한다는 서술은 지문에 없음 &rarr; 부적절</td></tr>
       </table>
     </div>
-    <div class="page-num">10 / 12</div>
+    <div class="page-num">9 / 11</div>
   </section>
 
   <!-- 12 3번 문제 -->
@@ -561,7 +561,7 @@
         <li style="padding:0.55cqw 1.2cqw;"><span class="n">⑤</span><span class="txt">많은 사람이 건강식품에 의존하게 되어 사회에 부정적 영향을 미칠 수 있다면, 이는 비판적 이해에 해당한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">11 / 12</div>
+    <div class="page-num">10 / 11</div>
   </section>
 
   <!-- 13 3번 해설 -->
@@ -589,14 +589,14 @@
         <p>⑤는 &lsquo;사회에 부정적 영향&rsquo;을 말하므로 <b class="u-warn">외재적</b> 관점. 다만 선택지가 &lsquo;<b>비판적 이해에 해당한다</b>&rsquo;고만 했으므로 <b class="u-ok">적절</b> &mdash; 외재적도 비판적 이해의 하위 갈래이기 때문</p>
       </div>
     </div>
-    <div class="page-num">12 / 12</div>
+    <div class="page-num">11 / 11</div>
   </section>
 
 </div>
 
 <div class="controls">
   <button id="prev">&larr; 이전</button>
-  <span id="counter">1 / 12</span>
+  <span id="counter">1 / 11</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
   <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
