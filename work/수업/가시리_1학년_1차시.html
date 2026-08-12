@@ -41,6 +41,7 @@
   .nav-meta { color: #857c6e; font-size: 0.78rem; }
 
   .stage {
+    container-type: inline-size;
     width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
     background: var(--paper);
     background-image:
@@ -59,69 +60,70 @@
 
   h1.title-main {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(2.2rem, 5.2vw, 4rem); line-height: 1.15; letter-spacing: -0.01em;
+    font-size: clamp(2.2rem, 5.65cqw, 6.40rem); line-height: 1.15; letter-spacing: -0.01em;
   }
   h2.slide-title {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.35rem, 2.9vw, 2.3rem);
-    padding-bottom: 0.5rem; margin-bottom: 1.6rem;
-    border-bottom: 2px solid var(--ink); display: inline-block;
+    font-size: clamp(1.35rem, 3.15cqw, 3.68rem);
+    padding-bottom: 0.7cqw; margin-bottom: 2.15cqw;
+    border-bottom: 0.17cqw solid var(--ink); display: inline-block;
   }
   .kicker {
     font-family: "Gowun Batang", serif; color: var(--danchung);
-    font-size: clamp(0.8rem, 1.5vw, 1rem); letter-spacing: 0.32em;
-    margin-bottom: 1.4rem;
+    font-size: clamp(0.8rem, 1.63cqw, 1.60rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
   }
-  .lead { font-size: clamp(0.95rem, 1.8vw, 1.3rem); color: var(--ink-soft); line-height: 1.75; }
+  .lead { font-size: clamp(0.95rem, 1.96cqw, 2.08rem); color: var(--ink-soft); line-height: 1.75; }
 
   /* 표지 */
   .cover { justify-content: center; align-items: flex-start; }
-  .cover .rule { width: 74px; height: 3px; background: var(--danchung); margin: 1.7rem 0 1.5rem; }
-  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.2vw, 1.6rem); color: var(--ink-soft); }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--danchung); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.39cqw, 2.56rem); color: var(--ink-soft); }
   .cover .foot {
     position: absolute; left: 5.4%; right: 5.4%; bottom: 5%;
     display: flex; justify-content: space-between;
-    font-size: clamp(0.72rem, 1.3vw, 0.92rem); color: var(--ink-faint);
-    border-top: 1px solid var(--rule); padding-top: 0.8rem;
-    padding-right: 4.5em;
+    font-size: clamp(0.72rem, 1.41cqw, 1.47rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
   }
+  /* 표지에서는 우측 하단 페이지 번호를 숨겨 foot과 겹치지 않게 */
+  .cover .page-num { display: none; }
 
-  .body-area { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .body-area { flex: 1; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2%; flex: 1; min-height: 0; }
   .col-head {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.9rem, 1.65vw, 1.18rem);
-    color: var(--danchung); margin-bottom: 0.9rem;
-    padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, 1.79cqw, 1.89rem);
+    color: var(--danchung); margin-bottom: 1.2cqw;
+    padding-bottom: 0.55cqw; border-bottom: 0.09cqw solid var(--rule);
   }
 
   /* 원문 — 옛한글(아래아 등) 표기를 위해 함초롬바탕 계열 우선 지정 */
   .verse {
     font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
-    font-size: clamp(1.05rem, 2.35vw, 1.72rem);
+    font-size: clamp(1.05rem, 2.55cqw, 2.75rem);
     line-height: 2.05; letter-spacing: 0.01em;
   }
   .verse .refrain { color: var(--danchung); }
   .modern {
-    font-size: clamp(0.98rem, 2vw, 1.42rem);
+    font-size: clamp(0.98rem, 2.17cqw, 2.27rem);
     line-height: 2.0; color: var(--ink);
   }
 
   /* 정서 해설 박스 */
   .emotion {
     margin-top: auto; background: var(--card);
-    border-left: 4px solid var(--danchung);
-    padding: 1.05rem 1.3rem;
+    border-left: 0.34cqw solid var(--danchung);
+    padding: 1.4cqw 1.75cqw;
   }
   .emotion .etag {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.92rem, 1.7vw, 1.2rem); color: var(--danchung);
+    font-size: clamp(0.92rem, 1.85cqw, 1.92rem); color: var(--danchung);
     margin-bottom: 0.5rem;
   }
   .emotion ul { list-style: none; }
   .emotion li {
-    font-size: clamp(0.82rem, 1.5vw, 1.05rem); line-height: 1.7;
-    color: var(--ink-soft); padding-left: 1.35rem; position: relative;
+    font-size: clamp(0.82rem, 1.63cqw, 1.68rem); line-height: 1.7;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
   }
   .emotion li + li { margin-top: 0.28rem; }
   .emotion li::before { content: "—"; position: absolute; left: 0; color: var(--ink-faint); }
@@ -130,8 +132,8 @@
   .info-table { width: 100%; border-collapse: collapse; }
   .info-table th, .info-table td {
     text-align: left; vertical-align: top;
-    padding: 0.85rem 0.7rem; border-bottom: 1px solid var(--rule);
-    font-size: clamp(0.85rem, 1.55vw, 1.08rem); line-height: 1.65;
+    padding: 1.15cqw 0.95cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.85rem, 1.68cqw, 1.73rem); line-height: 1.65;
   }
   .info-table th {
     width: 5.2em; font-family: "Gowun Batang", serif; font-weight: 700;
@@ -140,8 +142,8 @@
 
   .num-list { list-style: none; }
   .num-list li {
-    font-size: clamp(0.85rem, 1.6vw, 1.1rem); line-height: 1.7;
-    padding-left: 2.1rem; position: relative; margin-bottom: 1.15rem;
+    font-size: clamp(0.85rem, 1.74cqw, 1.76rem); line-height: 1.7;
+    padding-left: 2.85cqw; position: relative; margin-bottom: 1.55cqw;
   }
   .num-list li .n {
     position: absolute; left: 0; top: 0.05em;
@@ -152,129 +154,129 @@
   /* 3음보 */
   .def-box {
     background: var(--card); border: 1px solid var(--rule);
-    padding: 1.4rem 1.6rem;
+    padding: 1.9cqw 2.15cqw;
   }
   .def-box .dt {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--danchung);
-    font-size: clamp(0.95rem, 1.75vw, 1.22rem); margin-bottom: 0.6rem;
+    font-size: clamp(0.95rem, 1.90cqw, 1.95rem); margin-bottom: 0.6rem;
   }
-  .def-box p { font-size: clamp(0.85rem, 1.6vw, 1.1rem); line-height: 1.85; color: var(--ink-soft); }
+  .def-box p { font-size: clamp(0.85rem, 1.74cqw, 1.76rem); line-height: 1.85; color: var(--ink-soft); }
   .meter {
     display: flex; align-items: flex-start; justify-content: center;
-    gap: clamp(0.7rem, 2vw, 1.8rem);
-    margin: auto 0; padding: 1.5rem 0;
+    gap: clamp(0.7rem, 2.17cqw, 2.88rem);
+    margin: auto 0; padding: 2cqw 0;
     font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
-    font-size: clamp(1.2rem, 3vw, 2.3rem);
+    font-size: clamp(1.2rem, 3.26cqw, 3.68rem);
   }
   .meter .beat { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
   .meter .beat .lbl {
-    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.62rem, 1.1vw, 0.8rem);
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.62rem, 1.20cqw, 1.28rem);
     color: var(--ink-faint); letter-spacing: 0.08em; white-space: nowrap;
   }
   .meter .bar { color: var(--danchung); font-size: 0.85em; line-height: 1.4; }
 
   /* 정서 흐름도 */
-  .flow { display: flex; align-items: stretch; gap: 0.55rem; flex: 1; min-height: 0; }
+  .flow { display: flex; align-items: stretch; gap: 0.75cqw; min-height: 0; }
   .flow-step {
-    flex: 1; background: var(--card); border-top: 3px solid var(--danchung);
-    padding: 1.15rem 0.95rem; display: flex; flex-direction: column;
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--danchung);
+    padding: 1.55cqw 1.3cqw; display: flex; flex-direction: column;
   }
   .flow-step .stage-label {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.85rem, 1.55vw, 1.1rem); margin-bottom: 0.15rem;
+    font-size: clamp(0.85rem, 1.68cqw, 1.76rem); margin-bottom: 0.15rem;
   }
   .flow-step .emo {
     font-family: "Gowun Batang", serif; color: var(--danchung);
-    font-size: clamp(1.05rem, 2.1vw, 1.5rem); margin-bottom: 0.75rem;
+    font-size: clamp(1.05rem, 2.28cqw, 2.40rem); margin-bottom: 0.75rem;
   }
   .flow-step .quote {
     font-family: "Gowun Batang", serif;
-    font-size: clamp(0.78rem, 1.4vw, 1rem); line-height: 1.6;
+    font-size: clamp(0.78rem, 1.52cqw, 1.60rem); line-height: 1.6;
     color: var(--ink); padding-bottom: 0.6rem; margin-bottom: 0.6rem;
     border-bottom: 1px solid var(--rule);
   }
   .flow-step .desc {
-    font-size: clamp(0.72rem, 1.3vw, 0.92rem); line-height: 1.6; color: var(--ink-soft);
+    font-size: clamp(0.72rem, 1.41cqw, 1.47rem); line-height: 1.6; color: var(--ink-soft);
   }
   .flow-arrow {
     display: flex; align-items: center; color: var(--danchung);
-    font-size: clamp(0.9rem, 1.8vw, 1.4rem);
+    font-size: clamp(0.9rem, 1.96cqw, 2.24rem);
   }
 
   /* 3단 카드 */
-  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; flex: 1; min-height: 0; }
-  .c3 { background: var(--card); border-top: 3px solid var(--danchung); padding: 1.3rem 1.15rem; }
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.9cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--danchung); padding: 1.75cqw 1.55cqw; }
   .c3 h3 {
-    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 1.96cqw, 2.00rem);
     margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule);
   }
-  .c3 p { font-size: clamp(0.78rem, 1.4vw, 1rem); line-height: 1.75; color: var(--ink-soft); }
+  .c3 p { font-size: clamp(0.78rem, 1.52cqw, 1.60rem); line-height: 1.75; color: var(--ink-soft); }
 
   /* 질문 강조 */
   .question-hero {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.3rem, 3.4vw, 2.6rem); line-height: 1.5;
+    font-size: clamp(1.3rem, 3.70cqw, 4.16rem); line-height: 1.5;
     margin-bottom: 1.1rem;
   }
   .question-hero em { font-style: normal; color: var(--danchung); }
   .refrain-note {
-    font-family: "Gowun Batang", serif; font-size: clamp(0.88rem, 1.7vw, 1.18rem);
+    font-family: "Gowun Batang", serif; font-size: clamp(0.88rem, 1.85cqw, 1.89rem);
     color: var(--ink-soft); margin-bottom: 2rem;
   }
 
   /* 단계 흐름 (민요→궁중) */
-  .steps { display: flex; flex-direction: column; gap: 1.15rem; flex: 1; justify-content: center; }
+  .steps { display: flex; flex-direction: column; gap: 1.55cqw; flex: 1; justify-content: center; }
   .step { display: flex; gap: 1.3rem; align-items: flex-start; }
   .step .sn {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.1rem, 2.3vw, 1.75rem); color: var(--danchung);
+    font-size: clamp(1.1rem, 2.50cqw, 2.80rem); color: var(--danchung);
     width: 1.9em; flex-shrink: 0; padding-top: 0.05em;
   }
   .step .sbody { flex: 1; padding-bottom: 1.1rem; border-bottom: 1px solid var(--rule); }
   .step:last-child .sbody { border-bottom: none; }
   .step h3 {
-    font-family: "Gowun Batang", serif; font-size: clamp(0.98rem, 1.9vw, 1.3rem);
+    font-family: "Gowun Batang", serif; font-size: clamp(0.98rem, 2.07cqw, 2.08rem);
     margin-bottom: 0.35rem;
   }
-  .step p { font-size: clamp(0.8rem, 1.45vw, 1.03rem); line-height: 1.75; color: var(--ink-soft); }
+  .step p { font-size: clamp(0.8rem, 1.58cqw, 1.65rem); line-height: 1.75; color: var(--ink-soft); }
 
   /* 퀴즈 */
   .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-  .quiz-guide { font-size: clamp(0.88rem, 1.7vw, 1.2rem); color: var(--ink-soft); margin-bottom: 1.8rem; }
+  .quiz-guide { font-size: clamp(0.88rem, 1.85cqw, 1.92rem); color: var(--ink-soft); margin-bottom: 1.8rem; }
   .quiz-q {
     font-family: "Gowun Batang", serif;
-    font-size: clamp(1.15rem, 2.7vw, 2rem); line-height: 1.75;
-    padding: 1.7rem 1.9rem; background: var(--card); border: 1px solid var(--rule);
+    font-size: clamp(1.15rem, 2.93cqw, 3.20rem); line-height: 1.75;
+    padding: 2.3cqw 2.55cqw; background: var(--card); border: 1px solid var(--rule);
   }
   .blank {
     display: inline-block; min-width: 4.5em; text-align: center;
     color: var(--danchung); border-bottom: 3px solid var(--danchung);
   }
   .ox-row {
-    display: flex; gap: clamp(2rem, 8vw, 6rem); justify-content: center;
+    display: flex; gap: clamp(2rem, 8.70cqw, 9.60rem); justify-content: center;
     margin-top: 2rem;
-    font-family: "Gowun Batang", serif; font-size: clamp(2rem, 6vw, 4.5rem);
+    font-family: "Gowun Batang", serif; font-size: clamp(2rem, 6.52cqw, 7.20rem);
     color: var(--ink-faint);
   }
   .answer-badge {
     display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.5rem, 3.8vw, 2.9rem); color: var(--paper);
-    background: var(--danchung); padding: 0.55rem 2rem; margin-bottom: 1.6rem;
+    font-size: clamp(1.5rem, 4.13cqw, 4.64rem); color: var(--paper);
+    background: var(--danchung); padding: 0.55rem 2rem; margin-bottom: 2.15cqw;
   }
   .answer-desc {
-    font-size: clamp(0.88rem, 1.7vw, 1.2rem); line-height: 1.95; color: var(--ink-soft);
+    font-size: clamp(0.88rem, 1.85cqw, 1.92rem); line-height: 1.95; color: var(--ink-soft);
     max-width: 46em;
   }
 
   /* 핵심 정리 */
-  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5rem; }
-  .srow { display: flex; gap: 1.6rem; align-items: baseline; }
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2.05cqw; }
+  .srow { display: flex; gap: 2.15cqw; align-items: baseline; }
   .srow .skey {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--danchung);
-    font-size: clamp(0.92rem, 1.8vw, 1.25rem); width: 6.2em; flex-shrink: 0;
+    font-size: clamp(0.92rem, 1.96cqw, 2.00rem); width: 6.2em; flex-shrink: 0;
     text-align: right;
   }
-  .srow .sval { flex: 1; font-size: clamp(0.85rem, 1.6vw, 1.12rem); line-height: 1.85; }
+  .srow .sval { flex: 1; font-size: clamp(0.85rem, 1.74cqw, 1.79rem); line-height: 1.85; }
   .srow .sval ul { list-style: none; margin-top: 0.5rem; }
   .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
   .srow .sval li + li { margin-top: 0.3rem; }
@@ -282,8 +284,8 @@
 
   /* 슬라이드 번호 / 컨트롤 */
   .page-num {
-    position: absolute; right: 3.2%; bottom: 3%;
-    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+    position: absolute; right: 3.2%; bottom: 2.6%;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.30cqw, 1.44rem);
     color: var(--ink-faint); letter-spacing: 0.08em;
   }
   .controls {
@@ -298,6 +300,18 @@
   .controls button:hover { background: #4a443c; }
   .controls button:disabled { opacity: 0.35; cursor: default; }
   .hint { color: #7d746a; font-size: 0.78rem; }
+
+  /* 전체화면 — 슬라이드가 화면을 채우고 UI는 숨김.
+     글자는 vw가 아니라 슬라이드 높이(cqh) 기준으로 키워 화면에 비례하게 만든다. */
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
 
   @media (max-width: 720px) {
     .cols, .cards3 { grid-template-columns: 1fr; gap: 1rem; }
@@ -691,7 +705,8 @@
   <button id="prev">&larr; 이전</button>
   <span id="counter">1 / 15</span>
   <button id="next">다음 &rarr;</button>
-  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동</span>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
 </div>
 
 <script>
@@ -723,11 +738,28 @@
     show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
   });
 
+  // 전체화면
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
   document.addEventListener('keydown', (e) => {
     if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
     else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
     else if (e.key === 'Home') show(0);
     else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
   });
 
   window.addEventListener('hashchange', () => {
