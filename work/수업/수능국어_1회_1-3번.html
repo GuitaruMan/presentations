@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 국어 실전 1회 1~3번 (독서: 요약과 비판적 이해)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&display=swap');
+
+  :root {
+    --bg: #10131a;
+    --paper: #ffffff;
+    --ink: #14181f;
+    --ink-soft: #4d5665;
+    --ink-faint: #8a93a3;
+    --line: #d9dee6;
+    --line-soft: #eceff4;
+    --key: #1f5fbf;         /* 핵심 파랑 */
+    --key-bg: #eaf1fc;
+    --warn: #c2372d;        /* 정답/함정 빨강 */
+    --warn-bg: #fdeceb;
+    --ok: #1d7a55;          /* 근거 초록 */
+    --ok-bg: #e8f5ef;
+    --hl: #fff3b0;          /* 형광 */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,19,26,0.94); z-index: 50;
+  }
+  .nav-top a { color: #93a0b5; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #dce4f0; }
+  .nav-meta { color: #6c7789; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    border: 1px solid #cfd6e0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.4% 5%;
+  }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity:1; transform:none;} }
+
+  /* ── 타이포: 1920×1080 전체화면에서 본문 ≈50px, 제목 ≈90px ── */
+  h2.slide-title {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 4.7cqw; line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
+    border-bottom: 0.25cqw solid var(--ink);
+  }
+  h2.slide-title .q {
+    color: var(--key); margin-right: 0.5em;
+  }
+  .body-area { flex: 1; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .kicker {
+    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-weight: 700; margin-bottom: 1.6cqw;
+  }
+  .cover h1 {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+  }
+  .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
+  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .foot {
+    position: absolute; left: 5%; right: 5%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: 1.7cqw; color: var(--ink-faint);
+    border-top: 1px solid var(--line); padding-top: 1.2cqw;
+  }
+  .cover .page-num { display: none; }
+
+  /* 공통 텍스트 */
+  .lead { font-size: 2.6cqw; line-height: 1.7; color: var(--ink-soft); }
+  .big { font-size: 3.1cqw; line-height: 1.65; }
+
+  /* 지문 인용 */
+  .quote-box {
+    background: #f7f9fc; border-left: 0.45cqw solid var(--key);
+    padding: 1.9cqw 2.2cqw; font-size: 2.5cqw; line-height: 1.8;
+  }
+  .quote-box .src { display:block; margin-top:0.8cqw; font-size:1.8cqw; color:var(--ink-faint); }
+
+  mark { background: var(--hl); padding: 0 0.15em; }
+  .u-key { color: var(--key); font-weight: 700; }
+  .u-warn { color: var(--warn); font-weight: 700; }
+  .u-ok { color: var(--ok); font-weight: 700; }
+
+  /* 문단 구조도 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.5cqw; }
+  .para-no {
+    flex-shrink: 0; width: 6.2cqw;
+    background: var(--key); color: #fff;
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; border: 1px solid var(--line); border-left: none;
+    padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+
+  /* 4규칙 카드 */
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5cqw; }
+  .rule {
+    border: 1px solid var(--line); border-top: 0.5cqw solid var(--key);
+    padding: 1.7cqw 1.4cqw;
+  }
+  .rule h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; color: var(--key);
+    margin-bottom: 0.9cqw;
+  }
+  .rule p { font-size: 2.05cqw; line-height: 1.6; color: var(--ink-soft); }
+  .rule .ex {
+    margin-top: 1cqw; padding-top: 0.9cqw; border-top: 1px dashed var(--line);
+    font-size: 1.9cqw; line-height: 1.55; color: var(--ink);
+  }
+  .rule .ex b { color: var(--ok); }
+
+  /* 2열 비교 */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; }
+  .card {
+    border: 1px solid var(--line); padding: 1.9cqw 2cqw;
+    display: flex; flex-direction: column;
+  }
+  .card.k { border-top: 0.5cqw solid var(--key); }
+  .card.w { border-top: 0.5cqw solid var(--warn); }
+  .card h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw;
+  }
+  .card.k h3 { color: var(--key); }
+  .card.w h3 { color: var(--warn); }
+  .card p, .card li { font-size: 2.25cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card ul { list-style: none; }
+  .card li { padding-left: 1.5cqw; position: relative; }
+  .card li + li { margin-top: 0.7cqw; }
+  .card li::before { content: "·"; position: absolute; left: 0.35cqw; color: var(--ink-faint); font-weight: 700; }
+
+  /* 선택지 */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
+  .choices li {
+    display: flex; gap: 1.1cqw; align-items: flex-start;
+    font-size: 2.3cqw; line-height: 1.55;
+    padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
+  }
+  .choices .n {
+    flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
+    font-size: 2.3cqw; width: 1.6em;
+  }
+  /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
+  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide .choices { gap: 0.35cqw; }
+  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: 2.02cqw; }
+  .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
+  .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
+  .slide.q-slide .bogi { font-size: 1.85cqw; padding: 1.2cqw 1.5cqw; }
+  .choices li.ans {
+    background: var(--warn-bg); border-color: #f0c0bc;
+  }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices li.dim { color: var(--ink-faint); }
+  .choices li.dim .n { color: #b9c0cc; }
+
+  /* 정답 배너 */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.4cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
+  }
+  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num {
+    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+  }
+  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+
+  /* 근거 대조 */
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
+  .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
+  .evi .box .h {
+    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+
+  /* 함정 포인트 */
+  .trap {
+    margin-top: 1.6cqw; background: var(--key-bg);
+    border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
+  }
+  .trap .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
+  }
+  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+
+  /* 오답 정리 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
+    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+  }
+  .otable th {
+    background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
+    color: var(--ink-soft);
+  }
+  .otable tr.ans th { background: var(--warn); color: #fff; }
+  .otable tr.ans td { background: var(--warn-bg); font-weight: 500; }
+
+  /* 보기 박스 */
+  .bogi {
+    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7;
+  }
+  .bogi .tag {
+    display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
+    font-size: 1.75cqw; margin-bottom: 1cqw;
+  }
+
+  /* 체크 정리 */
+  .checks { display: flex; flex-direction: column; gap: 1.5cqw; }
+  .check-row { display: flex; gap: 1.6cqw; align-items: flex-start; }
+  .check-row .k {
+    flex-shrink: 0; width: 9.5em; font-weight: 700; color: var(--key);
+    font-size: 2.35cqw; text-align: right;
+  }
+  .check-row .v { flex: 1; font-size: 2.35cqw; line-height: 1.65; color: var(--ink-soft); }
+
+  .page-num {
+    position: absolute; right: 3%; bottom: 2.6%;
+    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+  }
+
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #93a0b5; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #232a36; color: #dce4f0; border: 1px solid #3a4454;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2e3746; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #616c7d; font-size: 0.78rem; }
+
+  /* 전체화면 */
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .rules, .two, .evi { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 80vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../work.html">업무용</a>
+    <a href="../index.html">홈</a>
+  </div>
+  <div class="nav-meta">수능 국어 실전 1회 1~3번 · 3학년 · 업데이트 2026. 8. 12.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 표지 -->
+  <section class="slide active cover">
+    <div class="kicker">실 전 모 의 고 사 　1 회 　독 서</div>
+    <h1>요약과 비판적 이해</h1>
+    <div class="rule"></div>
+    <div class="sub">지문 구조 분석 &amp; 1~3번 문항 풀이</div>
+    <div class="foot">
+      <span>고3 · 수능 대비 문제풀이</span>
+      <span>1~3번 · 배점 2 / 2 / 3점</span>
+    </div>
+    <div class="page-num">1 / 12</div>
+  </section>
+
+  <!-- 2 지문 구조 -->
+  <section class="slide">
+    <h2 class="slide-title">지문 구조 한눈에 보기</h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">독서 목적에 따라 방법을 선택 &rarr; <span class="u-key">요약이 중요</span></div>
+            <div class="d">설명문 등 정보 습득이 목적일 때: 핵심 내용과 주제 파악이 필요</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">요약의 정의 &mdash; <span class="u-key">질적 왜곡 없이</span> 중요 정보 중심으로 압축</div>
+            <div class="d">단순히 분량만 줄이면 정보 편중·누락 발생 / 기억 용량 초과 때문에 자연스럽게 일어남</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">판데이크의 <span class="u-key">요약 규칙 4가지</span> &rarr; ㉠ 요약은 과정이자 결과</div>
+            <div class="d">삭제 · 선택 · 일반화 · 구성</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t">맥락도 고려해야 &rarr; 디지털 환경에서는 <span class="u-key">비판적 이해</span>가 필요</div>
+            <div class="d">하이퍼링크로 목적 이탈, 잘못된 정보·편향된 관점·숨은 목적</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t">비판적 이해 = <span class="u-key">내재적 관점</span> + <span class="u-key">외재적 관점</span></div>
+            <div class="d">글 내부를 따지는가, 글 밖의 영향까지 따지는가</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">2 / 12</div>
+  </section>
+
+  <!-- 4 요약 4규칙 -->
+  <section class="slide">
+    <h2 class="slide-title">판데이크의 요약 규칙 4가지</h2>
+    <div class="body-area">
+      <div class="rules">
+        <div class="rule">
+          <h3>삭제</h3>
+          <p>중요하지 않은 정보나 부수적인 명제를 <b>기억하지 않는</b> 것</p>
+          <div class="ex"><b>주의</b> 선택과 <mark>동시에</mark> 일어남</div>
+        </div>
+        <div class="rule">
+          <h3>선택</h3>
+          <p>중요하다고 판단한 정보를 <b>기억하는</b> 것</p>
+          <div class="ex"><b>주의</b> 삭제와 <mark>동시에</mark> 일어남</div>
+        </div>
+        <div class="rule">
+          <h3>일반화</h3>
+          <p>하위 개념을 <b>상위 개념으로</b> 바꾸어 기억하는 것</p>
+          <div class="ex"><b>예</b> 사과, 배, 딸기 &rarr; 과일</div>
+        </div>
+        <div class="rule">
+          <h3>구성</h3>
+          <p>여러 정보를 묶어 <b>새로운 명제로</b> 대체하는 것</p>
+          <div class="ex"><b>예</b> 쓰레기를 줍고 꽃씨를 심었다 &rarr; 화단을 가꾸었다</div>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">시험에 나오는 지점</div>
+        <p>삭제와 선택은 <b class="u-warn">서로 반대되는 작용처럼 보이지만 동시에 일어남</b> &mdash; 지문에 명시된 서술. 이 부분을 뒤집어 놓은 선택지가 자주 출제됨</p>
+      </div>
+    </div>
+    <div class="page-num">3 / 12</div>
+  </section>
+
+  <!-- 5 내재적·외재적 -->
+  <section class="slide">
+    <h2 class="slide-title">비판적 이해의 두 관점</h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>내재적 관점</h3>
+          <p style="margin-bottom:1.1cqw;"><b>글 내부</b>의 내용에 집중하여 따지는 것</p>
+          <ul>
+            <li>주장과 근거가 타당한가</li>
+            <li>글의 정보가 <b class="u-key">신뢰성</b>이 있는가</li>
+            <li>표현이 적절한가</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>외재적 관점</h3>
+          <p style="margin-bottom:1.1cqw;"><b>글 외부</b>에 초점을 두고 따지는 것</p>
+          <ul>
+            <li>이 글이 우리의 삶에서 어떤 의미를 지니는가</li>
+            <li>우리 <b class="u-warn">사회에 어떤 영향</b>을 미치는가</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">경계선 구분법</div>
+        <p>판단의 시선이 <b class="u-key">글 안</b>에 머무르면 내재적, <b class="u-warn">글 밖(삶·사회)</b>으로 나가면 외재적. &lsquo;출처가 없어 신뢰성이 낮다&rsquo;는 글 안의 문제이므로 <b class="u-key">내재적</b></p>
+      </div>
+    </div>
+    <div class="page-num">4 / 12</div>
+  </section>
+
+  <!-- 6 1번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">01</span>윗글을 이해한 내용으로 적절하지 <u>않은</u> 것은?</h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">요약을 할 때는 글에 있는 정보에 대한 질적인 왜곡이 없어야 한다.</span></li>
+        <li><span class="n">②</span><span class="txt">정보를 담을 수 있는 기억의 용량이 한계가 있으므로 독서에서 요약이 필요하다.</span></li>
+        <li><span class="n">③</span><span class="txt">글에 나와 있는 여러 정보를 새로운 명제로 대체하는 것은 요약의 규칙 중 구성에 해당한다.</span></li>
+        <li><span class="n">④</span><span class="txt">디지털 미디어 환경에서 접하는 글은 다른 글과 이어지는 경우가 많아 처음의 독서 목적에서 벗어나기 쉽다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">요약 과정에서 중요하지 않은 정보를 기억하지 않는 일과 중요하다고 판단한 정보를 기억하는 일은 동시에 일어날 수 없다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">5 / 12</div>
+  </section>
+
+  <!-- 7 1번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">01</span>정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why">&lsquo;동시에 일어날 수 없다&rsquo; &rarr; 지문은 <b>동시에 일어난다</b>고 서술</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (3문단)</div>
+          <p>&ldquo;삭제는 중요하지 않은 정보나 부수적인 명제를 기억하지 않는 것이고, 선택은 중요하다고 판단한 정보를 기억하는 것으로 <mark><b>삭제와 동시에 일어난다</b></mark>.&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ⑤</div>
+          <p>&ldquo;&hellip;기억하지 않는 일과 &hellip;기억하는 일은 <mark><b>동시에 일어날 수 없다</b></mark>.&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">서술어를 정반대로 뒤집은 전형적 오답</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">풀이 요령</div>
+        <p>선택지가 지문의 <b>개념 정의를 그대로 옮겨 놓았을 때</b>는 마지막 서술어까지 확인할 것. 앞부분이 지문과 똑같으면 뒷부분을 뒤집어 놓는 것이 출제의 기본 수법</p>
+      </div>
+    </div>
+    <div class="page-num">6 / 12</div>
+  </section>
+
+  <!-- 8 1번 오답 정리 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">01</span>선택지별 확인</h2>
+    <div class="body-area">
+      <table class="otable">
+        <tr><th>①</th><td>2문단 &ldquo;질적인 왜곡 없이 중요한 정보를 중심으로 압축&rdquo; &rarr; <b class="u-ok">적절</b></td></tr>
+        <tr><th>②</th><td>2문단 &ldquo;지식과 정보의 양이 기억의 용량을 초과하는 경우가 많아&rdquo; &rarr; <b class="u-ok">적절</b></td></tr>
+        <tr><th>③</th><td>3문단 &ldquo;구성은 &hellip; 여러 정보를 묶어 새로운 명제로 대체&rdquo; &rarr; <b class="u-ok">적절</b></td></tr>
+        <tr><th>④</th><td>4문단 &ldquo;하이퍼링크로 다른 글과 연결되어 &hellip; 본래의 독서 목적을 잃기 쉬우며&rdquo; &rarr; <b class="u-ok">적절</b></td></tr>
+        <tr class="ans"><th>⑤</th><td>3문단은 &ldquo;삭제와 <b>동시에 일어난다</b>&rdquo;고 명시 &rarr; <b>적절하지 않음 (정답)</b></td></tr>
+      </table>
+    </div>
+    <div class="page-num">7 / 12</div>
+  </section>
+
+  <!-- 9 2번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">02</span>㉠을 이해한 내용으로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <div class="quote-box" style="margin-bottom:1.8cqw;">
+        ㉠ <b>요약은 독서의 과정이자 결과가 된다.</b>
+        <span class="src">3문단 마지막 문장 &mdash; 요약의 네 규칙을 설명한 뒤에 나오는 결론</span>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">요약은 독서 중에 얻은 글의 정보를 통해 글의 목적과 의도를 분석한 내용을 결과물로 만들어 내는 활동이다.</span></li>
+        <li><span class="n">②</span><span class="txt">요약은 글에 있는 모든 정보를 효율적으로 기억하기 위해 글을 읽는 중이나 글을 읽은 후에 실시하는 활동이다.</span></li>
+        <li><span class="n">③</span><span class="txt">요약은 독서 중인 글을 이해하기 위해 글의 내용과 관련된 자신의 배경지식을 정리한 결과물을 도출하는 활동이다.</span></li>
+        <li><span class="n">④</span><span class="txt">요약은 독서 중에 독자가 자연스럽게 수행하는 활동이면서, 글의 내용을 이해하고 기억하기 위해 정리한 독서의 결과이다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">요약은 독서 중에 중요도가 낮은 정보에 대한 이해를 보류하고, 독서가 완료된 후 이해를 보류한 정보를 체계적으로 정리하는 활동이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">8 / 12</div>
+  </section>
+
+  <!-- 10 2번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">02</span>정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">④</span>
+        <span class="why"><b>과정</b>(자연스럽게 일어남) + <b>결과</b>(이해·기억을 위한 정리)를 모두 담음</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">&lsquo;과정&rsquo;의 근거 (2문단)</div>
+          <p>&ldquo;요약은 일반적인 독서 과정 중 <mark><b>자연스럽게 일어나는데</b></mark>&rdquo;</p>
+        </div>
+        <div class="box src">
+          <div class="h">&lsquo;결과&rsquo;의 근거 (2문단)</div>
+          <p>&ldquo;이미 읽은 부분을 효과적으로 <mark><b>이해하고 기억하기 위해서</b></mark>이다&rdquo; &rarr; 정리된 산물</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">접근법</div>
+        <p>밑줄 문항은 <b>밑줄 문장을 두 부분으로 쪼개는</b> 것이 출발점. &lsquo;과정&rsquo;과 &lsquo;결과&rsquo; 두 요소를 <b class="u-key">모두 만족하는</b> 선택지를 찾으면 ④만 남음</p>
+      </div>
+    </div>
+    <div class="page-num">9 / 12</div>
+  </section>
+
+  <!-- 11 2번 오답 정리 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">02</span>선택지별 확인</h2>
+    <div class="body-area">
+      <table class="otable">
+        <tr><th>①</th><td>&lsquo;글의 목적과 의도를 분석&rsquo;은 요약이 아니라 <b class="u-warn">비판적 이해</b>의 영역 &rarr; 부적절</td></tr>
+        <tr><th>②</th><td><b class="u-warn">&lsquo;모든 정보&rsquo;</b>가 오류. 요약은 중요한 정보 중심으로 압축하는 것 &rarr; 부적절</td></tr>
+        <tr><th>③</th><td><b class="u-warn">&lsquo;배경지식을 정리&rsquo;</b>가 오류. 요약의 대상은 글에 있는 정보 &rarr; 부적절</td></tr>
+        <tr class="ans"><th>④</th><td>독서 중 자연스럽게 수행하는 <b>활동(과정)</b>이면서 이해·기억을 위해 정리한 <b>결과</b> &rarr; <b>정답</b></td></tr>
+        <tr><th>⑤</th><td><b class="u-warn">&lsquo;이해를 보류&rsquo;</b>했다가 나중에 정리한다는 서술은 지문에 없음 &rarr; 부적절</td></tr>
+      </table>
+    </div>
+    <div class="page-num">10 / 12</div>
+  </section>
+
+  <!-- 12 3번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">03</span>&lt;보기&gt; 반응으로 적절하지 <u>않은</u> 것은? [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.5cqw;">
+        <span class="tag">보기</span>
+        <div style="font-size:1.95cqw; color:var(--ink-soft); margin-bottom:0.9cqw;">
+          ○ 글의 맥락: 개인 블로그의 게시글 &nbsp;/&nbsp; ○ 글의 내용
+        </div>
+        <div style="font-weight:700; text-align:center; margin-bottom:0.7cqw;">피로한 당신에게 꼭 필요한 정보</div>
+        피로 관련 의학 논문에서 ○○ 성분이 면역력을 높이고 피로 개선에 도움이 된다는 정보를 발견 &rarr; △△식품의 &lsquo;○○환&rsquo; 출시 소식 &rarr; 먹어 보니 효과가 좋았고 지인들도 추천 &rarr; △△식품 할인 행사 안내
+        <div style="margin-top:0.8cqw;">※ 이 글은 △△식품으로부터 제품을 무상으로 제공받아 작성</div>
+      </div>
+      <ul class="choices" style="gap:0.5cqw;">
+        <li style="padding:0.55cqw 1.2cqw;"><span class="n">①</span><span class="txt">제품 홍보라면 요약하기 같은 독서 방법뿐 아니라 비판적으로 이해하는 것도 필요하다.</span></li>
+        <li style="padding:0.55cqw 1.2cqw;"><span class="n">②</span><span class="txt">인용된 지인의 말을 중요하지 않다고 판단해 기억하지 않았다면, 요약 규칙 중 삭제가 일어났다.</span></li>
+        <li style="padding:0.55cqw 1.2cqw;"><span class="n">③</span><span class="txt">의학 논문의 출처가 없어 정보가 신뢰성이 낮다고 판단했다면, 이는 외재적 관점의 비판적 이해이다.</span></li>
+        <li style="padding:0.55cqw 1.2cqw;"><span class="n">④</span><span class="txt">글에 있는 정보만으로는 &lsquo;○○환&rsquo;이 효과가 있다는 근거가 부족하다면, 이는 내재적 관점의 비판적 이해이다.</span></li>
+        <li style="padding:0.55cqw 1.2cqw;"><span class="n">⑤</span><span class="txt">많은 사람이 건강식품에 의존하게 되어 사회에 부정적 영향을 미칠 수 있다면, 이는 비판적 이해에 해당한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">11 / 12</div>
+  </section>
+
+  <!-- 13 3번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">03</span>정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">③</span>
+        <span class="why">&lsquo;정보의 신뢰성&rsquo;은 <b>내재적</b> 관점 &mdash; 외재적이라 한 것이 오류</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (5문단)</div>
+          <p>&ldquo;글 내부의 내용에 집중하여 주장과 근거가 타당한지, <mark><b>글의 정보가 신뢰성이 있는지</b></mark>, 표현이 적절한지 등을 따져 보는 <b>내재적 관점</b>&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ③</div>
+          <p>출처가 없어 <b>신뢰성이 낮다</b>고 판단 &rarr; 지문 기준으로는 <b class="u-key">내재적</b></p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">그런데 &lsquo;외재적 관점&rsquo;이라고 서술 &rarr; 오류</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">⑤와 헷갈리지 않기</div>
+        <p>⑤는 &lsquo;사회에 부정적 영향&rsquo;을 말하므로 <b class="u-warn">외재적</b> 관점. 다만 선택지가 &lsquo;<b>비판적 이해에 해당한다</b>&rsquo;고만 했으므로 <b class="u-ok">적절</b> &mdash; 외재적도 비판적 이해의 하위 갈래이기 때문</p>
+      </div>
+    </div>
+    <div class="page-num">12 / 12</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 12</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  let idx = 0;
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
