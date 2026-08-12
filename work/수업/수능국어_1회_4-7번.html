@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 국어 실전 1회 4~7번 (독서: 피아제의 전개념적 사고기)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&display=swap');
+
+  :root {
+    --bg: #10131a;
+    --paper: #ffffff;
+    --ink: #14181f;
+    --ink-soft: #4d5665;
+    --ink-faint: #8a93a3;
+    --line: #d9dee6;
+    --key: #1f5fbf;
+    --key-bg: #eaf1fc;
+    --warn: #c2372d;
+    --warn-bg: #fdeceb;
+    --ok: #1d7a55;
+    --hl: #fff3b0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,19,26,0.94); z-index: 50;
+  }
+  .nav-top a { color: #93a0b5; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #dce4f0; }
+  .nav-meta { color: #6c7789; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    border: 1px solid #cfd6e0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.4% 5%;
+  }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity:1; transform:none;} }
+
+  h2.slide-title {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 4.7cqw; line-height: 1.2; flex-shrink: 0;
+    padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
+    border-bottom: 0.25cqw solid var(--ink);
+  }
+  h2.slide-title .q { color: var(--key); margin-right: 0.5em; }
+  .body-area {
+    flex: 1 1 0; display: flex; flex-direction: column;
+    min-height: 0; justify-content: center; overflow: hidden;
+  }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .kicker {
+    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-weight: 700; margin-bottom: 1.6cqw;
+  }
+  .cover h1 {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+  }
+  .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
+  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .foot {
+    position: absolute; left: 5%; right: 5%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: 1.7cqw; color: var(--ink-faint);
+    border-top: 1px solid var(--line); padding-top: 1.2cqw;
+  }
+  .cover .page-num { display: none; }
+
+  mark { background: var(--hl); padding: 0 0.15em; }
+  .u-key { color: var(--key); font-weight: 700; }
+  .u-warn { color: var(--warn); font-weight: 700; }
+  .u-ok { color: var(--ok); font-weight: 700; }
+
+  /* 문단 구조도 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.5cqw; }
+  .para-no {
+    flex-shrink: 0; width: 6.2cqw;
+    background: var(--key); color: #fff;
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; border: 1px solid var(--line); border-left: none;
+    padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+
+  /* 6행 구조도: 행이 하나 더 많아 한 단계 더 축약 */
+  .slide.s-flow h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.2cqw; }
+  .slide.s-flow .para-flow { gap: 0.6cqw; }
+  .slide.s-flow .para-body { padding: 0.75cqw 1.3cqw; }
+  .slide.s-flow .para-body .t { font-size: 1.98cqw; line-height: 1.35; }
+  .slide.s-flow .para-body .d { font-size: 1.62cqw; line-height: 1.4; margin-top: 0.2cqw; }
+  .slide.s-flow .para-no { font-size: 1.85cqw; width: 5cqw; }
+
+  /* 개념 카드 (5특성) */
+  .rules { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2cqw; }
+  .rule {
+    border: 1px solid var(--line); border-top: 0.5cqw solid var(--key);
+    padding: 1.5cqw 1.15cqw; display: flex; flex-direction: column;
+  }
+  .rule h3 {
+    font-family: "Noto Serif KR", serif; font-size: 2.35cqw; color: var(--key);
+    margin-bottom: 0.8cqw; line-height: 1.25;
+  }
+  .rule p { font-size: 1.82cqw; line-height: 1.55; color: var(--ink-soft); }
+  .rule .ex {
+    margin-top: auto; padding-top: 0.85cqw; border-top: 1px dashed var(--line);
+    font-size: 1.72cqw; line-height: 1.5; color: var(--ink);
+  }
+  .rule .ex b { color: var(--ok); }
+
+  /* 2열 비교 */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; }
+  .card {
+    border: 1px solid var(--line); padding: 1.9cqw 2cqw;
+    display: flex; flex-direction: column;
+  }
+  .card.k { border-top: 0.5cqw solid var(--key); }
+  .card.w { border-top: 0.5cqw solid var(--warn); }
+  .card h3 { font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw; }
+  .card.k h3 { color: var(--key); }
+  .card.w h3 { color: var(--warn); }
+  .card p, .card li { font-size: 2.2cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card ul { list-style: none; }
+  .card li { padding-left: 1.5cqw; position: relative; }
+  .card li + li { margin-top: 0.7cqw; }
+  .card li::before { content: "·"; position: absolute; left: 0.35cqw; color: var(--ink-faint); font-weight: 700; }
+  .card .quote {
+    margin-top: 1.1cqw; padding: 0.9cqw 1.2cqw; background: #f7f9fc;
+    font-size: 2cqw; line-height: 1.6; color: var(--ink);
+  }
+
+  /* 3단 카드 (보존 개념 이유) */
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6cqw; }
+  .c3 { border: 1px solid var(--line); border-top: 0.4cqw solid var(--key); padding: 1.6cqw 1.5cqw; }
+  .c3 h3 {
+    font-family: "Noto Serif KR", serif; font-size: 2.6cqw; color: var(--key);
+    margin-bottom: 0.9cqw; padding-bottom: 0.6cqw; border-bottom: 1px solid var(--line);
+  }
+  .c3 p { font-size: 2cqw; line-height: 1.65; color: var(--ink-soft); }
+
+  /* 선택지 */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
+  .choices li {
+    display: flex; gap: 1.1cqw; align-items: flex-start;
+    font-size: 2.3cqw; line-height: 1.55;
+    padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
+  }
+  .choices .n {
+    flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
+    font-size: 2.3cqw; width: 1.6em;
+  }
+  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide .choices { gap: 0.35cqw; }
+  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: 2.02cqw; }
+  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
+  /* 보기 지문이 긴 문항: 한 단계 더 축약 */
+  .slide.q-long h2.slide-title { font-size: 3.4cqw; margin-bottom: 1.1cqw; }
+  .slide.q-long .bogi { font-size: 1.62cqw; padding: 0.85cqw 1.2cqw; line-height: 1.55; }
+  .slide.q-long .bogi .tag { font-size: 1.4cqw; margin-bottom: 0.5cqw; }
+  .slide.q-long .choices li { font-size: 1.83cqw; line-height: 1.42; padding: 0.35cqw 0.9cqw; }
+  .slide.q-long .choices .n { font-size: 1.83cqw; }
+
+  /* 정답 배너 */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.4cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
+  }
+  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num {
+    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+  }
+  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+
+  /* 근거 대조 */
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
+  .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
+  .evi .box .h {
+    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+
+  .trap {
+    margin-top: 1.6cqw; background: var(--key-bg);
+    border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
+  }
+  .trap .h { font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw; }
+  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+
+  /* 오답 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
+    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+  }
+  .otable th {
+    background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
+    color: var(--ink-soft);
+  }
+  .otable tr.ans th { background: var(--warn); color: #fff; }
+  .otable tr.ans td { background: var(--warn-bg); font-weight: 500; }
+
+  /* 보기 박스 */
+  .bogi { border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7; }
+  .bogi .tag {
+    display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
+    font-size: 1.75cqw; margin-bottom: 1cqw;
+  }
+
+  .page-num {
+    position: absolute; right: 3%; bottom: 2.6%;
+    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+  }
+
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #93a0b5; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #232a36; color: #dce4f0; border: 1px solid #3a4454;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2e3746; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #616c7d; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .rules, .two, .evi, .cards3 { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 80vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../work.html">업무용</a>
+    <a href="../index.html">홈</a>
+  </div>
+  <div class="nav-meta">수능 국어 실전 1회 4~7번 · 3학년 · 업데이트 2026. 8. 12.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 표지 -->
+  <section class="slide active cover">
+    <div class="kicker">실 전 모 의 고 사 　1 회 　독 서</div>
+    <h1>피아제의 전개념적 사고기</h1>
+    <div class="rule"></div>
+    <div class="sub">지문 구조 분석 &amp; 4~7번 문항 풀이</div>
+    <div class="foot">
+      <span>고3 · 수능 대비 문제풀이</span>
+      <span>4~7번 · 배점 2 / 2 / 3 / 2점</span>
+    </div>
+    <div class="page-num">1 / 13</div>
+  </section>
+
+  <!-- 2 지문 구조 -->
+  <section class="slide s-flow">
+    <h2 class="slide-title">지문 구조 한눈에 보기</h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">전개념적 사고기(만 2~4세) &rarr; <span class="u-key">인지적 특성 5가지</span> 제시</div>
+            <div class="d">상징물 대체 가능 &middot; 언어 발달로 의사소통 효율화 / 그러나 인지적으로 미성숙</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t"><span class="u-key">자기중심성</span> &mdash; 세 산 모형 실험</div>
+            <div class="d">배려심 부족이 아니라 인지의 미성숙에서 기인한 자연스러운 현상</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t"><span class="u-key">물활론적 사고</span> &middot; <span class="u-key">인공론적 사고</span></div>
+            <div class="d">생명 없는 대상에 생명·감정 부여 / 자연물이 어떤 목적을 위해 만들어졌다고 생각</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t"><span class="u-key">전환적 추론</span> &mdash; 유사성·인접성에 기댄 비논리적 인과</div>
+            <div class="d">과학적·논리적 원리를 이해하지 못해 자신의 경험·감정을 현상에 연결</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t"><span class="u-key">보존 개념 미획득</span> &mdash; 원인 세 가지</div>
+            <div class="d">중심화 현상 &middot; 직관적 사고 &middot; 비가역성</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">6</div>
+          <div class="para-body">
+            <div class="t">비판과 의의 &rarr; <span class="u-key">과소평가</span> 논란</div>
+            <div class="d">관심 낮은 맥락·어려운 언어로 실제 능력 과소평가 / 유아의 독자적 사고방식 연구라는 의의</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">2 / 13</div>
+  </section>
+
+  <!-- 3 다섯 가지 특성 -->
+  <section class="slide">
+    <h2 class="slide-title">전개념적 사고기의 인지적 특성 5가지</h2>
+    <div class="body-area">
+      <div class="rules">
+        <div class="rule">
+          <h3>자기중심성</h3>
+          <p>모든 것을 자기중심적으로 생각함. 내가 좋아하는 것을 남도 좋아하고, 내가 보는 것을 남도 본다고 여김</p>
+          <div class="ex"><b>실험</b> 세 산 모형</div>
+        </div>
+        <div class="rule">
+          <h3>물활론적 사고</h3>
+          <p>생명이 없는 대상이나 자연 현상에 <b>생명과 감정</b>을 부여함</p>
+          <div class="ex"><b>예</b> &ldquo;그림자가 나를 좋아해서 따라오고 있어&rdquo;</div>
+        </div>
+        <div class="rule">
+          <h3>인공론적 사고</h3>
+          <p>자연물이나 자연 현상이 어떤 <b>목적을 위해</b> 만들어졌다고 생각함</p>
+          <div class="ex"><b>예</b> &ldquo;달은 밤에 무섭지 말라고 만들어 놓은 거야&rdquo;</div>
+        </div>
+        <div class="rule">
+          <h3>전환적 추론</h3>
+          <p>유사성이나 인접성을 바탕으로 <b>비논리적인 인과 관계</b>를 설정함</p>
+          <div class="ex"><b>예</b> &ldquo;내가 거짓말을 해서 감기에 걸린 거야&rdquo;</div>
+        </div>
+        <div class="rule">
+          <h3>보존 개념 미획득</h3>
+          <p>외양이 바뀌어도 양·수·부피 등 <b>본질적 속성은 그대로</b>임을 이해하지 못함</p>
+          <div class="ex"><b>원인</b> 중심화·직관적 사고·비가역성</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">3 / 13</div>
+  </section>
+
+  <!-- 4 물활론 vs 인공론 -->
+  <section class="slide">
+    <h2 class="slide-title">헷갈리는 두 개념: 물활론 vs 인공론</h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>물활론적 사고</h3>
+          <p>생명이 없는 대상이나 자연 현상에 <b>생명과 감정</b>을 부여하는 것</p>
+          <div class="quote">&ldquo;그림자가 나를 <b class="u-key">좋아해서</b> 따라오고 있어.&rdquo;</div>
+          <ul style="margin-top:1.1cqw;">
+            <li>판단 기준 &mdash; 대상이 <b>느끼는가</b>(감정·생명)</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>인공론적 사고</h3>
+          <p>자연물이나 자연 현상이 어떤 <b>목적을 위해</b> 만들어졌거나 누군가에 의해 만들어졌다고 생각하는 것</p>
+          <div class="quote">&ldquo;달은 밤에 무섭지 말라고 <b class="u-warn">만들어 놓은</b> 거야.&rdquo;</div>
+          <ul style="margin-top:1.1cqw;">
+            <li>판단 기준 &mdash; 대상이 <b>목적을 위해 만들어졌는가</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">한 진술에 둘이 겹칠 수 있음</div>
+        <p>&ldquo;하늘이 화분을 <b class="u-key">불쌍해해서</b>(감정 &rarr; 물활론) 물을 <b class="u-warn">주고 싶어서</b>(목적 &rarr; 인공론) 비가 온다&rdquo; &mdash; 한 문장에 두 사고가 함께 나타날 수 있으므로 어느 쪽만 맞다고 단정하지 말 것</p>
+      </div>
+    </div>
+    <div class="page-num">4 / 13</div>
+  </section>
+
+  <!-- 5 보존 개념 3원인 -->
+  <section class="slide">
+    <h2 class="slide-title">보존 개념을 획득하지 못하는 세 가지 이유</h2>
+    <div class="body-area">
+      <div class="cards3">
+        <div class="c3">
+          <h3>중심화 현상</h3>
+          <p>두 개 이상의 차원을 동시에 고려하지 못하고 <b>한 가지 차원에만</b> 주의를 집중함</p>
+          <p style="margin-top:0.9cqw; color:var(--ink);">컵의 &lsquo;높이&rsquo;만 보고 &lsquo;굵기&rsquo;는 함께 보지 못함</p>
+        </div>
+        <div class="c3">
+          <h3>직관적 사고</h3>
+          <p><b>지각적 특성</b>에 의해서 주로 판단함</p>
+          <p style="margin-top:0.9cqw; color:var(--ink);">눈에 보이는 대로 &mdash; 높아 보이면 많다고 판단</p>
+        </div>
+        <div class="c3">
+          <h3>비가역성</h3>
+          <p>어떤 변화가 일어났을 때 이것을 <b>이전의 상태로 되돌릴 수 있다</b>는 것을 이해하지 못함</p>
+          <p style="margin-top:0.9cqw; color:var(--ink);">다시 원래 컵에 부으면 같아진다는 것을 모름</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">5 / 13</div>
+  </section>
+
+  <!-- 6 4번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">04</span>윗글을 이해한 내용으로 적절하지 <u>않은</u> 것은?</h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">피아제는 두 개 이상의 차원을 동시에 고려하는 것은 보존 개념의 획득과 관련이 있다고 보았다.</span></li>
+        <li><span class="n">②</span><span class="txt">피아제는 자신이 느끼는 것을 다른 사람도 느끼고 있다고 생각하는 것이 자기중심성에 해당한다고 보았다.</span></li>
+        <li><span class="n">③</span><span class="txt">피아제는 전개념적 사고기의 유아가 배려에 대한 교육을 통해 자기중심적 사고에서 벗어날 수 있다고 보았다.</span></li>
+        <li><span class="n">④</span><span class="txt">피아제는 만 2세에서 만 4세까지의 시기에 인간의 인지적 성장과 언어 발달이 빠른 속도로 일어난다고 보았다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">피아제의 유아 인지 발달에 대한 실험과 연구는 유아의 관심이나 언어 능력을 세밀하게 고려하지 못했다는 비판을 받았다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">6 / 13</div>
+  </section>
+
+  <!-- 7 4번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">04</span>정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">③</span>
+        <span class="why">자기중심적 사고는 <b>배려심 부족이 아님</b> &mdash; 교육으로 벗어난다는 서술도 없음</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (2문단)</div>
+          <p>&ldquo;자기중심적 사고는 유아의 <mark><b>배려심이 부족하여 나타나는 것이 아니라</b></mark> 인지의 미성숙에서 기인한 자연스러운 현상이다.&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ③</div>
+          <p>&ldquo;<mark><b>배려에 대한 교육</b></mark>을 통해 자기중심적 사고에서 벗어날 수 있다&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">지문이 부정한 전제를 그대로 가져다 쓴 오답</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">풀이 요령</div>
+        <p>지문에 <b>&lsquo;A가 아니라 B&rsquo;</b> 형태의 서술이 나오면 선택지에서 A를 되살려 놓는 경우가 많음. 부정된 쪽을 표시해 두고 대조할 것</p>
+      </div>
+    </div>
+    <div class="page-num">7 / 13</div>
+  </section>
+
+  <!-- 8 5번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">05</span>전환적 추론에 대해 이해한 내용으로 적절하지 <u>않은</u> 것은?</h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">귀납적 추론이나 연역적 추론과 다르게 논리적인 사고로 볼 수 없다.</span></li>
+        <li><span class="n">②</span><span class="txt">유아가 사건이나 현상을 자신의 경험에 관련지을 때 발생할 수 있다.</span></li>
+        <li><span class="n">③</span><span class="txt">유아가 사건의 유사성이나 인접성을 바탕으로 사고할 때 나타날 수 있다.</span></li>
+        <li><span class="n">④</span><span class="txt">어떤 사건의 인과 관계를 논리적으로 추론하는 능력이 부족하여 발생하는 사고방식이다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">유아가 특정한 현상의 과학적인 원리를 이해하고 자신의 수준에 맞는 쉬운 단어를 사용하여 설명하는 것이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">8 / 13</div>
+  </section>
+
+  <!-- 9 5번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">05</span>정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why">과학적 원리를 <b>이해하지 못해서</b> 나타나는 사고 &mdash; 정반대로 서술</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (4문단)</div>
+          <p>&ldquo;유아가 사건이나 현상의 과학적, 논리적 원리를 <mark><b>이해하지 못해</b></mark>, 쉽게 설명할 수 있는 자신의 경험이나 감정을 사건이나 현상에 연결하여 해석하기 때문에 발생한다.&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ⑤</div>
+          <p>&ldquo;과학적인 원리를 <mark><b>이해하고</b></mark> 자신의 수준에 맞는 쉬운 단어를 사용하여 설명&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">&lsquo;쉽게 설명&rsquo;이라는 표현만 따와 의미를 뒤집음</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">함정 구조</div>
+        <p>지문의 <b>&lsquo;쉽게 설명할 수 있는&rsquo;</b>은 자신의 경험·감정을 가리키는 말이지, 유아가 원리를 알고 쉬운 말로 설명한다는 뜻이 아님. 수식 대상을 확인할 것</p>
+      </div>
+    </div>
+    <div class="page-num">9 / 13</div>
+  </section>
+
+  <!-- 10 6번 문제 -->
+  <section class="slide q-slide q-long">
+    <h2 class="slide-title"><span class="q">06</span>&lt;보기&gt;에 대한 반응으로 가장 적절한 것은? [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.3cqw;">
+        <span class="tag">보기</span>
+        심리학자 갑은 전개념적 사고기 유아를 대상으로 인지 발달 능력을 확인하기 위해, 유아에게 친숙하고 흥미가 있는 놀이인 숨바꼭질에서 착안한 &lsquo;경찰 인형 실험&rsquo;을 하였다. 모형 벽과 경찰 인형을 배치한 후, 유아에게 소년 인형이 잡히지 않도록 경찰이 볼 수 없는 곳에 소년 인형을 배치하라고 하는 것이다. 이때 유아들은 한 명의 경찰이 배치된 상황뿐 아니라 두 명의 경찰이 배치된 복잡한 상황에서도 대부분 소년 인형을 잘 숨겼다.
+      </div>
+      <ul class="choices" style="gap:0.3cqw;">
+        <li style="padding:0.45cqw 1cqw;"><span class="n">①</span><span class="txt">갑의 경찰 인형 실험은 피아제의 세 산 모형 실험과 달리 전개념적 사고기 유아의 자기중심성이 잘 드러나는군.</span></li>
+        <li style="padding:0.45cqw 1cqw;"><span class="n">②</span><span class="txt">갑의 경찰 인형 실험의 결과에 따르면 전개념적 사고기 유아의 인지 수준이 피아제가 생각한 것보다 높지 않다는 것을 알 수 있군.</span></li>
+        <li style="padding:0.45cqw 1cqw;"><span class="n">③</span><span class="txt">갑의 경찰 인형 실험과 피아제의 세 산 모형 실험은 모두 전개념적 사고기 유아가 개인별로 인지 능력의 차이가 크다는 것을 보여 주는군.</span></li>
+        <li style="padding:0.45cqw 1cqw;"><span class="n">④</span><span class="txt">갑의 경찰 인형 실험과 피아제의 세 산 모형 실험의 결과에서 유아의 인지 능력이 다르게 나타나는 것은 실험에 사용한 맥락 조건의 차이가 영향을 미쳤겠군.</span></li>
+        <li style="padding:0.45cqw 1cqw;"><span class="n">⑤</span><span class="txt">갑의 경찰 인형 실험은 피아제의 세 산 모형 실험과 달리 특정 상황에서 타인의 시각적 관점을 전개념적 사고기 유아가 추론할 수 있는지를 판단하기 위한 실험이군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">10 / 13</div>
+  </section>
+
+  <!-- 11 6번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">06</span>정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">④</span>
+        <span class="why">두 실험의 결과 차이 &rarr; <b>맥락 조건</b>(관심 낮음 vs 친숙·흥미)의 차이</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (6문단)</div>
+          <p>&ldquo;세 산 모형 실험처럼 <mark><b>유아의 관심이 낮은 맥락 조건</b></mark>을 사용하거나 &hellip; 유아가 자신의 인지 능력을 제대로 발휘할 수 없어, 유아의 실제 능력을 <b>과소평가</b>했다는 비판&rdquo;</p>
+        </div>
+        <div class="box src">
+          <div class="h">&lt;보기&gt; 조건</div>
+          <p>&ldquo;유아에게 <mark><b>친숙하고 흥미가 있는 놀이</b></mark>인 숨바꼭질에서 착안&rdquo; &rarr; 대부분 소년 인형을 잘 숨김</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">⑤를 고르기 쉬운 이유</div>
+        <p>⑤의 내용 자체는 그럴듯하지만 <b class="u-warn">&lsquo;세 산 모형 실험과 달리&rsquo;</b>가 어긋남. 세 산 모형 실험 <b>역시</b> 타인의 시각적 관점 추론을 확인하는 실험이므로 두 실험의 차이로 볼 수 없음</p>
+      </div>
+    </div>
+    <div class="page-num">11 / 13</div>
+  </section>
+
+  <!-- 12 7번 문제 -->
+  <section class="slide q-slide q-long">
+    <h2 class="slide-title"><span class="q">07</span>&lt;보기&gt;의 ⓐ~ⓒ를 이해한 내용으로 적절하지 <u>않은</u> 것은?</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.2cqw;">
+        <span class="tag">보기</span>
+        <div style="margin-bottom:0.5cqw;">ⓐ 아이가 나무토막을 앞뒤로 움직이며 자동차 소리와 유사한 &lsquo;부릉부릉, 빵빵&rsquo;이라는 소리를 내면서 놀고 있다.</div>
+        <div style="margin-bottom:0.5cqw;">ⓑ 아이가 비가 내리는 것을 보고 &lsquo;비가 오는 건 하늘이 내 화분을 불쌍해해서 물을 주고 싶어서 그런 거야.&rsquo;라고 말했다.</div>
+        <div>ⓒ 같은 모양의 투명한 컵 A, B에 같은 양의 우유를 담아 놓고 물었더니 똑같다고 답함. B의 우유를 가늘고 긴 컵 C에 옮겨 담는 것을 보여 주고 A와 C 중 어느 것이 더 많은지 물었더니 C가 더 많다고 답함.</div>
+      </div>
+      <ul class="choices" style="gap:0.3cqw;">
+        <li style="padding:0.45cqw 1cqw;"><span class="n">①</span><span class="txt">ⓐ: 아이가 눈앞에 없는 대상을 상징물로 대체하는 사례로 전개념적 사고기를 넘어선 것을 보여 준다.</span></li>
+        <li style="padding:0.45cqw 1cqw;"><span class="n">②</span><span class="txt">ⓑ: 아이가 인공론적 사고를 바탕으로 특정 현상을 해석하는 것을 보여 준다.</span></li>
+        <li style="padding:0.45cqw 1cqw;"><span class="n">③</span><span class="txt">ⓑ: 아이가 생명이 없는 대상에 감정을 부여하는 물활론적 사고를 하고 있는 것을 보여 준다.</span></li>
+        <li style="padding:0.45cqw 1cqw;"><span class="n">④</span><span class="txt">ⓒ: 아이가 보존 개념을 획득하지 못한 것이므로 전개념적 사고기의 특성을 보여 준다.</span></li>
+        <li style="padding:0.45cqw 1cqw;"><span class="n">⑤</span><span class="txt">ⓒ: 아이가 C에 담긴 우유를 다시 B에 담으면 이전의 모습과 같아진다는 것을 알지 못하는 것으로 비가역성을 보여 준다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">12 / 13</div>
+  </section>
+
+  <!-- 13 7번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">07</span>정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">①</span>
+        <span class="why">상징물 대체는 전개념적 사고기의 <b>특징</b> &mdash; &lsquo;넘어선 것&rsquo;이 아님</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (1문단)</div>
+          <p>&ldquo;<mark><b>이 시기에</b></mark> 유아가 눈앞에 존재하지 않는 대상이나 사건을 머릿속에서 표상하고 그것을 <mark><b>언어나 상징물로 대체할 수 있게 되며</b></mark>&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ①</div>
+          <p>&ldquo;상징물로 대체하는 사례로 전개념적 사고기를 <mark><b>넘어선 것</b></mark>을 보여 준다&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">해당 시기의 특징을 &lsquo;그 시기를 벗어난 증거&rsquo;로 뒤집음</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">②와 ③이 함께 맞는 이유</div>
+        <p>ⓑ에는 &lsquo;하늘이 <b class="u-key">불쌍해해서</b>&rsquo;(감정 부여 &rarr; 물활론)와 &lsquo;물을 <b class="u-warn">주고 싶어서</b>&rsquo;(목적 &rarr; 인공론)가 함께 들어 있음. 두 선택지가 모두 적절할 수 있으므로 하나를 배제하지 말 것</p>
+      </div>
+    </div>
+    <div class="page-num">13 / 13</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 13</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  let idx = 0;
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
