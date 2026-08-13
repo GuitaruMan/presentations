@@ -262,6 +262,14 @@
     margin-bottom: 0.3rem;
   }
   .step p { font-size: clamp(0.76rem, 1.50cqw, 1.57rem); line-height: 1.72; color: var(--ink-soft); }
+  /* 시대 이름을 머리말로 쓰는 흐름 — 이름이 줄바꿈되지 않도록 넉넉히 */
+  .steps.era { gap: 2cqw; }
+  .steps.era .sn {
+    width: 5.4em; white-space: nowrap; text-align: right;
+    font-size: clamp(1.05rem, 2.50cqw, 2.75rem);
+  }
+  .steps.era .step p { font-size: clamp(0.86rem, 1.79cqw, 1.88rem); line-height: 1.8; }
+  .steps.era .sbody { padding-bottom: 1.5cqw; }
 
   .act-badge {
     display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
@@ -530,38 +538,6 @@
 
   <!-- 7 -->
   <section class="slide">
-    <h2 class="slide-title">한시의 표현상 특징</h2>
-    <div class="body-area">
-      <div class="cols">
-        <div>
-          <div class="col-head">&#9312; 은유법 &mdash; 잔치의 사물을 백성의 고통에 빗댐</div>
-          <table class="info-table">
-            <tr><th>술[酒]</th><td>피[血]</td></tr>
-            <tr><th>안주[肴]</th><td>기름[膏]</td></tr>
-            <tr><th>촛불 눈물<br>[燭淚]</th><td>백성 눈물[民淚]</td></tr>
-            <tr><th>노랫소리<br>[歌聲]</th><td>원망 소리[怨聲]</td></tr>
-          </table>
-        </div>
-        <div>
-          <div class="col-head">&#9313; 대구법</div>
-          <div class="def-box">
-            <p>첫 번째 구와 두 번째 구, 세 번째 구와 네 번째 구가 <strong style="color:var(--dan);">짝을 이루어</strong> 놓임 &mdash; 가락이 고르게 맞아떨어지며 뜻이 또렷해진다</p>
-          </div>
-          <div class="def-box">
-            <div class="dt">기능</div>
-            <p>
-              &#9312; 사건의 극적 긴장감을 높이며 새로운 사건의 전개를 예고함<br>
-              &#9313; 민중의 분노를 대변하여 가렴주구하는 정치 현실을 비판함으로써 <strong>작품의 주제를 강화</strong>함
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="page-num">7 / 31</div>
-  </section>
-
-  <!-- 8 -->
-  <section class="slide">
     <h2 class="slide-title">원문 &middot; 출두 직전의 긴장</h2>
     <div class="body-area">
       <div class="verse" style="margin-bottom:1.3cqw;">
@@ -583,10 +559,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">8 / 31</div>
+    <div class="page-num">7 / 31</div>
   </section>
 
-  <!-- 9 -->
+  <!-- 8 -->
   <section class="slide">
     <h2 class="slide-title">원문 &middot; 암행어사 출두야</h2>
     <div class="body-area">
@@ -616,10 +592,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">9 / 31</div>
+    <div class="page-num">8 / 31</div>
   </section>
 
-  <!-- 10 -->
+  <!-- 9 -->
   <section class="slide">
     <h2 class="slide-title">원문 &middot; 달아나는 사람들</h2>
     <div class="body-area">
@@ -644,10 +620,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">10 / 31</div>
+    <div class="page-num">9 / 31</div>
   </section>
 
-  <!-- 11 -->
+  <!-- 10 -->
   <section class="slide">
     <h2 class="slide-title">어휘 풀이 &middot; 출두 자리의 말들</h2>
     <div class="body-area">
@@ -662,10 +638,10 @@
         <div class="gl"><span class="gw">정렬부인(貞烈夫人)</span><span class="gd">절개를 지킨 부인에게 나라에서 내리던 칭호</span></div>
       </div>
     </div>
-    <div class="page-num">11 / 31</div>
+    <div class="page-num">10 / 31</div>
   </section>
 
-  <!-- 12 -->
+  <!-- 11 -->
   <section class="slide">
     <h2 class="slide-title">원문 &middot; 마지막 시험과 재회</h2>
     <div class="body-area">
@@ -683,10 +659,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">12 / 31</div>
+    <div class="page-num">11 / 31</div>
   </section>
 
-  <!-- 13 -->
+  <!-- 12 -->
   <section class="slide">
     <h2 class="slide-title">원문 &middot; 결말</h2>
     <div class="body-area">
@@ -716,6 +692,38 @@
         </ul>
       </div>
     </div>
+    <div class="page-num">12 / 31</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <h2 class="slide-title">한시의 표현상 특징</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">&#9312; 은유법 &mdash; 잔치의 사물을 백성의 고통에 빗댐</div>
+          <table class="info-table">
+            <tr><th>술[酒]</th><td>피[血]</td></tr>
+            <tr><th>안주[肴]</th><td>기름[膏]</td></tr>
+            <tr><th>촛불 눈물<br>[燭淚]</th><td>백성 눈물[民淚]</td></tr>
+            <tr><th>노랫소리<br>[歌聲]</th><td>원망 소리[怨聲]</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="col-head">&#9313; 대구법</div>
+          <div class="def-box">
+            <p>첫 번째 구와 두 번째 구, 세 번째 구와 네 번째 구가 <strong style="color:var(--dan);">짝을 이루어</strong> 놓임 &mdash; 가락이 고르게 맞아떨어지며 뜻이 또렷해진다</p>
+          </div>
+          <div class="def-box">
+            <div class="dt">기능</div>
+            <p>
+              &#9312; 사건의 극적 긴장감을 높이며 새로운 사건의 전개를 예고함<br>
+              &#9313; 민중의 분노를 대변하여 가렴주구하는 정치 현실을 비판함으로써 <strong>작품의 주제를 강화</strong>함
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="page-num">13 / 31</div>
   </section>
 
@@ -734,7 +742,7 @@
           또한 인물을 희화화하거나 언어유희를 사용하여 웃음을 유발하기도 하는데, 이를 통해 판소리 특유의 풍자와 해학이 드러난다.
         </p>
       </div>
-      <div class="emotion">
+      <div class="emotion" style="margin-bottom:6cqw;">
         <div class="etag">찾아봅시다</div>
         <ul>
           <li>소리꾼의 어투 / 확장적 문체 / 풍자와 해학 &mdash; 각각에 해당하는 대목을 <strong>쪽수와 함께</strong> 찾아 말해 봅시다</li>
@@ -953,6 +961,40 @@
 
   <!-- 23 -->
   <section class="slide">
+    <h2 class="slide-title">문학사의 흐름 속에서 &lt;춘향전&gt; 이해하기</h2>
+    <div class="body-area">
+      <div class="steps era">
+        <div class="step">
+          <div class="sn">설화</div>
+          <div class="sbody">
+            <p><strong>설씨녀 설화</strong>를 비롯하여 관탈 민녀 설화인 도미 설화, 암행어사 설화인 박문수 설화 등 여러 근원 설화가 판소리 &lt;춘향가&gt; 형성에 기여함</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">판소리</div>
+          <div class="sbody">
+            <p><strong>판소리</strong>의 운문적인 표현과 소리꾼이 사용하던 어투, 인물에 대한 희화화나 언어유희로 웃음을 유발하는 방식이 소설에 영향을 줌</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">소설</div>
+          <div class="sbody">
+            <p>&lt;춘향전&gt;이 향유되던 당대의 <strong>사회상</strong>이 작품의 주제 의식에 반영됨</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">오늘</div>
+          <div class="sbody">
+            <p>인간의 보편적 정서인 사랑을 바탕으로 현실 사회의 문제를 다루어, 오늘날에도 계속 <strong style="color:var(--dan);">다양한 내용과 형식으로 재창조</strong>되고 있음</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">23 / 31</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide">
     <h2 class="slide-title">학습 활동 4-(1)</h2>
     <div class="body-area">
       <div><span class="act-badge">학습 활동</span></div>
@@ -977,10 +1019,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">23 / 31</div>
+    <div class="page-num">24 / 31</div>
   </section>
 
-  <!-- 24 -->
+  <!-- 25 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 4-(2) &middot; 예시 답안</h2>
     <div class="body-area">
@@ -1009,10 +1051,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">24 / 31</div>
+    <div class="page-num">25 / 31</div>
   </section>
 
-  <!-- 25 -->
+  <!-- 26 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 4-(3) &middot; 예시 답안</h2>
     <div class="body-area">
@@ -1026,10 +1068,10 @@
         <li><span class="n">6</span>누구나 자신의 생각이나 감상을 담아 <strong>새로운 콘텐츠를 생산</strong>할 수 있다</li>
       </ul>
     </div>
-    <div class="page-num">25 / 31</div>
+    <div class="page-num">26 / 31</div>
   </section>
 
-  <!-- 26 -->
+  <!-- 27 -->
   <section class="slide">
     <h2 class="slide-title">생비자(prosumer)</h2>
     <div class="body-area">
@@ -1056,10 +1098,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">26 / 31</div>
+    <div class="page-num">27 / 31</div>
   </section>
 
-  <!-- 27 -->
+  <!-- 28 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 4-(4) &middot; 성찰</h2>
     <div class="body-area">
@@ -1080,10 +1122,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">27 / 31</div>
+    <div class="page-num">28 / 31</div>
   </section>
 
-  <!-- 28 -->
+  <!-- 29 -->
   <section class="slide">
     <h2 class="slide-title">소단원 마무리 퀴즈</h2>
     <div class="body-area quiz-wrap">
@@ -1095,10 +1137,10 @@
         <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>4.</strong> &lt;춘향전&gt;과 그 근원 설화인 설씨녀 설화는 &lsquo;정절의 수호&rsquo;라는 주제를 공유한다. &nbsp;( O / X )</div></div>
       </div>
     </div>
-    <div class="page-num">28 / 31</div>
+    <div class="page-num">29 / 31</div>
   </section>
 
-  <!-- 29 -->
+  <!-- 30 -->
   <section class="slide">
     <h2 class="slide-title">소단원 마무리 퀴즈 &middot; 정답</h2>
     <div class="body-area">
@@ -1122,40 +1164,6 @@
         <div class="ox-item">
           <div class="mark">O</div>
           <div class="txt">&lt;춘향전&gt;과 그 근원 설화인 설씨녀 설화는 &lsquo;정절의 수호&rsquo;라는 주제를 공유한다.</div>
-        </div>
-      </div>
-    </div>
-    <div class="page-num">29 / 31</div>
-  </section>
-
-  <!-- 30 -->
-  <section class="slide">
-    <h2 class="slide-title">문학사의 흐름 속에서 &lt;춘향전&gt; 이해하기</h2>
-    <div class="body-area">
-      <div class="steps">
-        <div class="step">
-          <div class="sn">설화</div>
-          <div class="sbody">
-            <p><strong>설씨녀 설화</strong>를 비롯하여 관탈 민녀 설화인 도미 설화, 암행어사 설화인 박문수 설화 등 여러 근원 설화가 판소리 &lt;춘향가&gt; 형성에 기여함</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="sn">판소리</div>
-          <div class="sbody">
-            <p><strong>판소리</strong>의 운문적인 표현과 소리꾼이 사용하던 어투, 인물에 대한 희화화나 언어유희로 웃음을 유발하는 방식이 소설에 영향을 줌</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="sn">소설</div>
-          <div class="sbody">
-            <p>&lt;춘향전&gt;이 향유되던 당대의 <strong>사회상</strong>이 작품의 주제 의식에 반영됨</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="sn">오늘</div>
-          <div class="sbody">
-            <p>인간의 보편적 정서인 사랑을 바탕으로 현실 사회의 문제를 다루어, 오늘날에도 계속 <strong style="color:var(--dan);">다양한 내용과 형식으로 재창조</strong>되고 있음</p>
-          </div>
         </div>
       </div>
     </div>
