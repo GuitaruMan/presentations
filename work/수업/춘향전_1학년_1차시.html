@@ -184,6 +184,11 @@
     white-space: nowrap; width: 7em; background: var(--card);
   }
   .cmp-table .hl { color: var(--dan); font-weight: 500; }
+  /* 행이 많은 표 — 조금 조밀하게 */
+  .cmp-table.tight th, .cmp-table.tight td {
+    padding: 0.68cqw 0.8cqw; font-size: clamp(0.6rem, 1.24cqw, 1.30rem); line-height: 1.55;
+  }
+  .cmp-table.tight thead th { font-size: clamp(0.66rem, 1.36cqw, 1.42rem); }
   .cmp-table tr:last-child td { border-bottom: none; }
 
   .num-list { list-style: none; }
@@ -393,12 +398,12 @@
     <div class="kicker">조 선 　 판 소 리 계 　 소 설</div>
     <h1 class="title-main">춘향전</h1>
     <div class="rule"></div>
-    <div class="sub">이야기의 내력과 인물, 그리고 잔치의 자리</div>
+    <div class="sub">갈래의 내력과 절정의 시작</div>
     <div class="foot">
       <span>작자 미상</span>
       <span>1학년 · 1차시</span>
     </div>
-    <div class="page-num">1 / 22</div>
+    <div class="page-num">1 / 21</div>
   </section>
 
   <!-- 2 -->
@@ -417,10 +422,10 @@
       </div>
       <div class="def-box">
         <div class="dt">1차시에 할 일</div>
-        <p>&lt;춘향전&gt;이 <strong style="color:var(--dan);">설화 &rarr; 판소리 &rarr; 판소리계 소설</strong>로 이어진 내력을 살피고, 수록 부분의 첫 대목을 읽으며 인물의 성격과 작품의 주제를 파악한다</p>
+        <p>&lt;춘향전&gt;이 <strong style="color:var(--dan);">설화 &rarr; 판소리 &rarr; 판소리계 소설</strong>로 이어진 내력을 살피고, 절정의 앞부분을 읽으며 몽룡이 지은 한시에 담긴 뜻을 파악한다</p>
       </div>
     </div>
-    <div class="page-num">2 / 22</div>
+    <div class="page-num">2 / 21</div>
   </section>
 
   <!-- 3 -->
@@ -454,7 +459,7 @@
         </div>
       </div>
     </div>
-    <div class="page-num">3 / 22</div>
+    <div class="page-num">3 / 21</div>
   </section>
 
   <!-- 4 -->
@@ -487,14 +492,14 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">4 / 22</div>
+    <div class="page-num">4 / 21</div>
   </section>
 
   <!-- 5 -->
   <section class="slide">
     <h2 class="slide-title">&lt;춘향전&gt;의 근원 설화</h2>
     <div class="body-area">
-      <table class="cmp-table">
+      <table class="cmp-table tight">
         <thead>
           <tr><th>근원 설화</th><th>어떤 이야기인가</th><th>&lt;춘향전&gt;에 반영된 내용</th></tr>
         </thead>
@@ -527,7 +532,7 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">5 / 22</div>
+    <div class="page-num">5 / 21</div>
   </section>
 
   <!-- 6 -->
@@ -558,7 +563,7 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">6 / 22</div>
+    <div class="page-num">6 / 21</div>
   </section>
 
   <!-- 7 -->
@@ -590,7 +595,7 @@
         </div>
       </div>
     </div>
-    <div class="page-num">7 / 22</div>
+    <div class="page-num">7 / 21</div>
   </section>
 
   <!-- 8 -->
@@ -630,7 +635,7 @@
         </div>
       </div>
     </div>
-    <div class="page-num">8 / 22</div>
+    <div class="page-num">8 / 21</div>
   </section>
 
   <!-- 9 -->
@@ -656,7 +661,7 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">9 / 22</div>
+    <div class="page-num">9 / 21</div>
   </section>
 
   <!-- 10 -->
@@ -688,7 +693,7 @@
         </div>
       </div>
     </div>
-    <div class="page-num">10 / 22</div>
+    <div class="page-num">10 / 21</div>
   </section>
 
   <!-- 11 -->
@@ -706,7 +711,7 @@
         <div class="gl"><span class="gw">백수한삼(白袖汗衫)</span><span class="gd">기생이나 무동이 춤출 때 손목에 착용하는 긴 소매</span></div>
       </div>
     </div>
-    <div class="page-num">11 / 22</div>
+    <div class="page-num">11 / 21</div>
   </section>
 
   <!-- 12 -->
@@ -743,201 +748,150 @@
         </div>
       </div>
     </div>
-    <div class="page-num">12 / 22</div>
+    <div class="page-num">12 / 21</div>
   </section>
 
   <!-- 13 -->
   <section class="slide">
-    <h2 class="slide-title">인물 &middot; 춘향</h2>
+    <h2 class="slide-title">원문 &middot; 푸대접받는 어사또</h2>
     <div class="body-area">
-      <div class="cols">
+      <div class="cols wide-left">
         <div>
-          <div class="col-head">말과 행동</div>
-          <ul class="num-list">
-            <li><span class="n">1</span>본관 사또의 수청을 거절하고, 한양에 간 몽룡을 끝까지 기다림</li>
-            <li><span class="n">2</span>옥에 갇혀 모진 고초를 겪으면서도 뜻을 굽히지 않음</li>
-            <li><span class="n">3</span>어사가 다시 수청을 묻자 &ldquo;내려오는 관장마다 낱낱이 명관이로구나.&rdquo;라며 냉소함</li>
-          </ul>
+          <div class="verse">
+            <p><span class="hl">어사또의 상을 보니 어찌 아니 통분하랴.</span> 모서리 떨어진 개상판에 닥나무 젓가락, 콩나물, 깍두기, 막걸리 한 사발 놓았구나.</p>
+            <p>상을 발길로 탁 차 던지며 운봉 영장의 갈빗대를 직신 쑤시며,</p>
+            <p class="said">&ldquo;<span class="hl">갈비 한 대 먹고지고.</span>&rdquo;</p>
+            <span class="src">교과서 32쪽 12~15행</span>
+          </div>
         </div>
         <div>
-          <div class="col-head">성격</div>
-          <div class="def-box">
-            <p><strong style="color:var(--dan);">의리와 절개를 중시함</strong><br>주체적이고 의지적임</p>
-          </div>
-          <div class="emotion" style="margin-top:1.4cqw;">
-            <div class="etag">두 겹의 얼굴</div>
+          <div class="col-head">두 가지 장치</div>
+          <div class="emotion" style="margin-top:0;">
+            <div class="etag">서술자의 개입</div>
             <ul>
-              <li>몽룡과의 약속을 지키는 <strong>열녀</strong>로서의 면모</li>
-              <li>불의한 권력에 맞서는 <strong>민중</strong>으로서의 면모</li>
-              <li>춘향의 시련은 신분적 한계를 넘어서려는 인간 해방의 의지를 상징함</li>
+              <li>&ldquo;어찌 아니 통분하랴.&rdquo; &mdash; 형편없는 상을 받은 상황에 서술자가 끼어들어 직접 분을 드러냄. 변학도의 <strong>인색함</strong>을 보이는 동시에, 뒤이을 한시와 어사출두에 <strong>극적 재미</strong>를 더함</li>
+            </ul>
+          </div>
+          <div class="emotion" style="margin-top:1.3cqw;">
+            <div class="etag">언어유희</div>
+            <ul>
+              <li>사람의 <strong>갈비뼈</strong>를 쑤시면서 상에 오른 <strong>갈비</strong>를 먹고 싶다고 말함 &mdash; 동음이의어를 활용한 말장난</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <div class="page-num">13 / 22</div>
+    <div class="page-num">13 / 21</div>
   </section>
 
   <!-- 14 -->
   <section class="slide">
-    <h2 class="slide-title">인물 &middot; 몽룡</h2>
+    <h2 class="slide-title">원문 &middot; 몽룡이 시를 짓다</h2>
     <div class="body-area">
-      <div class="cols">
-        <div>
-          <div class="col-head">말과 행동</div>
-          <ul class="num-list">
-            <li><span class="n">1</span>옥중의 춘향에게 걸인 행색으로 나타나 자신의 신분을 속임</li>
-            <li><span class="n">2</span>생일잔치에서 시를 지어 탐관오리를 겨누고, 출두를 주도면밀하게 준비함</li>
-            <li><span class="n">3</span>어사출두 뒤에도 정체를 먼저 밝히지 않고 춘향의 절개를 시험함</li>
-          </ul>
-        </div>
-        <div>
-          <div class="col-head">성격</div>
-          <div class="def-box">
-            <p>의리를 중시함<br><strong style="color:var(--dan);">주도면밀하지만 의뭉스러운(능청스러운) 면</strong>도 있음</p>
-          </div>
-          <div class="emotion" style="margin-top:1.4cqw;">
-            <div class="etag">생각해 볼 점</div>
-            <ul>
-              <li>몽룡의 여유와 능청은 결말의 극적 전환을 돋보이게 하지만, 그만큼 서사의 무게 중심은 <strong>춘향에게로 기운다</strong></li>
-            </ul>
-          </div>
-        </div>
+      <div class="verse" style="margin-bottom:1.4cqw;">
+        <p class="said">&ldquo;이 걸인도 어려서 추구(抽句) 좀 읽었으니 좋은 잔치에 와서 술과 안주 배불리 먹고 그냥 가기 염치없으니 <span class="hl">차운(次韻) 한 수 하사이다.</span>&rdquo;</p>
+        <p>좌중 사람들이 다 짓지도 못했는데 순식간에 글 두 귀를 지었으되, 백성들의 생활 형편과 본관 사또의 행정 실태를 생각하여 지었것다.</p>
+        <span class="src">교과서 33쪽 6~10행</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">여기에 담긴 것</div>
+        <ul>
+          <li>백성에게서 빼앗아 차린 잔치를 &lsquo;좋은 잔치&rsquo;라 하고, 형편없는 상을 받고도 &lsquo;배불리 먹었다&rsquo;고 말하는 <strong>반어적 표현</strong></li>
+          <li>남들보다 빨리 시를 짓는 모습에서 몽룡의 뛰어난 <strong>문재(文才)</strong>가 드러남 &mdash; 주인공의 월등한 능력을 보이는 것은 고전 소설에서 흔히 보이는 서술</li>
+          <li>&lsquo;백성의 형편과 사또의 행정을 생각하여 지었다&rsquo;고 서술자가 미리 알려 주는 것도 <strong>편집자적 논평</strong></li>
+        </ul>
       </div>
     </div>
-    <div class="page-num">14 / 22</div>
+    <div class="page-num">14 / 21</div>
   </section>
 
   <!-- 15 -->
   <section class="slide">
-    <h2 class="slide-title">인물 &middot; 변학도와 운봉 영장</h2>
+    <h2 class="slide-title">몽룡의 한시</h2>
     <div class="body-area">
-      <div class="cols">
-        <div>
-          <div class="col-head">변학도 &mdash; 본관 사또</div>
-          <ul class="num-list">
-            <li><span class="n">1</span>부임하자마자 춘향에게 수청을 강요하고 옥에 가둠</li>
-            <li><span class="n">2</span>생일잔치에 걸인으로 나타난 몽룡을 못마땅하게 여기고 형편없는 상을 내림</li>
-            <li><span class="n">3</span>몽룡의 한시를 보고도 그 뜻을 전혀 알아채지 못함</li>
-          </ul>
-          <div class="def-box">
-            <p><strong style="color:var(--dan);">탐욕스럽고 인색함. 어리석고 눈치가 없음</strong></p>
-          </div>
-        </div>
-        <div>
-          <div class="col-head">운봉 영장 &mdash; 곁에서 지켜보는 눈</div>
-          <ul class="num-list">
-            <li><span class="n">1</span>걸인 행색의 몽룡을 말석에 앉히자고 제안함</li>
-            <li><span class="n">2</span>한시를 읽고 &lsquo;아뿔싸, 일이 났구나.&rsquo; 하며 어사출두를 예감함</li>
-            <li><span class="n">3</span>관속을 단속하며 위기를 준비함</li>
-          </ul>
-          <div class="def-box">
-            <p><strong style="color:var(--dan);">사람을 알아보는 눈(지인지감)이 있음</strong> &mdash; 변학도의 어리석음을 견주어 드러내는 인물</p>
-          </div>
-        </div>
+      <div class="hanshi">
+        <div class="han">금준미주(金樽美酒) 천인혈(千人血)이요</div>
+        <div class="kor">금동이의 아름다운 술은 <strong>온 백성의 피</strong>요</div>
+        <div class="han">옥반가효(玉盤佳肴) 만성고(萬姓膏)라.</div>
+        <div class="kor">옥소반의 아름다운 안주는 <strong>온 백성의 기름</strong>이라.</div>
+        <div class="han">촉루락시(燭淚落時) 민루락(民淚落)이요</div>
+        <div class="kor">촛불 눈물 떨어질 때 <strong>백성 눈물</strong> 떨어지고</div>
+        <div class="han">가성고처(歌聲高處) 원성고(怨聲高)라.</div>
+        <div class="kor">노랫소리 높은 곳에 <strong>원망 소리</strong> 높았더라.</div>
+      </div>
+      <div class="emotion">
+        <div class="etag">읽고 나서</div>
+        <ul>
+          <li>운봉 영장이 낸 운자는 높을 고(高), 기름 고(膏) &mdash; 그 두 글자를 받아 지은 시</li>
+          <li>이 시를 본 운봉 영장은 &lsquo;아뿔싸, 일이 났구나.&rsquo; 하고 어사출두를 예감하지만, 정작 비판의 표적인 <strong>변학도는 아무 눈치도 채지 못한다</strong></li>
+          <li><strong>어사또가 지은 글귀는 이후 벌어질 사건과 어떤 관련이 있을까?</strong></li>
+        </ul>
       </div>
     </div>
-    <div class="page-num">15 / 22</div>
+    <div class="page-num">15 / 21</div>
   </section>
 
   <!-- 16 -->
   <section class="slide">
-    <h2 class="slide-title">학습 활동 1-(2)</h2>
+    <h2 class="slide-title">한시의 표현상 특징</h2>
     <div class="body-area">
-      <div><span class="act-badge">학습 활동</span></div>
-      <div class="act-q">말과 행동을 근거로 하여 인물의 성격을 파악해 보자.</div>
-      <table class="cmp-table">
-        <thead>
-          <tr><th>인물</th><th>말과 행동</th><th>성격</th></tr>
-        </thead>
-        <tbody>
-          <tr><th>춘향</th><td>본관 사또의 수청을 거절하고 한양에 간 몽룡을 끝까지 기다림.</td><td class="hl">?</td></tr>
-          <tr><th>몽룡</th><td>옥중에서 춘향에게 자신의 신분을 속임. 암행어사가 되어 춘향을 위기에서 구함.</td><td class="hl">?</td></tr>
-          <tr><th>변학도</th><td>춘향에게 수청을 강요하고 옥에 가둠. 생일잔치에 걸인으로 등장한 몽룡을 못마땅하게 여김. 몽룡의 정체를 알아차리지 못함.</td><td class="hl">?</td></tr>
-        </tbody>
-      </table>
+      <div class="cols">
+        <div>
+          <div class="col-head">&#9312; 은유법 &mdash; 잔치의 사물을 백성의 고통에 빗댐</div>
+          <table class="info-table">
+            <tr><th>술[酒]</th><td>피[血]</td></tr>
+            <tr><th>안주[肴]</th><td>기름[膏]</td></tr>
+            <tr><th>촛불 눈물<br>[燭淚]</th><td>백성 눈물[民淚]</td></tr>
+            <tr><th>노랫소리<br>[歌聲]</th><td>원망 소리[怨聲]</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="col-head">&#9313; 대구법</div>
+          <div class="def-box">
+            <p>첫 번째 구와 두 번째 구, 세 번째 구와 네 번째 구가 <strong style="color:var(--dan);">짝을 이루어</strong> 놓임 &mdash; 가락이 고르게 맞아떨어지며 뜻이 또렷해진다</p>
+          </div>
+          <div class="def-box">
+            <div class="dt">기능</div>
+            <p>
+              &#9312; 사건의 극적 긴장감을 높이며 새로운 사건의 전개를 예고함<br>
+              &#9313; 민중의 분노를 대변하여 가렴주구하는 정치 현실을 비판함으로써 <strong>작품의 주제를 강화</strong>함
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="page-num">16 / 22</div>
+    <div class="page-num">16 / 21</div>
   </section>
 
   <!-- 17 -->
   <section class="slide">
-    <h2 class="slide-title">학습 활동 1-(2) &middot; 예시 답안</h2>
-    <div class="body-area">
-      <table class="cmp-table">
-        <thead>
-          <tr><th>인물</th><th>말과 행동</th><th>성격</th></tr>
-        </thead>
-        <tbody>
-          <tr><th>춘향</th><td>본관 사또의 수청을 거절하고 한양에 간 몽룡을 끝까지 기다림.</td><td class="hl">의리와 절개를 중시함. 주체적이고 의지적임.</td></tr>
-          <tr><th>몽룡</th><td>옥중에서 춘향에게 자신의 신분을 속임. 암행어사가 되어 춘향을 위기에서 구함.</td><td class="hl">의리를 중시함. 주도면밀하지만 의뭉스러운(능청스러운) 면도 있음.</td></tr>
-          <tr><th>변학도</th><td>춘향에게 수청을 강요하고 옥에 가둠. 생일잔치에 걸인으로 등장한 몽룡을 못마땅하게 여김. 몽룡의 정체를 알아차리지 못함.</td><td class="hl">탐욕스럽고 인색함. 어리석고 눈치가 없음.</td></tr>
-        </tbody>
-      </table>
-      <div class="emotion">
-        <div class="etag">더 해 볼 활동</div>
-        <ul>
-          <li><strong>운봉 영장</strong>의 말과 행동을 근거로 그 성격과 서사에서의 역할도 정리해 봅시다</li>
-        </ul>
+    <h2 class="slide-title">확인 퀴즈</h2>
+    <div class="body-area quiz-wrap">
+      <div class="quiz-guide">다음 빈칸에 들어갈 알맞은 말을 생각해 봅시다.</div>
+      <div class="quiz-q">
+        몽룡의 한시는 잔칫상의 술과 안주를 백성의 피와 기름에 빗대었다.
+        이처럼 &lsquo;무엇은 무엇이다&rsquo;의 방식으로 원관념과 보조 관념을 견주어 말하는 표현 방법을
+        <span class="blank">&nbsp;?&nbsp;</span>이라 한다.
       </div>
     </div>
-    <div class="page-num">17 / 22</div>
+    <div class="page-num">17 / 21</div>
   </section>
 
   <!-- 18 -->
   <section class="slide">
-    <h2 class="slide-title">학습 활동 1-(3)</h2>
-    <div class="body-area">
-      <div><span class="act-badge">학습 활동</span></div>
-      <div class="act-q">등장인물 사이의 관계를 중심으로 하여 &lt;춘향전&gt;의 다양한 주제를 생각해 보자.</div>
-      <div class="def-box">
-        <p>
-          &lt;춘향전&gt;은 남녀 간의 사랑이라는 보편적인 이야기를 다루고 있지만, 그 속에는 당대의 다양한 사회 문제도 담겨 있다.
-          &lt;춘향전&gt;이 향유되던 조선 후기는 <strong style="color:var(--dan);">평민 의식이 성장</strong>하면서 양인과 천민을 구분하는 신분 제도와 유교적 가부장제,
-          탐관오리의 횡포에 대한 저항이 거세지는 시기였다.
-        </p>
-      </div>
-      <div class="cards2" style="margin-top:1.8cqw;">
-        <div class="c3">
-          <h3>춘향과 몽룡의 관계에 주목하면</h3>
-          <p style="color:var(--dan);font-size:clamp(0.9rem,1.9cqw,2rem);">?</p>
-        </div>
-        <div class="c3">
-          <h3>본관 사또와 춘향의 관계에 주목하면</h3>
-          <p style="color:var(--dan);font-size:clamp(0.9rem,1.9cqw,2rem);">?</p>
-        </div>
+    <h2 class="slide-title">확인 퀴즈 &middot; 정답</h2>
+    <div class="body-area quiz-wrap">
+      <div><span class="answer-badge">은유법</span></div>
+      <div class="answer-desc">
+        술[酒]&rarr;피[血], 안주[肴]&rarr;기름[膏], 촛불 눈물[燭淚]&rarr;백성 눈물[民淚], 노랫소리[歌聲]&rarr;원망 소리[怨聲].
+        네 짝이 나란히 놓이며 <strong>대구</strong>를 이루고, 잔치의 화려함이 곧 백성의 고통에서 나온 것임을 정면으로 짚어
+        어사출두의 정당성을 마련한다
       </div>
     </div>
-    <div class="page-num">18 / 22</div>
+    <div class="page-num">18 / 21</div>
   </section>
 
   <!-- 19 -->
-  <section class="slide">
-    <h2 class="slide-title">학습 활동 1-(3) &middot; 예시 답안</h2>
-    <div class="body-area">
-      <div class="cards2" style="flex:0 0 auto;">
-        <div class="c3">
-          <h3>춘향과 몽룡의 관계에 주목하면</h3>
-          <p>춘향을 통한 <strong style="color:var(--dan);">유교적 정절(열녀) 의식의 고취</strong></p>
-          <p>신분을 뛰어넘는 남녀 간의 지순한 사랑</p>
-        </div>
-        <div class="c3">
-          <h3>본관 사또와 춘향의 관계에 주목하면</h3>
-          <p><strong style="color:var(--dan);">탐관오리(불의한 지배 계층)의 횡포에 대한 저항</strong></p>
-          <p>서민 계층의 저항과 인간 해방</p>
-        </div>
-      </div>
-      <div class="emotion">
-        <div class="etag">함께 짚을 점</div>
-        <ul>
-          <li>&lsquo;정절 의식의 고취&rsquo;가 오늘의 눈에는 시대에 뒤떨어져 보일 수 있습니다. 작품에 대한 다양한 수용과 해석은 존중받아야 하되, <strong>&lt;춘향전&gt;이 놓인 시대 상황을 고려한 당대적 시각</strong>으로도 읽어 볼 필요가 있습니다</li>
-        </ul>
-      </div>
-    </div>
-    <div class="page-num">19 / 22</div>
-  </section>
-
-  <!-- 20 -->
   <section class="slide">
     <h2 class="slide-title">확인 퀴즈</h2>
     <div class="body-area quiz-wrap">
@@ -948,10 +902,10 @@
         읽을거리인 소설로 정착하였다.
       </div>
     </div>
-    <div class="page-num">20 / 22</div>
+    <div class="page-num">19 / 21</div>
   </section>
 
-  <!-- 21 -->
+  <!-- 20 -->
   <section class="slide">
     <h2 class="slide-title">확인 퀴즈 &middot; 정답</h2>
     <div class="body-area quiz-wrap">
@@ -961,55 +915,49 @@
         인물을 희화화하는 풍자와 해학이 소설 문장 속에 그대로 남아 있다
       </div>
     </div>
-    <div class="page-num">21 / 22</div>
+    <div class="page-num">20 / 21</div>
   </section>
 
-  <!-- 22 -->
+  <!-- 21 -->
   <section class="slide">
     <h2 class="slide-title">1차시 핵심 정리</h2>
     <div class="body-area">
       <div class="summary-list">
         <div class="srow">
           <div class="skey">갈래와 형성</div>
-          <div class="sval">판소리계 소설, 애정 소설 &mdash; 근원 설화 &rarr; 판소리 &lt;춘향가&gt; &rarr; 소설 &lt;춘향전&gt;
-            <ul>
-              <li>관탈 민녀&middot;열녀&middot;염정&middot;신원&middot;암행어사 설화가 바탕이 됨</li>
-            </ul>
-          </div>
+          <div class="sval">판소리계 소설, 애정 소설 &mdash; 근원 설화 &rarr; 판소리 &lt;춘향가&gt; &rarr; 소설 &lt;춘향전&gt;</div>
         </div>
         <div class="srow">
           <div class="skey">서사</div>
           <div class="sval">발단 &rarr; 전개 &rarr; 위기 &rarr; <strong style="color:var(--dan);">절정</strong> &rarr; 결말 &mdash; 교과서 수록 부분은 절정과 결말</div>
         </div>
         <div class="srow">
-          <div class="skey">인물</div>
-          <div class="sval">
+          <div class="skey">오늘 읽은 대목</div>
+          <div class="sval">변학도의 생일잔치 &rarr; 걸인을 말석에 &rarr; 푸대접받는 어사또 &rarr; 몽룡이 시를 짓다
             <ul>
-              <li>춘향 &mdash; 의리와 절개를 중시하는 주체적&middot;의지적 인물</li>
-              <li>몽룡 &mdash; 주도면밀하되 의뭉스러운 면이 있는 인물</li>
-              <li>변학도 &mdash; 탐욕스럽고 인색하며 눈치 없는 인물</li>
-              <li>운봉 영장 &mdash; 사람을 알아보는 눈이 있어 변학도와 견주어지는 인물</li>
+              <li>서술자가 끼어들어 &ldquo;어찌 아니 명관인가.&rdquo;, &ldquo;어찌 아니 통분하랴.&rdquo;라고 논평함</li>
+              <li>&lsquo;갈비 한 대 먹고지고&rsquo; &mdash; 동음이의어를 활용한 언어유희</li>
             </ul>
           </div>
         </div>
         <div class="srow">
-          <div class="skey">주제</div>
-          <div class="sval">신분을 초월한 사랑(표면) / 불의한 지배 계층에 대한 항거와 인간 해방(이면)</div>
+          <div class="skey">한시</div>
+          <div class="sval">술&rarr;피, 안주&rarr;기름, 촛불 눈물&rarr;백성 눈물, 노랫소리&rarr;원망 소리 &mdash; 은유와 대구로 긴장을 높이고 주제를 강화함</div>
         </div>
         <div class="srow">
           <div class="skey">다음 시간</div>
-          <div class="sval">몽룡의 한시와 어사출두 대목을 읽고, 판소리계 소설의 표현을 확인합니다</div>
+          <div class="sval">암행어사 출두와 재회 대목을 읽고, 사건&middot;인물&middot;주제를 정리합니다</div>
         </div>
       </div>
     </div>
-    <div class="page-num">22 / 22</div>
+    <div class="page-num">21 / 21</div>
   </section>
 
 </div>
 
 <div class="controls">
   <button id="prev">&larr; 이전</button>
-  <span id="counter">1 / 22</span>
+  <span id="counter">1 / 21</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
   <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
