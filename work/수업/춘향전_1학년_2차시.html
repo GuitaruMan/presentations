@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>춘향전 (1학년-2차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --paper: #f5f1e8;
+    --paper-edge: #e6dfd0;
+    --ink: #241f1c;
+    --ink-soft: #6b5f56;
+    --ink-faint: #a89a8c;
+    --dan: #8a2b52;           /* 자주 — 춘향전 강조색 */
+    --dan-soft: #b06f8a;
+    --rule: #d5cab5;
+    --card: #fbf8f1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #2b2422;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(43,36,34,0.92); z-index: 50;
+  }
+  .nav-top a { color: #c0b0a4; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #eadfd2; }
+  .nav-meta { color: #8d7f74; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 15% 9%, rgba(255,255,255,0.62) 0%, transparent 56%),
+      radial-gradient(ellipse at 85% 91%, rgba(160,120,110,0.20) 0%, transparent 60%),
+      repeating-linear-gradient(0deg,
+        rgba(140,90,80,0.045) 0px, rgba(140,90,80,0.045) 1px,
+        transparent 1px, transparent 26px),
+      repeating-linear-gradient(90deg,
+        rgba(140,90,80,0.045) 0px, rgba(140,90,80,0.045) 1px,
+        transparent 1px, transparent 26px);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.2% 5.4%;
+  }
+  /* 우측 상단 — 소리꾼의 합죽선 */
+  .stage::before {
+    content: ""; position: absolute; top: -2%; right: -2%;
+    width: 30%; height: 56%; pointer-events: none; opacity: 0.15;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 260'><g fill='none' stroke='%238a2b52' stroke-width='2.4' stroke-linecap='round'><path d='M184.3 56.8 A185 185 0 0 0 26.3 217.4'/><path d='M203 190.5 A50 50 0 0 0 160.4 233.9'/><path d='M203 190.5 L184.3 56.8'/><path d='M190.4 194 L137.7 69.6'/><path d='M179.2 200.6 L96 94.2'/><path d='M170.1 209.9 L62.2 128.7'/><path d='M163.6 221.3 L38.5 170.7'/><path d='M160.4 233.9 L26.3 217.4'/></g><circle cx='210' cy='240' r='5' fill='%238a2b52'/></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.85cqw, 5.50rem); line-height: 1.18; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.15cqw, 3.68rem);
+    padding-bottom: 0.7cqw; margin-bottom: 2.15cqw;
+    border-bottom: 0.17cqw solid var(--ink); display: inline-block;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--dan);
+    font-size: clamp(0.8rem, 1.63cqw, 1.60rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(0.95rem, 1.96cqw, 2.08rem); color: var(--ink-soft); line-height: 1.75; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--dan); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.39cqw, 2.56rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 5.4%; right: 5.4%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.41cqw, 1.47rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2%; flex: 1; min-height: 0; }
+  .cols.wide-left { grid-template-columns: 1.3fr 1fr; }
+  .cols.wide-right { grid-template-columns: 1fr 1.35fr; }
+  .col-head {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.9rem, 1.79cqw, 1.89rem);
+    color: var(--dan); margin-bottom: 1.2cqw;
+    padding-bottom: 0.55cqw; border-bottom: 0.09cqw solid var(--rule);
+  }
+
+  .verse {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.86rem, 1.85cqw, 1.95rem);
+    line-height: 1.95; letter-spacing: 0.005em;
+  }
+  .verse .hl { color: var(--dan); font-weight: 700; }
+  .verse .said { display: block; padding-left: 1.2em; }
+  .verse p + p { margin-top: 0.7cqw; }
+  .src {
+    display: block; margin-top: 0.9cqw;
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.62rem, 1.22cqw, 1.28rem);
+    color: var(--ink-faint); letter-spacing: 0.04em;
+  }
+
+  /* 한시 */
+  .hanshi {
+    display: grid; grid-template-columns: auto 1fr; gap: 0.6cqw 2.4cqw;
+    align-items: baseline; justify-content: center;
+    margin: 0.4cqw 0;
+  }
+  .hanshi .han {
+    font-family: "Noto Serif KR", "Gowun Batang", serif;
+    font-size: clamp(0.9rem, 2.0cqw, 2.15rem); color: var(--dan); letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+  .hanshi .kor {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.82rem, 1.72cqw, 1.80rem); line-height: 1.8; color: var(--ink);
+  }
+
+  .emotion {
+    margin-top: auto; background: var(--card);
+    border-left: 0.34cqw solid var(--dan);
+    padding: 1.4cqw 1.75cqw;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.92rem, 1.85cqw, 1.92rem); color: var(--dan);
+    margin-bottom: 0.5rem;
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.78rem, 1.55cqw, 1.62rem); line-height: 1.7;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+  }
+  .emotion li + li { margin-top: 0.28rem; }
+  .emotion li::before { content: "—"; position: absolute; left: 0; color: var(--ink-faint); }
+  .body-area > .emotion { margin-bottom: 4.4cqw; }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 1.0cqw 0.95cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.8rem, 1.58cqw, 1.65rem); line-height: 1.6;
+  }
+  .info-table th {
+    width: 4.6em; font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--dan); white-space: nowrap;
+  }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.9cqw 0.85cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.66rem, 1.36cqw, 1.42rem); line-height: 1.6;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    border-bottom: 0.17cqw solid var(--dan); font-size: clamp(0.72rem, 1.48cqw, 1.55rem);
+  }
+  .cmp-table tbody th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink);
+    white-space: nowrap; width: 7em; background: var(--card);
+  }
+  .cmp-table .hl { color: var(--dan); font-weight: 500; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.8rem, 1.63cqw, 1.68rem); line-height: 1.7;
+    padding-left: 2.85cqw; position: relative; margin-bottom: 1.4cqw;
+  }
+  .num-list li .n {
+    position: absolute; left: 0; top: 0.05em;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--dan); font-size: 1.05em;
+  }
+
+  .def-box {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.6cqw 1.9cqw;
+  }
+  .def-box + .def-box { margin-top: 1.3cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    font-size: clamp(0.92rem, 1.85cqw, 1.90rem); margin-bottom: 0.5rem;
+  }
+  .def-box p { font-size: clamp(0.8rem, 1.63cqw, 1.68rem); line-height: 1.8; color: var(--ink-soft); }
+
+  .flow { display: flex; align-items: stretch; gap: 0.75cqw; min-height: 0; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--dan);
+    padding: 1.5cqw 1.25cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .stage-label {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.82rem, 1.63cqw, 1.70rem); margin-bottom: 0.15rem;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; color: var(--dan);
+    font-size: clamp(1rem, 2.17cqw, 2.28rem); margin-bottom: 0.7rem;
+  }
+  .flow-step .desc {
+    font-size: clamp(0.7rem, 1.36cqw, 1.42rem); line-height: 1.6; color: var(--ink-soft);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; color: var(--dan);
+    font-size: clamp(0.9rem, 1.96cqw, 2.24rem);
+  }
+
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--dan); padding: 1.7cqw 1.5cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.92rem, 1.90cqw, 1.95rem);
+    margin-bottom: 0.7rem; padding-bottom: 0.45rem; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--dan); }
+  .c3 p { font-size: clamp(0.74rem, 1.46cqw, 1.53rem); line-height: 1.72; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.5rem; }
+
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9cqw 2.6cqw; }
+  .gl { display: flex; gap: 0.9cqw; align-items: baseline; padding-bottom: 0.75cqw; border-bottom: 1px solid var(--rule); }
+  .gl .gw {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    font-size: clamp(0.82rem, 1.63cqw, 1.70rem); width: 7.2em; flex-shrink: 0;
+  }
+  .gl .gd { font-size: clamp(0.72rem, 1.41cqw, 1.47rem); line-height: 1.62; color: var(--ink-soft); }
+
+  .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1rem, 2.28cqw, 2.55rem); color: var(--dan);
+    width: 2.4em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.92rem, 1.96cqw, 1.98rem);
+    margin-bottom: 0.3rem;
+  }
+  .step p { font-size: clamp(0.76rem, 1.50cqw, 1.57rem); line-height: 1.72; color: var(--ink-soft); }
+
+  .act-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    background: var(--dan); color: var(--paper);
+    font-size: clamp(0.7rem, 1.36cqw, 1.42rem); letter-spacing: 0.06em;
+    padding: 0.3em 1.1em; margin-bottom: 1.1cqw;
+  }
+  .act-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.92rem, 1.96cqw, 2.05rem); line-height: 1.7;
+    color: var(--ink); margin-bottom: 1.5cqw;
+  }
+  .qa { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .qa-item { background: var(--card); border-left: 0.3cqw solid var(--dan); padding: 1.15cqw 1.5cqw; }
+  .qa-item .q {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    font-size: clamp(0.8rem, 1.58cqw, 1.65rem); margin-bottom: 0.35rem;
+  }
+  .qa-item .a { font-size: clamp(0.74rem, 1.46cqw, 1.53rem); line-height: 1.72; color: var(--ink-soft); }
+  .blank {
+    display: inline-block; min-width: 5em; text-align: center;
+    color: var(--dan); border-bottom: 2px solid var(--dan); font-weight: 700;
+  }
+  .ans { color: var(--dan); font-weight: 700; }
+  .answer-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.3rem, 3.4cqw, 3.85rem); color: var(--paper);
+    background: var(--dan); padding: 0.5rem 1.8rem; margin-bottom: 1.9cqw;
+  }
+  .answer-desc {
+    font-size: clamp(0.85rem, 1.79cqw, 1.86rem); line-height: 1.9; color: var(--ink-soft);
+    max-width: 46em;
+  }
+
+  /* O/X 정리 목록 */
+  .ox-list { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .ox-item {
+    display: flex; gap: 1.4cqw; align-items: center;
+    background: var(--card); border: 1px solid var(--rule); padding: 1.1cqw 1.5cqw;
+  }
+  .ox-item .mark {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.1rem, 2.5cqw, 2.7rem); color: var(--dan);
+    width: 1.6em; text-align: center; flex-shrink: 0;
+  }
+  .ox-item .txt { font-size: clamp(0.76rem, 1.52cqw, 1.60rem); line-height: 1.7; }
+  .ox-item .why { display: block; color: var(--ink-soft); font-size: 0.9em; margin-top: 0.2rem; }
+
+  .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .quiz-guide { font-size: clamp(0.85rem, 1.79cqw, 1.86rem); color: var(--ink-soft); margin-bottom: 1.5rem; }
+  .quiz-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1rem, 2.39cqw, 2.62rem); line-height: 1.75;
+    padding: 2.1cqw 2.4cqw; background: var(--card); border: 1px solid var(--rule);
+  }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.6cqw; }
+  .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    font-size: clamp(0.88rem, 1.90cqw, 1.95rem); width: 6.4em; flex-shrink: 0;
+    text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.8rem, 1.63cqw, 1.70rem); line-height: 1.8; }
+  .srow .sval ul { list-style: none; margin-top: 0.45rem; }
+  .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
+  .srow .sval li + li { margin-top: 0.28rem; }
+  .srow .sval li::before { content: "·"; position: absolute; left: 0.2rem; color: var(--dan); }
+
+  .page-num {
+    position: absolute; right: 3.2%; bottom: 2.6%;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.30cqw, 1.44rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #c0b0a4; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #3d3430; color: #eadfd2; border: 1px solid #574b45;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #4b413c; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #8a7c72; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cols, .cards3, .cards2, .gloss { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .hanshi { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../work.html">업무용</a>
+    <a href="../index.html">홈</a>
+  </div>
+  <div class="nav-meta">춘향전 · 1학년 2차시 · 업데이트 2026. 8. 13.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">조 선 　 판 소 리 계 　 소 설</div>
+    <h1 class="title-main">춘향전</h1>
+    <div class="rule"></div>
+    <div class="sub">어사출두, 그리고 오늘까지 이어지는 이야기</div>
+    <div class="foot">
+      <span>작자 미상</span>
+      <span>1학년 · 2차시</span>
+    </div>
+    <div class="page-num">1 / 29</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 목표</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:2cqw;">
+        <div class="c3">
+          <h3>하나</h3>
+          <p>한국 문학사의 흐름을 고려하여 고전 소설을 수용한다</p>
+        </div>
+        <div class="c3">
+          <h3>둘</h3>
+          <p>매체의 변화가 소통 문화에 끼치는 영향을 탐구한다</p>
+        </div>
+      </div>
+      <div class="def-box">
+        <div class="dt">2차시에 할 일</div>
+        <p>
+          어사출두 대목을 읽으며 <strong style="color:var(--dan);">판소리계 소설의 표현</strong>을 확인하고,
+          근원 설화인 설씨녀 설화와 견주어 문학사의 흐름을 짚은 뒤,
+          &lt;춘향전&gt;이 <strong style="color:var(--dan);">오늘의 매체</strong>에서 어떻게 소통되는지 살펴본다
+        </p>
+      </div>
+    </div>
+    <div class="page-num">2 / 29</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <h2 class="slide-title">전시 학습 복습</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">지난 시간에 배운 것</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>&lt;춘향전&gt;은 여러 <strong>근원 설화</strong>에서 자라나 판소리 &lt;춘향가&gt;를 거쳐 소설로 정착한 <strong style="color:var(--dan);">판소리계 소설</strong></li>
+            <li><span class="n">2</span>춘향(의리와 절개, 주체적)&middot;몽룡(주도면밀, 의뭉스러움)&middot;변학도(탐욕, 눈치 없음)의 성격</li>
+            <li><span class="n">3</span>서술자의 개입, 확장적 문체, 풍자와 해학이라는 세 가지 표지</li>
+          </ul>
+        </div>
+        <div>
+          <div class="col-head">여기까지의 이야기</div>
+          <div class="def-box">
+            <p>변학도의 생일잔치에 걸인 행색의 몽룡이 나타났다. 운봉 영장의 제안으로 말석에 앉게 되었으나, 돌아온 것은 모서리 떨어진 개상판에 콩나물과 막걸리 한 사발뿐</p>
+          </div>
+          <div class="emotion" style="margin-top:1.4cqw;">
+            <div class="etag">오늘의 질문</div>
+            <ul>
+              <li>몽룡은 이 자리에서 무엇으로 <strong>먼저 칼을 뽑는가?</strong> 그리고 그 이야기는 오늘 우리에게 어떤 모습으로 전해지고 있는가?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">3 / 29</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 푸대접받는 어사또</h2>
+    <div class="body-area">
+      <div class="cols wide-left">
+        <div>
+          <div class="verse">
+            <p><span class="hl">어사또의 상을 보니 어찌 아니 통분하랴.</span> 모서리 떨어진 개상판에 닥나무 젓가락, 콩나물, 깍두기, 막걸리 한 사발 놓았구나.</p>
+            <p>상을 발길로 탁 차 던지며 운봉 영장의 갈빗대를 직신 쑤시며,</p>
+            <p class="said">&ldquo;<span class="hl">갈비 한 대 먹고지고.</span>&rdquo;</p>
+            <span class="src">교과서 32쪽 12~15행</span>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">두 가지 장치</div>
+          <div class="emotion" style="margin-top:0;">
+            <div class="etag">서술자의 개입</div>
+            <ul>
+              <li>&ldquo;어찌 아니 통분하랴.&rdquo; &mdash; 형편없는 상을 받은 상황에 서술자가 끼어들어 직접 분을 드러냄. 변학도의 <strong>인색함</strong>을 보이는 동시에, 뒤이을 한시와 어사출두에 <strong>극적 재미</strong>를 더함</li>
+            </ul>
+          </div>
+          <div class="emotion" style="margin-top:1.3cqw;">
+            <div class="etag">언어유희</div>
+            <ul>
+              <li>사람의 <strong>갈비뼈</strong>를 쑤시면서 상에 오른 <strong>갈비</strong>를 먹고 싶다고 말함 &mdash; 동음이의어를 활용한 말장난</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">4 / 29</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 몽룡이 시를 짓다</h2>
+    <div class="body-area">
+      <div class="verse" style="margin-bottom:1.4cqw;">
+        <p class="said">&ldquo;이 걸인도 어려서 추구(抽句) 좀 읽었으니 좋은 잔치에 와서 술과 안주 배불리 먹고 그냥 가기 염치없으니 <span class="hl">차운(次韻) 한 수 하사이다.</span>&rdquo;</p>
+        <p>좌중 사람들이 다 짓지도 못했는데 순식간에 글 두 귀를 지었으되, 백성들의 생활 형편과 본관 사또의 행정 실태를 생각하여 지었것다.</p>
+        <span class="src">교과서 33쪽 6~10행</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">여기에 담긴 것</div>
+        <ul>
+          <li>백성에게서 빼앗아 차린 잔치를 &lsquo;좋은 잔치&rsquo;라 하고, 형편없는 상을 받고도 &lsquo;배불리 먹었다&rsquo;고 말하는 <strong>반어적 표현</strong></li>
+          <li>남들보다 빨리 시를 짓는 모습에서 몽룡의 뛰어난 <strong>문재(文才)</strong>가 드러남 &mdash; 주인공의 월등한 능력을 보이는 것은 고전 소설에서 흔히 보이는 서술</li>
+          <li>&lsquo;백성의 형편과 사또의 행정을 생각하여 지었다&rsquo;고 서술자가 미리 알려 주는 것도 <strong>편집자적 논평</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 29</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <h2 class="slide-title">몽룡의 한시</h2>
+    <div class="body-area">
+      <div class="hanshi">
+        <div class="han">金樽美酒千人血</div>
+        <div class="kor">금 술잔의 좋은 술은 <strong>천 사람의 피</strong>요</div>
+        <div class="han">玉盤佳肴萬姓膏</div>
+        <div class="kor">옥소반의 좋은 안주는 <strong>만백성의 기름</strong>이라</div>
+        <div class="han">燭淚落時民淚落</div>
+        <div class="kor">촛불 눈물 떨어질 때 <strong>백성 눈물</strong> 떨어지고</div>
+        <div class="han">歌聲高處怨聲高</div>
+        <div class="kor">노랫소리 높은 곳에 <strong>원망 소리</strong> 높더라</div>
+      </div>
+      <div class="emotion">
+        <div class="etag">읽고 나서</div>
+        <ul>
+          <li>잔칫상 위의 술과 안주, 촛불과 노랫소리가 모두 <strong>백성에게서 나온 것</strong>임을 정면으로 짚는다</li>
+          <li>이 시를 본 운봉 영장은 속으로 &lsquo;아뿔싸, 일이 났구나.&rsquo; 하고 어사출두를 예감하지만, 정작 비판의 표적인 <strong>변학도는 아무 눈치도 채지 못한다</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">6 / 29</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <h2 class="slide-title">한시의 표현상 특징</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">&#9312; 은유법 &mdash; 잔치의 사물을 백성의 고통에 빗댐</div>
+          <table class="info-table">
+            <tr><th>술[酒]</th><td>피[血]</td></tr>
+            <tr><th>안주[肴]</th><td>기름[膏]</td></tr>
+            <tr><th>촛불 눈물<br>[燭淚]</th><td>백성 눈물[民淚]</td></tr>
+            <tr><th>노랫소리<br>[歌聲]</th><td>원망 소리[怨聲]</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="col-head">&#9313; 대구법</div>
+          <div class="def-box">
+            <p>첫 번째 구와 두 번째 구, 세 번째 구와 네 번째 구가 <strong style="color:var(--dan);">짝을 이루어</strong> 놓임 &mdash; 가락이 고르게 맞아떨어지며 뜻이 또렷해진다</p>
+          </div>
+          <div class="def-box">
+            <div class="dt">기능</div>
+            <p>
+              &#9312; 사건의 극적 긴장감을 높이며 새로운 사건의 전개를 예고함<br>
+              &#9313; 민중의 분노를 대변하여 가렴주구하는 정치 현실을 비판함으로써 <strong>작품의 주제를 강화</strong>함
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">7 / 29</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 출두 직전의 긴장</h2>
+    <div class="body-area">
+      <div class="verse" style="margin-bottom:1.3cqw;">
+        <p>공방 불러 돗자리 물품 단속, 병방 불러 역마 단속, 관청색 불러 다과 단속, 옥 형리 불러 죄인 단속, 집사 불러 형구 단속, 형방 불러 문서 장부 단속, 사령 불러 비상 대기 단속.</p>
+        <span class="src">교과서 34쪽 10~12행</span>
+      </div>
+      <div class="def-box">
+        <div class="dt">확장적 문체</div>
+        <p>
+          심상치 않은 낌새를 챈 운봉 영장이 관속을 단속하는 대목.
+          <strong style="color:var(--dan);">열거&middot;대구&middot;반복&middot;부연</strong>으로 한 장면을 길게 늘이는 판소리계 소설의 문체가 그대로 드러난다.
+          비슷한 어구가 되풀이되며 리듬이 생기고, 급박한 상황의 긴장감이 함께 높아진다
+        </p>
+      </div>
+      <div class="emotion">
+        <div class="etag">이어지는 대목</div>
+        <ul>
+          <li>&ldquo;어사또 몰래 신호할 제, 서리 보고 눈짓하니 서리, 중방 <strong>거동 보소</strong>. &hellip; 남원읍이 욱신욱신. 청파 역졸 <strong>거동 보소</strong>.&rdquo; &mdash; 소리꾼의 어투와 확장적 문체가 겹치며 긴장이 최고조에 이른다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">8 / 29</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 암행어사 출두야</h2>
+    <div class="body-area">
+      <div class="cols wide-left">
+        <div>
+          <div class="verse">
+            <p><span class="hl">&ldquo;암행어사 출두야.&rdquo;</span> 외치는 소리에 강산이 무너지고 천지가 뒤집히는 듯 초목금수(草木禽獸)인들 아니 떨랴.</p>
+            <p>남문에서, &ldquo;출두야.&rdquo; 북문에서, &ldquo;출두야.&rdquo; &hellip; &ldquo;애고 박 터졌네.&rdquo;</p>
+            <span class="src">교과서 34쪽 23행~37쪽 2행</span>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">해설</div>
+          <div class="emotion" style="margin-top:0;">
+            <div class="etag">극적 반전의 계기</div>
+            <ul>
+              <li>춘향의 고난이 끝나고 탐관오리를 징계할 수 있게 되었음을 선언하는 자리</li>
+              <li>&ldquo;초목금수인들 아니 떨랴.&rdquo;라는 <strong>편집자적 논평</strong>과 &ldquo;강산이 무너지고 천지가 뒤집히는 듯&rdquo;이라는 <strong>과장&middot;비유</strong>가 어우러짐</li>
+            </ul>
+          </div>
+          <div class="emotion" style="margin-top:1.3cqw;">
+            <div class="etag">짧은 호흡</div>
+            <ul>
+              <li>짧게 끊어지는 어구와 문장으로 긴박하게 진행되는 출두 장면을 실감 나게 표현함</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">9 / 29</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 달아나는 사람들</h2>
+    <div class="body-area">
+      <div class="verse" style="margin-bottom:1.2cqw;">
+        <p><span class="hl">모든 수령 도망갈 제 거동 보소.</span> &hellip; 부서지니 거문고요, 깨지느니 북과 장고라.</p>
+        <p>본관 사또가 똥을 싸고 멍석 구멍에 새앙쥐 눈 뜨듯 하고, 내아로 들어가서,</p>
+        <p class="said">&ldquo;어 추워라. <span class="hl">문 들어온다 바람 닫아라. 물 마르다 목 들여라.</span>&rdquo;</p>
+        <span class="src">교과서 37쪽 4~8행</span>
+      </div>
+      <div class="cols" style="flex:0 0 auto;">
+        <div>
+          <div class="col-head">희화화</div>
+          <p class="lead" style="font-size:clamp(0.74rem,1.46cqw,1.53rem);">
+            인궤, 병부, 탕건, 갓 대신 <strong>엉뚱한 것</strong>을 들고 허둥대는 수령들 &mdash; 열거&middot;대구&middot;반복&middot;과장으로 상황의 급박함을 살리면서 탐관오리를 <strong style="color:var(--dan);">풍자</strong>한다
+          </p>
+        </div>
+        <div>
+          <div class="col-head">언어 도치</div>
+          <p class="lead" style="font-size:clamp(0.74rem,1.46cqw,1.53rem);">
+            겁에 질린 변학도가 &lsquo;문&rsquo;과 &lsquo;바람&rsquo;, &lsquo;물&rsquo;과 &lsquo;목&rsquo;을 뒤바꾸어 말함 &mdash; <strong style="color:var(--dan);">언어유희</strong>로 인물을 우스꽝스럽게 만들어 집권층 양반을 풍자한다
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">10 / 29</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide">
+    <h2 class="slide-title">어휘 풀이 &middot; 출두 자리의 말들</h2>
+    <div class="body-area">
+      <div class="gloss">
+        <div class="gl"><span class="gw">추구(抽句)</span><span class="gd">좋은 시구를 뽑아 모은 책. 어린이의 한시 학습에 쓰임</span></div>
+        <div class="gl"><span class="gw">차운(次韻)</span><span class="gd">남이 지은 시의 운자를 따서 시를 지음</span></div>
+        <div class="gl"><span class="gw">형구(刑具)</span><span class="gd">형벌을 가하거나 고문을 할 때에 쓰는 도구</span></div>
+        <div class="gl"><span class="gw">역마(驛馬)</span><span class="gd">각 역참에 갖추어 둔 말. 공무로 다니는 벼슬아치가 씀</span></div>
+        <div class="gl"><span class="gw">봉고파직(封庫罷職)</span><span class="gd">관리를 파면한 뒤 창고를 봉하여 잠금</span></div>
+        <div class="gl"><span class="gw">인궤(印櫃)</span><span class="gd">관아에서 인장(도장)을 넣어 두는 상자</span></div>
+        <div class="gl"><span class="gw">내아(內衙)</span><span class="gd">고을 수령의 가족이 거처하던 안채</span></div>
+        <div class="gl"><span class="gw">정렬부인(貞烈夫人)</span><span class="gd">절개를 지킨 부인에게 나라에서 내리던 칭호</span></div>
+      </div>
+    </div>
+    <div class="page-num">11 / 29</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 마지막 시험과 재회</h2>
+    <div class="body-area">
+      <div class="verse" style="margin-bottom:1.2cqw;">
+        <p class="said">&ldquo;너만 한 년이 수절한다고 관정발악하였으니 살기를 바랄쏘냐. 죽어 마땅하되 <span class="hl">내 수청도 거역할까?</span>&rdquo;</p>
+        <p class="said">&ldquo;<span class="hl">내려오는 관장마다 낱낱이 명관이로구나.</span> &hellip; 그런 분부 마옵시고 어서 바삐 죽여 주오.&rdquo;</p>
+        <span class="src">교과서 38쪽 20~25행</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">해설</div>
+        <ul>
+          <li>몽룡은 자신이 어사임을 아직 모르는 춘향의 정절을 <strong>마지막으로 시험</strong>한다 &mdash; 재회 장면의 극적 효과를 높이는 장치</li>
+          <li>춘향은 &lsquo;명관&rsquo;이라며 <strong>반어적으로 냉소</strong>하고, 지조를 바위와 나무에 빗대며 단박에 거절한다</li>
+          <li>머뭇거림 없는 이 대응이 춘향의 <strong>열녀로서의 면모</strong>와 <strong>불의한 권력에 저항하는 민중으로서의 면모</strong>를 함께 보여 준다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">12 / 29</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 결말</h2>
+    <div class="body-area">
+      <div class="verse" style="margin-bottom:1.2cqw;">
+        <p class="said">&ldquo;얼씨구나 좋을시고 어사 낭군 좋을시고. 남원 읍내 <span class="hl">가을</span>철 들어 떨어지게 되었더니, 객사에 <span class="hl">봄</span>이 들어 이화춘풍(李花春風) 날 살린다. 꿈이냐 생시냐? 꿈을 깰까 염려로다.&rdquo;</p>
+        <span class="src">교과서 39쪽 5~7행</span>
+      </div>
+      <div class="cols" style="flex:0 0 auto;">
+        <div>
+          <div class="col-head">비유의 짜임</div>
+          <p class="lead" style="font-size:clamp(0.74rem,1.46cqw,1.53rem);">
+            &lsquo;가을&rsquo;은 변학도가 수청을 요구하던 때, &lsquo;봄&rsquo;은 <strong>이(李)</strong>몽룡이 돌아와 자신을 구해 준 때 &mdash; 죽을 위기에서 다시 살아난 상황을 계절에 빗댐
+          </p>
+        </div>
+        <div>
+          <div class="col-head">그 뒤의 이야기</div>
+          <p class="lead" style="font-size:clamp(0.74rem,1.46cqw,1.53rem);">
+            임금이 몽룡을 이조 참의 겸 대사성에 임명하고 춘향을 <strong style="color:var(--dan);">정렬부인</strong>에 봉함 &mdash; 춘향의 신분이 올라 혼인이 사회적으로 공인됨
+          </p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">고전 소설의 결말</div>
+        <ul>
+          <li>&ldquo;어찌 아니 좋을쏜가.&rdquo; &ldquo;일희일비가 아니 되랴.&rdquo; &mdash; 결말에도 서술자의 개입이 이어짐</li>
+          <li>주인공과 그 집안이 자손 대대로 부귀영화를 누리는 마무리는 많은 고전 소설에 공통된 틀</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">13 / 29</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 2</h2>
+    <div class="body-area">
+      <div><span class="act-badge">학습 활동</span></div>
+      <div class="act-q">보기를 읽고 판소리계 소설의 특징을 &lt;춘향전&gt;에서 찾아 이야기해 보자.</div>
+      <div class="def-box">
+        <div class="dt">보기</div>
+        <p>
+          &lt;춘향전&gt;은 판소리 &lt;춘향가&gt;의 사설이 독서물로 전환되어 이루어진 판소리계 소설이다. 그래서 판소리의 특징이 여럿 남아 있는데,
+          판소리 창을 하는 소리꾼이 청중에게 말을 건네거나 자신의 생각이나 느낌을 드러낼 때 사용하던 어투,
+          특정한 장면을 열거하거나 반복하여 좀 더 인상 깊게 표현하는 방식이 대표적이다.
+          또한 인물을 희화화하거나 언어유희를 사용하여 웃음을 유발하기도 하는데, 이를 통해 판소리 특유의 풍자와 해학이 드러난다.
+        </p>
+      </div>
+      <div class="emotion">
+        <div class="etag">찾아봅시다</div>
+        <ul>
+          <li>소리꾼의 어투 / 확장적 문체 / 풍자와 해학 &mdash; 각각에 해당하는 대목을 <strong>쪽수와 함께</strong> 찾아 말해 봅시다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">14 / 29</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 2 &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div class="qa">
+        <div class="qa-item">
+          <div class="q">소리꾼의 어투</div>
+          <div class="a">32쪽 &ldquo;어사또의 상을 보니 어찌 아니 통분하랴.&rdquo;에서는 소리꾼이 작중 상황에 대한 자신의 생각과 느낌을 직접 청중에게 말하던 판소리의 언어적 특징을 확인할 수 있어.</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">확장적 문체</div>
+          <div class="a">34쪽 &ldquo;공방 불러 돗자리 물품 단속, 병방 불러 역마 단속, 관청색 불러 다과 단속, 옥 형리 불러 죄인 단속, 집사 불러 형구 단속, 형방 불러 문서 장부 단속, 사령 불러 비상 대기 단속.&rdquo;에는 열거와 대구, 반복 등을 통한 판소리계 소설 특유의 확장적 문체가 나타나 있어.</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">풍자와 해학</div>
+          <div class="a">37쪽 &ldquo;어 추워라. 문 들어온다 바람 닫아라. 물 마르다 목 들여라.&rdquo;에서는 언어 도치를 통해 인물을 풍자하고 있어. 풍자적인 표현 방식은 판소리계 소설의 공통적 특성이야.</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">15 / 29</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide">
+    <h2 class="slide-title">설씨녀 설화 &middot; 또 하나의 뿌리</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">줄거리</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>설씨녀의 아버지가 늙고 쇠약한 몸으로 군역을 가게 되자, 그를 좋아하던 <strong>가실</strong>이 대신 군역을 자청함</li>
+            <li><span class="n">2</span>두 사람은 <strong style="color:var(--dan);">거울을 반으로 쪼개어</strong> 나누어 갖고 훗날을 기약함</li>
+            <li><span class="n">3</span>나라에 변고가 생겨 가실이 6년이 지나도록 돌아오지 못하자, 아버지는 딸에게 다른 혼인을 강요함</li>
+            <li><span class="n">4</span>설씨녀가 끝내 거절하던 중 남루한 차림의 가실이 돌아오고, 반쪽 거울로 서로를 알아보아 혼인에 이름</li>
+          </ul>
+        </div>
+        <div>
+          <div class="col-head">제재 개관</div>
+          <table class="info-table">
+            <tr><th>갈래</th><td>설화(열녀 설화, 신물 설화)</td></tr>
+            <tr><th>성격</th><td>사실적, 교훈적, 축약적</td></tr>
+            <tr><th>제재</th><td>설씨녀와 가실의 약속</td></tr>
+            <tr><th>주제</th><td>설씨녀와 가실의 사랑과 신의</td></tr>
+            <tr><th>특징</th><td>
+              &#9312; 신물(信物) 모티프가 확인됨<br>
+              &#9313; &lsquo;행복 &ndash; 불행 &ndash; 행복&rsquo;의 서사 구조<br>
+              &#9314; 자기 운명을 스스로 결정하는 주체적 여성 인물
+            </td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">16 / 29</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(1) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div><span class="act-badge">학습 활동</span></div>
+      <div class="act-q">다음 질문에 답하며 설씨녀 설화의 내용을 정리해 보자.</div>
+      <div class="qa">
+        <div class="qa-item">
+          <div class="q">가실이 설씨녀의 아버지 대신 군역을 간 까닭은 무엇인가?</div>
+          <div class="a">설씨녀의 아버지가 늙고 쇠약하여 설씨녀가 아버지의 군역을 걱정하자, 일찍부터 설씨녀를 좋아하던 가실이 그를 대신하여 군역을 갔다.</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">가실이 6년이 지나도록 돌아오지 못한 까닭은 무엇인가?</div>
+          <div class="a">나라에 변고가 생기는 바람에 다른 사람과 군역을 교대하지 못했기 때문이다.</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">설씨녀와 가실이 나누어 가진 &lsquo;거울&rsquo;은 어떤 역할을 하였는가?</div>
+          <div class="a">거울은 가실과 설씨녀가 맺은 혼인 약속의 신표로서, 설씨녀가 야위고 남루해진 가실을 알아보게 하여 두 인물의 재회를 돕는 역할을 하였다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">17 / 29</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(2)</h2>
+    <div class="body-area">
+      <div><span class="act-badge">학습 활동</span></div>
+      <div class="act-q">&lsquo;설씨녀&rsquo;와 &lsquo;춘향&rsquo;이 겪은 사건을 아래와 같이 비교해 보자.</div>
+      <table class="cmp-table">
+        <thead>
+          <tr><th>비교 항목</th><th>설씨녀</th><th>춘향</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>상대와 이별하게 된 원인</th><td class="hl">?</td><td class="hl">?</td></tr>
+          <tr><th>이별 뒤에 겪은 시련</th><td class="hl">?</td><td class="hl">?</td></tr>
+          <tr><th>시련이 해소된 계기</th><td class="hl">?</td><td class="hl">?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">18 / 29</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(2) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead>
+          <tr><th>비교 항목</th><th>설씨녀</th><th>춘향</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>상대와 이별하게 된 원인</th>
+            <td>가실이 설씨녀의 아버지를 대신하여 변방으로 <span class="hl">군역</span>을 떠나게 되어 이별함.</td>
+            <td>몽룡이 아버지를 따라 <span class="hl">한양으로 떠나게</span> 되어 이별함.</td>
+          </tr>
+          <tr>
+            <th>이별 뒤에 겪은 시련</th>
+            <td><span class="hl">아버지</span>가 설씨녀에게 다른 사람과 혼인할 것을 강요함.</td>
+            <td><span class="hl">본관 사또</span>가 춘향에게 수청을 강요하고, 이를 거부하자 춘향을 옥에 가두어 모질게 대함.</td>
+          </tr>
+          <tr>
+            <th>시련이 해소된 계기</th>
+            <td>설씨녀가 끝까지 다른 사람과의 혼인을 거절하고, 남루한 차림으로 돌아온 가실과 재회해 혼인에 이름.</td>
+            <td>춘향이 끝까지 본관 사또의 수청을 들지 않고, 암행어사가 되어 돌아온 몽룡이 춘향을 구하고 본관 사또를 벌함.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">19 / 29</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(3) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div class="act-q">(2)를 바탕으로 하여 &lsquo;설씨녀&rsquo;와 &lsquo;춘향&rsquo;에게 어떤 공통점이 있는지 말해 보자.</div>
+      <div class="cards2" style="flex:0 0 auto;">
+        <div class="c3">
+          <h3>성격</h3>
+          <p><strong style="color:var(--dan);">주체적, 적극적, 의지적임</strong></p>
+          <p>설씨녀는 아버지의 혼인 강요 속에서도 자신만의 가치관과 신념을 지켰고, 춘향 역시 변학도의 수청 강요 속에서도 자신만의 가치관과 신념을 지킴</p>
+        </div>
+        <div class="c3">
+          <h3>중요하게 여기는 것</h3>
+          <p><strong style="color:var(--dan);">상대와의 의리(신의)와 인간적인 도리</strong></p>
+          <p>설씨녀는 가실과 한 약속과 그의 은혜를 저버리지 않으려 했으며, 춘향은 몽룡과 한 사랑의 약속, 절개와 지조를 저버리지 않으려 함</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">차이도 함께</div>
+        <ul>
+          <li>이별의 원인이 <strong>군역</strong>이냐 <strong>가족의 이동</strong>이냐, 시련이 <strong>아버지의 혼인 강요</strong>냐 <strong>권력자의 수청 강요</strong>냐에서 갈린다. 설씨녀 설화에는 <strong>거울</strong>이라는 신물 모티프가 재회에 결정적 구실을 한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">20 / 29</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 4-(1)</h2>
+    <div class="body-area">
+      <div><span class="act-badge">학습 활동</span></div>
+      <div class="act-q">보기에 드러난 매체의 발전 과정과 그에 따른 소통 방식의 변화를 정리해 보자.</div>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="stage-label">첫 단계</div>
+          <div class="emo">인쇄 매체</div>
+          <div class="desc">인쇄 기술 발달로 책, 종이 신문 등을 통해 <strong>대량 복제</strong>가 가능해지고, 정보가 많은 사람에게 전달됨</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">둘째 단계</div>
+          <div class="emo">방송(대중) 매체</div>
+          <div class="desc">전기&middot;전파 기술 발달로 텔레비전, 영화 등 <strong>음성과 영상</strong>이 가미된 정보가 많은 사람에게 <strong>동시에</strong> 전달됨</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">셋째 단계</div>
+          <div class="emo">디지털 매체</div>
+          <div class="desc">인터넷에 바탕을 둔 개인 디지털 기기의 발달로 SNS, 일인 미디어 플랫폼 등에서 <strong>생산자와 소비자의 경계가 허물어지고</strong> 정보가 쌍방향으로 전달됨</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">21 / 29</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 4-(2) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div class="act-q">&lt;춘향전&gt;을 변용한 작품들을 찾아보고, 매체의 발전이 &lt;춘향전&gt;을 둘러싼 소통에 어떤 영향을 끼쳤는지 이야기해 보자.</div>
+      <div class="cards3" style="flex:0 0 auto;">
+        <div class="c3">
+          <h3>인쇄 매체</h3>
+          <p style="color:var(--dan);">《일설 춘향전》(1929)</p>
+          <p>책으로 출간되어 많은 사람이 <strong>읽을</strong> 수 있게 됨</p>
+        </div>
+        <div class="c3">
+          <h3>방송 매체</h3>
+          <p style="color:var(--dan);">영화 &lt;춘향뎐&gt;(2000)</p>
+          <p>음성과 영상으로 옮겨져 많은 사람이 동시에 <strong>볼</strong> 수 있게 됨</p>
+        </div>
+        <div class="c3">
+          <h3>디지털 매체</h3>
+          <p style="color:var(--dan);">웹툰 《광한루 로맨스》</p>
+          <p>디지털 기술에 바탕을 둔 작품이 나타나고, 독자가 <strong>댓글로 감상을 나눔</strong></p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">달라진 것</div>
+        <ul>
+          <li>소비자들이 댓글로 다양한 감상을 공유할 뿐 아니라, 자신의 관점과 해석을 더해 <strong>팬 아트나 팬 무비</strong> 같은 새로운 음악&middot;영상&middot;이미지를 창작하기도 한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">22 / 29</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 4-(3) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div class="act-q">디지털 매체에서의 반응을 보고, 이러한 소통 문화의 특성을 파악해 보자.</div>
+      <ul class="num-list">
+        <li><span class="n">1</span>다양한 <strong>이모티콘</strong>으로 감정을 표현한다</li>
+        <li><span class="n">2</span>다른 수용자의 견해가 <strong>소통의 소재</strong>가 된다</li>
+        <li><span class="n">3</span>작품을 수용(소비)한 직후 <strong>즉각적인 소통</strong>이 이루어진다</li>
+        <li><span class="n">4</span>수용자의 주관이 더욱 솔직하고 <strong>직설적</strong>으로 나타나는 편이다</li>
+        <li><span class="n">5</span>인터넷 주소(<strong>링크</strong>)를 연결하여 또 다른 정보를 실시간으로 공유한다</li>
+        <li><span class="n">6</span>누구나 자신의 생각이나 감상을 담아 <strong>새로운 콘텐츠를 생산</strong>할 수 있다</li>
+      </ul>
+    </div>
+    <div class="page-num">23 / 29</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide">
+    <h2 class="slide-title">생비자(prosumer)</h2>
+    <div class="body-area">
+      <div class="def-box">
+        <div class="dt">생비자란</div>
+        <p>
+          미디어를 <strong>소비하는 소비자</strong>이면서 동시에 <strong>생산하는 생산자</strong> 역할을 하는 사람.
+          책&middot;신문&middot;텔레비전 시대에는 일반인이 정보를 생산해 내놓기 어려웠지만, 일인 미디어가 확산되면서 누구나 만들고 나눌 수 있게 되었다.
+          이 전환은 우리가 미디어를 수동적으로 받아들이는 존재가 아니라 <strong style="color:var(--dan);">적극적으로 이용하는 능동적 존재</strong>임을 뜻한다
+        </p>
+      </div>
+      <div class="cards3" style="margin-top:1.7cqw;">
+        <div class="c3">
+          <h3>가장 작은 참여</h3>
+          <p>&lsquo;좋아요&rsquo;를 누르는 것도 생산자와의 소통에 참여하는 일</p>
+        </div>
+        <div class="c3">
+          <h3>한 걸음 더</h3>
+          <p>댓글을 쓰거나 정보를 스크랩하고 편집해 올리는 것</p>
+        </div>
+        <div class="c3">
+          <h3>본격적인 창작</h3>
+          <p>팬 아트, 팬 무비처럼 새로운 작품을 만들어 내는 것</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">24 / 29</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 4-(4) &middot; 성찰</h2>
+    <div class="body-area">
+      <div class="act-q">자신이 디지털 매체를 활용한 소통에 어떻게 참여하고 있는지 성찰해 보자.</div>
+      <div class="def-box">
+        <div class="dt">예시 답안</div>
+        <p>
+          나는 SNS를 자주 이용하는데, 사람들의 일상뿐만 아니라 중요한 뉴스도 가장 빨리 접할 수 있는 공간이기 때문이야.
+          문제는 정보 전달이 빠르고 누구나 정보 생산자가 될 수 있다 보니 <strong>불확실하거나 악의적인 정보도 매우 빠르게 퍼진다</strong>는 점이야.
+          나도 모르고 &lsquo;가짜 뉴스&rsquo;를 공유한 적이 있어. 정보 생산자에게는 자신이 만드는 정보에 대한 <strong style="color:var(--dan);">책임 의식</strong>이 있어야 하고,
+          수용자에게는 정보의 진실성을 판별할 수 있는 <strong style="color:var(--dan);">감식안</strong>이 필요한 것 같아.
+        </p>
+      </div>
+      <div class="emotion">
+        <div class="etag">함께 생각할 점</div>
+        <ul>
+          <li>오늘날 디지털 매체는 이미 <strong>공적 영역</strong>의 역할을 한다. 사적 소통과 공적 소통의 경계가 흐려질수록 온라인 공간에서도 <strong>소통 윤리</strong>를 갖추어야 한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">25 / 29</div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide">
+    <h2 class="slide-title">소단원 마무리 퀴즈</h2>
+    <div class="body-area quiz-wrap">
+      <div class="quiz-guide">다음 설명이 맞으면 O, 틀리면 X를 골라 봅시다.</div>
+      <div class="qa">
+        <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>1.</strong> 디지털 매체에서의 소통은 주로 일방향적으로 이루어진다. &nbsp;( O / X )</div></div>
+        <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>2.</strong> 디지털 매체의 발달로 공적 소통과 사적 소통의 경계가 뚜렷해졌다. &nbsp;( O / X )</div></div>
+        <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>3.</strong> &lt;춘향전&gt;에는 서술자의 논평과 운문적인 표현 등 판소리의 흔적이 남아 있다. &nbsp;( O / X )</div></div>
+        <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>4.</strong> &lt;춘향전&gt;과 그 근원 설화인 설씨녀 설화는 &lsquo;정절의 수호&rsquo;라는 주제를 공유한다. &nbsp;( O / X )</div></div>
+      </div>
+    </div>
+    <div class="page-num">26 / 29</div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide">
+    <h2 class="slide-title">소단원 마무리 퀴즈 &middot; 정답</h2>
+    <div class="body-area">
+      <div class="ox-list">
+        <div class="ox-item">
+          <div class="mark">X</div>
+          <div class="txt">디지털 매체에서의 소통은 주로 일방향적으로 이루어진다.
+            <span class="why">생산자와 소비자의 경계가 허물어지며 <strong>쌍방향</strong>으로 이루어진다.</span>
+          </div>
+        </div>
+        <div class="ox-item">
+          <div class="mark">X</div>
+          <div class="txt">디지털 매체의 발달로 공적 소통과 사적 소통의 경계가 뚜렷해졌다.
+            <span class="why">오히려 경계가 <strong>모호해지면서</strong> 소통 윤리의 중요성이 커졌다.</span>
+          </div>
+        </div>
+        <div class="ox-item">
+          <div class="mark">O</div>
+          <div class="txt">&lt;춘향전&gt;에는 서술자의 논평과 운문적인 표현 등 판소리의 흔적이 남아 있다.</div>
+        </div>
+        <div class="ox-item">
+          <div class="mark">O</div>
+          <div class="txt">&lt;춘향전&gt;과 그 근원 설화인 설씨녀 설화는 &lsquo;정절의 수호&rsquo;라는 주제를 공유한다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">27 / 29</div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide">
+    <h2 class="slide-title">문학사의 흐름 속에서 &lt;춘향전&gt; 이해하기</h2>
+    <div class="body-area">
+      <div class="steps">
+        <div class="step">
+          <div class="sn">설화</div>
+          <div class="sbody">
+            <p><strong>설씨녀 설화</strong>를 비롯하여 관탈 민녀 설화인 도미 설화, 암행어사 설화인 박문수 설화 등 여러 근원 설화가 판소리 &lt;춘향가&gt; 형성에 기여함</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">판소리</div>
+          <div class="sbody">
+            <p><strong>판소리</strong>의 운문적인 표현과 소리꾼이 사용하던 어투, 인물에 대한 희화화나 언어유희로 웃음을 유발하는 방식이 소설에 영향을 줌</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">소설</div>
+          <div class="sbody">
+            <p>&lt;춘향전&gt;이 향유되던 당대의 <strong>사회상</strong>이 작품의 주제 의식에 반영됨</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">오늘</div>
+          <div class="sbody">
+            <p>인간의 보편적 정서인 사랑을 바탕으로 현실 사회의 문제를 다루어, 오늘날에도 계속 <strong style="color:var(--dan);">다양한 내용과 형식으로 재창조</strong>되고 있음</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">28 / 29</div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide">
+    <h2 class="slide-title">2차시 핵심 정리</h2>
+    <div class="body-area">
+      <div class="summary-list">
+        <div class="srow">
+          <div class="skey">표현</div>
+          <div class="sval">
+            판소리계 소설의 자취가 곳곳에 남음
+            <ul>
+              <li>서술자의 개입 &mdash; &ldquo;어찌 아니 통분하랴.&rdquo; &ldquo;초목금수인들 아니 떨랴.&rdquo;</li>
+              <li>확장적 문체 &mdash; &ldquo;공방 불러&hellip; 병방 불러&hellip;&rdquo;의 열거와 대구</li>
+              <li>풍자와 해학 &mdash; &ldquo;갈비 한 대 먹고지고.&rdquo;, &ldquo;문 들어온다 바람 닫아라.&rdquo;</li>
+            </ul>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="skey">한시</div>
+          <div class="sval">술&rarr;피, 안주&rarr;기름, 촛불 눈물&rarr;백성 눈물, 노랫소리&rarr;원망 소리의 은유와 대구 &mdash; 긴장을 높이고 주제를 강화함</div>
+        </div>
+        <div class="srow">
+          <div class="skey">문학사</div>
+          <div class="sval">설씨녀 설화와 &lt;춘향전&gt;은 주체적&middot;의지적 여성상과 의리&middot;도리를 중시하는 태도를 함께 지님</div>
+        </div>
+        <div class="srow">
+          <div class="skey">매체</div>
+          <div class="sval">인쇄 &rarr; 방송 &rarr; 디지털로 이어지며 소통은 쌍방향이 되고, 독자는 생비자가 됨</div>
+        </div>
+        <div class="srow">
+          <div class="skey">남길 말</div>
+          <div class="sval">고전은 박물관이 아니라 <strong style="color:var(--dan);">댓글과 팬 무비 속에서 살아 숨 쉰다</strong> &mdash; 그 소통에는 생산자의 책임과 윤리가 따른다</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">29 / 29</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 29</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', () => show(idx - 1));
+  nextBtn.addEventListener('click', () => show(idx + 1));
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
