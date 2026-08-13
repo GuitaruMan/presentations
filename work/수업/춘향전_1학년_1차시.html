@@ -186,6 +186,9 @@
     font-family: "Gowun Batang", serif; font-weight: 700;
     color: var(--dan); font-size: 1.05em;
   }
+  /* 숫자 대신 용어를 머리말로 쓸 때 — 들여쓰기를 넓힘 */
+  .num-list.term li { padding-left: 5.6cqw; }
+  .num-list.term li .n { width: 5.2cqw; white-space: nowrap; }
 
   /* 정의 상자 */
   .def-box {
@@ -416,11 +419,12 @@
         <div>
           <div class="col-head">설화(說話)</div>
           <div class="def-box">
-            <p>각 민족 사이에서 <strong>입에서 입으로 전해져 온 이야기</strong>. 신화, 전설, 민담 등이 있다</p>
+            <p>각 민족 사이에서 <strong>입에서 입으로 전해져 온 이야기</strong>. 특정한 작가가 없고 전해지는 동안 조금씩 달라지며, 뒷날 소설의 밑감이 된다</p>
           </div>
-          <ul class="num-list" style="margin-top:1.4cqw;">
-            <li><span class="n">·</span>특정 작가가 없고, 전승 과정에서 조금씩 달라짐</li>
-            <li><span class="n">·</span>뒷날 소설의 밑감이 되는 이야기 틀을 마련함</li>
+          <ul class="num-list term" style="margin-top:1.3cqw;">
+            <li><span class="n">신화</span>신적 존재와 그 활동을 다룬 이야기. 나라나 세상의 시작을 설명함 <span style="color:var(--ink-faint);">(단군 신화, 주몽 신화)</span></li>
+            <li><span class="n">전설</span>구체적인 시간&middot;장소와 <strong>증거물</strong>이 남아 있는 이야기 <span style="color:var(--ink-faint);">(장자못 전설, 아기장수 전설)</span></li>
+            <li><span class="n">민담</span>때와 곳이 정해지지 않은, <strong>흥미</strong> 중심의 이야기 <span style="color:var(--ink-faint);">(콩쥐팥쥐, 혹부리 영감)</span></li>
           </ul>
         </div>
         <div>
@@ -428,10 +432,11 @@
           <div class="def-box">
             <p>근대 이전에 창작&middot;향유된 <strong>서사 문학의 한 갈래</strong>. 신소설이 등장하자 이와 구별하기 위해 &lsquo;고소설, 고대 소설, 옛 소설&rsquo; 등으로 불렸다</p>
           </div>
-          <div class="emotion" style="margin-top:1.4cqw;">
+          <div class="emotion" style="margin-top:1.3cqw;">
             <div class="etag">이렇게 접근합시다</div>
             <ul>
-              <li>신화&middot;전설&middot;민담&middot;고전 소설의 갈래를 지나치게 세밀히 구분하려 하지 말 것 &mdash; 흐름을 잇는 눈이 먼저</li>
+              <li>세 갈래의 경계를 하나하나 가려내기보다, 이 이야기들이 <strong>소설로 이어지는 흐름</strong>을 보는 데 눈을 두자</li>
+              <li>&lt;춘향전&gt;도 여러 설화가 모여 이루어진 이야기다</li>
             </ul>
           </div>
         </div>
@@ -441,6 +446,39 @@
   </section>
 
   <!-- 4 -->
+  <section class="slide">
+    <h2 class="slide-title">형성 과정 &middot; 설화에서 소설로</h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="flow-step">
+          <div class="stage-label">첫 자리</div>
+          <div class="emo">근원 설화</div>
+          <div class="desc">열녀 설화, 관탈 민녀 설화, 암행어사 설화 등 여러 이야기가 입에서 입으로 전해지며 서사의 밑감을 이룸</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">가운데 자리</div>
+          <div class="emo">판소리 &lt;춘향가&gt;</div>
+          <div class="desc">소리꾼이 청중 앞에서 부르는 구비 서사시로 묶임 &mdash; 현장의 어투와 확장적 문체가 여기서 자람</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">끝 자리</div>
+          <div class="emo">판소리계 소설</div>
+          <div class="desc">사설이 읽을거리(독서물)로 정착해 &lt;춘향전&gt;이 됨 &mdash; 판소리의 자취가 문장 곳곳에 남음</div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">기억할 것</div>
+        <ul>
+          <li>&lt;춘향전&gt;은 한 사람이 지어낸 작품이 아니라, <strong>여러 세대의 입과 귀를 거쳐 다듬어진</strong> 공동의 이야기</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">4 / 26</div>
+  </section>
+
+  <!-- 5 -->
   <section class="slide">
     <h2 class="slide-title">삶과 연관 짓기</h2>
     <div class="body-area">
@@ -468,10 +506,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">4 / 26</div>
+    <div class="page-num">5 / 26</div>
   </section>
 
-  <!-- 5 -->
+  <!-- 6 -->
   <section class="slide">
     <h2 class="slide-title">작품의 기본 골격</h2>
     <div class="body-area">
@@ -500,10 +538,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">5 / 26</div>
+    <div class="page-num">6 / 26</div>
   </section>
 
-  <!-- 6 -->
+  <!-- 7 -->
   <section class="slide">
     <h2 class="slide-title">전체 서사 구조</h2>
     <div class="body-area">
@@ -540,10 +578,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">6 / 26</div>
+    <div class="page-num">7 / 26</div>
   </section>
 
-  <!-- 7 -->
+  <!-- 8 -->
   <section class="slide">
     <h2 class="slide-title">수록 부분의 짜임</h2>
     <div class="body-area">
@@ -566,10 +604,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">7 / 26</div>
+    <div class="page-num">8 / 26</div>
   </section>
 
-  <!-- 8 -->
+  <!-- 9 -->
   <section class="slide">
     <h2 class="slide-title">원문 &middot; 변학도의 생일잔치</h2>
     <div class="body-area">
@@ -598,10 +636,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">8 / 26</div>
+    <div class="page-num">9 / 26</div>
   </section>
 
-  <!-- 9 -->
+  <!-- 10 -->
   <section class="slide">
     <h2 class="slide-title">어휘 풀이 &middot; 잔치 자리의 말들</h2>
     <div class="body-area">
@@ -616,10 +654,10 @@
         <div class="gl"><span class="gw">백수한삼(白袖汗衫)</span><span class="gd">기생이나 무동이 춤출 때 손목에 착용하는 긴 소매</span></div>
       </div>
     </div>
-    <div class="page-num">9 / 26</div>
+    <div class="page-num">10 / 26</div>
   </section>
 
-  <!-- 10 -->
+  <!-- 11 -->
   <section class="slide">
     <h2 class="slide-title">인물 &middot; 춘향</h2>
     <div class="body-area">
@@ -648,10 +686,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">10 / 26</div>
+    <div class="page-num">11 / 26</div>
   </section>
 
-  <!-- 11 -->
+  <!-- 12 -->
   <section class="slide">
     <h2 class="slide-title">인물 &middot; 몽룡</h2>
     <div class="body-area">
@@ -678,10 +716,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">11 / 26</div>
+    <div class="page-num">12 / 26</div>
   </section>
 
-  <!-- 12 -->
+  <!-- 13 -->
   <section class="slide">
     <h2 class="slide-title">인물 &middot; 변학도와 운봉 영장</h2>
     <div class="body-area">
@@ -710,10 +748,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">12 / 26</div>
+    <div class="page-num">13 / 26</div>
   </section>
 
-  <!-- 13 -->
+  <!-- 14 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 1-(1)</h2>
     <div class="body-area">
@@ -726,10 +764,10 @@
         <div class="fill-row">춘향은 몽룡과 함께 한양으로 가 <span class="blank">&nbsp;?&nbsp;</span>에 봉해지고, 이후 두 사람은 행복하게 살아감.</div>
       </div>
     </div>
-    <div class="page-num">13 / 26</div>
+    <div class="page-num">14 / 26</div>
   </section>
 
-  <!-- 14 -->
+  <!-- 15 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 1-(1) &middot; 예시 답안</h2>
     <div class="body-area">
@@ -746,10 +784,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">14 / 26</div>
+    <div class="page-num">15 / 26</div>
   </section>
 
-  <!-- 15 -->
+  <!-- 16 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 1-(2)</h2>
     <div class="body-area">
@@ -766,10 +804,10 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">15 / 26</div>
+    <div class="page-num">16 / 26</div>
   </section>
 
-  <!-- 16 -->
+  <!-- 17 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 1-(2) &middot; 예시 답안</h2>
     <div class="body-area">
@@ -790,10 +828,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">16 / 26</div>
+    <div class="page-num">17 / 26</div>
   </section>
 
-  <!-- 17 -->
+  <!-- 18 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 1-(3)</h2>
     <div class="body-area">
@@ -817,10 +855,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">17 / 26</div>
+    <div class="page-num">18 / 26</div>
   </section>
 
-  <!-- 18 -->
+  <!-- 19 -->
   <section class="slide">
     <h2 class="slide-title">학습 활동 1-(3) &middot; 예시 답안</h2>
     <div class="body-area">
@@ -843,10 +881,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">18 / 26</div>
+    <div class="page-num">19 / 26</div>
   </section>
 
-  <!-- 19 -->
+  <!-- 20 -->
   <section class="slide">
     <h2 class="slide-title">서술자가 끼어든다</h2>
     <div class="body-area">
@@ -872,10 +910,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">19 / 26</div>
+    <div class="page-num">20 / 26</div>
   </section>
 
-  <!-- 20 -->
+  <!-- 21 -->
   <section class="slide">
     <h2 class="slide-title">판소리계 소설의 세 가지 표지</h2>
     <div class="body-area">
@@ -903,10 +941,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">20 / 26</div>
+    <div class="page-num">21 / 26</div>
   </section>
 
-  <!-- 21 -->
+  <!-- 22 -->
   <section class="slide">
     <h2 class="slide-title">풍자와 해학, 무엇이 다른가</h2>
     <div class="body-area">
@@ -932,39 +970,6 @@
         <div class="etag">작품에서 찾으면</div>
         <ul>
           <li>변학도가 어사출두에 놀라 &ldquo;문 들어온다 바람 닫아라.&rdquo;라고 뒤바꾸어 말하는 대목 &mdash; 집권층 양반을 겨눈 <strong>풍자</strong> (2차시에서 자세히)</li>
-        </ul>
-      </div>
-    </div>
-    <div class="page-num">21 / 26</div>
-  </section>
-
-  <!-- 22 -->
-  <section class="slide">
-    <h2 class="slide-title">형성 과정 &middot; 설화에서 소설로</h2>
-    <div class="body-area">
-      <div class="flow">
-        <div class="flow-step">
-          <div class="stage-label">첫 자리</div>
-          <div class="emo">근원 설화</div>
-          <div class="desc">열녀 설화, 관탈 민녀 설화, 암행어사 설화 등 여러 이야기가 입에서 입으로 전해지며 서사의 밑감을 이룸</div>
-        </div>
-        <div class="flow-arrow">&#10132;</div>
-        <div class="flow-step">
-          <div class="stage-label">가운데 자리</div>
-          <div class="emo">판소리 &lt;춘향가&gt;</div>
-          <div class="desc">소리꾼이 청중 앞에서 부르는 구비 서사시로 묶임 &mdash; 현장의 어투와 확장적 문체가 여기서 자람</div>
-        </div>
-        <div class="flow-arrow">&#10132;</div>
-        <div class="flow-step">
-          <div class="stage-label">끝 자리</div>
-          <div class="emo">판소리계 소설</div>
-          <div class="desc">사설이 읽을거리(독서물)로 정착해 &lt;춘향전&gt;이 됨 &mdash; 판소리의 자취가 문장 곳곳에 남음</div>
-        </div>
-      </div>
-      <div class="emotion">
-        <div class="etag">기억할 것</div>
-        <ul>
-          <li>&lt;춘향전&gt;은 한 사람이 지어낸 작품이 아니라, <strong>여러 세대의 입과 귀를 거쳐 다듬어진</strong> 공동의 이야기</li>
         </ul>
       </div>
     </div>
