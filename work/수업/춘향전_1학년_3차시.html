@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>춘향전 (1학년-3차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --paper: #f5f1e8;
+    --paper-edge: #e6dfd0;
+    --ink: #241f1c;
+    --ink-soft: #6b5f56;
+    --ink-faint: #a89a8c;
+    --dan: #8a2b52;           /* 자주 — 춘향전 강조색 */
+    --dan-soft: #b06f8a;
+    --rule: #d5cab5;
+    --card: #fbf8f1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #2b2422;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(43,36,34,0.92); z-index: 50;
+  }
+  .nav-top a { color: #c0b0a4; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #eadfd2; }
+  .nav-meta { color: #8d7f74; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 15% 9%, rgba(255,255,255,0.62) 0%, transparent 56%),
+      radial-gradient(ellipse at 85% 91%, rgba(160,120,110,0.20) 0%, transparent 60%),
+      repeating-linear-gradient(0deg,
+        rgba(140,90,80,0.045) 0px, rgba(140,90,80,0.045) 1px,
+        transparent 1px, transparent 26px),
+      repeating-linear-gradient(90deg,
+        rgba(140,90,80,0.045) 0px, rgba(140,90,80,0.045) 1px,
+        transparent 1px, transparent 26px);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.2% 5.4%;
+  }
+  /* 우측 상단 — 소리꾼의 합죽선 */
+  .stage::before {
+    content: ""; position: absolute; top: -2%; right: -2%;
+    width: 30%; height: 56%; pointer-events: none; opacity: 0.15;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 260'><g fill='none' stroke='%238a2b52' stroke-width='2.4' stroke-linecap='round'><path d='M184.3 56.8 A185 185 0 0 0 26.3 217.4'/><path d='M203 190.5 A50 50 0 0 0 160.4 233.9'/><path d='M203 190.5 L184.3 56.8'/><path d='M190.4 194 L137.7 69.6'/><path d='M179.2 200.6 L96 94.2'/><path d='M170.1 209.9 L62.2 128.7'/><path d='M163.6 221.3 L38.5 170.7'/><path d='M160.4 233.9 L26.3 217.4'/></g><circle cx='210' cy='240' r='5' fill='%238a2b52'/></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.85cqw, 5.50rem); line-height: 1.18; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.15cqw, 3.68rem);
+    padding-bottom: 0.7cqw; margin-bottom: 2.15cqw;
+    border-bottom: 0.17cqw solid var(--ink); display: inline-block;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--dan);
+    font-size: clamp(0.8rem, 1.63cqw, 1.60rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(0.95rem, 1.96cqw, 2.08rem); color: var(--ink-soft); line-height: 1.75; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--dan); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.39cqw, 2.56rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 5.4%; right: 5.4%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.41cqw, 1.47rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2%; flex: 1; min-height: 0; }
+  .cols.wide-left { grid-template-columns: 1.3fr 1fr; }
+  .cols.wide-right { grid-template-columns: 1fr 1.35fr; }
+  .col-head {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.9rem, 1.79cqw, 1.89rem);
+    color: var(--dan); margin-bottom: 1.2cqw;
+    padding-bottom: 0.55cqw; border-bottom: 0.09cqw solid var(--rule);
+  }
+
+  .verse {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.86rem, 1.85cqw, 1.95rem);
+    line-height: 1.95; letter-spacing: 0.005em;
+  }
+  .verse .hl { color: var(--dan); font-weight: 700; }
+  .verse .said { display: block; padding-left: 1.2em; }
+  .verse p + p { margin-top: 0.7cqw; }
+  .src {
+    display: block; margin-top: 0.9cqw;
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.62rem, 1.22cqw, 1.28rem);
+    color: var(--ink-faint); letter-spacing: 0.04em;
+  }
+
+  /* 한시 */
+  .hanshi {
+    display: grid; grid-template-columns: auto 1fr; gap: 0.6cqw 2.4cqw;
+    align-items: baseline; justify-content: center;
+    margin: 0.4cqw 0;
+  }
+  .hanshi .han {
+    font-family: "Noto Serif KR", "Gowun Batang", serif;
+    font-size: clamp(0.9rem, 2.0cqw, 2.15rem); color: var(--dan); letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+  .hanshi .kor {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.82rem, 1.72cqw, 1.80rem); line-height: 1.8; color: var(--ink);
+  }
+
+  .emotion {
+    margin-top: auto; background: var(--card);
+    border-left: 0.34cqw solid var(--dan);
+    padding: 1.4cqw 1.75cqw;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.92rem, 1.85cqw, 1.92rem); color: var(--dan);
+    margin-bottom: 0.5rem;
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.78rem, 1.55cqw, 1.62rem); line-height: 1.7;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+  }
+  .emotion li + li { margin-top: 0.28rem; }
+  .emotion li::before { content: "—"; position: absolute; left: 0; color: var(--ink-faint); }
+  .body-area > .emotion { margin-bottom: 4.4cqw; }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 1.0cqw 0.95cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.8rem, 1.58cqw, 1.65rem); line-height: 1.6;
+  }
+  .info-table th {
+    width: 4.6em; font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--dan); white-space: nowrap;
+  }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.9cqw 0.85cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.66rem, 1.36cqw, 1.42rem); line-height: 1.6;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    border-bottom: 0.17cqw solid var(--dan); font-size: clamp(0.72rem, 1.48cqw, 1.55rem);
+  }
+  .cmp-table tbody th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink);
+    white-space: nowrap; width: 7em; background: var(--card);
+  }
+  .cmp-table .hl { color: var(--dan); font-weight: 500; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.8rem, 1.63cqw, 1.68rem); line-height: 1.7;
+    padding-left: 2.85cqw; position: relative; margin-bottom: 1.4cqw;
+  }
+  .num-list li .n {
+    position: absolute; left: 0; top: 0.05em;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--dan); font-size: 1.05em;
+  }
+
+  .def-box {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.6cqw 1.9cqw;
+  }
+  .def-box + .def-box { margin-top: 1.3cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    font-size: clamp(0.92rem, 1.85cqw, 1.90rem); margin-bottom: 0.5rem;
+  }
+  .def-box p { font-size: clamp(0.8rem, 1.63cqw, 1.68rem); line-height: 1.8; color: var(--ink-soft); }
+
+  .flow { display: flex; align-items: stretch; gap: 0.75cqw; min-height: 0; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--dan);
+    padding: 1.5cqw 1.25cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .stage-label {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.82rem, 1.63cqw, 1.70rem); margin-bottom: 0.15rem;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; color: var(--dan);
+    font-size: clamp(1rem, 2.17cqw, 2.28rem); margin-bottom: 0.7rem;
+  }
+  .flow-step .desc {
+    font-size: clamp(0.7rem, 1.36cqw, 1.42rem); line-height: 1.6; color: var(--ink-soft);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; color: var(--dan);
+    font-size: clamp(0.9rem, 1.96cqw, 2.24rem);
+  }
+
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--dan); padding: 1.7cqw 1.5cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.92rem, 1.90cqw, 1.95rem);
+    margin-bottom: 0.7rem; padding-bottom: 0.45rem; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--dan); }
+  .c3 p { font-size: clamp(0.74rem, 1.46cqw, 1.53rem); line-height: 1.72; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.5rem; }
+
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9cqw 2.6cqw; }
+  .gl { display: flex; gap: 0.9cqw; align-items: baseline; padding-bottom: 0.75cqw; border-bottom: 1px solid var(--rule); }
+  .gl .gw {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    font-size: clamp(0.82rem, 1.63cqw, 1.70rem); width: 7.2em; flex-shrink: 0;
+  }
+  .gl .gd { font-size: clamp(0.72rem, 1.41cqw, 1.47rem); line-height: 1.62; color: var(--ink-soft); }
+
+  .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1rem, 2.28cqw, 2.55rem); color: var(--dan);
+    width: 2.4em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.92rem, 1.96cqw, 1.98rem);
+    margin-bottom: 0.3rem;
+  }
+  .step p { font-size: clamp(0.76rem, 1.50cqw, 1.57rem); line-height: 1.72; color: var(--ink-soft); }
+  /* 시대 이름을 머리말로 쓰는 흐름 — 이름이 줄바꿈되지 않도록 넉넉히 */
+  .steps.era { gap: 2cqw; }
+  .steps.era .sn {
+    width: 5.4em; white-space: nowrap; text-align: right;
+    font-size: clamp(1.05rem, 2.50cqw, 2.75rem);
+  }
+  .steps.era .step p { font-size: clamp(0.86rem, 1.79cqw, 1.88rem); line-height: 1.8; }
+  .steps.era .sbody { padding-bottom: 1.5cqw; }
+
+  .act-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    background: var(--dan); color: var(--paper);
+    font-size: clamp(0.7rem, 1.36cqw, 1.42rem); letter-spacing: 0.06em;
+    padding: 0.3em 1.1em; margin-bottom: 1.1cqw;
+  }
+  .act-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.92rem, 1.96cqw, 2.05rem); line-height: 1.7;
+    color: var(--ink); margin-bottom: 1.5cqw;
+  }
+  .qa { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .qa-item { background: var(--card); border-left: 0.3cqw solid var(--dan); padding: 1.15cqw 1.5cqw; }
+  .qa-item .q {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    font-size: clamp(0.8rem, 1.58cqw, 1.65rem); margin-bottom: 0.35rem;
+  }
+  .qa-item .a { font-size: clamp(0.74rem, 1.46cqw, 1.53rem); line-height: 1.72; color: var(--ink-soft); }
+  .blank {
+    display: inline-block; min-width: 5em; text-align: center;
+    color: var(--dan); border-bottom: 2px solid var(--dan); font-weight: 700;
+  }
+  .ans { color: var(--dan); font-weight: 700; }
+  .answer-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.3rem, 3.4cqw, 3.85rem); color: var(--paper);
+    background: var(--dan); padding: 0.5rem 1.8rem; margin-bottom: 1.9cqw;
+  }
+  .answer-desc {
+    font-size: clamp(0.85rem, 1.79cqw, 1.86rem); line-height: 1.9; color: var(--ink-soft);
+    max-width: 46em;
+  }
+
+  /* O/X 정리 목록 */
+  .ox-list { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .ox-item {
+    display: flex; gap: 1.4cqw; align-items: center;
+    background: var(--card); border: 1px solid var(--rule); padding: 1.1cqw 1.5cqw;
+  }
+  .ox-item .mark {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.1rem, 2.5cqw, 2.7rem); color: var(--dan);
+    width: 1.6em; text-align: center; flex-shrink: 0;
+  }
+  .ox-item .txt { font-size: clamp(0.76rem, 1.52cqw, 1.60rem); line-height: 1.7; }
+  .ox-item .why { display: block; color: var(--ink-soft); font-size: 0.9em; margin-top: 0.2rem; }
+
+  .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .quiz-guide { font-size: clamp(0.85rem, 1.79cqw, 1.86rem); color: var(--ink-soft); margin-bottom: 1.5rem; }
+  .quiz-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1rem, 2.39cqw, 2.62rem); line-height: 1.75;
+    padding: 2.1cqw 2.4cqw; background: var(--card); border: 1px solid var(--rule);
+  }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.6cqw; }
+  .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--dan);
+    font-size: clamp(0.88rem, 1.90cqw, 1.95rem); width: 6.4em; flex-shrink: 0;
+    text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.8rem, 1.63cqw, 1.70rem); line-height: 1.8; }
+  .srow .sval ul { list-style: none; margin-top: 0.45rem; }
+  .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
+  .srow .sval li + li { margin-top: 0.28rem; }
+  .srow .sval li::before { content: "·"; position: absolute; left: 0.2rem; color: var(--dan); }
+
+  .page-num {
+    position: absolute; right: 3.2%; bottom: 2.6%;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.30cqw, 1.44rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #c0b0a4; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #3d3430; color: #eadfd2; border: 1px solid #574b45;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #4b413c; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #8a7c72; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cols, .cards3, .cards2, .gloss { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .hanshi { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../work.html">업무용</a>
+    <a href="../index.html">홈</a>
+  </div>
+  <div class="nav-meta">춘향전 · 1학년 3차시 · 업데이트 2026. 8. 13.</div>
+</div>
+
+<div class="stage" id="stage">
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">조 선 　 판 소 리 계 　 소 설</div>
+    <h1 class="title-main">춘향전</h1>
+    <div class="rule"></div>
+    <div class="sub">설씨녀에서 웹툰까지, 이어지는 이야기</div>
+    <div class="foot">
+      <span>작자 미상</span>
+      <span>1학년 · 3차시</span>
+    </div>
+    <div class="page-num">1 / 19</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 목표</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:2cqw;">
+        <div class="c3">
+          <h3>하나</h3>
+          <p>한국 문학사의 흐름을 고려하여 고전 소설을 수용한다</p>
+        </div>
+        <div class="c3">
+          <h3>둘</h3>
+          <p>매체의 변화가 소통 문화에 끼치는 영향을 탐구한다</p>
+        </div>
+      </div>
+      <div class="def-box">
+        <div class="dt">3차시에 할 일</div>
+        <p>근원 설화인 설씨녀 설화와 견주어 <strong style="color:var(--dan);">문학사의 흐름</strong>을 짚고, 매체의 변화가 &lt;춘향전&gt;을 둘러싼 소통에 끼친 영향을 탐구한다</p>
+      </div>
+    </div>
+    <div class="page-num">2 / 19</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <h2 class="slide-title">전시 학습 복습</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">내용 &mdash; 무엇을 이야기했나</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>생일잔치에 나타난 몽룡이 한시로 탐관오리를 겨누고, 어사출두로 변학도를 <strong>봉고파직</strong>함</li>
+            <li><span class="n">2</span>춘향은 마지막 시험 앞에서도 뜻을 굽히지 않고, 두 사람은 극적으로 재회함</li>
+          </ul>
+        </div>
+        <div>
+          <div class="col-head">표현 &mdash; 어떻게 이야기했나</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>서술자의 개입, 확장적 문체, 풍자와 해학 &mdash; 판소리에서 온 자취</li>
+            <li><span class="n">2</span>은유와 대구로 짜인 한시가 사건의 전환을 예고함</li>
+          </ul>
+          <div class="emotion">
+            <div class="etag">오늘의 질문</div>
+            <ul>
+              <li>이 이야기는 <strong>어디에서 와서</strong> 어디로 가고 있는가? 설화에서 시작된 이야기가 오늘의 웹툰과 댓글에 이르기까지</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">3 / 19</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <h2 class="slide-title">설씨녀 설화 &middot; 또 하나의 뿌리</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">줄거리</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>설씨녀의 아버지가 늙고 쇠약한 몸으로 군역을 가게 되자, 그를 좋아하던 <strong>가실</strong>이 대신 군역을 자청함</li>
+            <li><span class="n">2</span>두 사람은 <strong style="color:var(--dan);">거울을 반으로 쪼개어</strong> 나누어 갖고 훗날을 기약함</li>
+            <li><span class="n">3</span>나라에 변고가 생겨 가실이 6년이 지나도록 돌아오지 못하자, 아버지는 딸에게 다른 혼인을 강요함</li>
+            <li><span class="n">4</span>설씨녀가 끝내 거절하던 중 남루한 차림의 가실이 돌아오고, 반쪽 거울로 서로를 알아보아 혼인에 이름</li>
+          </ul>
+        </div>
+        <div>
+          <div class="col-head">제재 개관</div>
+          <table class="info-table">
+            <tr><th>갈래</th><td>설화(열녀 설화, 신물 설화)</td></tr>
+            <tr><th>성격</th><td>사실적, 교훈적, 축약적</td></tr>
+            <tr><th>제재</th><td>설씨녀와 가실의 약속</td></tr>
+            <tr><th>주제</th><td>설씨녀와 가실의 사랑과 신의</td></tr>
+            <tr><th>특징</th><td>
+              &#9312; 신물(信物) 모티프가 확인됨<br>
+              &#9313; &lsquo;행복 &ndash; 불행 &ndash; 행복&rsquo;의 서사 구조<br>
+              &#9314; 자기 운명을 스스로 결정하는 주체적 여성 인물
+            </td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">4 / 19</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <h2 class="slide-title">설씨녀 설화 원문 &middot; 약속과 신표</h2>
+    <div class="body-area">
+      <div class="cols wide-left">
+        <div>
+          <div class="verse">
+            <p class="said">&ldquo;저는 변변찮은 사람입니다만, 일찍부터 뜻과 기개를 자부하며 살아왔습니다. <span class="hl">제가 아버님의 군역을 대신하고자 합니다.</span>&rdquo;</p>
+            <p class="said">&ldquo;혼인은 중요한 일이니 갑작스레 정하기는 어렵습니다. <span class="hl">제가 이미 마음으로 허락하였으니, 이는 죽어도 변하지 않을 것입니다.</span> 바라건대 당신께서 변방으로 나갔다가 교대하여 돌아오시면 그때 좋은 날을 잡아 혼례를 올려도 늦지 않을 것입니다.&rdquo;</p>
+            <p>그러고는 <span class="hl">거울을 반으로 쪼개어 각각 한 조각씩 나누어 가지며</span> 말했다.</p>
+            <p class="said">&ldquo;이것은 우리 약속의 신표입니다. 훗날 합쳐 봅시다.&rdquo;</p>
+            <span class="src">교과서 44쪽 &middot; 《삼국사기》 권 제48 열전 제8</span>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">어휘</div>
+          <div class="gl" style="display:block;"><span class="gw" style="width:auto;">여염집</span><span class="gd">일반 백성의 살림집</span></div>
+          <div class="gl" style="display:block;"><span class="gw" style="width:auto;">군역(軍役)</span><span class="gd">군대에서 복역하거나 군대의 진영에서 부역하는 일</span></div>
+          <div class="gl" style="display:block;border-bottom:none;"><span class="gw" style="width:auto;">신표(信標)</span><span class="gd">뒷날에 보고 증거가 되게 하기 위하여 서로 주고받는 물건</span></div>
+          <div class="emotion" style="margin-top:1.3cqw;">
+            <div class="etag">눈여겨볼 것</div>
+            <ul>
+              <li>혼인 날짜를 미루면서도 &lsquo;마음으로 이미 허락했다&rsquo;고 못 박는 설씨녀 &mdash; <strong>자기 뜻을 스스로 정하는 인물</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">5 / 19</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <h2 class="slide-title">설씨녀 설화 원문 &middot; 시련과 재회</h2>
+    <div class="body-area">
+      <div class="verse" style="margin-bottom:1.2cqw;">
+        <p>나라에 변고가 생기는 바람에 가실은 다른 사람과 교대하지 못해 6년이 되도록 돌아오지 못했다. 아버지가 다른 집안에 시집가라 이르자 설씨녀가 대답했다.</p>
+        <p class="said">&ldquo;그 사람은 그 약속을 믿고 군대에 갔고&hellip; <span class="hl">우리가 사람이라면 어찌 신의를 저버리고 약속을 깰 수 있겠습니까?</span> 저는 아버지의 명을 따를 수 없으니, 다시는 그런 말씀을 말아 주세요.&rdquo;</p>
+        <p>이때 가실이 돌아왔다. 몸이 너무 야위어 핏기가 없었고 옷차림이 남루해서 집안사람들은 그를 알아보지 못했다. 가실은 곧장 설씨녀에게 와서 그녀 앞에 <span class="hl">깨진 거울</span>을 던졌다. 설씨녀는 그것을 주워 들고는 큰 소리로 울었다.</p>
+        <span class="src">교과서 45쪽 &middot; 《삼국사기》 권 제48 열전 제8</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">해설</div>
+        <ul>
+          <li>알아보지 못할 만큼 남루해진 가실을 <strong>거울 반쪽</strong>이 증명한다 &mdash; 신물 모티프가 재회의 결정적 구실을 함</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">6 / 19</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(1) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div><span class="act-badge">학습 활동</span></div>
+      <div class="act-q">다음 질문에 답하며 설씨녀 설화의 내용을 정리해 보자.</div>
+      <div class="qa">
+        <div class="qa-item">
+          <div class="q">가실이 설씨녀의 아버지 대신 군역을 간 까닭은 무엇인가?</div>
+          <div class="a">설씨녀의 아버지가 늙고 쇠약하여 설씨녀가 아버지의 군역을 걱정하자, 일찍부터 설씨녀를 좋아하던 가실이 그를 대신하여 군역을 갔다.</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">가실이 6년이 지나도록 돌아오지 못한 까닭은 무엇인가?</div>
+          <div class="a">나라에 변고가 생기는 바람에 다른 사람과 군역을 교대하지 못했기 때문이다.</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">설씨녀와 가실이 나누어 가진 &lsquo;거울&rsquo;은 어떤 역할을 하였는가?</div>
+          <div class="a">거울은 가실과 설씨녀가 맺은 혼인 약속의 신표로서, 설씨녀가 야위고 남루해진 가실을 알아보게 하여 두 인물의 재회를 돕는 역할을 하였다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">7 / 19</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(2)</h2>
+    <div class="body-area">
+      <div><span class="act-badge">학습 활동</span></div>
+      <div class="act-q">&lsquo;설씨녀&rsquo;와 &lsquo;춘향&rsquo;이 겪은 사건을 아래와 같이 비교해 보자.</div>
+      <table class="cmp-table">
+        <thead>
+          <tr><th>비교 항목</th><th>설씨녀</th><th>춘향</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>상대와 이별하게 된 원인</th><td class="hl">?</td><td class="hl">?</td></tr>
+          <tr><th>이별 뒤에 겪은 시련</th><td class="hl">?</td><td class="hl">?</td></tr>
+          <tr><th>시련이 해소된 계기</th><td class="hl">?</td><td class="hl">?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">8 / 19</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(2) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead>
+          <tr><th>비교 항목</th><th>설씨녀</th><th>춘향</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>상대와 이별하게 된 원인</th>
+            <td>가실이 설씨녀의 아버지를 대신하여 변방으로 <span class="hl">군역</span>을 떠나게 되어 이별함.</td>
+            <td>몽룡이 아버지를 따라 <span class="hl">한양으로 떠나게</span> 되어 이별함.</td>
+          </tr>
+          <tr>
+            <th>이별 뒤에 겪은 시련</th>
+            <td><span class="hl">아버지</span>가 설씨녀에게 다른 사람과 혼인할 것을 강요함.</td>
+            <td><span class="hl">본관 사또</span>가 춘향에게 수청을 강요하고, 이를 거부하자 춘향을 옥에 가두어 모질게 대함.</td>
+          </tr>
+          <tr>
+            <th>시련이 해소된 계기</th>
+            <td>설씨녀가 끝까지 다른 사람과의 혼인을 거절하고, 남루한 차림으로 돌아온 가실과 재회해 혼인에 이름.</td>
+            <td>춘향이 끝까지 본관 사또의 수청을 들지 않고, 암행어사가 되어 돌아온 몽룡이 춘향을 구하고 본관 사또를 벌함.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">9 / 19</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(3) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div class="act-q">(2)를 바탕으로 하여 &lsquo;설씨녀&rsquo;와 &lsquo;춘향&rsquo;에게 어떤 공통점이 있는지 말해 보자.</div>
+      <div class="cards2" style="flex:0 0 auto;">
+        <div class="c3">
+          <h3>성격</h3>
+          <p><strong style="color:var(--dan);">주체적, 적극적, 의지적임</strong></p>
+          <p>설씨녀는 아버지의 혼인 강요 속에서도 자신만의 가치관과 신념을 지켰고, 춘향 역시 변학도의 수청 강요 속에서도 자신만의 가치관과 신념을 지킴</p>
+        </div>
+        <div class="c3">
+          <h3>중요하게 여기는 것</h3>
+          <p><strong style="color:var(--dan);">상대와의 의리(신의)와 인간적인 도리</strong></p>
+          <p>설씨녀는 가실과 한 약속과 그의 은혜를 저버리지 않으려 했으며, 춘향은 몽룡과 한 사랑의 약속, 절개와 지조를 저버리지 않으려 함</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">차이도 함께</div>
+        <ul>
+          <li>이별의 원인이 <strong>군역</strong>이냐 <strong>가족의 이동</strong>이냐, 시련이 <strong>아버지의 혼인 강요</strong>냐 <strong>권력자의 수청 강요</strong>냐에서 갈린다. 설씨녀 설화에는 <strong>거울</strong>이라는 신물 모티프가 재회에 결정적 구실을 한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">10 / 19</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide">
+    <h2 class="slide-title">문학사의 흐름 속에서 &lt;춘향전&gt; 이해하기</h2>
+    <div class="body-area">
+      <div class="steps era">
+        <div class="step">
+          <div class="sn">설화</div>
+          <div class="sbody">
+            <p><strong>설씨녀 설화</strong>를 비롯하여 관탈 민녀 설화인 도미 설화, 암행어사 설화인 박문수 설화 등 여러 근원 설화가 판소리 &lt;춘향가&gt; 형성에 기여함</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">판소리</div>
+          <div class="sbody">
+            <p><strong>판소리</strong>의 운문적인 표현과 소리꾼이 사용하던 어투, 인물에 대한 희화화나 언어유희로 웃음을 유발하는 방식이 소설에 영향을 줌</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">소설</div>
+          <div class="sbody">
+            <p>&lt;춘향전&gt;이 향유되던 당대의 <strong>사회상</strong>이 작품의 주제 의식에 반영됨</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">오늘</div>
+          <div class="sbody">
+            <p>인간의 보편적 정서인 사랑을 바탕으로 현실 사회의 문제를 다루어, 오늘날에도 계속 <strong style="color:var(--dan);">다양한 내용과 형식으로 재창조</strong>되고 있음</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">11 / 19</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 4-(1)</h2>
+    <div class="body-area">
+      <div><span class="act-badge">학습 활동</span></div>
+      <div class="act-q">보기에 드러난 매체의 발전 과정과 그에 따른 소통 방식의 변화를 정리해 보자.</div>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="stage-label">첫 단계</div>
+          <div class="emo">인쇄 매체</div>
+          <div class="desc">인쇄 기술 발달로 책, 종이 신문 등을 통해 <strong>대량 복제</strong>가 가능해지고, 정보가 많은 사람에게 전달됨</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">둘째 단계</div>
+          <div class="emo">방송(대중) 매체</div>
+          <div class="desc">전기&middot;전파 기술 발달로 텔레비전, 영화 등 <strong>음성과 영상</strong>이 가미된 정보가 많은 사람에게 <strong>동시에</strong> 전달됨</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">셋째 단계</div>
+          <div class="emo">디지털 매체</div>
+          <div class="desc">인터넷에 바탕을 둔 개인 디지털 기기의 발달로 SNS, 일인 미디어 플랫폼 등에서 <strong>생산자와 소비자의 경계가 허물어지고</strong> 정보가 쌍방향으로 전달됨</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">12 / 19</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 4-(2) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div class="act-q">&lt;춘향전&gt;을 변용한 작품들을 찾아보고, 매체의 발전이 &lt;춘향전&gt;을 둘러싼 소통에 어떤 영향을 끼쳤는지 이야기해 보자.</div>
+      <div class="cards3" style="flex:0 0 auto;">
+        <div class="c3">
+          <h3>인쇄 매체</h3>
+          <p style="color:var(--dan);">《일설 춘향전》(1929)</p>
+          <p>책으로 출간되어 많은 사람이 <strong>읽을</strong> 수 있게 됨</p>
+        </div>
+        <div class="c3">
+          <h3>방송 매체</h3>
+          <p style="color:var(--dan);">영화 &lt;춘향뎐&gt;(2000)</p>
+          <p>음성과 영상으로 옮겨져 많은 사람이 동시에 <strong>볼</strong> 수 있게 됨</p>
+        </div>
+        <div class="c3">
+          <h3>디지털 매체</h3>
+          <p style="color:var(--dan);">웹툰 《광한루 로맨스》</p>
+          <p>디지털 기술에 바탕을 둔 작품이 나타나고, 독자가 <strong>댓글로 감상을 나눔</strong></p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">달라진 것</div>
+        <ul>
+          <li>소비자들이 댓글로 다양한 감상을 공유할 뿐 아니라, 자신의 관점과 해석을 더해 <strong>팬 아트나 팬 무비</strong> 같은 새로운 음악&middot;영상&middot;이미지를 창작하기도 한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">13 / 19</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 4-(3) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div class="act-q">디지털 매체에서의 반응을 보고, 이러한 소통 문화의 특성을 파악해 보자.</div>
+      <ul class="num-list">
+        <li><span class="n">1</span>다양한 <strong>이모티콘</strong>으로 감정을 표현한다</li>
+        <li><span class="n">2</span>다른 수용자의 견해가 <strong>소통의 소재</strong>가 된다</li>
+        <li><span class="n">3</span>작품을 수용(소비)한 직후 <strong>즉각적인 소통</strong>이 이루어진다</li>
+        <li><span class="n">4</span>수용자의 주관이 더욱 솔직하고 <strong>직설적</strong>으로 나타나는 편이다</li>
+        <li><span class="n">5</span>인터넷 주소(<strong>링크</strong>)를 연결하여 또 다른 정보를 실시간으로 공유한다</li>
+        <li><span class="n">6</span>누구나 자신의 생각이나 감상을 담아 <strong>새로운 콘텐츠를 생산</strong>할 수 있다</li>
+      </ul>
+    </div>
+    <div class="page-num">14 / 19</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide">
+    <h2 class="slide-title">생비자(prosumer)</h2>
+    <div class="body-area">
+      <div class="def-box">
+        <div class="dt">생비자란</div>
+        <p>
+          미디어를 <strong>소비하는 소비자</strong>이면서 동시에 <strong>생산하는 생산자</strong> 역할을 하는 사람.
+          책&middot;신문&middot;텔레비전 시대에는 일반인이 정보를 생산해 내놓기 어려웠지만, 일인 미디어가 확산되면서 누구나 만들고 나눌 수 있게 되었다.
+          이 전환은 우리가 미디어를 수동적으로 받아들이는 존재가 아니라 <strong style="color:var(--dan);">적극적으로 이용하는 능동적 존재</strong>임을 뜻한다
+        </p>
+      </div>
+      <div class="cards3" style="margin-top:1.7cqw;">
+        <div class="c3">
+          <h3>가장 작은 참여</h3>
+          <p>&lsquo;좋아요&rsquo;를 누르는 것도 생산자와의 소통에 참여하는 일</p>
+        </div>
+        <div class="c3">
+          <h3>한 걸음 더</h3>
+          <p>댓글을 쓰거나 정보를 스크랩하고 편집해 올리는 것</p>
+        </div>
+        <div class="c3">
+          <h3>본격적인 창작</h3>
+          <p>팬 아트, 팬 무비처럼 새로운 작품을 만들어 내는 것</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">15 / 19</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 4-(4) &middot; 성찰</h2>
+    <div class="body-area">
+      <div class="act-q">자신이 디지털 매체를 활용한 소통에 어떻게 참여하고 있는지 성찰해 보자.</div>
+      <div class="def-box">
+        <div class="dt">예시 답안</div>
+        <p>
+          나는 SNS를 자주 이용하는데, 사람들의 일상뿐만 아니라 중요한 뉴스도 가장 빨리 접할 수 있는 공간이기 때문이야.
+          문제는 정보 전달이 빠르고 누구나 정보 생산자가 될 수 있다 보니 <strong>불확실하거나 악의적인 정보도 매우 빠르게 퍼진다</strong>는 점이야.
+          나도 모르고 &lsquo;가짜 뉴스&rsquo;를 공유한 적이 있어. 정보 생산자에게는 자신이 만드는 정보에 대한 <strong style="color:var(--dan);">책임 의식</strong>이 있어야 하고,
+          수용자에게는 정보의 진실성을 판별할 수 있는 <strong style="color:var(--dan);">감식안</strong>이 필요한 것 같아.
+        </p>
+      </div>
+      <div class="emotion">
+        <div class="etag">함께 생각할 점</div>
+        <ul>
+          <li>오늘날 디지털 매체는 이미 <strong>공적 영역</strong>의 역할을 한다. 사적 소통과 공적 소통의 경계가 흐려질수록 온라인 공간에서도 <strong>소통 윤리</strong>를 갖추어야 한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">16 / 19</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide">
+    <h2 class="slide-title">소단원 마무리 퀴즈</h2>
+    <div class="body-area quiz-wrap">
+      <div class="quiz-guide">다음 설명이 맞으면 O, 틀리면 X를 골라 봅시다.</div>
+      <div class="qa">
+        <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>1.</strong> 디지털 매체에서의 소통은 주로 일방향적으로 이루어진다. &nbsp;( O / X )</div></div>
+        <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>2.</strong> 디지털 매체의 발달로 공적 소통과 사적 소통의 경계가 뚜렷해졌다. &nbsp;( O / X )</div></div>
+        <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>3.</strong> &lt;춘향전&gt;에는 서술자의 논평과 운문적인 표현 등 판소리의 흔적이 남아 있다. &nbsp;( O / X )</div></div>
+        <div class="qa-item"><div class="a" style="font-size:clamp(0.8rem,1.63cqw,1.7rem);"><strong>4.</strong> &lt;춘향전&gt;과 그 근원 설화인 설씨녀 설화는 &lsquo;정절의 수호&rsquo;라는 주제를 공유한다. &nbsp;( O / X )</div></div>
+      </div>
+    </div>
+    <div class="page-num">17 / 19</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide">
+    <h2 class="slide-title">소단원 마무리 퀴즈 &middot; 정답</h2>
+    <div class="body-area">
+      <div class="ox-list">
+        <div class="ox-item">
+          <div class="mark">X</div>
+          <div class="txt">디지털 매체에서의 소통은 주로 일방향적으로 이루어진다.
+            <span class="why">생산자와 소비자의 경계가 허물어지며 <strong>쌍방향</strong>으로 이루어진다.</span>
+          </div>
+        </div>
+        <div class="ox-item">
+          <div class="mark">X</div>
+          <div class="txt">디지털 매체의 발달로 공적 소통과 사적 소통의 경계가 뚜렷해졌다.
+            <span class="why">오히려 경계가 <strong>모호해지면서</strong> 소통 윤리의 중요성이 커졌다.</span>
+          </div>
+        </div>
+        <div class="ox-item">
+          <div class="mark">O</div>
+          <div class="txt">&lt;춘향전&gt;에는 서술자의 논평과 운문적인 표현 등 판소리의 흔적이 남아 있다.</div>
+        </div>
+        <div class="ox-item">
+          <div class="mark">O</div>
+          <div class="txt">&lt;춘향전&gt;과 그 근원 설화인 설씨녀 설화는 &lsquo;정절의 수호&rsquo;라는 주제를 공유한다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">18 / 19</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide">
+    <h2 class="slide-title">3차시 핵심 정리</h2>
+    <div class="body-area">
+      <div class="summary-list">
+        <div class="srow">
+          <div class="skey">근원 설화</div>
+          <div class="sval">설씨녀 설화와 &lt;춘향전&gt;은 주체적&middot;의지적 여성상과 의리&middot;도리를 중시하는 태도를 함께 지님
+            <ul>
+              <li>이별의 원인(군역 / 가족의 이동), 시련의 양상(혼인 강요 / 수청 강요)에서 갈림</li>
+            </ul>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="skey">문학사</div>
+          <div class="sval">설화 &rarr; 판소리 &rarr; 판소리계 소설 &rarr; 오늘의 재창조 &mdash; 하나의 작품이 다른 작품, 생산자와 수용자, 사회 현실과 이어져 있음</div>
+        </div>
+        <div class="srow">
+          <div class="skey">매체</div>
+          <div class="sval">인쇄 &rarr; 방송 &rarr; 디지털
+            <ul>
+              <li>대량 복제 &rarr; 음성과 영상의 동시 전달 &rarr; 쌍방향 소통</li>
+              <li>독자는 소비자이면서 생산자인 <strong>생비자</strong>가 됨</li>
+            </ul>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="skey">소통 윤리</div>
+          <div class="sval">사적 소통과 공적 소통의 경계가 흐려질수록, 정보 생산자의 <strong>책임 의식</strong>과 수용자의 <strong>감식안</strong>이 필요함</div>
+        </div>
+        <div class="srow">
+          <div class="skey">남길 말</div>
+          <div class="sval">고전은 박물관이 아니라 <strong style="color:var(--dan);">댓글과 팬 무비 속에서 살아 숨 쉰다</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">19 / 19</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 19</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', () => show(idx - 1));
+  nextBtn.addEventListener('click', () => show(idx + 1));
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
