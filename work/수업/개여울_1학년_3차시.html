@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개여울 (1학년-3차시)</title>
+<style>
+  /* Noto Serif KR은 옛한글(첫가끝 조합형) 자모를 지원 — 원문 표기용 */
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --paper: #eef2f3;
+    --paper-edge: #d8e1e4;
+    --ink: #1e2529;
+    --ink-soft: #5a6a70;
+    --ink-faint: #93a2a8;
+    --water: #2f6b8f;         /* 여울 물빛 — 강조색 */
+    --water-soft: #6d9cb5;
+    --rule: #bccdd4;
+    --card: #f7fafb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #22292d;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(34,41,45,0.92); z-index: 50;
+  }
+  .nav-top a { color: #a8b9c0; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #d8e6ec; }
+  .nav-meta { color: #7a888f; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    /* 한지 바탕 + 여울에 이는 잔물결을 옅게 깐 배경 */
+    background-image:
+      radial-gradient(ellipse at 14% 8%, rgba(255,255,255,0.62) 0%, transparent 56%),
+      radial-gradient(ellipse at 86% 92%, rgba(120,160,180,0.26) 0%, transparent 60%),
+      repeating-linear-gradient(178deg,
+        rgba(90,140,165,0.055) 0px, rgba(90,140,165,0.055) 1px,
+        transparent 1px, transparent 14px);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.2% 5.4%;
+  }
+  /* 우측 상단 — 여울의 물살과 물가에 돋은 풀포기 */
+  .stage::before {
+    content: ""; position: absolute; top: -1%; right: -3%;
+    width: 33%; height: 60%; pointer-events: none; opacity: 0.16;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 320'><g fill='none' stroke='%232f6b8f' stroke-width='2.2' stroke-linecap='round'><path d='M18 74 C60 52 96 96 138 74 C170 57 194 78 214 66'/><path d='M10 108 C54 86 92 130 134 108 C168 90 192 112 214 100'/><path d='M26 210 C68 188 104 232 146 210 C178 193 198 214 216 202'/><path d='M18 244 C62 222 98 266 140 244 C174 226 196 248 216 236'/></g><g fill='none' stroke='%232f6b8f' stroke-width='2.6' stroke-linecap='round'><path d='M96 176 C92 154 96 138 106 124'/><path d='M104 176 C110 152 122 138 136 130'/><path d='M110 176 C118 158 134 150 150 148'/><path d='M92 176 C82 158 68 150 54 148'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.85cqw, 5.50rem); line-height: 1.18; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.15cqw, 3.68rem);
+    padding-bottom: 0.7cqw; margin-bottom: 2.15cqw;
+    border-bottom: 0.17cqw solid var(--ink); display: inline-block;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--water);
+    font-size: clamp(0.8rem, 1.63cqw, 1.60rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(0.95rem, 1.96cqw, 2.08rem); color: var(--ink-soft); line-height: 1.75; }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--water); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.39cqw, 2.56rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 5.4%; right: 5.4%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.41cqw, 1.47rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2%; flex: 1; min-height: 0; }
+  .col-head {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.9rem, 1.79cqw, 1.89rem);
+    color: var(--water); margin-bottom: 1.2cqw;
+    padding-bottom: 0.55cqw; border-bottom: 0.09cqw solid var(--rule);
+  }
+
+  /* 원문 — 옛한글(아래아 등) 표기를 위해 함초롬바탕 계열 우선 지정 */
+  .verse {
+    font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
+    font-size: clamp(1.05rem, 2.55cqw, 2.75rem);
+    line-height: 2.05; letter-spacing: 0.01em;
+  }
+  .verse .jang { color: var(--water); }
+  .cols.wide-left { grid-template-columns: 1.3fr 1fr; }
+  /* 전문 제시 — 한 장이 한 줄에 들어가도록 크기를 조금 낮춤 */
+  .verse-full { line-height: 1.95; font-size: clamp(0.85rem, 2.02cqw, 2.18rem); }
+  .verse-full .jang-label {
+    display: block;
+    font-family: "Noto Sans KR", sans-serif; color: var(--water);
+    font-size: 0.50em; letter-spacing: 0.16em; margin-bottom: 0.15em;
+  }
+  .verse-full .yeon + .yeon { margin-top: 1.1cqw; }
+  .modern {
+    font-size: clamp(0.98rem, 2.17cqw, 2.27rem);
+    line-height: 2.0; color: var(--ink);
+  }
+
+  /* 정서 해설 박스 */
+  .emotion {
+    margin-top: auto; background: var(--card);
+    border-left: 0.34cqw solid var(--water);
+    padding: 1.4cqw 1.75cqw;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.92rem, 1.85cqw, 1.92rem); color: var(--water);
+    margin-bottom: 0.5rem;
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.82rem, 1.63cqw, 1.68rem); line-height: 1.7;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+  }
+  .emotion li + li { margin-top: 0.28rem; }
+  .emotion li::before { content: "—"; position: absolute; left: 0; color: var(--ink-faint); }
+  /* 본문 바닥에 붙는 정서 박스는 슬라이드 번호와 겹치지 않도록 아래를 띄움 */
+  .body-area > .emotion { margin-bottom: 4.6cqw; }
+
+  /* 기본 정보 표 */
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 1.15cqw 0.95cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.85rem, 1.68cqw, 1.73rem); line-height: 1.65;
+  }
+  .info-table th {
+    width: 5.2em; font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--water); white-space: nowrap;
+  }
+
+  /* 비교 표 */
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.95cqw 0.85cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.66rem, 1.36cqw, 1.42rem); line-height: 1.6;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--water);
+    border-bottom: 0.17cqw solid var(--water); font-size: clamp(0.72rem, 1.52cqw, 1.58rem);
+  }
+  .cmp-table tbody th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink);
+    white-space: nowrap; width: 7.5em; background: var(--card);
+  }
+  .cmp-table .hl { color: var(--water); font-weight: 500; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.85rem, 1.74cqw, 1.76rem); line-height: 1.7;
+    padding-left: 2.85cqw; position: relative; margin-bottom: 1.55cqw;
+  }
+  .num-list li .n {
+    position: absolute; left: 0; top: 0.05em;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--water); font-size: 1.05em;
+  }
+
+  /* 정의 상자 · 음보 */
+  .def-box {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.9cqw 2.15cqw;
+  }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--water);
+    font-size: clamp(0.95rem, 1.90cqw, 1.95rem); margin-bottom: 0.6rem;
+  }
+  .def-box p { font-size: clamp(0.85rem, 1.74cqw, 1.76rem); line-height: 1.85; color: var(--ink-soft); }
+  .meter {
+    display: flex; align-items: flex-start; justify-content: center;
+    gap: clamp(0.5rem, 1.63cqw, 2.16rem);
+    margin: 2.4cqw 0; padding: 1.2cqw 0;
+    font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
+    font-size: clamp(1.0rem, 2.72cqw, 3.05rem);
+  }
+  .meter.small { font-size: clamp(0.86rem, 2.28cqw, 2.55rem); margin: 1.6cqw 0; }
+  .meter .beat { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .meter .beat .lbl {
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.58rem, 1.14cqw, 1.22rem);
+    color: var(--ink-faint); letter-spacing: 0.06em; white-space: nowrap;
+  }
+  .meter .beat.fix .lbl { color: var(--water); }
+  .meter .bar { color: var(--water); font-size: 0.85em; line-height: 1.4; }
+  .meter-label {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--water);
+    font-size: clamp(0.8rem, 1.58cqw, 1.65rem); text-align: center;
+  }
+
+  /* 정서 흐름도 */
+  .flow { display: flex; align-items: stretch; gap: 0.75cqw; min-height: 0; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--water);
+    padding: 1.55cqw 1.3cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .stage-label {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.85rem, 1.68cqw, 1.76rem); margin-bottom: 0.15rem;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; color: var(--water);
+    font-size: clamp(1.05rem, 2.28cqw, 2.40rem); margin-bottom: 0.75rem;
+  }
+  .flow-step .quote {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.78rem, 1.52cqw, 1.60rem); line-height: 1.6;
+    color: var(--ink); padding-bottom: 0.6rem; margin-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .flow-step .desc {
+    font-size: clamp(0.72rem, 1.41cqw, 1.47rem); line-height: 1.6; color: var(--ink-soft);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; color: var(--water);
+    font-size: clamp(0.9rem, 1.96cqw, 2.24rem);
+  }
+
+  /* 3단 카드 */
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.9cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--water); padding: 1.75cqw 1.55cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 1.96cqw, 2.00rem);
+    margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word {
+    font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
+    color: var(--water);
+  }
+  .c3 p { font-size: clamp(0.78rem, 1.52cqw, 1.60rem); line-height: 1.75; color: var(--ink-soft); }
+
+  /* 질문 강조 */
+  .question-hero {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.3rem, 3.70cqw, 4.16rem); line-height: 1.5;
+    margin-bottom: 1.1rem;
+  }
+  .question-hero em { font-style: normal; color: var(--water); }
+
+  /* 단계 흐름 */
+  .steps { display: flex; flex-direction: column; gap: 1.55cqw; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.3rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.1rem, 2.50cqw, 2.80rem); color: var(--water);
+    width: 1.9em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 1.1rem; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.98rem, 2.07cqw, 2.08rem);
+    margin-bottom: 0.35rem;
+  }
+  .step p { font-size: clamp(0.8rem, 1.58cqw, 1.65rem); line-height: 1.75; color: var(--ink-soft); }
+
+  /* 퀴즈 */
+  .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .quiz-guide { font-size: clamp(0.88rem, 1.85cqw, 1.92rem); color: var(--ink-soft); margin-bottom: 1.8rem; }
+  .quiz-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1.05rem, 2.61cqw, 2.88rem); line-height: 1.75;
+    padding: 2.3cqw 2.55cqw; background: var(--card); border: 1px solid var(--rule);
+  }
+  .blank {
+    display: inline-block; min-width: 4.5em; text-align: center;
+    color: var(--water); border-bottom: 3px solid var(--water);
+  }
+  .ox-row {
+    display: flex; gap: clamp(2rem, 8.70cqw, 9.60rem); justify-content: center;
+    margin-top: 2rem;
+    font-family: "Gowun Batang", serif; font-size: clamp(2rem, 6.52cqw, 7.20rem);
+    color: var(--ink-faint);
+  }
+  .answer-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.4rem, 3.80cqw, 4.30rem); color: var(--paper);
+    background: var(--water); padding: 0.55rem 2rem; margin-bottom: 2.15cqw;
+  }
+  .answer-desc {
+    font-size: clamp(0.88rem, 1.85cqw, 1.92rem); line-height: 1.95; color: var(--ink-soft);
+    max-width: 46em;
+  }
+
+  /* 핵심 정리 */
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.75cqw; }
+  .srow { display: flex; gap: 2.15cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--water);
+    font-size: clamp(0.92rem, 1.96cqw, 2.00rem); width: 6.2em; flex-shrink: 0;
+    text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.85rem, 1.74cqw, 1.79rem); line-height: 1.85; }
+  .srow .sval ul { list-style: none; margin-top: 0.5rem; }
+  .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
+  .srow .sval li + li { margin-top: 0.3rem; }
+  .srow .sval li::before { content: "·"; position: absolute; left: 0.2rem; color: var(--water); }
+
+  /* 슬라이드 번호 / 컨트롤 */
+  .page-num {
+    position: absolute; right: 3.2%; bottom: 2.6%;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.30cqw, 1.44rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #a8b9c0; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #333c41; color: #d8e6ec; border: 1px solid #4c565b;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #414b50; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #74818a; font-size: 0.78rem; }
+
+  /* 전체화면 — 슬라이드가 화면을 채우고 UI는 숨김 */
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cols, .cards3 { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../work.html">업무용</a>
+    <a href="../index.html">홈</a>
+  </div>
+  <div class="nav-meta">개여울 · 1학년 3차시 · 업데이트 2026. 8. 13.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">근 대 　 현 대 시</div>
+    <h1 class="title-main">개여울</h1>
+    <div class="rule"></div>
+    <div class="sub">물가에 남은 약속, 옛 가락에 실은 기다림</div>
+    <div class="foot">
+      <span>김소월(金素月)</span>
+      <span>1학년 · 3차시</span>
+    </div>
+    <div class="page-num">1 / 20</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 목표</h2>
+    <div class="body-area">
+      <p class="lead" style="margin-bottom:1.6rem;">
+        한국 문학사의 흐름을 고려하여 시가 문학을 수용한다
+      </p>
+      <div class="cards3">
+        <div class="c3">
+          <h3>하나</h3>
+          <p>&lt;개여울&gt;의 시적 상황을 파악하고, 연에 따라 변화하는 화자의 정서를 설명할 수 있다</p>
+        </div>
+        <div class="c3">
+          <h3>둘</h3>
+          <p>자유시임에도 3음보 율격을 취한 까닭을 전통 계승의 관점에서 이해할 수 있다</p>
+        </div>
+        <div class="c3">
+          <h3>셋</h3>
+          <p>&lt;가시리&gt;&middot;&lt;묏버들 갈&#4370;&#4513; 것거&gt;와 견주어 &lsquo;이별의 정한&rsquo;이 어떻게 계승&middot;변용되었는지 설명할 수 있다</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">2 / 20</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <h2 class="slide-title">전시 학습 복습 &middot; 두 갈래의 자취</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">고려 속요 &middot; &lt;가시리&gt;</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>민간의 우리말 노래가 궁중 음악인 <strong>속악(俗樂)</strong>으로 편입된 갈래 &mdash; 분연체와 후렴구가 특징</li>
+            <li><span class="n">2</span>여음 &lsquo;나&#4354;&#4510;&#4523;&rsquo;과 <strong style="color:var(--water);">3음보</strong> 가락으로 이별의 슬픔을 노래함</li>
+            <li><span class="n">3</span>후렴구 &lsquo;위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;&rsquo;는 궁중 편입 과정에서 덧붙여진 것으로 추정됨</li>
+          </ul>
+        </div>
+        <div>
+          <div class="col-head">평시조 &middot; &lt;묏버들 갈&#4370;&#4513; 것거&gt;</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>3장 6구의 정형시 &mdash; <strong style="color:var(--water);">4음보</strong> 율격과 종장 첫 마디 3음절의 엄격한 규칙</li>
+            <li><span class="n">2</span>&lsquo;묏버들&rsquo;은 임의 곁에 머물고자 하는 <strong>화자의 분신</strong>이자 사랑을 전하는 매개체</li>
+          </ul>
+          <div class="emotion">
+            <div class="etag">오늘의 질문</div>
+            <ul>
+              <li>고려와 조선을 지나온 &lsquo;이별의 정한&rsquo;과 음보의 가락은, 근대의 <strong>현대시</strong>에서 어떤 모습으로 되살아났을까?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">3 / 20</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <h2 class="slide-title">작품의 기본 골격</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">기본 정보</div>
+          <table class="info-table">
+            <tr><th>작품명</th><td>개여울 (김소월)</td></tr>
+            <tr><th>갈래</th><td>자유시, 서정시<br><span style="color:var(--ink-soft);font-size:0.92em;">시집 &lt;진달래꽃&gt;(1925) 수록 &mdash; 정형의 틀을 벗었으나 전통 율격을 안으로 품음</span></td></tr>
+            <tr><th>성격</th><td>애상적, 서정적, 민요적</td></tr>
+            <tr><th>주제</th><td>이별의 정한과<br>임에 대한 간절한 그리움</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="col-head">핵심 특징</div>
+          <ul class="num-list">
+            <li><span class="n">1</span><strong style="color:var(--water);">3음보</strong> 율격 &mdash; 민요적 가락의 현대적 계승</li>
+            <li><span class="n">2</span>고유어를 살린 <strong>섬세한 심상</strong> &mdash; &lsquo;파릇한&rsquo;, &lsquo;잔물&rsquo;, &lsquo;헤적일&rsquo;</li>
+            <li><span class="n">3</span>&lsquo;&sim;합니까&rsquo;, &lsquo;&sim;인지요&rsquo;의 <strong>의문형 어조</strong>로 그리움과 원망을 함께 드러냄</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">4 / 20</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <h2 class="slide-title">작가와 시적 공간</h2>
+    <div class="body-area">
+      <div class="steps">
+        <div class="step">
+          <div class="sn">一</div>
+          <div class="sbody">
+            <h3>김소월(1902&sim;1934), 본명 정식(廷湜)</h3>
+            <p>평북 정주 출생. 스승 김억의 지도 아래 시를 익혔으며, 뛰어난 우리말 감각으로 민족적 정서인 &lsquo;이별의 정한&rsquo;을 형상화한 시인. 서구시의 물결 속에서도 전통 민요의 가락을 붙든 점에서 문학사적 의의가 큼</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">二</div>
+          <div class="sbody">
+            <h3>&lsquo;개여울&rsquo;이라는 공간</h3>
+            <p>개울의 물살이 빠르고 물이 얕은 곳. 이 시에서는 임과 헤어진 <strong>이별의 장소</strong>이자, 날마다 나와 앉아 임을 기다리는 <strong>애상적 기다림의 공간</strong>으로 기능함</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">三</div>
+          <div class="sbody">
+            <h3>노래로 이어진 생명</h3>
+            <p>1967년 정미조가 부른 가요로 널리 알려지며, 시의 3음보 가락이 오늘의 노래에까지 이어짐을 보여 줌 &mdash; 전통 율격이 살아 있는 리듬임을 확인할 수 있는 사례</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">5 / 20</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 1&sim;3연</h2>
+    <div class="body-area">
+      <div class="cols wide-left">
+        <div>
+          <div class="verse verse-full">
+            <div class="yeon">
+              <span class="jang-label">1연</span>
+              당신은 무슨 일로<br>
+              그리합니까?<br>
+              홀로이 개여울에 주저앉아서
+            </div>
+            <div class="yeon">
+              <span class="jang-label">2연</span>
+              파릇한 풀포기가<br>
+              돋아나오고<br>
+              잔물은 봄바람에 헤적일 때에
+            </div>
+            <div class="yeon">
+              <span class="jang-label">3연</span>
+              가도 아주 가지는<br>
+              않노라시던<br>
+              그러한 약속이 있었겠지요
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">읽으며 살필 것</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>화자는 지금 <strong>누구를</strong> 바라보며 말을 건네고 있는가?</li>
+            <li><span class="n">2</span>2연의 봄 풍경은 화자의 마음과 <strong>어울리는가, 어긋나는가?</strong></li>
+          </ul>
+          <div class="emotion">
+            <div class="etag">첫 인상 나누기</div>
+            <ul>
+              <li>3연의 &lsquo;약속&rsquo;은 어떤 내용의 약속이었을지 짐작해 봅시다</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">6 / 20</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <h2 class="slide-title">원문 &middot; 4&sim;5연</h2>
+    <div class="body-area">
+      <div class="cols wide-left">
+        <div>
+          <div class="verse verse-full">
+            <div class="yeon">
+              <span class="jang-label">4연</span>
+              날마다 개여울에<br>
+              나와 앉아서<br>
+              하염없이 무엇을 생각합니다
+            </div>
+            <div class="yeon">
+              <span class="jang-label">5연</span>
+              가도 아주 가지는<br>
+              않노라심은<br>
+              굳이 잊지 말라는 부탁인지요
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="col-head">구조의 짜임</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>3연과 5연은 &lsquo;가도 아주 가지는 않노라&sim;&rsquo;를 <strong style="color:var(--water);">반복&middot;변주</strong>하여 수미상관에 가까운 안정감을 만듦</li>
+            <li><span class="n">2</span>같은 약속이 3연에서는 <strong>희망</strong>으로, 5연에서는 <strong>의심</strong>으로 되읽힘</li>
+          </ul>
+          <div class="emotion">
+            <div class="etag">생각해 봅시다</div>
+            <ul>
+              <li>&lsquo;부탁인지요&rsquo;라는 물음에는 어떤 감정이 숨어 있을까요?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">7 / 20</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <h2 class="slide-title">텍스트 정밀 분석 &middot; 1연</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">원문</div>
+          <div class="verse">
+            당신은 <span class="jang">무슨 일로</span><br>
+            그리합니까?<br>
+            홀로이 개여울에 주저앉아서
+          </div>
+        </div>
+        <div>
+          <div class="col-head">풀이</div>
+          <div class="modern">
+            개여울에 홀로 주저앉은<br>
+            &lsquo;당신&rsquo;을 향해<br>
+            까닭을 묻는 말 건넴
+          </div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">정서 &middot; 서운함과 원망</div>
+        <ul>
+          <li>&lsquo;무슨 일로 그리합니까&rsquo;는 단순한 질문이 아니라, 떠나려는 임을 향한 <strong>안타까움과 원망</strong>이 배어 있는 물음</li>
+          <li>&lsquo;홀로이&rsquo;, &lsquo;주저앉아서&rsquo; &mdash; 쓸쓸하고 무력한 자세가 이별의 정황을 한 장면으로 압축함</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">8 / 20</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <h2 class="slide-title">텍스트 정밀 분석 &middot; 2&sim;3연</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">원문</div>
+          <div class="verse">
+            <span class="jang">파릇한 풀포기</span>가<br>
+            돋아나오고<br>
+            잔물은 봄바람에 헤적일 때에
+          </div>
+        </div>
+        <div>
+          <div class="col-head">풀이</div>
+          <div class="modern">
+            새 풀이 돋고 잔물결이<br>
+            봄바람에 일렁이는 때<br>
+            &mdash; 되살아나는 계절
+          </div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">정서 &middot; 그리움과 재회의 기대</div>
+        <ul>
+          <li>봄의 생동하는 심상은 화자의 쓸쓸함과 <strong>대조</strong>를 이루면서도, 소생하는 계절처럼 임도 돌아오리라는 <strong>기대</strong>를 불러옴</li>
+          <li>3연 &lsquo;가도 아주 가지는 않노라시던 그러한 약속&rsquo; &mdash; 과거의 약속을 떠올리며 재회의 희망을 붙듦</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">9 / 20</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <h2 class="slide-title">텍스트 정밀 분석 &middot; 4&sim;5연</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">4연</div>
+          <div class="verse">
+            날마다 개여울에<br>
+            <span class="jang">나와 앉아서</span><br>
+            하염없이 무엇을 생각합니다
+          </div>
+        </div>
+        <div>
+          <div class="col-head">5연</div>
+          <div class="verse">
+            가도 아주 가지는<br>
+            않노라심은<br>
+            <span class="jang">굳이 잊지 말라는 부탁인지요</span>
+          </div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">정서 &middot; 원망 &middot; 서운함 &middot; 실망</div>
+        <ul>
+          <li>&lsquo;날마다&rsquo;, &lsquo;하염없이&rsquo;는 기다림이 끝없이 되풀이되고 있음을 드러냄</li>
+          <li>같은 약속이 이제는 재회의 언약이 아니라 <strong>&lsquo;나를 잊지 말라&rsquo;는 부탁</strong>으로 읽힘 &mdash; 돌아오지 않는 임에 대한 깨달음과 원망</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">10 / 20</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide">
+    <h2 class="slide-title">핵심 시어 풀이</h2>
+    <div class="body-area">
+      <div class="cards3">
+        <div class="c3">
+          <h3><span class="word">개여울</span></h3>
+          <p>개울의 물살이 빠른 얕은 곳. 임과 헤어진 <strong>이별의 공간</strong>이자 날마다 나와 앉는 <strong>기다림의 공간</strong></p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">파릇한 풀포기 &middot; 잔물</span></h3>
+          <p>봄의 생동을 담은 고유어 심상. 소생하는 자연과 대비되어 화자의 애상을 더 깊게 만드는 <strong>대조의 장치</strong></p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">그러한 약속</span></h3>
+          <p>&lsquo;가도 아주 가지는 않겠다&rsquo;던 임의 말. 3연에서는 희망의 근거였으나 5연에서는 <strong>의심의 대상</strong>으로 뒤집힘</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">11 / 20</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <h2 class="slide-title">형식과 율격 &middot; 3음보의 계승</h2>
+    <div class="body-area">
+      <div class="def-box">
+        <div class="dt">자유시가 옛 가락을 품는 방식</div>
+        <p>
+          &lt;개여울&gt;은 정형의 틀에서 벗어난 자유시이지만, 한 행을 <strong style="color:var(--water);">세 번의 호흡</strong>으로 끊어 읽게 되는
+          3음보 율격을 취해 민요적 가락을 만들어 냄
+        </p>
+      </div>
+      <div class="meter small">
+        <span class="beat"><span>파릇한</span><span class="lbl">첫째 호흡</span></span>
+        <span class="bar">V</span>
+        <span class="beat"><span>풀포기가</span><span class="lbl">둘째 호흡</span></span>
+        <span class="bar">V</span>
+        <span class="beat"><span>돋아 나오고</span><span class="lbl">셋째 호흡</span></span>
+      </div>
+      <div class="meter small">
+        <span class="beat"><span>잔물은</span><span class="lbl">첫째 호흡</span></span>
+        <span class="bar">V</span>
+        <span class="beat"><span>봄바람에</span><span class="lbl">둘째 호흡</span></span>
+        <span class="bar">V</span>
+        <span class="beat"><span>헤적일 때에</span><span class="lbl">셋째 호흡</span></span>
+      </div>
+      <p class="lead" style="text-align:center;margin-bottom:3.4cqw;">세 마디로 끊어 읽는 이 호흡이 매 연에서 되풀이됨</p>
+    </div>
+    <div class="page-num">12 / 20</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <h2 class="slide-title">음보율의 전승 &middot; 세 작품 끊어 읽기</h2>
+    <div class="body-area">
+      <div class="meter-label">&lt;가시리&gt; &middot; 3음보</div>
+      <div class="meter small">
+        <span class="beat"><span>가시리</span></span><span class="bar">V</span>
+        <span class="beat"><span>가시리</span></span><span class="bar">V</span>
+        <span class="beat"><span>잇고 (나&#4354;&#4510;&#4523;)</span></span><span class="bar">V</span>
+      </div>
+      <div class="meter-label">&lt;묏버들 갈&#4370;&#4513; 것거&gt; &middot; 4음보</div>
+      <div class="meter small">
+        <span class="beat"><span>묏버들</span></span><span class="bar">V</span>
+        <span class="beat"><span>갈&#4370;&#4513; 것거</span></span><span class="bar">V</span>
+        <span class="beat"><span>보내노라</span></span><span class="bar">V</span>
+        <span class="beat"><span>님의손&#4355;&#4513;</span></span><span class="bar">V</span>
+      </div>
+      <div class="meter-label">&lt;개여울&gt; &middot; 3음보</div>
+      <div class="meter small">
+        <span class="beat"><span>파릇한</span></span><span class="bar">V</span>
+        <span class="beat"><span>풀포기가</span></span><span class="bar">V</span>
+        <span class="beat"><span>돋아 나오고</span></span><span class="bar">V</span>
+      </div>
+    </div>
+    <div class="page-num">13 / 20</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide">
+    <h2 class="slide-title">정서의 흐름</h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="flow-step">
+          <div class="stage-label">1연</div>
+          <div class="emo">서운함 &middot; 원망</div>
+          <div class="quote">&ldquo;당신은 무슨 일로<br>그리합니까?&rdquo;</div>
+          <div class="desc">개여울에 주저앉은 임을 향한 물음 &mdash; 이별의 정황 제시</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">2&sim;3연</div>
+          <div class="emo">그리움 &middot; 기대</div>
+          <div class="quote">&ldquo;가도 아주 가지는<br>않노라시던&rdquo;</div>
+          <div class="desc">봄의 소생과 과거의 약속에 기대어 재회를 희망함</div>
+        </div>
+        <div class="flow-arrow">&#10132;</div>
+        <div class="flow-step">
+          <div class="stage-label">4&sim;5연</div>
+          <div class="emo">실망 &middot; 원망</div>
+          <div class="quote">&ldquo;굳이 잊지 말라는<br>부탁인지요&rdquo;</div>
+          <div class="desc">돌아오지 않는 임에 대한 깨달음 &mdash; 정서의 심화</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">14 / 20</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide">
+    <h2 class="slide-title">심화 &middot; 시적 상황의 다각적 해석</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">해석 &#9312; &mdash; &lsquo;당신&rsquo;은 떠나는 임</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>화자가 이별의 자리에서 임에게 직접 묻는 상황</li>
+            <li><span class="n">2</span>1연의 물음은 떠나려는 임을 향한 원망 어린 호소가 됨</li>
+          </ul>
+        </div>
+        <div>
+          <div class="col-head">해석 &#9313; &mdash; &lsquo;당신&rsquo;은 기다리는 사람</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>&lsquo;당신&rsquo;을 임을 기다리며 개여울에 주저앉아 있는 사람으로 봄</li>
+            <li><span class="n">2</span>1&sim;3연은 관찰자인 화자가 &lsquo;당신&rsquo;에게 건네는 물음, 4&sim;5연은 &lsquo;당신&rsquo;의 내면적 응답 혹은 화자의 시선 확장이 됨</li>
+          </ul>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">왜 살펴야 하는가</div>
+        <ul>
+          <li>어느 쪽으로 읽느냐에 따라 말 건넴의 방향이 달라지며, 작품이 한층 <strong>입체적</strong>으로 읽힘 &mdash; 근거를 들어 자신의 해석을 말해 봅시다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">15 / 20</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide">
+    <h2 class="slide-title">종합 비교 &middot; 전통의 계승과 변용</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>&lt;가시리&gt;</th>
+            <th>&lt;묏버들 갈&#4370;&#4513; 것거&gt;</th>
+            <th>&lt;개여울&gt;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>갈래</th>
+            <td>고려 속요</td>
+            <td>평시조, 서정시</td>
+            <td>자유시, 서정시(현대시)</td>
+          </tr>
+          <tr>
+            <th>형식적 특징</th>
+            <td class="hl">3음보, 분연체, 후렴구</td>
+            <td class="hl">4음보, 3장 6구, 종장 첫 마디 3음절</td>
+            <td class="hl">3음보(전통 율격 계승), 자유로운 행과 연 구성</td>
+          </tr>
+          <tr>
+            <th>주제</th>
+            <td>이별의 정한</td>
+            <td>이별의 정한, 임에 대한 그리움</td>
+            <td>이별의 정한, 임에 대한 그리움</td>
+          </tr>
+          <tr>
+            <th>핵심 기법</th>
+            <td>반복법을 통한 감정의 압축</td>
+            <td>상징(묏버들)과 도치법</td>
+            <td>고유어를 통한 섬세한 심상 제시</td>
+          </tr>
+          <tr>
+            <th>공통점</th>
+            <td colspan="3">시대와 갈래가 달라도 &lsquo;이별의 정한&rsquo;이라는 원형적 주제와 음보율의 가락을 공유함</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">16 / 20</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 퀴즈 1</h2>
+    <div class="body-area quiz-wrap">
+      <div class="quiz-guide">다음 빈칸에 들어갈 알맞은 말을 생각해 봅시다.</div>
+      <div class="quiz-q">
+        고려 시대 궁중 음악의 하나로, 우리말로 되어 있으며 민간 노래에서 유래하기도 한 이 갈래의 명칭은
+        <span class="blank">&nbsp;?&nbsp;</span> 이다.
+      </div>
+    </div>
+    <div class="page-num">17 / 20</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 퀴즈 1 &middot; 정답</h2>
+    <div class="body-area quiz-wrap">
+      <div><span class="answer-badge">고려 속요</span></div>
+      <div class="answer-desc">
+        분연체 형식과 각 연 끝의 후렴구가 특징. &lt;가시리&gt;의 후렴구 &lsquo;위 증즐가 &#45824;&#54217;&#49513;&#4355;&#4513;&rsquo;는 임과 이별하는 내용과 어울리지 않는데, 이는 민간 노래가 궁중 음악으로 편입되는 과정에서 덧붙여진 것으로 추정됨
+      </div>
+    </div>
+    <div class="page-num">18 / 20</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 퀴즈 2</h2>
+    <div class="body-area quiz-wrap">
+      <div class="quiz-guide">다음 설명이 맞으면 O, 틀리면 X를 골라 봅시다.</div>
+      <div class="quiz-q">
+        &lt;개여울&gt;의 화자는 1연부터 5연까지 &lsquo;당신&rsquo;과의 재회를 확신하며 초지일관 기쁨의 정서를 유지한다.
+      </div>
+      <div class="ox-row"><span>O</span><span>X</span></div>
+    </div>
+    <div class="page-num">19 / 20</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 퀴즈 2 &middot; 정답</h2>
+    <div class="body-area quiz-wrap">
+      <div><span class="answer-badge">X</span></div>
+      <div class="answer-desc">
+        1&sim;3연에서는 과거의 약속에 기대어 재회를 기대하지만, 4&sim;5연에서는 돌아오지 않는 임에 대한 원망과 실망이 드러남. 하나의 정서가 유지되는 것이 아니라 <strong>기대 &rarr; 원망&middot;실망</strong>으로 심화되는 흐름을 보임
+      </div>
+    </div>
+    <div class="page-num">20 / 20</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 20</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', () => show(idx - 1));
+  nextBtn.addEventListener('click', () => show(idx + 1));
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  // 전체화면
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
