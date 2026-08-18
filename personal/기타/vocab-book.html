@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vocab-book 내려받기 - My Presentations</title>
+<style>
+  :root { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270; --accent: #3a5ba0;
+    --shadow: rgba(28, 34, 48, 0.10); --line: #e8eaee; --code: #f3f4f7; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #14161c; --card: #1f232c; --ink: #eceef2;
+    --ink-soft: #a3aab8; --accent: #7fa2e0; --shadow: rgba(0,0,0,0.4); --line: #2c313c; --code: #171a21; } }
+  :root[data-theme="dark"] { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8;
+    --accent: #7fa2e0; --shadow: rgba(0,0,0,0.4); --line: #2c313c; --code: #171a21; }
+  :root[data-theme="light"] { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270;
+    --accent: #3a5ba0; --shadow: rgba(28, 34, 48, 0.10); --line: #e8eaee; --code: #f3f4f7; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+    display: flex; flex-direction: column; align-items: center; padding: 6vh 5vw 6vh; line-height: 1.6; }
+  .top { width: 100%; max-width: 760px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; }
+  a.back { color: var(--ink-soft); text-decoration: none; font-size: 0.9rem; }
+  a.back:hover { color: var(--accent); }
+  .wrap { width: 100%; max-width: 760px; }
+  h1 { font-size: 1.6rem; margin: 0.5rem 0 0.5rem; }
+  .lead { color: var(--ink-soft); font-size: 0.95rem; margin-bottom: 2rem; }
+  h2 { font-size: 1.1rem; margin: 2.2rem 0 0.9rem; }
+  .dl { display: flex; flex-direction: column; gap: 0.8rem; }
+  a.file { background: var(--card); border-radius: 14px; padding: 1.1rem 1.3rem; text-decoration: none;
+    color: var(--ink); box-shadow: 0 3px 12px var(--shadow); display: flex; align-items: center; gap: 1rem;
+    transition: transform 0.15s ease; }
+  a.file:hover { transform: translateX(4px); }
+  .ico { font-size: 1.6rem; }
+  .ft { display: flex; flex-direction: column; gap: 0.2rem; flex: 1; }
+  .fname { font-weight: 600; }
+  .fdesc { font-size: 0.83rem; color: var(--ink-soft); }
+  .box { background: var(--card); border-radius: 14px; padding: 1.2rem 1.4rem;
+    box-shadow: 0 3px 12px var(--shadow); margin-bottom: 1rem; }
+  .box b { color: var(--accent); }
+  ol, ul { margin: 0.4rem 0 0; padding-left: 1.3rem; }
+  li { margin: 0.35rem 0; font-size: 0.93rem; }
+  code { background: var(--code); border-radius: 6px; padding: 0.15rem 0.45rem; font-size: 0.87em;
+    font-family: "Cascadia Mono", Consolas, monospace; }
+  pre { background: var(--code); border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto;
+    font-size: 0.85rem; font-family: "Cascadia Mono", Consolas, monospace; margin: 0.6rem 0 0; }
+  .note { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.8rem; }
+  table { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.9rem; }
+  th, td { border-bottom: 1px solid var(--line); padding: 0.6rem 0.4rem; text-align: left; }
+  th { color: var(--ink-soft); font-weight: 600; font-size: 0.83rem; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <a class="back" href="../기타.html">&larr; 기타</a>
+    <a class="back" href="../../index.html">홈으로</a>
+  </div>
+  <div class="wrap">
+    <h1>📚 vocab-book — 영어 단어·숙어장 만들기</h1>
+    <div class="lead">
+      교재 사진에서 단어·숙어를 뽑아 굿노트(아이패드)용 A4 PDF 단어장을 만드는 도구.
+      Claude Code 플러그인, 클로드 데스크탑 스킬, 파이썬 스크립트 세 가지 형태로 받을 수 있다.
+    </div>
+
+    <h2>내려받기</h2>
+    <div class="dl">
+      <a class="file" href="vocab-book-plugin.zip" download>
+        <span class="ico">🧩</span>
+        <span class="ft">
+          <span class="fname">vocab-book-plugin.zip</span>
+          <span class="fdesc">Claude Code 플러그인 전체 (스킬 + 커맨드 + 스크립트 + 예시)</span>
+        </span>
+      </a>
+      <a class="file" href="vocab-book-desktop.zip" download>
+        <span class="ico">🖥️</span>
+        <span class="ft">
+          <span class="fname">vocab-book-desktop.zip</span>
+          <span class="fdesc">클로드 데스크탑용 스킬 — 설정 → 기능 → 스킬에 업로드</span>
+        </span>
+      </a>
+      <a class="file" href="vocab_book.py" download>
+        <span class="ico">🐍</span>
+        <span class="ft">
+          <span class="fname">vocab_book.py</span>
+          <span class="fdesc">스크립트 한 파일 — 이것만 있어도 PDF 생성·게시가 전부 된다</span>
+        </span>
+      </a>
+      <a class="file" href="vocab-book-예시.json" download>
+        <span class="ico">📄</span>
+        <span class="ft">
+          <span class="fname">vocab-book-예시.json</span>
+          <span class="fdesc">데이터 형식 예시 (화상영어 Unit 7 — 단어 24 + 숙어 12)</span>
+        </span>
+      </a>
+    </div>
+
+    <h2>쓰는 법</h2>
+
+    <div class="box">
+      <b>① Claude Code</b> — 슬래시 명령 하나로 끝난다. 설치는 처음 한 번만.
+      <pre>/plugin marketplace add GuitaruMan/presentations
+/plugin install vocab-book@guitaruman-plugins</pre>
+      <pre>/vocab-book 교재사진1.jpg 교재사진2.jpg</pre>
+      <div class="note">위 zip을 따로 받지 않아도 된다. 인터넷이 안 되는 환경이면 zip을 풀어
+        <code>/plugin marketplace add &lt;폴더경로&gt;</code> 로 등록한다.</div>
+    </div>
+
+    <div class="box">
+      <b>② 클로드 데스크탑</b> — Chrome 헤드리스가 없어 PDF를 직접 못 만들므로, 아티팩트로 만든 뒤 인쇄한다.
+      <ol>
+        <li><code>vocab-book-desktop.zip</code> 을 받는다</li>
+        <li>설정 → 기능(Capabilities) → 스킬 → 업로드</li>
+        <li>대화에 교재 사진을 올리고 "단어장 만들어줘"</li>
+        <li>아티팩트 ⋯ → 인쇄 → 대상 <b>"PDF로 저장"</b> (A4 세로, 배경 그래픽 켜기, 머리글·바닥글 끄기)</li>
+      </ol>
+    </div>
+
+    <div class="box">
+      <b>③ 스크립트만</b> — Claude 없이 JSON을 직접 고쳐 다시 뽑을 때.
+      <pre>python vocab_book.py pdf  vocab.json 단어장.pdf
+python vocab_book.py web  vocab.json 페이지.html --pdf 단어장.pdf --pdf-pages 6
+python vocab_book.py push --category 주현이 --page 페이지.html --title "제목" --dry-run</pre>
+      <div class="note">JSON 형식과 자세한 설명은 <code>vocab_book.py</code> 맨 위 주석에 다 들어 있다.</div>
+    </div>
+
+    <h2>필요한 것</h2>
+    <table>
+      <tr><th>항목</th><th>용도</th></tr>
+      <tr><td>Python 3</td><td>표준 라이브러리만 쓴다. 별도 설치 패키지 없음</td></tr>
+      <tr><td>Chrome 또는 Edge</td><td>HTML을 A4 PDF로 인쇄. 못 찾으면 <code>CHROME_PATH</code> 로 지정</td></tr>
+      <tr><td>git</td><td>사이트에 게시할 때만 (<code>push</code> 명령)</td></tr>
+    </table>
+
+    <h2>결과물</h2>
+    <table>
+      <tr><th>쪽</th><th>내용</th></tr>
+      <tr><td>1</td><td>표지 — 제목, 항목 수, 공부 3단계, 이름·시작일 칸</td></tr>
+      <tr><td>2~</td><td>단어 그룹마다 한 쪽 (12개까지, 카드 오른쪽에 필기용 점선 3줄)</td></tr>
+      <tr><td>다음</td><td>숙어 그룹마다 한 쪽</td></tr>
+      <tr><td>마지막</td><td>연습 ① 단어 뜻 쓰기 / 연습 ② 숙어 뜻 쓰기 + 빈칸 채우기</td></tr>
+    </table>
+    <div class="note">A4 세로, 크림 배경 + 파스텔 카드. 굿노트에서 애플펜슬로 바로 필기할 수 있게 여백을 뒀다.</div>
+  </div>
+</body>
+</html>

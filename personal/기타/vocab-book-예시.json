@@ -1,0 +1,296 @@
+{
+  "unit": "Unit 7",
+  "title": "My Favorite Gadget is My Cell Phone",
+  "page_title": "화상영어 Unit 7 단어 · 숙어장",
+  "emoji": "📱",
+  "cover_title": "영어 단어 · 숙어장",
+  "subtitle": "꼭 필요한 것만 골랐어요. 3일이면 끝!",
+  "running_title": "Unit 7 · My Favorite Gadget",
+  "days": [
+    {
+      "tag": "Day 1",
+      "subtitle": "꼭 알아야 할 단어 ①",
+      "color": "#F79FBF",
+      "words": [
+        {
+          "word": "notice",
+          "pron": "[노우티스]",
+          "pos": "동사",
+          "mean": "알아차리다",
+          "ex": "I notice people using smart phones."
+        },
+        {
+          "word": "spend",
+          "pron": "[스펜드]",
+          "pos": "동사",
+          "mean": "(시간·돈을) 쓰다",
+          "ex": "Don't spend too much time on games."
+        },
+        {
+          "word": "agree",
+          "pron": "[어그리]",
+          "pos": "동사",
+          "mean": "동의하다",
+          "ex": "I agree with you."
+        },
+        {
+          "word": "share",
+          "pron": "[셰어]",
+          "pos": "동사",
+          "mean": "나누다, 함께 쓰다",
+          "ex": "We can share our interests."
+        },
+        {
+          "word": "download",
+          "pron": "[다운로드]",
+          "pos": "동사",
+          "mean": "내려받다",
+          "ex": "I like downloading games and movies."
+        },
+        {
+          "word": "save",
+          "pron": "[세이브]",
+          "pos": "동사",
+          "mean": "아끼다, 저축하다",
+          "ex": "It tells us how much money we can save."
+        },
+        {
+          "word": "carry",
+          "pron": "[캐리]",
+          "pos": "동사",
+          "mean": "가지고 다니다",
+          "ex": "I always carry my cell phone."
+        },
+        {
+          "word": "cause",
+          "pron": "[코즈]",
+          "pos": "동사",
+          "mean": "일으키다",
+          "ex": "Cell phones might cause some problems."
+        },
+        {
+          "word": "consider",
+          "pron": "[컨시더]",
+          "pos": "동사",
+          "mean": "곰곰이 생각하다",
+          "ex": "Consider the advantages of them."
+        },
+        {
+          "word": "realize",
+          "pron": "[리얼라이즈]",
+          "pos": "동사",
+          "mean": "깨닫다",
+          "ex": "She seems to realize the problem."
+        },
+        {
+          "word": "rely",
+          "pron": "[릴라이]",
+          "pos": "동사",
+          "mean": "믿고 의지하다",
+          "ex": "People rely on their gadgets."
+        },
+        {
+          "word": "communicate",
+          "pron": "[커뮤니케이트]",
+          "pos": "동사",
+          "mean": "이야기를 나누다",
+          "ex": "I communicate with my friends."
+        }
+      ]
+    },
+    {
+      "tag": "Day 2",
+      "subtitle": "꼭 알아야 할 단어 ②",
+      "color": "#B9A7E0",
+      "words": [
+        {
+          "word": "gadget",
+          "pron": "[개짓]",
+          "pos": "명사",
+          "mean": "(작고 편리한) 기계",
+          "ex": "My favorite gadget is my cell phone."
+        },
+        {
+          "word": "problem",
+          "pron": "[프라블럼]",
+          "pos": "명사",
+          "mean": "문제",
+          "ex": "The problem is that people depend on it."
+        },
+        {
+          "word": "interest",
+          "pron": "[인터레스트]",
+          "pos": "명사",
+          "mean": "관심, 흥미",
+          "ex": "We can share our interests."
+        },
+        {
+          "word": "direction",
+          "pron": "[디렉션]",
+          "pos": "명사",
+          "mean": "방향, 길 안내",
+          "ex": "A GPS app gives us directions."
+        },
+        {
+          "word": "application",
+          "pron": "[애플리케이션]",
+          "pos": "명사",
+          "mean": "앱, 응용 프로그램",
+          "ex": "A GPS application is very useful."
+        },
+        {
+          "word": "advantage",
+          "pron": "[어드밴티지]",
+          "pos": "명사",
+          "mean": "좋은 점, 장점",
+          "ex": "Consider the advantages of cell phones."
+        },
+        {
+          "word": "function",
+          "pron": "[펑션]",
+          "pos": "명사",
+          "mean": "기능",
+          "ex": "Cell phones have many functions."
+        },
+        {
+          "word": "brain",
+          "pron": "[브레인]",
+          "pos": "명사",
+          "mean": "뇌, 머리",
+          "ex": "People use their brains less."
+        },
+        {
+          "word": "favorite",
+          "pron": "[페이버릿]",
+          "pos": "형용사",
+          "mean": "가장 좋아하는",
+          "ex": "This is my favorite song."
+        },
+        {
+          "word": "necessary",
+          "pron": "[네세세리]",
+          "pos": "형용사",
+          "mean": "꼭 필요한",
+          "ex": "Smart phones are necessary these days."
+        },
+        {
+          "word": "useful",
+          "pron": "[유스풀]",
+          "pos": "형용사",
+          "mean": "쓸모 있는",
+          "ex": "This app is very useful."
+        },
+        {
+          "word": "convenient",
+          "pron": "[컨비니언트]",
+          "pos": "형용사",
+          "mean": "편리한",
+          "ex": "Our lives are more convenient than before."
+        }
+      ]
+    }
+  ],
+  "idiom_days": [
+    {
+      "tag": "Day 3",
+      "subtitle": "꼭 외워야 할 숙어",
+      "color": "#7ECFC0",
+      "idioms": [
+        {
+          "phrase": "be addicted to ~",
+          "mean": "~에 중독되다",
+          "ex": "They are addicted to their cell phones."
+        },
+        {
+          "phrase": "depend on ~",
+          "mean": "~에 의지하다",
+          "ex": "People depend on their phones."
+        },
+        {
+          "phrase": "rely on ~",
+          "mean": "~에 의지하다",
+          "ex": "People rely on their gadgets."
+        },
+        {
+          "phrase": "keep in touch",
+          "mean": "연락하며 지내다",
+          "ex": "We can keep in touch through our phones."
+        },
+        {
+          "phrase": "these days",
+          "mean": "요즘에는",
+          "ex": "Phones are necessary these days."
+        },
+        {
+          "phrase": "agree with ~",
+          "mean": "~의 말에 동의하다",
+          "ex": "I agree with you."
+        },
+        {
+          "phrase": "spend time on ~",
+          "mean": "~에 시간을 쓰다",
+          "ex": "Don't spend too much time on games."
+        },
+        {
+          "phrase": "than before",
+          "mean": "예전보다",
+          "ex": "Our lives are more convenient than before."
+        },
+        {
+          "phrase": "for example",
+          "mean": "예를 들어",
+          "ex": "For example, a GPS app is useful."
+        },
+        {
+          "phrase": "whether ~ or not",
+          "mean": "~인지 아닌지",
+          "ex": "Consider whether it is right or not."
+        },
+        {
+          "phrase": "cause problems",
+          "mean": "문제를 일으키다",
+          "ex": "Cell phones might cause problems."
+        },
+        {
+          "phrase": "can't live without ~",
+          "mean": "~ 없이는 살 수 없다",
+          "ex": "I can't live without my smart phone."
+        }
+      ]
+    }
+  ],
+  "word_bank": [
+    "gadget",
+    "necessary",
+    "directions",
+    "to",
+    "than",
+    "without"
+  ],
+  "fill_blanks": [
+    {
+      "en": "My favorite <u></u> is my cell phone.",
+      "ko": "내가 가장 좋아하는 기계는 휴대폰이야."
+    },
+    {
+      "en": "Smart phones are <u></u> these days.",
+      "ko": "요즘에는 스마트폰이 꼭 필요해."
+    },
+    {
+      "en": "A GPS app gives us <u></u>.",
+      "ko": "GPS 앱은 우리에게 길을 알려 줘."
+    },
+    {
+      "en": "They are addicted <u></u> their cell phones.",
+      "ko": "그들은 휴대폰에 중독되어 있어."
+    },
+    {
+      "en": "Our lives are more convenient <u></u> before.",
+      "ko": "우리 삶은 예전보다 더 편리해."
+    },
+    {
+      "en": "I can't live <u></u> my smart phone.",
+      "ko": "나는 스마트폰 없이는 살 수 없어."
+    }
+  ]
+}
