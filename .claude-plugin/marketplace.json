@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "guitaruman-plugins",
+  "version": "1.0.0",
+  "description": "개인용 Claude Code 플러그인 모음",
+  "owner": {
+    "name": "GuitaruMan"
+  },
+  "plugins": [
+    {
+      "name": "vocab-book",
+      "description": "교재 사진에서 영어 단어·숙어장을 만들어 굿노트용 A4 PDF와 웹 페이지로 내보내고 presentations 사이트에 게시한다",
+      "source": "./plugins/vocab-book",
+      "category": "education"
+    }
+  ]
+}

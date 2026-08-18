@@ -1,0 +1,8 @@
+{
+  "name": "vocab-book",
+  "version": "1.0.0",
+  "description": "교재 사진에서 영어 단어·숙어장을 만들어 굿노트용 A4 PDF와 웹 페이지로 내보내고 presentations 사이트에 게시한다",
+  "author": {
+    "name": "GuitaruMan"
+  }
+}
