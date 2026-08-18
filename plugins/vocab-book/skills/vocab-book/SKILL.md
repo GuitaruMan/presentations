@@ -18,11 +18,11 @@ JSON 하나만 정확히 쓰면 나머지는 재현된다.
    예문은 본문 문장을 그대로 쓰거나 더 짧게 다듬는다.
 3. **JSON 작성** — 아래 스키마대로 `vocab.json`을 쓴다. **한 그룹(day)당 최대 12개** —
    넘으면 PDF 한 쪽에서 잘리므로 스크립트가 에러를 낸다.
-4. **PDF 생성** — `python scripts/make_pdf.py vocab.json 출력.pdf`
+4. **PDF 생성** — `python $P/scripts/make_pdf.py vocab.json 출력.pdf`
 5. **분량 확인** — 생성된 PDF 쪽수를 확인하고, 사용자가 정한 상한(보통 4~6쪽)을 넘으면
    항목 수를 줄인다. 다 담으려 하지 말고 핵심만 남긴다.
-6. **웹 페이지 생성** (게시할 때만) — `python scripts/make_web.py ...`
-7. **게시** (사용자가 요청할 때만) — `python scripts/publish.py ...`
+6. **웹 페이지 생성** (게시할 때만) — `python $P/scripts/make_web.py ...`
+7. **게시** (사용자가 요청할 때만) — `python $P/scripts/publish.py ...`
 
 ## JSON 스키마
 
@@ -67,15 +67,26 @@ JSON 하나만 정확히 쓰면 나머지는 재현된다.
 
 A4 세로, 크림 배경 + 파스텔 카드. 굿노트에서 애플펜슬로 바로 쓸 수 있게 여백을 둔다.
 
+## 스크립트 위치 찾기
+
+`CLAUDE_PLUGIN_ROOT`은 Bash 도구 환경에 설정되지 않는다. 설치 경로를 직접 구한다:
+
+```bash
+python -c "import json,os;p=os.path.expanduser('~/.claude/plugins/installed_plugins.json');print(json.load(open(p))['plugins']['vocab-book@guitaruman-plugins'][0]['installPath'])"
+```
+
+보통 `~/.claude/plugins/cache/guitaruman-plugins/vocab-book/<버전>/` 이다.
+아래 예시의 `$P`는 이 경로를 가리킨다.
+
 ## 명령 예시
 
 ```bash
-cd ${CLAUDE_PLUGIN_ROOT}
-python scripts/make_pdf.py vocab.json 화상영어_Unit7_단어장.pdf
-python scripts/make_web.py vocab.json 화상영어_Unit7.html \
+P=$(python -c "import json,os;p=os.path.expanduser('~/.claude/plugins/installed_plugins.json');print(json.load(open(p))['plugins']['vocab-book@guitaruman-plugins'][0]['installPath'])")
+python $P/scripts/make_pdf.py vocab.json 화상영어_Unit7_단어장.pdf
+python $P/scripts/make_web.py vocab.json 화상영어_Unit7.html \
   --pdf 화상영어_Unit7_단어장.pdf --pdf-pages 6 \
   --back-href ../주현이.html --back-label 주현이 --home-href ../../index.html
-python scripts/publish.py --category 주현이 \
+python $P/scripts/publish.py --category 주현이 \
   --page 화상영어_Unit7.html --pdf 화상영어_Unit7_단어장.pdf \
   --title "화상영어 Unit 7 - 단어 · 숙어장" --icon 📱
 ```

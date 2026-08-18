@@ -24,6 +24,11 @@
 - `scripts/make_web.py` — JSON → 사이트용 HTML(다크모드 대응, 뜻 가리기 토글)
 - `scripts/publish.py` — 가정용 카테고리에 파일 복사 + 목록 링크 추가 + push
 
+## 스크립트 직접 실행
+
+설치 경로는 `~/.claude/plugins/cache/guitaruman-plugins/vocab-book/<버전>/`.
+정확한 경로는 `~/.claude/plugins/installed_plugins.json`의 `vocab-book@guitaruman-plugins` → `installPath`.
+
 ## 요구 사항
 
 Python 3, Chrome 또는 Edge, git. PDF 변환에 쓸 브라우저를 못 찾으면 `CHROME_PATH`로 지정한다.
