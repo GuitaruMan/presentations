@@ -67,33 +67,22 @@ JSON 하나만 정확히 쓰면 나머지는 재현된다.
 
 A4 세로, 크림 배경 + 파스텔 카드. 굿노트에서 애플펜슬로 바로 쓸 수 있게 여백을 둔다.
 
-## 스크립트 위치 찾기
+## 실행
 
-`CLAUDE_PLUGIN_ROOT`은 Bash 도구 환경에 설정되지 않는다. 설치 경로를 직접 구한다:
-
-```bash
-python -c "import json,os;p=os.path.expanduser('~/.claude/plugins/installed_plugins.json');print(json.load(open(p))['plugins']['vocab-book@guitaruman-plugins'][0]['installPath'])"
-```
-
-보통 `~/.claude/plugins/cache/guitaruman-plugins/vocab-book/<버전>/` 이다.
-아래 예시의 `$P`는 이 경로를 가리킨다.
-
-## 명령 예시
+스크립트는 `scripts/vocab_book.py` 한 파일이다. 사용법과 JSON 형식이 파일 맨 위 주석에 다 들어 있으니,
+경로가 헷갈리면 그 파일을 읽으면 된다. 설치 경로는 보통
+`~/.claude/plugins/cache/guitaruman-plugins/vocab-book/<버전>/scripts/vocab_book.py`
+(정확한 경로는 `~/.claude/plugins/installed_plugins.json`의 `installPath`).
+플러그인 없이 파일만 복사해 써도 똑같이 동작한다.
 
 ```bash
-P=$(python -c "import json,os;p=os.path.expanduser('~/.claude/plugins/installed_plugins.json');print(json.load(open(p))['plugins']['vocab-book@guitaruman-plugins'][0]['installPath'])")
-python $P/scripts/make_pdf.py vocab.json 화상영어_Unit7_단어장.pdf
-python $P/scripts/make_web.py vocab.json 화상영어_Unit7.html \
-  --pdf 화상영어_Unit7_단어장.pdf --pdf-pages 6 \
-  --back-href ../주현이.html --back-label 주현이 --home-href ../../index.html
-python $P/scripts/publish.py --category 주현이 \
-  --page 화상영어_Unit7.html --pdf 화상영어_Unit7_단어장.pdf \
-  --title "화상영어 Unit 7 - 단어 · 숙어장" --icon 📱
+python vocab_book.py pdf  vocab.json 화상영어_Unit7_단어장.pdf
+python vocab_book.py web  vocab.json 화상영어_Unit7.html   --pdf 화상영어_Unit7_단어장.pdf --pdf-pages 6   --back-href ../주현이.html --back-label 주현이 --home-href ../../index.html
+python vocab_book.py push --category 주현이   --page 화상영어_Unit7.html --pdf 화상영어_Unit7_단어장.pdf   --title "화상영어 Unit 7 - 단어 · 숙어장" --icon 📱
 ```
 
-`publish.py`는 repo를 임시로 clone해서 `home/<카테고리>/`에 파일을 넣고,
-`home/<카테고리>.html` 목록 맨 위에 링크를 추가한 뒤 push한다.
-확인만 하려면 `--dry-run`.
+`push`는 repo를 임시로 clone해서 `home/<카테고리>/`에 파일을 넣고,
+`home/<카테고리>.html` 목록 맨 위에 링크를 추가한 뒤 push한다. 확인만 하려면 `--dry-run`.
 
 ## 흔한 실수
 

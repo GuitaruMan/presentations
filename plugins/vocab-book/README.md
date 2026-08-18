@@ -19,15 +19,15 @@
 
 ## 구성
 
-- `skills/vocab-book/SKILL.md` — 워크플로, JSON 스키마, 흔한 실수
-- `scripts/make_pdf.py` — JSON → A4 PDF (헤드리스 Chrome/Edge 사용, 외부 패키지 없음)
-- `scripts/make_web.py` — JSON → 사이트용 HTML(다크모드 대응, 뜻 가리기 토글)
-- `scripts/publish.py` — 가정용 카테고리에 파일 복사 + 목록 링크 추가 + push
+- `scripts/vocab_book.py` — **이 파일 하나가 전부다.** `pdf` / `web` / `push` 세 명령을 갖고 있고,
+  사용법과 JSON 형식이 파일 맨 위 주석에 들어 있다. 플러그인 없이 파일만 복사해도 동작한다.
+- `skills/vocab-book/SKILL.md` — Claude가 따라갈 워크플로
+- `examples/unit7.json` — 예시 데이터
 
-## 스크립트 직접 실행
+## 파일 하나만 옮겨 쓰기
 
-설치 경로는 `~/.claude/plugins/cache/guitaruman-plugins/vocab-book/<버전>/`.
-정확한 경로는 `~/.claude/plugins/installed_plugins.json`의 `vocab-book@guitaruman-plugins` → `installPath`.
+`scripts/vocab_book.py`만 복사해 두고 Claude에게 "이 파일 읽고 단어장 만들어줘"라고 해도 된다.
+플러그인 설치, 마켓플레이스 등록 없이 그대로 동작한다.
 
 ## 요구 사항
 
