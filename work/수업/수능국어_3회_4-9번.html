@@ -46,7 +46,7 @@
 
   .stage {
     container-type: inline-size;
-    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    width: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9); aspect-ratio: 16 / 9;
     background: var(--paper);
     border: 1px solid #cfd6e0;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -390,25 +390,25 @@
   }
 
   /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
-  .slide:has(.logic) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
-  .slide:has(.logic) .ans-banner .lb { font-size: 1.7cqw; }
-  .slide:has(.logic) .ans-banner .num { font-size: 3.8cqw; }
-  .slide:has(.logic) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
-  .slide:has(.logic) .evi { gap: 1.4cqw; }
-  .slide:has(.logic) .evi .box { padding: 1.15cqw 1.4cqw; }
-  .slide:has(.logic) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
-  .slide:has(.logic) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.logic) .otable th, .slide:has(.logic) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
-  .slide:has(.logic) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
-  .slide:has(.logic) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
-  .slide:has(.logic) .logic p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.logic) .two .card { padding: 1.4cqw 1.6cqw; }
-  .slide:has(.logic) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
-  .slide:has(.logic) .two .card p, .slide:has(.logic) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
-  .slide:has(.logic) .flow .fbox { padding: 1.1cqw 1.15cqw; }
-  .slide:has(.logic) .flow .fbox .t { font-size: 2.05cqw; }
-  .slide:has(.logic) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
-  .slide:has(.logic) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+  .slide:has(.ans-banner) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.ans-banner) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.ans-banner) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.ans-banner) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.ans-banner) .evi { gap: 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.ans-banner) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .otable th, .slide:has(.ans-banner) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.ans-banner) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.ans-banner) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.ans-banner) .two .card p, .slide:has(.ans-banner) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.ans-banner) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.ans-banner) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
 
   /* 3열 분류 슬라이드 압축 */
   .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
@@ -458,8 +458,8 @@
   .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
 
   /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
-  .slide:has(.logic):has(.otable) .otable th,
-  .slide:has(.logic):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
 
   /* 흐름도 + 해설 박스 슬라이드 */
   .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
@@ -475,25 +475,33 @@
   .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
 
   /* 마지막 미세 조정 */
-  .slide:has(.logic) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.92cqw; line-height: 1.52; }
   .slide:has(svg) svg { height: 20cqw; }
   .slide:has(svg) .bogi { font-size: 1.75cqw; }
   .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
 
-  .slide:has(.logic) .ans-banner { margin-bottom: 0.95cqw; }
-  .slide:has(.two):has(.logic) .card { padding: 1.2cqw 1.5cqw; }
-  .slide:has(.logic):has(.otable) .otable th,
-  .slide:has(.logic):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(.ans-banner) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.ans-banner) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
   .slide:has(svg) svg { height: 18.6cqw; }
-  .slide:has(.two):has(.logic) .card li + li { margin-top: 0.4cqw; }
-  .slide:has(.two):has(.logic) .card p, .slide:has(.two):has(.logic) .card li { line-height: 1.45; }
+  .slide:has(.two):has(.ans-banner) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.ans-banner) .card p, .slide:has(.two):has(.ans-banner) .card li { line-height: 1.45; }
+
+  /* 해설 슬라이드 안의 보충 박스 */
+  .slide:has(.ans-banner) .trap { margin-top: 1.05cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.ans-banner) .trap .h { font-size: 1.9cqw; margin-bottom: 0.4cqw; }
+  .slide:has(.ans-banner) .trap p { font-size: 1.9cqw; line-height: 1.5; }
+  .slide.s-flow .para-body { padding: 0.9cqw 1.3cqw; }
+  .slide:has(.steps) .steps .st { padding: 1.15cqw 1.2cqw; }
+  .slide:has(.steps) .steps .st .d { font-size: 1.82cqw; }
 </style>
 </head>
 <body>
 
 <div class="nav-top">
   <div>
-    <a href="../수업_3학년.html">&larr; 3학년</a>
+    <a href="../수업.html">&larr; 수업</a>
     <a href="../../work.html">업무용</a>
     <a href="../../index.html">홈</a>
   </div>
@@ -508,12 +516,12 @@
     <div class="kicker">수 능 완 성 　실 전 3 회 　주 제 　통 합 (인 문)</div>
     <h1>지각 경험과<br>지각적 믿음</h1>
     <div class="rule"></div>
-    <div class="sub">(가) 옳음 조건과 정당화 · (나) 개념주의와 비개념주의 &mdash; 정답 공개판</div>
+    <div class="sub">(가) 옳음 조건과 정당화 · (나) 개념주의와 비개념주의</div>
     <div class="foot">
       <span>고3 · 수능완성 실전 모의고사 3회 (본문 187~189쪽)</span>
       <span>4~9번 · 3점 문항 8번</span>
     </div>
-    <div class="page-num">1 / 20</div>
+    <div class="page-num">1 / 19</div>
   </section>
 
   <!-- 2 지문 구조 -->
@@ -526,31 +534,31 @@
           <ul style="margin-top:0.3cqw;">
             <li><b>1문단</b> ㉮ 지각 경험과 지각적 믿음을 <b class="u-key">구분</b>할 필요</li>
             <li><b>2문단</b> 감각적 표상 &rarr; 속성·동일성 판단 &rarr; 지각적 믿음</li>
-            <li><b>3문단</b> <b class="u-key">옳음 조건</b> &mdash; 착각·환각은 충족 못 함</li>
+            <li><b>3문단</b> <b class="u-key">옳음 조건</b>: 착각·환각은 충족하지 못한다</li>
             <li><b>4문단</b> &lsquo;지각 경험의 내용은 어떤 성격이어야 하는가&rsquo;라는 물음 &rarr; 철학적 쟁점</li>
           </ul>
         </div>
         <div class="card w">
-          <h3>(나) 두 진영의 대립</h3>
+          <h3>(나) 두 입장의 대립</h3>
           <ul style="margin-top:0.3cqw;">
-            <li><b>1문단</b> 개념주의 vs 비개념주의 &mdash; 지각 경험이 어떻게 <b>구조화</b>되는가</li>
-            <li><b>2문단</b> 개념주의 &mdash; <b class="u-warn">데닛</b>, ㉠</li>
-            <li><b>3문단</b> 비개념주의 &mdash; <b class="u-warn">드레츠키</b>, ㉡</li>
+            <li><b>1문단</b> 개념주의와 비개념주의: 지각 경험이 어떻게 <b>구조화</b>되는가</li>
+            <li><b>2문단</b> 개념주의: <b class="u-warn">데닛</b>, ㉠</li>
+            <li><b>3문단</b> 비개념주의: <b class="u-warn">드레츠키</b>, ㉡</li>
             <li><b>4문단</b> 대립의 인식론적 의의</li>
           </ul>
         </div>
       </div>
       <div class="trap">
         <div class="h">두 글이 이어지는 지점</div>
-        <p>(가)가 던진 물음 &mdash; &lsquo;지각 경험의 내용이 옳음 조건을 충족하려면 <b>어떤 성격</b>을 지녀야 하는가&rsquo; &mdash; 에 (나)의 두 진영이 각각 답한다. <b class="u-key">(가)는 문제 설정, (나)는 두 개의 답안</b></p>
+        <p>(가)는 지각 경험의 내용이 옳음 조건을 충족하려면 어떤 성격을 지녀야 하는가라는 물음을 남겼고, (나)의 두 입장이 각각 그 물음에 답한다.</p>
       </div>
     </div>
-    <div class="page-num">2 / 20</div>
+    <div class="page-num">2 / 19</div>
   </section>
 
   <!-- 3 지각 경험 vs 지각적 믿음 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">㉮ 왜 둘을 구분해야 하는가 &mdash; 빨간 사과</span></h2>
+    <h2 class="slide-title"><span class="qtext">지각 경험에서 지각적 믿음까지 (2문단)</span></h2>
     <div class="body-area">
       <div class="flow">
         <div class="fbox">
@@ -568,17 +576,17 @@
           <div class="d">&lsquo;나는 빨간 사과를 보고 있다.&rsquo;<br>&lsquo;내 앞에 사과가 놓여 있다.&rsquo;</div>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">구분의 이유는 &lsquo;역할&rsquo;에 있다</div>
-        <p>지각 경험은 믿음을 <b class="u-ok">정당화하는 근거</b>이고, 지각적 믿음은 그 근거 위에 세워진 <b class="u-ok">산물</b>이다. 근거와 산물을 한 덩어리로 뭉뚱그리면 &lsquo;이 믿음이 정당한가&rsquo;를 따질 자리가 사라진다. 6번 문항이 정확히 이 한 줄을 묻는다</p>
+      <div class="trap">
+        <div class="h">구분이 필요한 이유</div>
+        <p>지각 경험은 믿음을 정당화하는 근거이고, 지각적 믿음은 그 근거 위에 세워진 산물이다. 2문단이 &lsquo;지각 경험은 판단이나 믿음을 정당화하는 근거를 제공한다&rsquo;고 서술한 대목이 ㉮의 이유가 된다.</p>
       </div>
     </div>
-    <div class="page-num">3 / 20</div>
+    <div class="page-num">3 / 19</div>
   </section>
 
   <!-- 4 옳음 조건 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">옳음 조건 &mdash; 정당화의 관문</span></h2>
+    <h2 class="slide-title"><span class="qtext">옳음 조건 (3문단)</span></h2>
     <div class="body-area">
       <div class="two">
         <div class="card k">
@@ -600,15 +608,15 @@
       </div>
       <div class="trap">
         <div class="h">여기서 나온 물음이 (나)로 이어진다</div>
-        <p>&ldquo;지각 경험의 내용이 옳음 조건을 충족하려면 그것이 <b>어떤 성격</b>을 지녀야 하는가&rdquo; &mdash; 개념적이어야 하는가(개념주의), 아니면 개념 이전 상태로도 되는가(비개념주의)</p>
+        <p>&ldquo;지각 경험의 내용이 옳음 조건을 충족하려면 그것이 어떤 성격을 지녀야 하는가.&rdquo; 개념적이어야 한다는 쪽이 개념주의, 개념 이전 상태로도 된다는 쪽이 비개념주의다.</p>
       </div>
     </div>
-    <div class="page-num">4 / 20</div>
+    <div class="page-num">4 / 19</div>
   </section>
 
   <!-- 5 개념주의 vs 비개념주의 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">두 진영의 트레이드마크 &mdash; 이 표가 4문항을 푼다</span></h2>
+    <h2 class="slide-title"><span class="qtext">(나)의 두 입장</span></h2>
     <div class="body-area">
       <table class="mtable">
         <thead>
@@ -621,8 +629,8 @@
         </tr>
         <tr>
           <td class="stmt">대표 학자</td>
-          <td><b>데닛</b> &mdash; 식탁의 것을 &lsquo;빨간 사과&rsquo;로 보는 것 자체가 개념적 해석. 그 해석은 <b>비의식적</b>일 수 있다</td>
-          <td><b>드레츠키</b> &mdash; 지각 경험이 <b>먼저</b> 주어지고 그 위에 <b>고차 인지 작용</b>이 작동한다</td>
+          <td><b>데닛</b>. 식탁의 것을 &lsquo;빨간 사과&rsquo;로 보는 것 자체가 개념적 해석이며, 그 해석은 <b>비의식적</b>일 수 있다</td>
+          <td><b>드레츠키</b>. 지각 경험이 <b>먼저</b> 주어지고 그 위에 <b>고차 인지 작용</b>이 작동한다</td>
         </tr>
         <tr>
           <td class="stmt">밑줄 문장</td>
@@ -630,13 +638,13 @@
           <td class="ans"><b>㉡</b> 우리는 지각 경험에 주어진 <b>모든 것을 알아채는 것은 아니다</b></td>
         </tr>
         <tr>
-          <td class="stmt">신호 어휘</td>
-          <td><b class="u-key">이미 / 애초에 / 구조화되어 / 분리되지 않는 / 관통하여</b></td>
-          <td><b class="u-warn">먼저 주어지고 / 이후에 / 고차 인지 작용 / 절차적으로 구별 / 정보의 손실</b></td>
+          <td class="stmt">지각 경험과<br>인지 작용의 관계</td>
+          <td>둘은 분리되지 않는다. 개념적 해석이 지각 경험을 <b class="u-key">관통하여</b> 영향을 미친다.</td>
+          <td>둘은 <b class="u-warn">절차적으로 구별</b>된다. 지각 경험이 먼저 주어지고, 뒤에 고차 인지 작용이 이를 개념적 정보로 변환하며 정보의 손실이 생긴다.</td>
         </tr>
       </table>
     </div>
-    <div class="page-num">5 / 20</div>
+    <div class="page-num">5 / 19</div>
   </section>
 
   <!-- 6 04번 문제 -->
@@ -651,7 +659,7 @@
         <li><span class="n">⑤</span><span class="txt">(나)와 달리 (가)는 지각 경험의 옳음 조건에 대한 관점이 <u>시대에 따라 변화된 과정</u>을 고찰하고 있다.</span></li>
       </ul>
     </div>
-    <div class="page-num">6 / 20</div>
+    <div class="page-num">6 / 19</div>
   </section>
 
   <!-- 7 04번 해설 -->
@@ -673,12 +681,12 @@
           <p>2문단 개념주의 &mdash; <b>데닛</b>의 견해로 뒷받침 / 3문단 비개념주의 &mdash; <b>드레츠키</b>의 견해로 뒷받침 &rarr; 상반된 두 입장</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 전개 방식 문항은 서술어만 본다</div>
-        <p>선택지 다섯 개에서 <b>내용</b>은 다 그럴듯하게 들린다. 갈리는 것은 마지막 <b class="u-ok">작업 동사</b>다: ②분류·소개, ③배경 규명·계승 양상, ④원인 분석, ⑤시대적 변화 고찰. 이 넷은 지문 어디에도 없는 작업이다. <b>(가)/(나)를 각각 &lsquo;무엇을 어떻게&rsquo; 한 줄로 요약해 두고 동사만 대조</b>하면 30초 문항이 된다</p>
+      <div class="trap">
+        <div class="h">두 글이 한 작업</div>
+        <p>(가)는 빨간 사과 사례로 개념을 설명하고 옳음 조건으로 정당화 요건을 제시했다. (나)는 데닛과 드레츠키의 견해를 들어 상반된 입장을 대비했다. 분류, 계승 양상, 원인 분석, 시대적 변화는 두 글에서 다루지 않았다.</p>
       </div>
     </div>
-    <div class="page-num">7 / 20</div>
+    <div class="page-num">7 / 19</div>
   </section>
 
   <!-- 8 05번 문제 -->
@@ -701,7 +709,7 @@
         <li><span class="n">⑤</span><span class="txt">㉡은 실제로 인지하는 것보다 더 많은 정보가 지각 경험 속에 비개념적으로 주어져 있다는 것을 의미한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">8 / 20</div>
+    <div class="page-num">8 / 19</div>
   </section>
 
   <!-- 9 05번 해설 -->
@@ -711,7 +719,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">②</span>
-        <span class="why">㉠(개념주의) 설명에 <b>㉡(비개념주의)의 도식</b>을 끼워 넣었다</span>
+        <span class="why">㉠의 설명에 3문단 드레츠키의 순서를 가져다 놓았다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -721,15 +729,15 @@
         <div class="box opt">
           <div class="h">선택지 ②</div>
           <p>&ldquo;㉠은 지각 경험이 <mark><b>먼저 주어지고</b></mark> 이 경험에 대한 인지 작용이&hellip;&rdquo;</p>
-          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">&lsquo;먼저 주어지고&rsquo;는 드레츠키(㉡)의 어휘 &mdash; 진영 뒤바꾸기</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">&lsquo;먼저 주어지고&rsquo;는 드레츠키의 서술이다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 밑줄에 진영 라벨부터 붙인다</div>
-        <p>㉠=개념주의, ㉡=비개념주의. 라벨을 붙이고 나면 이 문항은 <b class="u-ok">선택지에 상대 진영의 신호 어휘가 섞였는지</b>만 보면 된다. ③이 &lsquo;분리되어 있다&rsquo;고 하는데도 적절한 이유는, 같은 말이라도 <b>㉡에 붙었기 때문</b>이다. ②는 정확히 같은 어휘를 <b class="u-warn">㉠에 붙였기 때문에</b> 틀렸다. 어휘가 아니라 <b>어휘가 붙은 자리</b>를 보라</p>
+      <div class="trap">
+        <div class="h">㉠이 놓인 문맥</div>
+        <p>㉠은 2문단 데닛의 결론이다. 2문단의 데닛은 지각 경험이 개념적 해석과 분리되지 않으며, 그 해석이 지각 경험을 관통한다고 보았다. ②가 말하는 &lsquo;지각 경험이 먼저 주어지고&rsquo;라는 순서는 3문단 드레츠키의 서술이다.</p>
       </div>
     </div>
-    <div class="page-num">9 / 20</div>
+    <div class="page-num">9 / 19</div>
   </section>
 
   <!-- 10 06번 문제 -->
@@ -748,7 +756,7 @@
         <li><span class="n">⑤</span><span class="txt">지각 경험은 판단을 통해 형성되지만, 지각적 믿음은 판단을 수반하지 않기 때문이다.</span></li>
       </ul>
     </div>
-    <div class="page-num">10 / 20</div>
+    <div class="page-num">10 / 19</div>
   </section>
 
   <!-- 11 06번 해설 -->
@@ -758,7 +766,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">②</span>
-        <span class="why"><b>근거</b>와 <b>산물</b>은 역할이 다르므로 갈라 두어야 한다</span>
+        <span class="why">지각 경험은 근거이고 지각적 믿음은 그 산물이다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -766,21 +774,21 @@
           <p>&ldquo;우리는 지각 경험에서 여러 정보를 얻고 이를 바탕으로 판단을 내리고&hellip;믿음을 형성한다. 즉 지각 경험은 판단이나 믿음을 <mark><b>정당화하는 근거를 제공</b></mark>하는 것으로 여겨진다.&rdquo;</p>
         </div>
         <div class="box opt">
-          <div class="h">③을 먼저 버려라</div>
-          <p>&lsquo;둘은 <b>동일한</b> 감각 인상에 불과하다&rsquo; &rarr; 그렇다면 <b class="u-warn">구분할 필요가 없어진다</b>. 밑줄의 결론을 스스로 무너뜨리는 선택지</p>
+          <div class="h">③이 성립할 수 없는 까닭</div>
+          <p>&lsquo;둘은 동일한 감각 인상에 불과하다&rsquo;고 하면 <b class="u-warn">구분할 이유 자체가 사라진다</b>. ㉮의 진술과 어긋난다.</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 이유 추론은 &lsquo;결론을 떠받치는가&rsquo;로 거른다</div>
-        <p>①은 (나)의 개념주의 쟁점을 1문단에 끌어온 <b>출처 오류</b>. ④ &lsquo;언제나 충족&rsquo;은 3문단(착각·환각)과 충돌. ⑤는 2문단의 순서를 통째로 뒤집었다. <b class="u-ok">밑줄 문장의 주장을 강화하지 못하는 선택지는 근거가 될 수 없다</b>는 한 가지 기준으로 넷이 정리된다</p>
+      <div class="trap">
+        <div class="h">㉮의 이유가 놓인 자리</div>
+        <p>1문단의 ㉮ 바로 뒤에서 2문단이 지각 경험, 판단, 지각적 믿음의 순서를 밝히고 지각 경험이 믿음을 정당화하는 근거임을 서술한다. ①이 말하는 개념적 해석은 (나)의 쟁점이지 (가)가 구분을 제안한 이유가 아니다.</p>
       </div>
     </div>
-    <div class="page-num">11 / 20</div>
+    <div class="page-num">11 / 19</div>
   </section>
 
   <!-- 12 07번 문제 -->
   <section class="slide">
-    <h2 class="slide-title" style="font-size:3.5cqw;"><span class="q">07</span><span class="qtext">활동지 &mdash; (나)의 관점으로 (가)의 핵심 문장 해석하기</span><span class="ans-chip">정답 ③</span></h2>
+    <h2 class="slide-title" style="font-size:3.5cqw;"><span class="q">07</span><span class="qtext">활동지: (나)의 관점으로 (가)의 문장 해석하기</span><span class="ans-chip">정답 ③</span></h2>
     <div class="body-area">
       <table class="mtable">
         <thead>
@@ -803,7 +811,7 @@
         </tr>
       </table>
     </div>
-    <div class="page-num">12 / 20</div>
+    <div class="page-num">12 / 19</div>
   </section>
 
   <!-- 13 07번 해설 -->
@@ -813,24 +821,24 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">③</span>
-        <span class="why">개념주의 칸에 <b>드레츠키의 도식</b>을 넣었다</span>
+        <span class="why">개념주의 칸에 비개념주의의 순서를 넣었다</span>
       </div>
       <div class="evi">
         <div class="box src">
           <div class="h">개념주의의 실제 주장 ((나) 2문단)</div>
-          <p>지각 경험은 <mark><b>애초에 개념으로 표현 가능한 방식으로 주어진다</b></mark>. 이미 개념적 내용을 담고 있으므로 정당화 근거가 된다 &mdash; 나중에 무엇을 <b>제외할</b> 필요가 없다</p>
+          <p>지각 경험은 <mark><b>애초에 개념으로 표현 가능한 방식으로 주어진다</b></mark>. 이미 개념적 내용을 담고 있으므로 정당화 근거가 되며, 나중에 무엇을 제외할 필요가 없다.</p>
         </div>
         <div class="box opt">
           <div class="h">선택지 ③</div>
-          <p>&ldquo;<mark><b>고차 인지 작용이 개입해 비개념적 내용이 제외되어야</b></mark>&rdquo; &rarr; 지각 경험이 먼저 있고 그 뒤에 인지 작용이 들어와 개념적 정보로 <b>변환</b>한다는 것은 드레츠키(비개념주의)의 그림</p>
+          <p>&ldquo;<mark><b>고차 인지 작용이 개입해 비개념적 내용이 제외되어야</b></mark>&rdquo;는, 지각 경험이 먼저 있고 뒤에 인지 작용이 개념적 정보로 <b>변환</b>한다는 드레츠키의 서술이다.</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 5칸짜리 활동지는 &lsquo;진영 × 신호 어휘&rsquo; 짝만 검산</div>
-        <p>표로 옮겨 놓으면 각 칸이 <b>[진영 이름] + [그 진영의 트레이드마크]</b> 조합인지만 보면 된다. 개념주의 칸에는 <b class="u-key">이미 / 애초에 / 구조화</b>가, 비개념주의 칸에는 <b class="u-warn">먼저 / 이후 / 고차 인지 작용 / 대응</b>이 와야 한다. ③은 개념주의 칸에 비개념주의 어휘가 들어앉았다. <b>문장 1·2·3의 내용을 새로 이해할 필요조차 없다</b></p>
+      <div class="trap">
+        <div class="h">두 입장이 적절함을 찾는 자리</div>
+        <p>개념주의는 지각 경험이 애초에 개념적으로 구조화되어 있다는 데서, 비개념주의는 그 내용이 실제 세계와 대응한다는 데서 적절함을 찾는다. ③은 개념적 구조화를 나중에 이루어지는 작업으로 만들어 놓았다.</p>
       </div>
     </div>
-    <div class="page-num">13 / 20</div>
+    <div class="page-num">13 / 19</div>
   </section>
 
   <!-- 14 08번 보기 -->
@@ -843,23 +851,23 @@
       </div>
       <div class="steps">
         <div class="st">
-          <div class="n">칸 1</div>
+          <div class="n">①</div>
           <div class="t">비개념적으로 남은 것</div>
           <div class="d">소음, 눈앞의 흔들림 &mdash; 개념화되지 못한 감각 정보의 잔여</div>
         </div>
         <div class="st">
-          <div class="n">칸 2</div>
+          <div class="n">②</div>
           <div class="t">개념적 판단이 들어간 것</div>
           <div class="d">&lsquo;도로였다&rsquo;, &lsquo;파란색 지붕의 건물&rsquo; &mdash; 속성 판단 + 동일성 판단 &rarr; 지각적 믿음</div>
         </div>
         <div class="st">
-          <div class="n">칸 3</div>
+          <div class="n">③</div>
           <div class="t">옳음 조건 판정</div>
           <div class="d">파란 지붕 건물은 실재하지 않음 &rarr; 착각·환각처럼 <b>옳음 조건 불충족</b></div>
         </div>
       </div>
     </div>
-    <div class="page-num">14 / 20</div>
+    <div class="page-num">14 / 19</div>
   </section>
 
   <!-- 15 08번 선택지 -->
@@ -874,7 +882,7 @@
         <li><span class="n">⑤</span><span class="txt">드레츠키의 관점에서는 A의 기억 중, 자동차 사고 상황과 관련된 정보가 손실된 이유는 비개념적 내용으로 이루어진 사고 당시의 지각 경험이 후속 인지 과정에서 일부만 개념화되었기 때문이라고 보겠군.</span></li>
       </ul>
     </div>
-    <div class="page-num">15 / 20</div>
+    <div class="page-num">15 / 19</div>
   </section>
 
   <!-- 16 08번 해설 -->
@@ -884,7 +892,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">③</span>
-        <span class="why">실제와 어긋난 것은 <b>개념적 판단이 들어간 진술</b>이다</span>
+        <span class="why">실제와 어긋난 것은 개념적 판단이 들어간 진술이다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -894,15 +902,15 @@
         <div class="box opt">
           <div class="h">선택지 ③</div>
           <p>&ldquo;<mark><b>비개념적 정보에 머물러 있었기 때문에</b></mark> 실제 사태와 일치하지 않겠군&rdquo;</p>
-          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">칸 2의 사실을 칸 1에 옮겨 놓고, 없는 인과까지 만들었다</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">개념적 판단을 거친 진술을 비개념적 정보 쪽으로 옮겨 놓았다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; &lsquo;때문에&rsquo;가 붙은 선택지 하나를 표적으로</div>
-        <p>①②④⑤는 모두 <b>대응 진술</b>(이것은 저것에 해당한다)이지만, ③만 유일하게 <b class="u-ok">&lsquo;~때문에 ~하지 않겠군&rsquo;이라는 인과 진술</b>이다. 사례 적용 문항에서 혼자 인과를 주장하는 선택지는 인과의 <b>방향과 주어</b>를 반드시 검산한다. 여기서는 &lsquo;무엇이 실제와 어긋났는가&rsquo;의 주어가 바뀌어 있다</p>
+      <div class="trap">
+        <div class="h">A의 진술은 두 층으로 되어 있다</div>
+        <p>소음과 흔들림은 개념화되지 못한 채 남은 정보이고, &lsquo;도로&rsquo;와 &lsquo;파란색 지붕의 건물&rsquo;은 속성 판단과 동일성 판단을 거친 개념적 진술이다. 경찰 조사와 어긋난 것은 뒤쪽 층이다.</p>
       </div>
     </div>
-    <div class="page-num">16 / 20</div>
+    <div class="page-num">16 / 19</div>
   </section>
 
   <!-- 17 08번 선택지별 확인 -->
@@ -917,7 +925,7 @@
         <tr><th>⑤</th><td>개념적 정보로 변환되는 과정에서 <b>정보의 손실</b>이 필연적 &mdash; (나) 3문단 &rarr; 적절</td></tr>
       </table>
     </div>
-    <div class="page-num">17 / 20</div>
+    <div class="page-num">17 / 19</div>
   </section>
 
   <!-- 18 09번 문제 -->
@@ -936,7 +944,7 @@
         <li class="ans"><span class="n">⑤</span><span class="txt">ⓔ: 그런 말은 빈정거림을 <u>넘어</u> 시비를 거는 것에 가깝다.</span></li>
       </ul>
     </div>
-    <div class="page-num">18 / 20</div>
+    <div class="page-num">18 / 19</div>
   </section>
 
   <!-- 19 09번 해설 -->
@@ -955,35 +963,19 @@
         <tr><th>④</th><td>지문 ⓓ = <b>어떤 대상을 바로 향하여 보다</b> ／ 선택지 = 자신의 시각으로 관찰하다 &rarr; 불일치</td></tr>
         <tr class="ans"><th>⑤</th><td>양쪽 모두 <b>일정한 기준이나 한계 따위를 벗어나 지나다</b> &rarr; <b>정답</b></td></tr>
       </table>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 사전 뜻풀이를 떠올리지 말고 &lsquo;구체 / 추상&rsquo;으로 먼저 가른다</div>
-        <p>지문의 ⓐ~ⓔ는 전부 <b>추상적 작용</b>에 쓰였다. 선택지 ①③④는 값·장소·시선처럼 <b class="u-warn">구체적 상황</b>으로 되돌려 놓은 것이라 이 단계에서 걸러진다. 남은 ②와 ⑤ 중 ②는 &lsquo;물음을 제기하다&rsquo;가 아니라 &lsquo;말을 건네다&rsquo;여서 탈락. <b class="u-ok">뜻풀이 암기가 아니라 &lsquo;추상인가 구체인가&rsquo; 한 번, &lsquo;바꿔 넣어 읽어 보기&rsquo; 한 번</b>이면 끝난다</p>
+      <div class="trap">
+        <div class="h">ⓔ의 쓰임</div>
+        <p>지문의 ⓔ는 개념적인가 비개념적인가라는 물음의 한계를 지나간다는 뜻이다. ⑤의 &lsquo;넘어&rsquo; 역시 빈정거림이라는 한계를 지나 시비에 이르렀다는 뜻이므로 쓰임이 같다.</p>
       </div>
     </div>
-    <div class="page-num">19 / 20</div>
-  </section>
-
-  <!-- 20 핵심 정리 -->
-  <section class="slide">
-    <h2 class="slide-title"><span class="qtext">오늘 가져갈 것</span></h2>
-    <div class="body-area">
-      <div class="checks">
-        <div class="check-row"><div class="k">(가)의 뼈대</div><div class="v">지각 경험(근거) &rarr; 판단 &rarr; 지각적 믿음(산물). 근거가 <b>옳음 조건</b>을 통과해야 믿음이 정당화된다</div></div>
-        <div class="check-row"><div class="k">(나)의 뼈대</div><div class="v"><b class="u-key">개념주의</b>=이미 개념적으로 구조화 (데닛, ㉠) / <b class="u-warn">비개념주의</b>=먼저 주어지고 뒤에 개념화 (드레츠키, ㉡)</div></div>
-        <div class="check-row"><div class="k">4번 유형</div><div class="v">전개 방식은 <b>서술어(작업 동사)</b>만 대조한다 &mdash; 분류·규명·계승·원인 분석은 지문에 없다</div></div>
-        <div class="check-row"><div class="k">5·7번 유형</div><div class="v">어휘가 아니라 <b>어휘가 붙은 자리</b>를 본다. 진영 × 신호 어휘 짝 검산</div></div>
-        <div class="check-row"><div class="k">8번 유형</div><div class="v">&lt;보기&gt;를 <b>비개념 / 개념 / 옳음 조건</b> 세 칸에 먼저 배분. 혼자 &lsquo;때문에&rsquo;라고 말하는 선택지를 표적으로</div></div>
-        <div class="check-row"><div class="k">9번 유형</div><div class="v">추상 vs 구체로 한 번 거르고, 남은 것은 <b>원문에 바꿔 넣어</b> 읽어 본다</div></div>
-      </div>
-    </div>
-    <div class="page-num">20 / 20</div>
+    <div class="page-num">19 / 19</div>
   </section>
 
 </div>
 
 <div class="controls">
   <button id="prev">&larr; 이전</button>
-  <span id="counter">1 / 20</span>
+  <span id="counter">1 / 19</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
   <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>

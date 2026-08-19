@@ -46,7 +46,7 @@
 
   .stage {
     container-type: inline-size;
-    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    width: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9); aspect-ratio: 16 / 9;
     background: var(--paper);
     border: 1px solid #cfd6e0;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -390,25 +390,25 @@
   }
 
   /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
-  .slide:has(.logic) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
-  .slide:has(.logic) .ans-banner .lb { font-size: 1.7cqw; }
-  .slide:has(.logic) .ans-banner .num { font-size: 3.8cqw; }
-  .slide:has(.logic) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
-  .slide:has(.logic) .evi { gap: 1.4cqw; }
-  .slide:has(.logic) .evi .box { padding: 1.15cqw 1.4cqw; }
-  .slide:has(.logic) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
-  .slide:has(.logic) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.logic) .otable th, .slide:has(.logic) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
-  .slide:has(.logic) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
-  .slide:has(.logic) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
-  .slide:has(.logic) .logic p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.logic) .two .card { padding: 1.4cqw 1.6cqw; }
-  .slide:has(.logic) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
-  .slide:has(.logic) .two .card p, .slide:has(.logic) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
-  .slide:has(.logic) .flow .fbox { padding: 1.1cqw 1.15cqw; }
-  .slide:has(.logic) .flow .fbox .t { font-size: 2.05cqw; }
-  .slide:has(.logic) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
-  .slide:has(.logic) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+  .slide:has(.ans-banner) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.ans-banner) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.ans-banner) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.ans-banner) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.ans-banner) .evi { gap: 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.ans-banner) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .otable th, .slide:has(.ans-banner) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.ans-banner) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.ans-banner) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.ans-banner) .two .card p, .slide:has(.ans-banner) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.ans-banner) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.ans-banner) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
 
   /* 3열 분류 슬라이드 압축 */
   .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
@@ -458,8 +458,8 @@
   .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
 
   /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
-  .slide:has(.logic):has(.otable) .otable th,
-  .slide:has(.logic):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
 
   /* 흐름도 + 해설 박스 슬라이드 */
   .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
@@ -475,25 +475,33 @@
   .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
 
   /* 마지막 미세 조정 */
-  .slide:has(.logic) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.92cqw; line-height: 1.52; }
   .slide:has(svg) svg { height: 20cqw; }
   .slide:has(svg) .bogi { font-size: 1.75cqw; }
   .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
 
-  .slide:has(.logic) .ans-banner { margin-bottom: 0.95cqw; }
-  .slide:has(.two):has(.logic) .card { padding: 1.2cqw 1.5cqw; }
-  .slide:has(.logic):has(.otable) .otable th,
-  .slide:has(.logic):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(.ans-banner) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.ans-banner) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
   .slide:has(svg) svg { height: 18.6cqw; }
-  .slide:has(.two):has(.logic) .card li + li { margin-top: 0.4cqw; }
-  .slide:has(.two):has(.logic) .card p, .slide:has(.two):has(.logic) .card li { line-height: 1.45; }
+  .slide:has(.two):has(.ans-banner) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.ans-banner) .card p, .slide:has(.two):has(.ans-banner) .card li { line-height: 1.45; }
+
+  /* 해설 슬라이드 안의 보충 박스 */
+  .slide:has(.ans-banner) .trap { margin-top: 1.05cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.ans-banner) .trap .h { font-size: 1.9cqw; margin-bottom: 0.4cqw; }
+  .slide:has(.ans-banner) .trap p { font-size: 1.9cqw; line-height: 1.5; }
+  .slide.s-flow .para-body { padding: 0.9cqw 1.3cqw; }
+  .slide:has(.steps) .steps .st { padding: 1.15cqw 1.2cqw; }
+  .slide:has(.steps) .steps .st .d { font-size: 1.82cqw; }
 </style>
 </head>
 <body>
 
 <div class="nav-top">
   <div>
-    <a href="../수업_3학년.html">&larr; 3학년</a>
+    <a href="../수업.html">&larr; 수업</a>
     <a href="../../work.html">업무용</a>
     <a href="../../index.html">홈</a>
   </div>
@@ -508,12 +516,12 @@
     <div class="kicker">수 능 완 성 　실 전 3 회 　독 서 　이 론</div>
     <h1>텍스트 복잡도</h1>
     <div class="rule"></div>
-    <div class="sub">지문 구조 분석 &amp; 1~3번 문항 풀이 &mdash; 정답 공개판</div>
+    <div class="sub">지문 구조 분석 &amp; 1~3번 문항 풀이</div>
     <div class="foot">
       <span>고3 · 수능완성 실전 모의고사 3회 (본문 186~187쪽)</span>
       <span>1~3번 · 배점 2 / 2 / 3점</span>
     </div>
-    <div class="page-num">1 / 14</div>
+    <div class="page-num">1 / 13</div>
   </section>
 
   <!-- 2 지문 구조 -->
@@ -551,12 +559,12 @@
         </div>
       </div>
     </div>
-    <div class="page-num">2 / 14</div>
+    <div class="page-num">2 / 13</div>
   </section>
 
   <!-- 3 세 요인 분류표 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">복잡도를 만드는 세 요인 &mdash; 이 표가 3문항을 다 푼다</span></h2>
+    <h2 class="slide-title"><span class="qtext">복잡도를 만드는 세 요인 (2문단)</span></h2>
     <div class="body-area">
       <div class="three">
         <div class="card">
@@ -590,16 +598,16 @@
         </div>
       </div>
       <div class="trap">
-        <div class="h">여기서 갈린다</div>
-        <p>&lsquo;<b>문장이 길고 구조가 복잡하다</b>&rsquo;는 느낌상 질적 요인 같지만 2문단이 <b class="u-key">양적 요인</b>으로 못 박아 두었다. 3번 문항의 오답 두 개가 정확히 이 착각을 노린다</p>
+        <div class="h">양적 요인과 질적 요인의 구분</div>
+        <p>2문단은 양적 요인을 &lsquo;수치로 측정할 수 있는 언어적·구조적 특성&rsquo;으로 정의하고, 그 예로 문장의 길이와 문장 구조의 복잡성을 들었다. 따라서 &lsquo;문장이 길고 구조가 복잡하다&rsquo;는 <b class="u-key">양적 요인</b>에 해당한다.</p>
       </div>
     </div>
-    <div class="page-num">3 / 14</div>
+    <div class="page-num">3 / 13</div>
   </section>
 
   <!-- 4 읽기 전략 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">㉠ 요인별 읽기 전략 &mdash; 요인과 처방의 짝</span></h2>
+    <h2 class="slide-title"><span class="qtext">㉠ 요인별 읽기 전략 (3문단)</span></h2>
     <div class="body-area">
       <table class="mtable">
         <thead>
@@ -613,7 +621,7 @@
         <tr><td class="stmt">목적이 흐릿함 (독자·과제)</td><td><b>읽기 목적을 명확히</b> 하여 속도와 깊이를 조절, 필요한 정보에 집중</td></tr>
       </table>
     </div>
-    <div class="page-num">4 / 14</div>
+    <div class="page-num">4 / 13</div>
   </section>
 
   <!-- 5 01번 문제 -->
@@ -628,7 +636,7 @@
         <li><span class="n">⑤</span><span class="txt">어휘, 문장 구조, 내용 전개 등에서 나타나는 텍스트 복잡도가 높을수록 독자는 더 많은 인지적 자원을 사용한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">5 / 14</div>
+    <div class="page-num">5 / 13</div>
   </section>
 
   <!-- 6 01번 해설 -->
@@ -638,7 +646,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">④</span>
-        <span class="why">지문에 <b>없는 우열 관계</b>를 만들어 낸 선택지</span>
+        <span class="why">지문은 세 요인의 경중을 말하지 않았다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -648,15 +656,15 @@
         <div class="box opt">
           <div class="h">선택지 ④</div>
           <p>&ldquo;질적 요인은 양적 요인<mark><b>보다</b></mark> 독자가 느끼는 인지적 부담이 <b>크다</b>&rdquo;</p>
-          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">병렬로 나열된 세 요인을 우열 관계로 바꿔치기</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">지문에 없는 우열 관계를 진술했다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 비교급을 먼저 사냥한다</div>
-        <p>이 문항의 다섯 선택지 중 <b>비교 표현이 들어간 것은 ①과 ④ 둘뿐</b>이다. 비교급이 보이면 &lsquo;지문이 실제로 두 항을 견주었는가&rsquo;만 확인하면 된다. ①은 2문단이 &lsquo;정보 추론보다 단순 정보 습득일 경우가 상대적으로 쉽다&rsquo;고 <b class="u-ok">직접 견주었으므로 적절</b>. ④는 세 요인을 <b class="u-warn">나란히 늘어놓기만 했지 견준 적이 없다</b>. 나머지 셋을 대조하지 않고도 답이 나온다</p>
+      <div class="trap">
+        <div class="h">①과 ④의 차이</div>
+        <p>2문단은 세 요인이 상호 작용하여 형성된다고 서술했을 뿐, 요인 사이의 경중은 말하지 않았다. 반면 ①이 견준 내용은 같은 2문단에 &lsquo;정보 추론보다 단순 정보 습득일 경우가 이해가 상대적으로 쉽다&rsquo;는 근거 문장이 있다.</p>
       </div>
     </div>
-    <div class="page-num">6 / 14</div>
+    <div class="page-num">6 / 13</div>
   </section>
 
   <!-- 7 02번 문제 -->
@@ -665,7 +673,7 @@
     <div class="body-area">
       <div class="quote-box" style="margin-bottom:1.5cqw;">
         ㉠ <b>복잡도가 높은 텍스트를 이해하기 위해서는 요인별 특성에 맞춘 읽기 전략이 필요하다.</b>
-        <span class="src">3문단 첫 문장 &mdash; 뒤에 이어지는 전략 목록 전체를 총괄하는 문장</span>
+        <span class="src">3문단 첫 문장. 뒤에 이어지는 전략 목록을 총괄한다</span>
       </div>
       <ul class="choices">
         <li><span class="n">①</span><span class="txt">어려운 단어가 많이 포함된 텍스트일 경우, 문맥을 통해 단어의 의미를 추론하며 읽는다.</span></li>
@@ -675,7 +683,7 @@
         <li><span class="n">⑤</span><span class="txt">문장 안에 또 다른 문장이 여러 번 들어간 구조의 문장이 많을 경우, 주어, 서술어, 목적어를 구분하고 문장을 여러 구절로 나누어 정리하며 이해한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">7 / 14</div>
+    <div class="page-num">7 / 13</div>
   </section>
 
   <!-- 8 02번 해설 -->
@@ -685,7 +693,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">④</span>
-        <span class="why">지문이 &lsquo;하라&rsquo;고 한 것을 &lsquo;<b>하기보다</b>&rsquo;로 밀어냈다</span>
+        <span class="why">3문단은 배경지식을 보완하라고 했다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -695,15 +703,15 @@
         <div class="box opt">
           <div class="h">선택지 ④</div>
           <p>&ldquo;관련 배경지식을 <mark><b>보완하기보다</b></mark> 세부적인 정보를 빠르게 훑어보며 읽는다&rdquo;</p>
-          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">처방을 정반대로 뒤집고, 지문에 없는 &lsquo;빠르게 훑어보기&rsquo;를 끼워 넣음</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">지문의 처방과 반대이고, &lsquo;빠르게 훑어보기&rsquo;는 지문에 없다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 짝짓기 문항은 &lsquo;배제 표현&rsquo;부터 본다</div>
-        <p>①~⑤가 전부 &lsquo;<b>어떤 요인 → 어떤 전략</b>&rsquo; 형태다. 이런 1:1 매칭 문항은 3문단의 전략 목록에서 짝을 찾아 대조하면 되는데, 순서대로 다 볼 필요가 없다. <b class="u-ok">&lsquo;~보다&rsquo;, &lsquo;~하기보다&rsquo;, &lsquo;~대신&rsquo;처럼 지문의 전략 하나를 배제하는 표현이 붙은 선택지</b>를 먼저 집으면 된다. 지문은 전략을 <b>더하라</b>고만 했지 어느 하나를 <b>버리라</b>고 한 적이 없기 때문이다</p>
+      <div class="trap">
+        <div class="h">3문단과의 대조</div>
+        <p>㉠ 뒤로 이어지는 3문단이 요인별 처방을 차례로 제시한다. 생소한 주제에 대해서는 배경지식을 보완하라고 했으며, 세부 정보를 빠르게 훑어보라는 서술은 나오지 않는다.</p>
       </div>
     </div>
-    <div class="page-num">8 / 14</div>
+    <div class="page-num">8 / 13</div>
   </section>
 
   <!-- 9 02번 선택지별 확인 -->
@@ -718,7 +726,7 @@
         <tr><th>⑤</th><td>안긴문장 많음 &rarr; <b>성분 구분 후 구절로 분할</b> (3문단 그대로) &rarr; 적절</td></tr>
       </table>
     </div>
-    <div class="page-num">9 / 14</div>
+    <div class="page-num">9 / 13</div>
   </section>
 
   <!-- 10 03번 문제 (대화) -->
@@ -734,11 +742,11 @@
         <div class="row r3"><span class="who">학생 3</span><span>나도 경제 동아리 활동에서 <mark>조사했던 개념과 연결하며</mark> 이해하니까 내용 정리에 도움이 되었어.<span class="tag">독자 및 과제</span></span></div>
       </div>
       <div class="trap" style="margin-top:1.2cqw;">
-        <div class="h">발화 → 요인 태깅이 전부다</div>
-        <p>학생 1 = 양적 + 질적 / 학생 2 = 양적 / 학생 3 = 양적(어려움) + 독자 및 과제(완화). <b class="u-warn">학생 3에게 질적 요인은 나온 적이 없다</b></p>
+        <div class="h">발화별 요인</div>
+        <p>학생 1은 양적·질적 요인, 학생 2는 양적 요인, 학생 3은 양적 요인에서 어려움을 겪고 독자 및 과제 요인으로 이를 덜었다. 학생 3의 발화에 질적 요인에 해당하는 내용은 없다.</p>
       </div>
     </div>
-    <div class="page-num">10 / 14</div>
+    <div class="page-num">10 / 13</div>
   </section>
 
   <!-- 11 03번 선택지 -->
@@ -753,7 +761,7 @@
         <li><span class="n">⑤</span><span class="txt">&lsquo;학생 2&rsquo;와 &lsquo;학생 3&rsquo;은 모두 복잡도가 높은 기사문을 이해하기 위해 자신의 읽기 목적을 점검하고 있다.</span></li>
       </ul>
     </div>
-    <div class="page-num">11 / 14</div>
+    <div class="page-num">11 / 13</div>
   </section>
 
   <!-- 12 03번 해설 -->
@@ -763,7 +771,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">②</span>
-        <span class="why">어휘(양적) → <b>읽기 속도</b> 저하까지, 인과가 지문과 정확히 일치</span>
+        <span class="why">어휘는 양적 요인, 그 결과는 읽기 속도 저하</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -773,15 +781,15 @@
         <div class="box opt">
           <div class="h">학생 2의 발화</div>
           <p>&ldquo;모르는 단어의 의미를 일일이 사전에서 찾다가, <b>수업 시간 안에 다 읽지 못했어</b>&rdquo;</p>
-          <p style="margin-top:1cqw; color:var(--ok); font-weight:700;">어휘 = 양적 요인, 다 못 읽음 = 속도 문제 &rarr; 두 축이 모두 맞는 유일한 선택지</p>
+          <p style="margin-top:1cqw; color:var(--ok); font-weight:700;">요인과 결과가 모두 지문과 맞는 선택지는 ②뿐이다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 발화에 태그를 붙인 뒤 선택지를 본다</div>
-        <p>선택지를 먼저 읽으면 진다. <b>2문단의 세 요인 목록을 손에 쥐고 발화 여섯 개에 태그를 다는 것</b>이 먼저다. 그러면 오답 셋(①③④)이 모두 <b class="u-warn">&lsquo;양적을 질적이라고 부르거나, 질적을 없다고 하는&rsquo;</b> 한 가지 장치로 묶인다는 게 보인다. 이 문항이 3점인 이유는 추론이 어려워서가 아니라 <b>분류를 정확히 했는지</b>를 묻기 때문이다</p>
+      <div class="trap">
+        <div class="h">이 문항이 확인하는 것</div>
+        <p>2문단의 요인 분류를 대화 상황에 적용할 수 있는지를 묻는다. 발화를 요인별로 먼저 정리하면, 오답 ①③④가 모두 양적 요인을 질적 요인으로 옮겨 놓은 진술임이 드러난다.</p>
       </div>
     </div>
-    <div class="page-num">12 / 14</div>
+    <div class="page-num">12 / 13</div>
   </section>
 
   <!-- 13 03번 선택지별 확인 -->
@@ -796,29 +804,14 @@
         <tr><th>⑤</th><td>두 학생 모두 <b class="u-warn">읽기 목적을 점검한 발화가 없다</b>. 지문에 있는 전략이라고 해서 대화에도 있는 것은 아니다 &rarr; 부적절</td></tr>
       </table>
     </div>
-    <div class="page-num">13 / 14</div>
-  </section>
-
-  <!-- 14 핵심 정리 -->
-  <section class="slide">
-    <h2 class="slide-title"><span class="qtext">오늘 가져갈 것</span></h2>
-    <div class="body-area">
-      <div class="checks">
-        <div class="check-row"><div class="k">지문 한 줄</div><div class="v">텍스트 복잡도 = 세 요인의 <b>상호 작용</b>. 요인을 알면 처방이 나온다</div></div>
-        <div class="check-row"><div class="k">암기할 경계선</div><div class="v"><b class="u-key">문장 길이·구조의 복잡성 = 양적 요인</b> (질적 아님) / <b class="u-warn">비유 = 질적</b> / <b class="u-ok">배경지식·읽기 목적 = 독자 및 과제</b></div></div>
-        <div class="check-row"><div class="k">1번 유형</div><div class="v">비교급이 보이면 &lsquo;지문이 실제로 견주었는가&rsquo;만 확인 &mdash; 병렬 나열을 우열로 바꾸면 오답</div></div>
-        <div class="check-row"><div class="k">2번 유형</div><div class="v">요인-전략 짝짓기에서는 <b>&lsquo;~하기보다&rsquo;</b>처럼 지문의 처방을 배제하는 표현을 먼저 찍는다</div></div>
-        <div class="check-row"><div class="k">3번 유형</div><div class="v">사례 적용은 <b>발화에 태그를 먼저 붙이고</b> 선택지를 본다. 순서를 바꾸면 낚인다</div></div>
-      </div>
-    </div>
-    <div class="page-num">14 / 14</div>
+    <div class="page-num">13 / 13</div>
   </section>
 
 </div>
 
 <div class="controls">
   <button id="prev">&larr; 이전</button>
-  <span id="counter">1 / 14</span>
+  <span id="counter">1 / 13</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
   <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
