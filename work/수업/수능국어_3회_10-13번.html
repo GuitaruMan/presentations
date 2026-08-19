@@ -32,6 +32,10 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     min-height: 100vh; padding: 2vh 2vw;
+    /* 한국어는 어절 단위로만 줄을 바꾸고(keep-all), 마지막 줄에 한두 글자만
+       남는 것을 피한다(pretty). 낱말 중간에서 끊기는 것을 막기 위한 설정. */
+    word-break: keep-all; overflow-wrap: break-word; text-wrap: pretty;
+    letter-spacing: -0.015em;
   }
 
   .nav-top {
@@ -877,11 +881,11 @@
     <h2 class="slide-title"><span class="q">13</span><span class="qtext">선택지별 확인</span></h2>
     <div class="body-area">
       <table class="otable">
-        <tr><th>①</th><td>A가 몰랐던 것은 &lsquo;법령&rsquo;이 아니라 &lsquo;<b>이 지역이 제한 구역으로 지정되었다</b>&rsquo;는 점 &mdash; 발화를 정확히 옮김 &rarr; 적절</td></tr>
+        <tr><th>①</th><td>A가 몰랐던 것은 법령이 아니라 &lsquo;<b>이 지역이 제한 구역으로 지정되었다</b>&rsquo;는 점이다 &rarr; 적절</td></tr>
         <tr><th>②</th><td>최근 지정 + 안내 부족 = 상당한 이유설이 드는 사유(제·개정이 널리 공지되지 않음, 행정 기관 안내 미비) &rarr; 적절</td></tr>
         <tr><th>③</th><td>제한 구역임을 몰랐다 = 자기 행위가 금지된 것임을 인식하지 못함 = <b>위법성의 인식 결여</b> &rarr; 적절</td></tr>
         <tr class="ans"><th>④</th><td>&lsquo;확인했다면 알 수 있었다&rsquo; = 회피 가능 &rarr; 회피 가능성설상 <b class="u-warn">정당한 이유 불인정</b>. 선택지는 반대로 진술 &rarr; <b>정답</b></td></tr>
-        <tr><th>⑤</th><td>정보가 공식 제공되었는데 확인하지 않음 &rarr; 주의 의무 미이행 &rarr; 책임 인정 &mdash; 회피 가능성설 &rarr; 적절</td></tr>
+        <tr><th>⑤</th><td>공식 제공된 정보를 확인하지 않음 &rarr; 주의 의무 미이행. 회피 가능성설에 따른 책임 인정 &rarr; 적절</td></tr>
       </table>
     </div>
     <div class="page-num">16 / 16</div>

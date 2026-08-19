@@ -32,6 +32,10 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     min-height: 100vh; padding: 2vh 2vw;
+    /* 한국어는 어절 단위로만 줄을 바꾸고(keep-all), 마지막 줄에 한두 글자만
+       남는 것을 피한다(pretty). 낱말 중간에서 끊기는 것을 막기 위한 설정. */
+    word-break: keep-all; overflow-wrap: break-word; text-wrap: pretty;
+    letter-spacing: -0.015em;
   }
 
   .nav-top {
@@ -865,9 +869,9 @@
     <h2 class="slide-title"><span class="q">16</span><span class="qtext">선택지별 확인</span></h2>
     <div class="body-area">
       <table class="otable">
-        <tr><th>①</th><td>수소 이온 농도 증가 = pH 하강 = 그래프 왼쪽 &rarr; B는 상승, A는 하강. 4문단 &lsquo;더 크게 반응&rsquo;과도 부합 &rarr; 적절</td></tr>
+        <tr><th>①</th><td>수소 이온 농도 증가는 pH 하강이므로 B는 상승, A는 하강. 4문단 &lsquo;더 크게 반응&rsquo;과 부합 &rarr; 적절</td></tr>
         <tr><th>②</th><td>A가 가장 큰 지점은 pH 약 7.5(중성 쪽). 그때 B는 20% 아래 &mdash; 3문단 &lsquo;중성 pH에서 미라쿨린은 <b>반응을 억제</b>&rsquo; &rarr; 적절</td></tr>
-        <tr><th>③</th><td>pH가 낮아질수록 B의 활성화 정도 상승 &rarr; 조개껍질 구조가 닫힌 상태 &mdash; 3문단의 활성화 조건 &rarr; 적절</td></tr>
+        <tr><th>③</th><td>pH가 낮아질수록 B의 활성화 정도가 오른다. 조개껍질 구조가 닫힌 상태(3문단) &rarr; 적절</td></tr>
         <tr class="ans"><th>④</th><td>활성화 정도가 커진 원인은 <b class="u-warn">전하 분포 변화 &rarr; 구조 닫힘</b>. &lsquo;반응도가 커져서&rsquo;는 활성화 이후의 성질을 원인으로 삼은 오류 &rarr; <b>정답</b></td></tr>
         <tr><th>⑤</th><td>pH에 따른 B의 변화는 결합된 미라쿨린의 <b>전하 분포 변화</b>에서 비롯 &mdash; 3문단 그대로 &rarr; 적절</td></tr>
       </table>

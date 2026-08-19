@@ -32,6 +32,10 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     min-height: 100vh; padding: 2vh 2vw;
+    /* 한국어는 어절 단위로만 줄을 바꾸고(keep-all), 마지막 줄에 한두 글자만
+       남는 것을 피한다(pretty). 낱말 중간에서 끊기는 것을 막기 위한 설정. */
+    word-break: keep-all; overflow-wrap: break-word; text-wrap: pretty;
+    letter-spacing: -0.015em;
   }
 
   .nav-top {
@@ -678,7 +682,7 @@
         </div>
         <div class="box src">
           <div class="h">(나)에서 확인</div>
-          <p>2문단 개념주의 &mdash; <b>데닛</b>의 견해로 뒷받침 / 3문단 비개념주의 &mdash; <b>드레츠키</b>의 견해로 뒷받침 &rarr; 상반된 두 입장</p>
+          <p>2문단은 <b>데닛</b>의 견해로 개념주의를, 3문단은 <b>드레츠키</b>의 견해로 비개념주의를 뒷받침한다.</p>
         </div>
       </div>
       <div class="trap">
@@ -918,10 +922,10 @@
     <h2 class="slide-title"><span class="q">08</span><span class="qtext">선택지별 확인</span></h2>
     <div class="body-area">
       <table class="otable">
-        <tr><th>①</th><td>&lsquo;저 사물은 파랗다&rsquo;(속성) + &lsquo;저 사물은 건물의 지붕이다&rsquo;(동일성) &rarr; 지각적 믿음 &mdash; (가) 2문단 그대로 &rarr; 적절</td></tr>
+        <tr><th>①</th><td>&lsquo;파랗다&rsquo;(속성)와 &lsquo;건물의 지붕이다&rsquo;(동일성)를 거쳐 형성된 지각적 믿음 &rarr; 적절</td></tr>
         <tr><th>②</th><td>실재하지 않는 건물을 보았다 &rarr; 실제 세계와 대응 실패 &rarr; <b>옳음 조건 불충족</b> &mdash; (가) 3문단 &rarr; 적절</td></tr>
         <tr class="ans"><th>③</th><td>실제와 어긋난 것은 <b class="u-warn">개념적 판단이 들어간 진술</b>. 비개념적 정보에 머물렀기 &lsquo;때문&rsquo;이 아니다 &rarr; <b>정답</b></td></tr>
-        <tr><th>④</th><td>&lsquo;도로&rsquo;는 개념화된 부분, 전체 장면은 개념화되지 못한 부분 &mdash; 드레츠키의 <b>부분적 개념화</b>와 일치 &rarr; 적절</td></tr>
+        <tr><th>④</th><td>&lsquo;도로&rsquo;는 개념화된 부분, 전체 장면은 그렇지 못한 부분. 드레츠키의 <b>부분적 개념화</b> &rarr; 적절</td></tr>
         <tr><th>⑤</th><td>개념적 정보로 변환되는 과정에서 <b>정보의 손실</b>이 필연적 &mdash; (나) 3문단 &rarr; 적절</td></tr>
       </table>
     </div>
