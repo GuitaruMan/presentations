@@ -32,6 +32,10 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     min-height: 100vh; padding: 2vh 2vw;
+    /* 한국어는 어절 단위로만 줄을 바꾸고(keep-all), 마지막 줄에 한두 글자만
+       남는 것을 피한다(pretty). 낱말 중간에서 끊기는 것을 막기 위한 설정. */
+    word-break: keep-all; overflow-wrap: break-word; text-wrap: pretty;
+    letter-spacing: -0.015em;
   }
 
   .nav-top {
