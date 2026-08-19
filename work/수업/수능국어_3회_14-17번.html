@@ -46,7 +46,7 @@
 
   .stage {
     container-type: inline-size;
-    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    width: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9); aspect-ratio: 16 / 9;
     background: var(--paper);
     border: 1px solid #cfd6e0;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -390,25 +390,25 @@
   }
 
   /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
-  .slide:has(.logic) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
-  .slide:has(.logic) .ans-banner .lb { font-size: 1.7cqw; }
-  .slide:has(.logic) .ans-banner .num { font-size: 3.8cqw; }
-  .slide:has(.logic) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
-  .slide:has(.logic) .evi { gap: 1.4cqw; }
-  .slide:has(.logic) .evi .box { padding: 1.15cqw 1.4cqw; }
-  .slide:has(.logic) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
-  .slide:has(.logic) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.logic) .otable th, .slide:has(.logic) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
-  .slide:has(.logic) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
-  .slide:has(.logic) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
-  .slide:has(.logic) .logic p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.logic) .two .card { padding: 1.4cqw 1.6cqw; }
-  .slide:has(.logic) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
-  .slide:has(.logic) .two .card p, .slide:has(.logic) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
-  .slide:has(.logic) .flow .fbox { padding: 1.1cqw 1.15cqw; }
-  .slide:has(.logic) .flow .fbox .t { font-size: 2.05cqw; }
-  .slide:has(.logic) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
-  .slide:has(.logic) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+  .slide:has(.ans-banner) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.ans-banner) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.ans-banner) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.ans-banner) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.ans-banner) .evi { gap: 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.ans-banner) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .otable th, .slide:has(.ans-banner) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.ans-banner) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.ans-banner) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.ans-banner) .two .card p, .slide:has(.ans-banner) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.ans-banner) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.ans-banner) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
 
   /* 3열 분류 슬라이드 압축 */
   .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
@@ -458,8 +458,8 @@
   .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
 
   /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
-  .slide:has(.logic):has(.otable) .otable th,
-  .slide:has(.logic):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
 
   /* 흐름도 + 해설 박스 슬라이드 */
   .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
@@ -475,25 +475,33 @@
   .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
 
   /* 마지막 미세 조정 */
-  .slide:has(.logic) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.92cqw; line-height: 1.52; }
   .slide:has(svg) svg { height: 20cqw; }
   .slide:has(svg) .bogi { font-size: 1.75cqw; }
   .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
 
-  .slide:has(.logic) .ans-banner { margin-bottom: 0.95cqw; }
-  .slide:has(.two):has(.logic) .card { padding: 1.2cqw 1.5cqw; }
-  .slide:has(.logic):has(.otable) .otable th,
-  .slide:has(.logic):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(.ans-banner) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.ans-banner) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
   .slide:has(svg) svg { height: 18.6cqw; }
-  .slide:has(.two):has(.logic) .card li + li { margin-top: 0.4cqw; }
-  .slide:has(.two):has(.logic) .card p, .slide:has(.two):has(.logic) .card li { line-height: 1.45; }
+  .slide:has(.two):has(.ans-banner) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.ans-banner) .card p, .slide:has(.two):has(.ans-banner) .card li { line-height: 1.45; }
+
+  /* 해설 슬라이드 안의 보충 박스 */
+  .slide:has(.ans-banner) .trap { margin-top: 1.05cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.ans-banner) .trap .h { font-size: 1.9cqw; margin-bottom: 0.4cqw; }
+  .slide:has(.ans-banner) .trap p { font-size: 1.9cqw; line-height: 1.5; }
+  .slide.s-flow .para-body { padding: 0.9cqw 1.3cqw; }
+  .slide:has(.steps) .steps .st { padding: 1.15cqw 1.2cqw; }
+  .slide:has(.steps) .steps .st .d { font-size: 1.82cqw; }
 </style>
 </head>
 <body>
 
 <div class="nav-top">
   <div>
-    <a href="../수업_3학년.html">&larr; 3학년</a>
+    <a href="../수업.html">&larr; 수업</a>
     <a href="../../work.html">업무용</a>
     <a href="../../index.html">홈</a>
   </div>
@@ -508,12 +516,12 @@
     <div class="kicker">수 능 완 성 　실 전 3 회 　독 서 　과 학</div>
     <h1>미라쿨린과<br>맛 인지의 맥락 의존성</h1>
     <div class="rule"></div>
-    <div class="sub">신맛이 단맛으로 바뀌는 이유 &mdash; 14~17번 문항 풀이 · 정답 공개판</div>
+    <div class="sub">신맛이 단맛으로 바뀌는 이유 · 14~17번 문항 풀이</div>
     <div class="foot">
       <span>고3 · 수능완성 실전 모의고사 3회 (본문 192~193쪽)</span>
       <span>14~17번 · 3점 문항 16번</span>
     </div>
-    <div class="page-num">1 / 17</div>
+    <div class="page-num">1 / 16</div>
   </section>
 
   <!-- 2 지문 구조 -->
@@ -546,7 +554,7 @@
           <div class="para-no">4</div>
           <div class="para-body">
             <div class="t">변하는 것은 수용체의 종류가 아니라 <span class="u-key">민감도와 반응도</span></div>
-            <div class="d">신맛 수용체가 단맛 수용체로 바뀌는 것이 <b>아니다</b> &mdash; 같은 자극에도 더 쉽게, 더 크게 반응</div>
+            <div class="d">신맛 수용체가 단맛 수용체로 바뀌는 것이 아니라, 같은 자극에도 더 쉽게 더 크게 반응하는 것이다</div>
           </div>
         </div>
         <div class="para-row">
@@ -558,12 +566,12 @@
         </div>
       </div>
     </div>
-    <div class="page-num">2 / 17</div>
+    <div class="page-num">2 / 16</div>
   </section>
 
   <!-- 3 맛 인지 과정 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">맛 인지 과정 &mdash; 화살표의 방향을 고정하라</span></h2>
+    <h2 class="slide-title"><span class="qtext">맛 인지 과정 (1문단)</span></h2>
     <div class="body-area">
       <div class="flow">
         <div class="fbox">
@@ -586,17 +594,17 @@
           <div class="d">뇌가 해석하여 <b>단맛·신맛</b> 등으로 인식</div>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">과학 지문의 첫 문항은 방향·순서 뒤집기가 1순위</div>
-        <p>이 네 칸을 그려 두는 데 20초면 충분하고, 그 20초로 14번이 끝난다. <b class="u-ok">신호는 수용체에서 뇌로 간다.</b> 반대로 &lsquo;뇌의 신호를 수용체로 전달&rsquo;이라고 쓴 선택지가 나오면 그게 답이다. 맛 변화 물질이 하는 일도 신호를 만드는 것이 아니라 <b>수용체의 작동 방식을 바꾸는 것</b>임에 유의</p>
+      <div class="trap">
+        <div class="h">1문단이 정해 둔 것</div>
+        <p>신호는 미각 수용체에서 생성되어 뇌로 전달되고, 해석은 뇌가 한다. 그리고 맛 변화 물질이 하는 일은 신호를 만들거나 나르는 것이 아니라 수용체의 작동 방식을 바꾸는 것이다.</p>
       </div>
     </div>
-    <div class="page-num">3 / 17</div>
+    <div class="page-num">3 / 16</div>
   </section>
 
   <!-- 4 산 pH -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">㉡ 레몬이 하는 일 &mdash; 환경을 바꿀 뿐이다</span></h2>
+    <h2 class="slide-title"><span class="qtext">산 성분과 pH (2문단)</span></h2>
     <div class="body-area">
       <div class="flow">
         <div class="fbox">
@@ -615,16 +623,16 @@
         </div>
       </div>
       <div class="trap">
-        <div class="h">역할 분담을 한 줄로 못 박아 두자</div>
-        <p><b class="u-warn">㉡ 레몬 = 환경 제공자</b>(입안을 산성으로 만들 뿐, 수용체에 결합하지 않는다) ／ <b class="u-key">㉠ 미라클베리(미라쿨린) = 작동자</b>(단맛 수용체에 결합해 있다가 산성이 되면 전하 분포가 바뀐다). 15번은 이 분담만 알면 네 개가 한꺼번에 떨어진다</p>
+        <div class="h">두 물질의 역할</div>
+        <p><b class="u-warn">㉡ 레몬</b>은 산 성분으로 입안을 산성으로 만들 뿐 수용체에 결합하지 않는다(2문단). <b class="u-key">㉠ 미라클베리</b>의 미라쿨린은 단맛 수용체에 결합해 있다가 산성이 되면 전하 분포가 바뀐다(3문단).</p>
       </div>
     </div>
-    <div class="page-num">4 / 17</div>
+    <div class="page-num">4 / 16</div>
   </section>
 
   <!-- 5 미라쿨린 작동 원리 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">미라쿨린의 작동 원리 &mdash; 조개껍질이 닫힌다</span></h2>
+    <h2 class="slide-title"><span class="qtext">미라쿨린의 작동 원리 (3문단)</span></h2>
     <div class="body-area">
       <div class="two">
         <div class="card k">
@@ -645,17 +653,17 @@
           </ul>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">인과 사슬을 통째로 외운다</div>
-        <p><b class="u-ok">신맛 음식 &rarr; pH 하강 &rarr; 미라쿨린 전하 분포 변화 &rarr; 조개껍질 구조 닫힘 &rarr; 단맛 수용체 강한 활성화</b>. 이 사슬의 <b>어느 한 칸을 다른 칸으로 바꿔치기</b>하는 것이 15·16번 오답의 전부다. 특히 &lsquo;신맛 수용체가 단맛 수용체로 바뀐다&rsquo;는 지문이 <b class="u-warn">직접 부정</b>한 진술이다</p>
+      <div class="trap">
+        <div class="h">2~4문단이 이어 놓은 인과</div>
+        <p>신맛 음식을 먹으면 pH가 낮아지고, 산성 환경에서 미라쿨린의 전하 분포가 달라지며, 그 변화가 조개껍질 모양 구조를 닫아 단맛 수용체를 강하게 활성화한다. 4문단은 이것이 신맛 수용체가 단맛 수용체로 바뀌는 현상이 아니라고 밝힌다.</p>
       </div>
     </div>
-    <div class="page-num">5 / 17</div>
+    <div class="page-num">5 / 16</div>
   </section>
 
   <!-- 6 민감도 vs 반응도 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">정의가 나란히 나오면 반드시 바꿔치기가 나온다</span></h2>
+    <h2 class="slide-title"><span class="qtext">민감도와 반응도 (4문단)</span></h2>
     <div class="body-area">
       <div class="two">
         <div class="card k">
@@ -676,10 +684,10 @@
       </div>
       <div class="trap">
         <div class="h">4문단의 결론 문장</div>
-        <p>&ldquo;미라쿨린은 입안이 산성 환경과 같은 특정 조건에 놓였을 때 같은 자극에도 단맛 수용체가 <b class="u-key">더 쉽게</b>(민감도), <b class="u-warn">더 크게</b>(반응도) 반응하도록 만든다.&rdquo; &mdash; 산성에서는 <b>두 성질이 함께</b> 올라간다. 16번에서 ①과 ④의 운명이 여기서 갈린다</p>
+        <p>&ldquo;미라쿨린은 입안이 산성 환경과 같은 특정 조건에 놓였을 때 같은 자극에도 단맛 수용체가 <b class="u-key">더 쉽게</b>(민감도), <b class="u-warn">더 크게</b>(반응도) 반응하도록 만든다.&rdquo; 산성에서는 두 성질이 함께 올라가지만, 활성화가 일어나는 쪽이 민감도이고 활성화된 뒤의 세기가 반응도라는 구분은 유지된다.</p>
       </div>
     </div>
-    <div class="page-num">6 / 17</div>
+    <div class="page-num">6 / 16</div>
   </section>
 
   <!-- 7 14번 문제 -->
@@ -694,7 +702,7 @@
         <li class="ans"><span class="n">⑤</span><span class="txt">미각 수용체의 작동 방식을 바꾸는 물질은 <b>뇌의 신호를 미각 수용체로 전달</b>하여 수용체의 반응을 달라지게 한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">7 / 17</div>
+    <div class="page-num">7 / 16</div>
   </section>
 
   <!-- 8 14번 해설 -->
@@ -704,7 +712,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">⑤</span>
-        <span class="why">신호의 방향을 <b>거꾸로</b> 돌리고, 물질의 역할까지 바꿨다</span>
+        <span class="why">신호의 방향과 물질의 역할이 모두 지문과 다르다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -714,15 +722,15 @@
         <div class="box opt">
           <div class="h">선택지 ⑤</div>
           <p>&ldquo;<mark><b>뇌의 신호를 미각 수용체로 전달</b></mark>하여&rdquo;</p>
-          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">① 방향이 반대 ② 맛 변화 물질은 신호를 전달하는 것이 아니라 수용체의 작동 방식을 바꾼다 &mdash; 오류가 둘</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">신호의 방향이 반대이고, 맛 변화 물질은 신호를 전달하는 것이 아니라 수용체의 작동 방식을 바꾼다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; ②는 도식의 &lsquo;대우&rsquo;일 뿐이다</div>
-        <p>②를 보고 &lsquo;지문에 이런 말이 있었나?&rsquo; 하고 되돌아가면 시간을 버린다. 지문이 <b>수용체 &rarr; 뇌 &rarr; 인식</b>이라고 했으면, <b class="u-ok">뇌에 도달하지 못하면 인식할 수 없다</b>는 것은 같은 말의 뒤집기(대우)라서 지문에 그대로 없어도 참이다. 도식 하나를 그려 두면 ②는 검증 없이 통과시키고 ⑤만 잡아낼 수 있다</p>
+      <div class="trap">
+        <div class="h">②에 대하여</div>
+        <p>1문단이 신호가 뇌로 전달되어야 뇌가 해석하고 인식한다고 했으므로, 뇌에 도달하지 못하면 인식할 수 없다는 ②는 참이다. 같은 문장이 지문에 그대로 없다는 이유만으로 불일치라고 볼 수 없다.</p>
       </div>
     </div>
-    <div class="page-num">8 / 17</div>
+    <div class="page-num">8 / 16</div>
   </section>
 
   <!-- 9 15번 문제 -->
@@ -741,7 +749,7 @@
         <li class="ans"><span class="n">⑤</span><span class="txt">㉠은 ㉡을 섭취할 때 단맛 수용체가 <b>강하게 활성화되도록</b> 한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">9 / 17</div>
+    <div class="page-num">9 / 16</div>
   </section>
 
   <!-- 10 15번 해설 -->
@@ -751,7 +759,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">⑤</span>
-        <span class="why">㉠(결합·작동) × ㉡(산성 환경) &rarr; 강한 활성화</span>
+        <span class="why">㉠이 결합해 있고 ㉡이 산성 환경을 만든다</span>
       </div>
       <table class="otable" style="margin-top:0.2cqw;">
         <tr><th>①</th><td>㉠이 바꾸는 것은 <b>단맛 수용체</b>의 민감도·반응도다. 4문단은 <b class="u-warn">신맛 수용체 자체는 변하지 않는다</b>고 명시 &rarr; 역할 오지목</td></tr>
@@ -760,12 +768,12 @@
         <tr><th>④</th><td>단맛 수용체에 <b class="u-warn">결합하는 것은 미라쿨린</b>(㉠). ㉡은 결합하지 않는다 &rarr; 역할 뒤바꿈</td></tr>
         <tr class="ans"><th>⑤</th><td>㉠이 결합해 있는 상태에서 ㉡이 만든 산성 환경이 전하 분포를 바꾸고 구조를 닫아 <b>강한 활성화</b> &rarr; <b>정답</b></td></tr>
       </table>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 물질이 둘 나오면 &lsquo;누가 결합하고 누가 환경을 바꾸는가&rsquo;</div>
-        <p>㉠과 ㉡의 역할을 한 줄로 확정하는 순간 ①②③④가 <b class="u-ok">모두 &lsquo;역할 뒤바꾸기&rsquo;라는 하나의 장치</b>임이 드러난다. 선택지를 하나씩 지문과 대조하는 대신, <b>역할표를 먼저 만들고 선택지를 그 표에 대입</b>하는 편이 훨씬 빠르다</p>
+      <div class="trap">
+        <div class="h">문단별로 정해진 주체</div>
+        <p>pH를 낮추는 것은 산 성분(2문단), 단맛 수용체에 결합하는 것은 미라쿨린(3문단), 변하는 것은 단맛 수용체의 민감도와 반응도(4문단)다. ①부터 ④까지는 이 주체와 대상을 서로 바꾸어 놓았다.</p>
       </div>
     </div>
-    <div class="page-num">10 / 17</div>
+    <div class="page-num">10 / 16</div>
   </section>
 
   <!-- 11 16번 보기 그래프 -->
@@ -800,17 +808,13 @@
         </div>
         <div style="flex:1;">
           <div class="trap" style="margin-top:0;">
-            <div class="h">그래프를 읽기 전에 축부터</div>
-            <p>x축이 오른쪽으로 갈수록 <b>pH 상승 = 수소 이온 농도 하락 = 중성 쪽</b>. 즉 <b class="u-key">왼쪽이 산성</b>이다.<br>y축은 &lsquo;<b class="u-warn">활성화 정도</b>&rsquo; &mdash; 얼마나 쉽게 활성화되었는가의 지표다.</p>
-          </div>
-          <div class="logic" style="margin-top:1.1cqw;">
-            <div class="h">두 곡선의 뜻</div>
-            <p><b>A(점선)</b> 미라쿨린이 없으니 pH와 큰 상관없이 완만.<br><b class="u-warn">B(실선)</b> 산성(왼쪽)에서 100까지 치솟고 중성(오른쪽)에서 20 아래로 떨어진다 &mdash; 3문단 그대로</p>
+            <div class="h">그래프 읽기</div>
+            <p>x축은 오른쪽으로 갈수록 pH가 높아지므로 <b class="u-key">왼쪽이 산성</b>이다. <b>A(점선)</b>는 미라쿨린이 없어 pH와 큰 상관없이 완만하고, <b class="u-warn">B(실선)</b>는 산성인 왼쪽에서 100까지 오르고 중성인 오른쪽에서 20 아래로 떨어진다. 3문단의 서술과 일치한다.</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="page-num">11 / 17</div>
+    <div class="page-num">11 / 16</div>
   </section>
 
   <!-- 12 16번 선택지 -->
@@ -825,7 +829,7 @@
         <li><span class="n">⑤</span><span class="txt">pH 변화에 따라 B의 활성화 정도가 달라지는 것은 B에 결합한 미라쿨린의 전하 분포의 변화와 관련이 있겠군.</span></li>
       </ul>
     </div>
-    <div class="page-num">12 / 17</div>
+    <div class="page-num">12 / 16</div>
   </section>
 
   <!-- 13 16번 해설 -->
@@ -835,7 +839,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">④</span>
-        <span class="why">활성화가 커진 <b>원인</b>을 엉뚱한 곳에서 찾았다</span>
+        <span class="why">활성화 정도가 커진 원인을 잘못 짚었다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -845,15 +849,15 @@
         <div class="box opt">
           <div class="h">선택지 ④</div>
           <p>&ldquo;활성화 정도가 큰 것은 <mark><b>반응도가 커지기 때문</b></mark>&rdquo;</p>
-          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">반응도는 <b>활성화된 뒤</b>의 신호 크기·지속에 관한 성질. 활성화 자체가 커진 이유가 될 수 없다</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">반응도는 활성화된 뒤의 신호 크기와 지속에 관한 성질이므로, 활성화 자체가 커진 이유가 될 수 없다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">①과 ④는 왜 운명이 갈리는가 &mdash; 반드시 나오는 질문</div>
-        <p>둘 다 &lsquo;반응도&rsquo;를 말하는데 ①은 적절, ④는 오답이다. <b class="u-ok">①은 사실 진술</b>이다 &mdash; 4문단이 산성에서 &lsquo;더 쉽게(민감도), <b>더 크게</b>(반응도)&rsquo; 반응한다고 했으므로 수소 이온 농도가 높아질 때 B의 반응도가 커지는 것은 맞다. <b class="u-warn">④는 인과 진술</b>이다 &mdash; y축 &lsquo;활성화 정도&rsquo;가 커진 <b>원인</b>을 묻고 있고, 지문이 지목한 원인은 전하 분포 변화에 따른 구조 변화이지 반응도가 아니다. <b>같은 낱말이라도 &lsquo;~이다&rsquo;와 &lsquo;~때문이다&rsquo;는 검증 기준이 다르다</b></p>
+      <div class="trap">
+        <div class="h">①과 ④의 차이</div>
+        <p>①은 산성에서 B에 일어나는 일을 말한다. 4문단이 &lsquo;더 크게 반응&rsquo;한다고 했으므로 반응도가 커지는 것은 맞다. ④는 활성화 정도가 커진 원인을 말하는데, 3문단이 밝힌 원인은 미라쿨린의 전하 분포 변화에 따른 구조 변화다.</p>
       </div>
     </div>
-    <div class="page-num">13 / 17</div>
+    <div class="page-num">13 / 16</div>
   </section>
 
   <!-- 14 16번 선택지별 확인 -->
@@ -868,7 +872,7 @@
         <tr><th>⑤</th><td>pH에 따른 B의 변화는 결합된 미라쿨린의 <b>전하 분포 변화</b>에서 비롯 &mdash; 3문단 그대로 &rarr; 적절</td></tr>
       </table>
     </div>
-    <div class="page-num">14 / 17</div>
+    <div class="page-num">14 / 16</div>
   </section>
 
   <!-- 15 17번 문제 -->
@@ -886,7 +890,7 @@
         <li><span class="n">⑤</span><span class="txt">ⓔ: 이바지할</span></li>
       </ul>
     </div>
-    <div class="page-num">15 / 17</div>
+    <div class="page-num">15 / 16</div>
   </section>
 
   <!-- 16 17번 해설 -->
@@ -896,7 +900,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">②</span>
-        <span class="why">&lsquo;안에 들어 있다&rsquo;와 &lsquo;매여 있다&rsquo;는 다른 관계</span>
+        <span class="why">&lsquo;안에 들어 있다&rsquo;와 &lsquo;매여 있다&rsquo;는 서로 다른 관계다</span>
       </div>
       <table class="otable" style="margin-top:0.2cqw;">
         <tr><th>①</th><td>발생하다 = 어떤 일이나 사물이 생겨나다 ↔ 일어나다 = 어떤 일이 생기다 &rarr; 적절</td></tr>
@@ -905,36 +909,19 @@
         <tr><th>④</th><td>지칭하다 = 어떤 대상을 가리켜 이르다 ↔ 일컫다 = 가리켜 말하다 &rarr; 적절</td></tr>
         <tr><th>⑤</th><td>기여하다 = 도움이 되도록 이바지하다 ↔ 이바지하다 = 도움이 되게 하다 &rarr; 적절</td></tr>
       </table>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 뜻풀이를 외우지 말고 원문에 도로 넣어 읽어라</div>
-        <p>&ldquo;신맛이 나는 음식에는 보통 구연산과 같은 산 성분이 <b class="u-warn">딸려 있다</b>&rdquo; &mdash; 읽는 순간 어색하다. 이 어색함의 정체는 <b>관계의 종류</b>다. 포함은 <b class="u-ok">전체 안에 부분이 들어 있는 관계</b>, 딸림은 <b class="u-ok">주된 것에 부수적인 것이 붙어 있는 관계</b>. 나머지 넷은 넣어 읽어도 문장이 그대로 살아난다. <b>바꿔 쓰기 문항은 사전 정의 대조보다 삽입 테스트가 먼저다</b></p>
+      <div class="trap">
+        <div class="h">포함되다와 딸리다</div>
+        <p>ⓑ가 놓인 자리에서 산 성분은 음식을 이루는 구성 요소이므로 전체 안에 부분이 들어 있는 관계다. &lsquo;딸리다&rsquo;는 주된 것에 부수적인 것이 붙어 있는 관계여서, 산 성분을 덤으로 붙은 것으로 만들어 버린다.</p>
       </div>
     </div>
-    <div class="page-num">16 / 17</div>
-  </section>
-
-  <!-- 17 핵심 정리 -->
-  <section class="slide">
-    <h2 class="slide-title"><span class="qtext">오늘 가져갈 것</span></h2>
-    <div class="body-area">
-      <div class="checks">
-        <div class="check-row"><div class="k">지문 한 줄</div><div class="v">맛 인지는 자극만으로 결정되지 않는다 &mdash; <b>주변 조건에 좌우되는 맥락 의존성</b></div></div>
-        <div class="check-row"><div class="k">인과 사슬</div><div class="v">신맛 음식 &rarr; pH 하강 &rarr; 미라쿨린 <b class="u-warn">전하 분포 변화</b> &rarr; 조개껍질 구조 닫힘 &rarr; 단맛 수용체 강한 활성화</div></div>
-        <div class="check-row"><div class="k">지문이 부정한 것</div><div class="v">신맛 수용체가 단맛 수용체로 <b>바뀌는 것이 아니다</b>. 변하는 것은 단맛 수용체의 <b>민감도와 반응도</b></div></div>
-        <div class="check-row"><div class="k">14번 유형</div><div class="v">과학 지문 첫 문항은 <b>방향·순서 뒤집기</b>. 도식을 그려 두고 화살표만 대조</div></div>
-        <div class="check-row"><div class="k">15번 유형</div><div class="v">물질이 둘이면 <b>역할표</b>부터 &mdash; 누가 결합하고 누가 환경을 바꾸는가</div></div>
-        <div class="check-row"><div class="k">16번 유형</div><div class="v">정의가 나란히 나온 용어(민감도/반응도)는 반드시 출제된다. <b>&lsquo;~이다&rsquo;와 &lsquo;~때문이다&rsquo;를 구별</b>해 검증</div></div>
-        <div class="check-row"><div class="k">17번 유형</div><div class="v">바꿔 쓰기는 <b>원문 삽입 테스트</b>가 가장 빠르다</div></div>
-      </div>
-    </div>
-    <div class="page-num">17 / 17</div>
+    <div class="page-num">16 / 16</div>
   </section>
 
 </div>
 
 <div class="controls">
   <button id="prev">&larr; 이전</button>
-  <span id="counter">1 / 17</span>
+  <span id="counter">1 / 16</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
   <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>

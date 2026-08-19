@@ -46,7 +46,7 @@
 
   .stage {
     container-type: inline-size;
-    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    width: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9); aspect-ratio: 16 / 9;
     background: var(--paper);
     border: 1px solid #cfd6e0;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -390,25 +390,25 @@
   }
 
   /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
-  .slide:has(.logic) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
-  .slide:has(.logic) .ans-banner .lb { font-size: 1.7cqw; }
-  .slide:has(.logic) .ans-banner .num { font-size: 3.8cqw; }
-  .slide:has(.logic) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
-  .slide:has(.logic) .evi { gap: 1.4cqw; }
-  .slide:has(.logic) .evi .box { padding: 1.15cqw 1.4cqw; }
-  .slide:has(.logic) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
-  .slide:has(.logic) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.logic) .otable th, .slide:has(.logic) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
-  .slide:has(.logic) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
-  .slide:has(.logic) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
-  .slide:has(.logic) .logic p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.logic) .two .card { padding: 1.4cqw 1.6cqw; }
-  .slide:has(.logic) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
-  .slide:has(.logic) .two .card p, .slide:has(.logic) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
-  .slide:has(.logic) .flow .fbox { padding: 1.1cqw 1.15cqw; }
-  .slide:has(.logic) .flow .fbox .t { font-size: 2.05cqw; }
-  .slide:has(.logic) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
-  .slide:has(.logic) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+  .slide:has(.ans-banner) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.ans-banner) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.ans-banner) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.ans-banner) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.ans-banner) .evi { gap: 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.ans-banner) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .otable th, .slide:has(.ans-banner) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.ans-banner) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.ans-banner) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.ans-banner) .two .card p, .slide:has(.ans-banner) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.ans-banner) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.ans-banner) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
 
   /* 3열 분류 슬라이드 압축 */
   .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
@@ -458,8 +458,8 @@
   .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
 
   /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
-  .slide:has(.logic):has(.otable) .otable th,
-  .slide:has(.logic):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
 
   /* 흐름도 + 해설 박스 슬라이드 */
   .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
@@ -475,25 +475,33 @@
   .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
 
   /* 마지막 미세 조정 */
-  .slide:has(.logic) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.92cqw; line-height: 1.52; }
   .slide:has(svg) svg { height: 20cqw; }
   .slide:has(svg) .bogi { font-size: 1.75cqw; }
   .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
 
-  .slide:has(.logic) .ans-banner { margin-bottom: 0.95cqw; }
-  .slide:has(.two):has(.logic) .card { padding: 1.2cqw 1.5cqw; }
-  .slide:has(.logic):has(.otable) .otable th,
-  .slide:has(.logic):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(.ans-banner) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.ans-banner) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
   .slide:has(svg) svg { height: 18.6cqw; }
-  .slide:has(.two):has(.logic) .card li + li { margin-top: 0.4cqw; }
-  .slide:has(.two):has(.logic) .card p, .slide:has(.two):has(.logic) .card li { line-height: 1.45; }
+  .slide:has(.two):has(.ans-banner) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.ans-banner) .card p, .slide:has(.two):has(.ans-banner) .card li { line-height: 1.45; }
+
+  /* 해설 슬라이드 안의 보충 박스 */
+  .slide:has(.ans-banner) .trap { margin-top: 1.05cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.ans-banner) .trap .h { font-size: 1.9cqw; margin-bottom: 0.4cqw; }
+  .slide:has(.ans-banner) .trap p { font-size: 1.9cqw; line-height: 1.5; }
+  .slide.s-flow .para-body { padding: 0.9cqw 1.3cqw; }
+  .slide:has(.steps) .steps .st { padding: 1.15cqw 1.2cqw; }
+  .slide:has(.steps) .steps .st .d { font-size: 1.82cqw; }
 </style>
 </head>
 <body>
 
 <div class="nav-top">
   <div>
-    <a href="../수업_3학년.html">&larr; 3학년</a>
+    <a href="../수업.html">&larr; 수업</a>
     <a href="../../work.html">업무용</a>
     <a href="../../index.html">홈</a>
   </div>
@@ -508,12 +516,12 @@
     <div class="kicker">수 능 완 성 　실 전 3 회 　독 서 　사 회</div>
     <h1>법률의 착오</h1>
     <div class="rule"></div>
-    <div class="sub">위법성의 인식과 정당한 이유 &mdash; 10~13번 문항 풀이 · 정답 공개판</div>
+    <div class="sub">위법성의 인식과 정당한 이유 · 10~13번 문항 풀이</div>
     <div class="foot">
       <span>고3 · 수능완성 실전 모의고사 3회 (본문 190~191쪽)</span>
       <span>10~13번 · 3점 문항 13번</span>
     </div>
-    <div class="page-num">1 / 17</div>
+    <div class="page-num">1 / 16</div>
   </section>
 
   <!-- 2 지문 구조 -->
@@ -558,12 +566,12 @@
         </div>
       </div>
     </div>
-    <div class="page-num">2 / 17</div>
+    <div class="page-num">2 / 16</div>
   </section>
 
   <!-- 3 법률의 착오 vs 사실의 착오 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">경계선 ① 법률의 착오 vs 사실의 착오</span></h2>
+    <h2 class="slide-title"><span class="qtext">법률의 착오와 사실의 착오 (2문단)</span></h2>
     <div class="body-area">
       <div class="two">
         <div class="card k">
@@ -585,16 +593,16 @@
         </div>
       </div>
       <div class="trap">
-        <div class="h">가르는 질문 하나</div>
-        <p>&ldquo;<b>무엇을</b> 몰랐는가?&rdquo; &mdash; <b class="u-warn">사물·상황</b>을 몰랐으면 사실의 착오, <b class="u-key">그것이 금지된다는 규범</b>을 몰랐으면 법률의 착오. 11번과 13번이 이 한 줄에 걸려 있다</p>
+        <div class="h">구분 기준</div>
+        <p>무엇을 몰랐는지를 따진다. 사물이나 상황을 몰랐으면 <b class="u-warn">사실의 착오</b>, 그것이 금지된다는 규범을 몰랐으면 <b class="u-key">법률의 착오</b>다. 2문단의 절도 사례가 같은 행위도 이 기준으로 갈린다는 것을 보여 준다.</p>
       </div>
     </div>
-    <div class="page-num">3 / 17</div>
+    <div class="page-num">3 / 16</div>
   </section>
 
   <!-- 4 위법성의 인식 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">쟁점 ① 위법성의 인식 &mdash; ㉠고의설 vs ㉡책임설</span></h2>
+    <h2 class="slide-title"><span class="qtext">위법성의 인식: ㉠고의설과 ㉡책임설 (3문단)</span></h2>
     <div class="body-area">
       <div class="two">
         <div class="card k">
@@ -615,17 +623,17 @@
           </ul>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">두 학설의 차이는 &lsquo;몰랐다&rsquo;의 처리 방식</div>
-        <p>고의설에서 &lsquo;몰랐다&rsquo;는 <b>고의 자체를 없앤다</b>. 책임설에서 &lsquo;몰랐다&rsquo;는 고의를 없애지 않고, <b class="u-ok">정당한 이유가 있느냐를 따로 심사</b>하게 만든다. 그래서 <b>&lsquo;정당한 이유&rsquo;라는 논점은 책임설 쪽에서 나온다</b> &mdash; 12번의 정답이 여기서 나온다</p>
+      <div class="trap">
+        <div class="h">두 학설이 갈리는 지점</div>
+        <p>고의설에서 위법성의 인식이 없으면 고의가 성립하지 않고, 고의가 없으면 범죄도 성립하지 않는다. 책임설에서는 고의가 유지되고 정당한 이유가 있는지를 따로 심사한다. 3문단에서 정당한 이유를 끌어들이는 쪽은 책임설뿐이다.</p>
       </div>
     </div>
-    <div class="page-num">4 / 17</div>
+    <div class="page-num">4 / 16</div>
   </section>
 
   <!-- 5 정당한 이유 -->
   <section class="slide">
-    <h2 class="slide-title"><span class="qtext">쟁점 ② 정당한 이유 &mdash; 두 판단 기준</span></h2>
+    <h2 class="slide-title"><span class="qtext">정당한 이유와 두 판단 기준 (4문단)</span></h2>
     <div class="body-area">
       <div class="quote-box" style="margin-bottom:1.5cqw; font-size:2.2cqw;">
         <b>정당한 이유</b> = 법을 알기 위해 <b>통상적으로 요구되는 주의 의무를 다했음에도</b> 법규를 인식하기 어려운 사정이 존재하는 경우
@@ -651,7 +659,7 @@
         </div>
       </div>
     </div>
-    <div class="page-num">5 / 17</div>
+    <div class="page-num">5 / 16</div>
   </section>
 
   <!-- 6 10번 문제 -->
@@ -666,7 +674,7 @@
         <li><span class="n">⑤</span><span class="txt">법률의 착오에 대한 논의에서 핵심이 되는 요소를 파악하고 각 요소에 대한 쟁점 사항을 정리하며 읽는다.</span></li>
       </ul>
     </div>
-    <div class="page-num">6 / 17</div>
+    <div class="page-num">6 / 16</div>
   </section>
 
   <!-- 7 10번 해설 -->
@@ -676,7 +684,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">③</span>
-        <span class="why">지문의 <b>인과 화살표를 거꾸로</b> 돌려 놓았다</span>
+        <span class="why">1문단의 인과를 거꾸로 놓았다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -687,15 +695,15 @@
         <div class="box opt">
           <div class="h">선택지 ③</div>
           <p>&ldquo;법률의 착오<mark><b>가</b></mark> 법 복잡성 증가<mark><b>에 미치는 영향</b></mark>&rdquo;</p>
-          <p style="margin-top:0.8cqw; color:var(--warn); font-weight:700;">결과를 원인 자리에 앉혔다. 지문에 없는 논의</p>
+          <p style="margin-top:0.8cqw; color:var(--warn); font-weight:700;">지문에 없는 방향의 논의다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 독서 전략 문항은 &lsquo;지문에 그 내용이 있는가&rsquo;만 본다</div>
-        <p>독서 전략 문항은 전략의 <b>세련됨</b>을 묻지 않는다. 오직 <b class="u-ok">그 전략으로 읽을 거리가 지문에 실제로 있는가</b>만 본다. ①②④⑤는 각각 2문단·5문단·5문단·3~4문단에 대응하는 내용이 있고, ③만 대응할 문단이 없다. 그리고 없는 내용을 만들 때 출제자가 가장 즐겨 쓰는 방법이 <b>1문단 도입부 인과의 방향을 뒤집는 것</b>이다</p>
+      <div class="trap">
+        <div class="h">1문단의 인과</div>
+        <p>1문단은 법이 복잡해져서 시민이 법규를 정확히 알지 못한 채 위반하게 된다고 서술했다. 법률의 착오가 법 복잡성 증가에 영향을 미친다는 반대 방향의 논의는 지문에 없다.</p>
       </div>
     </div>
-    <div class="page-num">7 / 17</div>
+    <div class="page-num">7 / 16</div>
   </section>
 
   <!-- 8 11번 문제 -->
@@ -710,7 +718,7 @@
         <li class="ans"><span class="n">⑤</span><span class="txt">법령의 내용이 지나치게 난해하게 만들어진 경우는 위법성의 인식의 결여를 뒷받침하는 <b>정당한 이유</b>가 된다.</span></li>
       </ul>
     </div>
-    <div class="page-num">8 / 17</div>
+    <div class="page-num">8 / 16</div>
   </section>
 
   <!-- 9 11번 해설 -->
@@ -720,7 +728,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">⑤</span>
-        <span class="why">3문단(결여 &rarr; 면책 가능) + 4문단(난해함 = 정당한 이유)의 결합</span>
+        <span class="why">3문단과 4문단을 이으면 성립한다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -732,12 +740,12 @@
           <p>상당한 이유설의 고려 사유: &ldquo;<mark><b>법령의 내용이 지나치게 난해하거나</b></mark>, 제·개정이 최근 이루어져 널리 공지되지 않은 경우&hellip;&rdquo;</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 짝 개념 지문은 선택지에 &lsquo;소속&rsquo;을 적는다</div>
-        <p>이 지문에는 짝 개념이 두 쌍(법률의 착오/사실의 착오, 고의설/책임설)과 기준 두 개(상당한 이유설/회피 가능성설)뿐이다. 선택지를 읽으며 <b class="u-ok">&lsquo;이 진술은 어느 칸의 것인가&rsquo;를 여백에 적으면</b> ①④는 <b>칸 침범</b>, ③은 형법 제16조와 <b>정반대</b>, ②는 &lsquo;주의 의무를 다했음에도&rsquo;라는 <b class="u-warn">조건을 지운 것</b>으로 한꺼번에 정리된다</p>
+      <div class="trap">
+        <div class="h">3문단과 4문단을 이어야 한다</div>
+        <p>3문단에서 위법성의 인식이 결여되어도 그 이유가 정당하게 뒷받침되면 면책된다는 것을 확인하고, 4문단에서 난해한 법령이 상당한 이유설이 드는 사유라는 것을 확인해야 ⑤가 성립한다.</p>
       </div>
     </div>
-    <div class="page-num">9 / 17</div>
+    <div class="page-num">9 / 16</div>
   </section>
 
   <!-- 10 11번 선택지별 확인 -->
@@ -752,7 +760,7 @@
         <tr class="ans"><th>⑤</th><td>난해한 법령 = 상당한 이유설이 드는 사유 &rarr; 위법성 인식 결여를 뒷받침하는 <b>정당한 이유</b> &rarr; <b>정답</b></td></tr>
       </table>
     </div>
-    <div class="page-num">10 / 17</div>
+    <div class="page-num">10 / 16</div>
   </section>
 
   <!-- 11 12번 문제 -->
@@ -771,7 +779,7 @@
         <li class="ans"><span class="n">⑤</span><span class="txt">㉠과 ㉡은 <b>모두</b> 행위자가 법을 알기 위한 통상적인 주의 의무를 다했다는 사실을 위법성 인식의 정당한 이유로 인정한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">11 / 17</div>
+    <div class="page-num">11 / 16</div>
   </section>
 
   <!-- 12 12번 해설 -->
@@ -781,7 +789,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">⑤</span>
-        <span class="why"><b>㉠이 다룬 적 없는 논점</b>을 공통 견해로 묶었다</span>
+        <span class="why">고의설이 다루지 않은 논점을 공통 견해로 묶었다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -791,20 +799,20 @@
         <div class="box opt">
           <div class="h">선택지 ⑤</div>
           <p>&ldquo;㉠과 ㉡은 <mark><b>모두</b></mark>&hellip;주의 의무를 다했다는 사실을 정당한 이유로 인정한다&rdquo;</p>
-          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">한쪽이 아예 언급하지 않은 논점을 &lsquo;공통항&rsquo;으로 위장</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">고의설이 언급하지 않은 논점이다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 대립 구도에서 &lsquo;모두&rsquo;는 경보음</div>
-        <p>두 학설을 <b>대립</b>시켜 서술한 지문에서 &lsquo;㉠과 ㉡ 모두~&rsquo;로 시작하는 선택지는 일단 의심한다. 검산 방법은 두 가지다. ㉠ 지문이 그 공통항을 <b class="u-ok">명시했는가</b>, ㉡ 아니면 <b class="u-warn">한쪽이 그 논점을 꺼낸 적조차 없는가</b>. 여기서는 후자다. 다섯 선택지 중 유일하게 &lsquo;모두&rsquo;가 붙은 ⑤부터 확인하면 나머지를 볼 필요가 없다</p>
+      <div class="trap">
+        <div class="h">고의설이 다룬 범위</div>
+        <p>3문단의 고의설 서술은 위법성의 인식이 고의의 요소이고, 인식하고 의도적으로 행했을 때 고의가 성립한다는 데까지다. 주의 의무와 정당한 이유는 책임설이 끌어들여 4문단에서 다루어지는 논점이다.</p>
       </div>
     </div>
-    <div class="page-num">12 / 17</div>
+    <div class="page-num">12 / 16</div>
   </section>
 
   <!-- 13 13번 보기 -->
   <section class="slide">
-    <h2 class="slide-title" style="font-size:3.4cqw;"><span class="q">13</span><span class="qtext">&lt;보기&gt; 모의 재판 &mdash; 드론 비행 제한 구역 [3점]</span><span class="ans-chip">정답 ④</span></h2>
+    <h2 class="slide-title" style="font-size:3.4cqw;"><span class="q">13</span><span class="qtext">&lt;보기&gt; 모의 재판: 드론 비행 제한 구역 [3점]</span><span class="ans-chip">정답 ④</span></h2>
     <div class="body-area">
       <div class="bogi" style="margin-bottom:1.1cqw; font-size:1.95cqw; padding:1.2cqw 1.5cqw;">
         <span class="tag" style="font-size:1.6cqw; margin-bottom:0.6cqw;">사건 개요</span>
@@ -818,7 +826,7 @@
         <div class="row r3"><span class="who">학생 5</span><span style="font-size:1.95cqw;">정보가 공식 제공되었으니 확인하지 않은 A에게 책임을 물을 수 있습니다.<span class="tag">책임 · 회피 가능성설</span></span></div>
       </div>
     </div>
-    <div class="page-num">13 / 17</div>
+    <div class="page-num">13 / 16</div>
   </section>
 
   <!-- 14 13번 선택지 -->
@@ -833,7 +841,7 @@
         <li><span class="n">⑤</span><span class="txt">&lsquo;학생 5&rsquo;는 A가 비행 제한 구역 정보를 알 수 있었음에도 불구하고 이를 확인하지 않았다는 점에서 책임을 물을 수 있다는 입장을 취하고 있다.</span></li>
       </ul>
     </div>
-    <div class="page-num">14 / 17</div>
+    <div class="page-num">14 / 16</div>
   </section>
 
   <!-- 15 13번 해설 -->
@@ -843,7 +851,7 @@
       <div class="ans-banner">
         <span class="lb">정답</span>
         <span class="num">④</span>
-        <span class="why">학생 4는 <b>책임</b> 쪽인데 선택지는 <b>면책</b>이라 읽었다</span>
+        <span class="why">학생 4의 발화를 정당한 이유가 있다는 뜻으로 읽었다</span>
       </div>
       <div class="evi">
         <div class="box src">
@@ -853,15 +861,15 @@
         <div class="box opt">
           <div class="h">선택지 ④</div>
           <p>학생 4의 발화 = &lsquo;확인했다면 알 수 있었을 것&rsquo; &rarr; 회피 <b>가능</b>했다 &rarr; 정당한 이유 <b class="u-warn">불인정</b></p>
-          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">선택지는 &lsquo;정당한 이유가 있다&rsquo;로 방향을 180도 돌렸다</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">선택지는 이를 &lsquo;정당한 이유가 있다&rsquo;로 뒤집었다</p>
         </div>
       </div>
-      <div class="logic">
-        <div class="h">풀이 논리 &mdash; 발화 다섯 개를 두 방향으로 먼저 가른다</div>
-        <p>모의 재판·토론 &lt;보기&gt;는 발화 내용을 정밀하게 이해할 필요가 없다. <b class="u-ok">&lsquo;A를 봐주자(면책)&rsquo;와 &lsquo;A에게 책임을 묻자&rsquo; 두 칸으로 화살표만 그으면</b> 된다. 학생 2·3 = 면책, 학생 4·5 = 책임, 학생 1 = 사실 정리. 선택지가 이 화살표를 뒤집었는지만 보면 ④가 즉시 걸린다. 실제로 이 문항의 유일한 장치가 <b>방향 뒤집기</b> 하나다</p>
+      <div class="trap">
+        <div class="h">발화별 근거</div>
+        <p>학생 2는 상당한 이유설, 학생 3은 위법성의 인식 결여, 학생 4와 5는 회피 가능성설에 기대고 있다. 4문단의 회피 가능성설은 부지를 피할 수 있었던 상황에서는 정당한 이유를 인정하지 않는다.</p>
       </div>
     </div>
-    <div class="page-num">15 / 17</div>
+    <div class="page-num">15 / 16</div>
   </section>
 
   <!-- 16 13번 선택지별 확인 -->
@@ -876,31 +884,14 @@
         <tr><th>⑤</th><td>정보가 공식 제공되었는데 확인하지 않음 &rarr; 주의 의무 미이행 &rarr; 책임 인정 &mdash; 회피 가능성설 &rarr; 적절</td></tr>
       </table>
     </div>
-    <div class="page-num">16 / 17</div>
-  </section>
-
-  <!-- 17 핵심 정리 -->
-  <section class="slide">
-    <h2 class="slide-title"><span class="qtext">오늘 가져갈 것</span></h2>
-    <div class="body-area">
-      <div class="checks">
-        <div class="check-row"><div class="k">지문 한 줄</div><div class="v">법적 책임은 <b>법규 위반 사실만으로</b> 결정되지 않는다 &mdash; 인식 가능성과 주의 의무 이행까지 본다</div></div>
-        <div class="check-row"><div class="k">경계선 ①</div><div class="v"><b class="u-key">규범을 몰랐다 = 법률의 착오</b> / <b class="u-warn">사실을 몰랐다 = 사실의 착오</b></div></div>
-        <div class="check-row"><div class="k">경계선 ②</div><div class="v"><b>고의설</b>: 인식 없으면 고의 불성립 / <b>책임설</b>: 인식 없어도 정당한 이유가 없으면 책임</div></div>
-        <div class="check-row"><div class="k">경계선 ③</div><div class="v"><b>상당한 이유설</b>: 사회적으로 이해되는가 / <b>회피 가능성설</b>: 피할 수 있었는가</div></div>
-        <div class="check-row"><div class="k">10번 유형</div><div class="v">독서 전략 문항은 <b>대응할 문단이 있는가</b>만 본다. 1문단 도입부 인과의 방향 뒤집기가 단골</div></div>
-        <div class="check-row"><div class="k">12번 유형</div><div class="v">대립 구도에서 &lsquo;<b>모두</b>&rsquo;가 붙은 선택지 &mdash; 한쪽이 언급조차 안 한 논점은 아닌지 확인</div></div>
-        <div class="check-row"><div class="k">13번 유형</div><div class="v">토론 &lt;보기&gt;는 발화를 <b>면책 / 책임</b> 두 방향으로 가른 뒤 선택지의 화살표를 검산</div></div>
-      </div>
-    </div>
-    <div class="page-num">17 / 17</div>
+    <div class="page-num">16 / 16</div>
   </section>
 
 </div>
 
 <div class="controls">
   <button id="prev">&larr; 이전</button>
-  <span id="counter">1 / 17</span>
+  <span id="counter">1 / 16</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
   <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
