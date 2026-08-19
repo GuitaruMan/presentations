@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 국어 실전 3회 4~9번 (주제 통합: 지각 경험과 지각적 믿음)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&display=swap');
+
+  :root {
+    --bg: #10131a;
+    --paper: #ffffff;
+    --ink: #14181f;
+    --ink-soft: #4d5665;
+    --ink-faint: #8a93a3;
+    --line: #d9dee6;
+    --line-soft: #eceff4;
+    --key: #1f5fbf;         /* 핵심 파랑 */
+    --key-bg: #eaf1fc;
+    --warn: #c2372d;        /* 정답/함정 빨강 */
+    --warn-bg: #fdeceb;
+    --ok: #1d7a55;          /* 근거 초록 */
+    --ok-bg: #e8f5ef;
+    --hl: #fff3b0;          /* 형광 */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,19,26,0.94); z-index: 50;
+  }
+  .nav-top a { color: #93a0b5; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #dce4f0; }
+  .nav-meta { color: #6c7789; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    border: 1px solid #cfd6e0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.4% 5%;
+  }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity:1; transform:none;} }
+
+  /* ── 타이포: 1920×1080 전체화면에서 본문 ≈50px, 제목 ≈90px ── */
+  h2.slide-title {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 4.7cqw; line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
+    border-bottom: 0.25cqw solid var(--ink);
+  }
+  h2.slide-title .q {
+    color: var(--key); margin-right: 0.5em;
+  }
+  /* 제목은 고정 높이를 유지(flex-shrink:0)하고, 본문은 남은 공간 안에서만 중앙 정렬.
+     내용이 많아도 본문이 제목 영역을 침범하지 않는다. */
+  h2.slide-title { flex-shrink: 0; }
+  .body-area {
+    flex: 1 1 0; display: flex; flex-direction: column;
+    min-height: 0; justify-content: center; overflow: hidden;
+  }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .kicker {
+    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-weight: 700; margin-bottom: 1.6cqw;
+  }
+  .cover h1 {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+  }
+  .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
+  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .foot {
+    position: absolute; left: 5%; right: 5%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: 1.7cqw; color: var(--ink-faint);
+    border-top: 1px solid var(--line); padding-top: 1.2cqw;
+  }
+  .cover .page-num { display: none; }
+
+  /* 공통 텍스트 */
+  .lead { font-size: 2.6cqw; line-height: 1.7; color: var(--ink-soft); }
+  .big { font-size: 3.1cqw; line-height: 1.65; }
+
+  /* 지문 인용 */
+  .quote-box {
+    background: #f7f9fc; border-left: 0.45cqw solid var(--key);
+    padding: 1.9cqw 2.2cqw; font-size: 2.5cqw; line-height: 1.8;
+  }
+  .quote-box .src { display:block; margin-top:0.8cqw; font-size:1.8cqw; color:var(--ink-faint); }
+
+  mark { background: var(--hl); padding: 0 0.15em; }
+  .u-key { color: var(--key); font-weight: 700; }
+  .u-warn { color: var(--warn); font-weight: 700; }
+  .u-ok { color: var(--ok); font-weight: 700; }
+
+  /* 문단 구조도 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.5cqw; }
+  .para-no {
+    flex-shrink: 0; width: 6.2cqw;
+    background: var(--key); color: #fff;
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; border: 1px solid var(--line); border-left: none;
+    padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+
+  /* 4규칙 카드 */
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5cqw; }
+  .rule {
+    border: 1px solid var(--line); border-top: 0.5cqw solid var(--key);
+    padding: 1.7cqw 1.4cqw;
+  }
+  .rule h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; color: var(--key);
+    margin-bottom: 0.9cqw;
+  }
+  .rule p { font-size: 2.05cqw; line-height: 1.6; color: var(--ink-soft); }
+  .rule .ex {
+    margin-top: 1cqw; padding-top: 0.9cqw; border-top: 1px dashed var(--line);
+    font-size: 1.9cqw; line-height: 1.55; color: var(--ink);
+  }
+  .rule .ex b { color: var(--ok); }
+
+  /* 2열 비교 */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; }
+  .card {
+    border: 1px solid var(--line); padding: 1.9cqw 2cqw;
+    display: flex; flex-direction: column;
+  }
+  .card.k { border-top: 0.5cqw solid var(--key); }
+  .card.w { border-top: 0.5cqw solid var(--warn); }
+  .card h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw;
+  }
+  .card.k h3 { color: var(--key); }
+  .card.w h3 { color: var(--warn); }
+  .card p, .card li { font-size: 2.25cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card ul { list-style: none; }
+  .card li { padding-left: 1.5cqw; position: relative; }
+  .card li + li { margin-top: 0.7cqw; }
+  .card li::before { content: "·"; position: absolute; left: 0.35cqw; color: var(--ink-faint); font-weight: 700; }
+
+  /* 선택지 */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
+  .choices li {
+    display: flex; gap: 1.1cqw; align-items: flex-start;
+    font-size: 2.3cqw; line-height: 1.55;
+    padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
+  }
+  .choices .n {
+    flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
+    font-size: 2.3cqw; width: 1.6em;
+  }
+  /* 5행 구조도 슬라이드: 제목과 겹치지 않도록 여백·행높이 축약 */
+  .slide.s-flow h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide.s-flow .para-flow { gap: 0.85cqw; }
+  .slide.s-flow .para-body { padding: 1cqw 1.4cqw; }
+  .slide.s-flow .para-body .t { font-size: 2.2cqw; line-height: 1.4; }
+  .slide.s-flow .para-body .d { font-size: 1.8cqw; line-height: 1.45; }
+  .slide.s-flow .para-no { font-size: 2cqw; width: 5.6cqw; }
+
+  /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
+  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide .choices { gap: 0.35cqw; }
+  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: 2.02cqw; }
+  .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
+  .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
+  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
+  .choices li.ans {
+    background: var(--warn-bg); border-color: #f0c0bc;
+  }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices li.dim { color: var(--ink-faint); }
+  .choices li.dim .n { color: #b9c0cc; }
+
+  .slide.q-long h2.slide-title { font-size: 3.4cqw; margin-bottom: 1.1cqw; }
+  .slide.q-long .bogi { font-size: 1.62cqw; padding: 0.85cqw 1.2cqw; line-height: 1.55; }
+  .slide.q-long .bogi .tag { font-size: 1.4cqw; margin-bottom: 0.5cqw; }
+  .slide.q-long .choices li { font-size: 1.83cqw; line-height: 1.42; padding: 0.35cqw 0.9cqw; }
+  .slide.q-long .choices .n { font-size: 1.83cqw; }
+  .slide.q-long .ans-chip { font-size: 1.6cqw; }
+
+  /* 정답 배너 */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.4cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
+  }
+  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num {
+    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+  }
+  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+
+  /* 근거 대조 */
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
+  .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
+  .evi .box .h {
+    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+
+  /* 함정 포인트 */
+  .trap {
+    margin-top: 1.6cqw; background: var(--key-bg);
+    border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
+  }
+  .trap .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
+  }
+  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+
+  /* 오답 정리 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
+    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+  }
+  .otable th {
+    background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
+    color: var(--ink-soft);
+  }
+  .otable tr.ans th { background: var(--warn); color: #fff; }
+  .otable tr.ans td { background: var(--warn-bg); font-weight: 500; }
+
+  /* 보기 박스 */
+  .bogi {
+    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7;
+  }
+  .bogi .tag {
+    display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
+    font-size: 1.75cqw; margin-bottom: 1cqw;
+  }
+
+  /* 체크 정리 */
+  .checks { display: flex; flex-direction: column; gap: 1.5cqw; }
+  .check-row { display: flex; gap: 1.6cqw; align-items: flex-start; }
+  .check-row .k {
+    flex-shrink: 0; width: 9.5em; font-weight: 700; color: var(--key);
+    font-size: 2.35cqw; text-align: right;
+  }
+  .check-row .v { flex: 1; font-size: 2.35cqw; line-height: 1.65; color: var(--ink-soft); }
+
+  .page-num {
+    position: absolute; right: 3%; bottom: 2.6%;
+    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+  }
+
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #93a0b5; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #232a36; color: #dce4f0; border: 1px solid #3a4454;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2e3746; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #616c7d; font-size: 0.78rem; }
+
+  /* 전체화면 */
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .rules, .two, .evi { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 80vh; }
+  }
+
+  /* ── 정답 표시(이 자료의 추가 요소): 학생들이 이미 풀고 오므로 문제 슬라이드에 정답을 함께 띄운다 ── */
+  h2.slide-title { display: flex; align-items: baseline; gap: 0.4em; }
+  h2.slide-title .qtext { flex: 1; }
+  .ans-chip {
+    flex-shrink: 0; align-self: center;
+    background: var(--warn); color: #fff;
+    font-family: "Noto Sans KR", sans-serif; font-weight: 700;
+    font-size: 1.9cqw; letter-spacing: 0.06em;
+    padding: 0.35cqw 1.1cqw; border-radius: 2cqw; white-space: nowrap;
+  }
+  .slide.q-slide .ans-chip { font-size: 1.75cqw; }
+
+  /* 풀이 논리 박스 ─ 답지 해설이 아니라 '어떻게 끊어 낼 것인가' */
+  .logic {
+    margin-top: 1.5cqw; background: var(--ok-bg);
+    border-left: 0.45cqw solid var(--ok); padding: 1.4cqw 1.8cqw;
+  }
+  .logic .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--ok); margin-bottom: 0.55cqw;
+  }
+  .logic p { font-size: 2.15cqw; line-height: 1.62; color: var(--ink); }
+  .logic p + p { margin-top: 0.55cqw; }
+
+  /* 단계형 소거 순서 */
+  .steps { display: flex; gap: 1.3cqw; }
+  .steps .st {
+    flex: 1; border: 1px solid var(--line); border-top: 0.5cqw solid var(--ok);
+    padding: 1.4cqw 1.4cqw;
+  }
+  .steps .st .n {
+    font-family: "Noto Serif KR", serif; font-size: 2.5cqw; color: var(--ok);
+    font-weight: 700; margin-bottom: 0.7cqw;
+  }
+  .steps .st .t { font-size: 2.1cqw; font-weight: 700; line-height: 1.45; margin-bottom: 0.5cqw; }
+  .steps .st .d { font-size: 1.9cqw; line-height: 1.55; color: var(--ink-soft); }
+
+  /* 3열 분류표 */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .three .card { border-top: 0.5cqw solid var(--key); }
+  .three .card.q2 { border-top-color: var(--warn); }
+  .three .card.q3 { border-top-color: var(--ok); }
+  .three .card h3 { font-size: 2.7cqw; }
+  .three .card.q2 h3 { color: var(--warn); }
+  .three .card.q3 h3 { color: var(--ok); }
+  .three .card li { font-size: 2cqw; }
+
+  /* 매칭 표(2입장 × 문장) */
+  .mtable { width: 100%; border-collapse: collapse; }
+  .mtable th, .mtable td {
+    border: 1px solid var(--line); padding: 1cqw 1.2cqw;
+    font-size: 1.95cqw; line-height: 1.5; text-align: left; vertical-align: top;
+  }
+  .mtable thead th { background: #f2f5f9; text-align: center; font-size: 2.05cqw; }
+  .mtable td.stmt { background: #fbfcfe; font-weight: 700; }
+  .mtable td .no { font-weight: 700; color: var(--ink-faint); margin-right: 0.3em; }
+  .mtable td.ans { background: var(--warn-bg); }
+  .mtable td.ans .no { color: var(--warn); }
+
+  /* 대화 상자 */
+  .talk { border: 1px solid var(--ink); padding: 1.5cqw 1.8cqw; }
+  .talk .row { display: flex; gap: 1cqw; font-size: 2.1cqw; line-height: 1.52; }
+  .talk .row + .row { margin-top: 0.6cqw; }
+  .talk .who { flex-shrink: 0; width: 5.2em; font-weight: 700; color: var(--key); }
+  .talk .row.r2 .who { color: var(--warn); }
+  .talk .row.r3 .who { color: var(--ok); }
+  .talk .tag {
+    display: inline-block; margin-left: 0.4em; padding: 0 0.5em;
+    font-size: 1.6cqw; border: 1px solid var(--line); color: var(--ink-faint);
+  }
+
+  /* 흐름 화살표 */
+  .flow { display: flex; align-items: stretch; gap: 1.1cqw; }
+  .flow .fbox {
+    flex: 1; border: 1px solid var(--line); border-top: 0.45cqw solid var(--key);
+    padding: 1.3cqw 1.3cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .flow .fbox .t { font-size: 2.2cqw; font-weight: 700; line-height: 1.4; }
+  .flow .fbox .d { font-size: 1.85cqw; line-height: 1.5; color: var(--ink-soft); margin-top: 0.4cqw; }
+  .flow .arrow {
+    flex-shrink: 0; display: flex; align-items: center;
+    font-size: 3cqw; color: var(--ink-faint);
+  }
+
+  /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
+  .slide:has(.logic) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.logic) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.logic) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.logic) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.logic) .evi { gap: 1.4cqw; }
+  .slide:has(.logic) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.logic) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.logic) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.logic) .otable th, .slide:has(.logic) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.logic) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.logic) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.logic) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.logic) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.logic) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.logic) .two .card p, .slide:has(.logic) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.logic) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.logic) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.logic) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.logic) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+
+  /* 3열 분류 슬라이드 압축 */
+  .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide:has(.three) .card { padding: 1.4cqw 1.5cqw; }
+  .slide:has(.three) .card h3 { font-size: 2.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.three) .card p { font-size: 1.92cqw; line-height: 1.5; }
+  .slide:has(.three) .card li { font-size: 1.88cqw; line-height: 1.45; }
+  .slide:has(.three) .card li + li { margin-top: 0.45cqw; }
+  .slide:has(.three) .trap { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.three) .trap .h { font-size: 1.92cqw; }
+  .slide:has(.three) .trap p { font-size: 2cqw; line-height: 1.5; }
+
+  /* 대화 슬라이드 압축 */
+  .slide:has(.talk) .talk { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.talk) .talk .row { font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.talk) .talk .row + .row { margin-top: 0.45cqw; }
+  .slide:has(.talk) .talk .tag { font-size: 1.45cqw; }
+  .slide:has(.talk) .trap { margin-top: 1cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.talk) .trap .h { font-size: 1.85cqw; }
+  .slide:has(.talk) .trap p { font-size: 1.95cqw; line-height: 1.48; }
+  .slide:has(.talk) .bogi { font-size: 1.85cqw; line-height: 1.55; }
+
+  /* 문제 슬라이드에 인용 상자가 함께 있는 경우 */
+  .slide.q-slide:has(.quote-box) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.quote-box) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide:has(.two) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.two) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide .two .card { padding: 1.1cqw 1.4cqw; }
+
+  /* 매칭 표가 큰 슬라이드 */
+  .slide:has(.mtable) h2.slide-title { font-size: 4cqw; margin-bottom: 1.4cqw; }
+  .slide:has(.mtable) .mtable th, .slide:has(.mtable) .mtable td { padding: 0.85cqw 1.05cqw; font-size: 1.85cqw; line-height: 1.45; }
+
+  /* 체크 정리 슬라이드가 길어질 때 */
+  .slide:has(.checks) .checks { gap: 1.15cqw; }
+  .slide:has(.checks) .check-row .k, .slide:has(.checks) .check-row .v { font-size: 2.15cqw; line-height: 1.5; }
+
+  /* 2열 비교 슬라이드 압축 */
+  .slide:has(.two) .card { padding: 1.35cqw 1.6cqw; }
+  .slide:has(.two) .card h3 { font-size: 2.6cqw; margin-bottom: 0.75cqw; }
+  .slide:has(.two) .card p, .slide:has(.two) .card li { font-size: 2cqw; line-height: 1.5; }
+  .slide:has(.two) .card li + li { margin-top: 0.5cqw; }
+  .slide:has(.two) .trap { margin-top: 1.05cqw; padding: 1.05cqw 1.5cqw; }
+  .slide:has(.two) .trap .h { font-size: 1.88cqw; }
+  .slide:has(.two) .trap p { font-size: 1.98cqw; line-height: 1.5; }
+  .slide:has(.two) .quote-box { font-size: 2.05cqw; padding: 1.2cqw 1.5cqw; }
+  .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
+
+  /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
+  .slide:has(.logic):has(.otable) .otable th,
+  .slide:has(.logic):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+
+  /* 흐름도 + 해설 박스 슬라이드 */
+  .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
+  .slide:has(.flow) .flow .fbox .t { font-size: 2.1cqw; }
+  .slide:has(.flow) .flow .fbox .d { font-size: 1.82cqw; line-height: 1.45; }
+  .slide:has(.flow) .trap, .slide:has(.flow) .logic { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.flow) .trap p, .slide:has(.flow) .logic p { font-size: 2cqw; line-height: 1.52; }
+
+  /* 그래프 슬라이드 */
+  .slide:has(svg) .bogi { font-size: 1.82cqw; line-height: 1.55; padding: 1.05cqw 1.4cqw; }
+  .slide:has(svg) svg { width: 100%; height: 24cqw; }
+  .slide:has(svg) .trap p, .slide:has(svg) .logic p { font-size: 1.88cqw; line-height: 1.5; }
+  .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
+
+  /* 마지막 미세 조정 */
+  .slide:has(.logic) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(svg) svg { height: 20cqw; }
+  .slide:has(svg) .bogi { font-size: 1.75cqw; }
+  .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
+
+  .slide:has(.logic) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.logic) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.logic):has(.otable) .otable th,
+  .slide:has(.logic):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(svg) svg { height: 18.6cqw; }
+  .slide:has(.two):has(.logic) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.logic) .card p, .slide:has(.two):has(.logic) .card li { line-height: 1.45; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../../work.html">업무용</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">수능완성 3회 4~9번 · 3학년 · 업데이트 2026. 8. 19.</div>
+</div>
+
+<div class="stage" id="stage">
+
+
+  <!-- 1 표지 -->
+  <section class="slide active cover">
+    <div class="kicker">수 능 완 성 　실 전 3 회 　주 제 　통 합 (인 문)</div>
+    <h1>지각 경험과<br>지각적 믿음</h1>
+    <div class="rule"></div>
+    <div class="sub">(가) 옳음 조건과 정당화 · (나) 개념주의와 비개념주의 &mdash; 정답 공개판</div>
+    <div class="foot">
+      <span>고3 · 수능완성 실전 모의고사 3회 (본문 187~189쪽)</span>
+      <span>4~9번 · 3점 문항 8번</span>
+    </div>
+    <div class="page-num">1 / 20</div>
+  </section>
+
+  <!-- 2 지문 구조 -->
+  <section class="slide s-flow">
+    <h2 class="slide-title"><span class="qtext">(가)(나) 지문 구조</span></h2>
+    <div class="body-area">
+      <div class="two" style="gap:1.6cqw;">
+        <div class="card k">
+          <h3>(가) 정당화의 조건</h3>
+          <ul style="margin-top:0.3cqw;">
+            <li><b>1문단</b> ㉮ 지각 경험과 지각적 믿음을 <b class="u-key">구분</b>할 필요</li>
+            <li><b>2문단</b> 감각적 표상 &rarr; 속성·동일성 판단 &rarr; 지각적 믿음</li>
+            <li><b>3문단</b> <b class="u-key">옳음 조건</b> &mdash; 착각·환각은 충족 못 함</li>
+            <li><b>4문단</b> &lsquo;지각 경험의 내용은 어떤 성격이어야 하는가&rsquo;라는 물음 &rarr; 철학적 쟁점</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>(나) 두 진영의 대립</h3>
+          <ul style="margin-top:0.3cqw;">
+            <li><b>1문단</b> 개념주의 vs 비개념주의 &mdash; 지각 경험이 어떻게 <b>구조화</b>되는가</li>
+            <li><b>2문단</b> 개념주의 &mdash; <b class="u-warn">데닛</b>, ㉠</li>
+            <li><b>3문단</b> 비개념주의 &mdash; <b class="u-warn">드레츠키</b>, ㉡</li>
+            <li><b>4문단</b> 대립의 인식론적 의의</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">두 글이 이어지는 지점</div>
+        <p>(가)가 던진 물음 &mdash; &lsquo;지각 경험의 내용이 옳음 조건을 충족하려면 <b>어떤 성격</b>을 지녀야 하는가&rsquo; &mdash; 에 (나)의 두 진영이 각각 답한다. <b class="u-key">(가)는 문제 설정, (나)는 두 개의 답안</b></p>
+      </div>
+    </div>
+    <div class="page-num">2 / 20</div>
+  </section>
+
+  <!-- 3 지각 경험 vs 지각적 믿음 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">㉮ 왜 둘을 구분해야 하는가 &mdash; 빨간 사과</span></h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="fbox">
+          <div class="t">지각 경험</div>
+          <div class="d">눈을 통해 <b>빨간 사과를 보는 것</b><br>= 사물·사건·특성을 마주하며 얻는 <b class="u-key">감각적 표상</b></div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">판단</div>
+          <div class="d"><b>속성 판단</b> &lsquo;저 사물은 빨갛다.&rsquo;<br><b>동일성 판단</b> &lsquo;저 사물은 사과이다.&rsquo;</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">지각적 믿음</div>
+          <div class="d">&lsquo;나는 빨간 사과를 보고 있다.&rsquo;<br>&lsquo;내 앞에 사과가 놓여 있다.&rsquo;</div>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">구분의 이유는 &lsquo;역할&rsquo;에 있다</div>
+        <p>지각 경험은 믿음을 <b class="u-ok">정당화하는 근거</b>이고, 지각적 믿음은 그 근거 위에 세워진 <b class="u-ok">산물</b>이다. 근거와 산물을 한 덩어리로 뭉뚱그리면 &lsquo;이 믿음이 정당한가&rsquo;를 따질 자리가 사라진다. 6번 문항이 정확히 이 한 줄을 묻는다</p>
+      </div>
+    </div>
+    <div class="page-num">3 / 20</div>
+  </section>
+
+  <!-- 4 옳음 조건 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">옳음 조건 &mdash; 정당화의 관문</span></h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>옳음 조건이란</h3>
+          <p style="margin-bottom:1cqw;">지각 경험의 <b>내용</b>이 <b class="u-key">실제 세계와 일치</b>할 때 그 경험이 옳다고 할 수 있는 조건</p>
+          <ul>
+            <li>&lsquo;지각 경험의 내용&rsquo; = 주체가 감각을 통해 획득하는 정보</li>
+            <li>그 정보가 실제 세계에 <b>대응</b>해야 적절</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>충족하지 못하는 경우</h3>
+          <p style="margin-bottom:1cqw;"><b class="u-warn">착각 · 환각</b>처럼 실제 세계와 대응하지 못하는 지각 경험</p>
+          <ul>
+            <li>옳음 조건을 충족하지 못함</li>
+            <li>그에 기초한 판단·믿음은 <b>정당화되기 어렵다</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">여기서 나온 물음이 (나)로 이어진다</div>
+        <p>&ldquo;지각 경험의 내용이 옳음 조건을 충족하려면 그것이 <b>어떤 성격</b>을 지녀야 하는가&rdquo; &mdash; 개념적이어야 하는가(개념주의), 아니면 개념 이전 상태로도 되는가(비개념주의)</p>
+      </div>
+    </div>
+    <div class="page-num">4 / 20</div>
+  </section>
+
+  <!-- 5 개념주의 vs 비개념주의 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">두 진영의 트레이드마크 &mdash; 이 표가 4문항을 푼다</span></h2>
+    <div class="body-area">
+      <table class="mtable">
+        <thead>
+          <tr><th style="width:9em;"></th><th>개념주의</th><th>비개념주의</th></tr>
+        </thead>
+        <tr>
+          <td class="stmt">핵심 주장</td>
+          <td>지각 경험이 <b class="u-key">개념으로 표현 가능한 인지적 내용으로 구조화될 때에만</b> 옳음 조건을 충족하고 정당화 근거가 된다</td>
+          <td>지각 경험은 개념적 해석을 <b class="u-warn">반드시 포함할 필요가 없다</b>. 개념적 해석 이전의 심적 상태로도 옳음 조건 충족 가능</td>
+        </tr>
+        <tr>
+          <td class="stmt">대표 학자</td>
+          <td><b>데닛</b> &mdash; 식탁의 것을 &lsquo;빨간 사과&rsquo;로 보는 것 자체가 개념적 해석. 그 해석은 <b>비의식적</b>일 수 있다</td>
+          <td><b>드레츠키</b> &mdash; 지각 경험이 <b>먼저</b> 주어지고 그 위에 <b>고차 인지 작용</b>이 작동한다</td>
+        </tr>
+        <tr>
+          <td class="stmt">밑줄 문장</td>
+          <td class="ans"><b>㉠</b> 우리는 <b>알아챈 것만큼만</b> 지각한다</td>
+          <td class="ans"><b>㉡</b> 우리는 지각 경험에 주어진 <b>모든 것을 알아채는 것은 아니다</b></td>
+        </tr>
+        <tr>
+          <td class="stmt">신호 어휘</td>
+          <td><b class="u-key">이미 / 애초에 / 구조화되어 / 분리되지 않는 / 관통하여</b></td>
+          <td><b class="u-warn">먼저 주어지고 / 이후에 / 고차 인지 작용 / 절차적으로 구별 / 정보의 손실</b></td>
+        </tr>
+      </table>
+    </div>
+    <div class="page-num">5 / 20</div>
+  </section>
+
+  <!-- 6 04번 문제 -->
+  <section class="slide q-slide q-long">
+    <h2 class="slide-title"><span class="q">04</span><span class="qtext">(가)와 (나)에 대한 설명으로 가장 적절한 것은?</span><span class="ans-chip">정답 ①</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li class="ans"><span class="n">①</span><span class="txt">(가)는 <b>사례를 제시</b>하여 지각 경험과 관련된 개념을 설명하고, (나)는 <b>대표적인 학자의 견해</b>를 들어 지각 경험의 성격에 대한 상반된 입장을 제시하고 있다.</span></li>
+        <li><span class="n">②</span><span class="txt">(가)는 지각 경험과 지각적 믿음의 관계를 일정한 기준에 따라 <u>분류</u>하고, (나)는 지각 경험과 관련된 특정 이론이 사회의 여러 분야에 미치는 <u>영향</u>을 소개하고 있다.</span></li>
+        <li><span class="n">③</span><span class="txt">(가)는 지각적 믿음과 관련된 특정 학자의 입장이 나타나게 된 <u>배경</u>을 밝히고, (나)는 지각 경험의 정당화 가능성에 대한 특정 학자의 입장이 <u>계승된 양상</u>을 규명하고 있다.</span></li>
+        <li><span class="n">④</span><span class="txt">(가)와 달리 (나)는 지각 경험이 지각적 믿음을 정당화하는 방식에 대한 철학적 의의와 평가가 <u>달라진 원인</u>을 분석하고 있다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">(나)와 달리 (가)는 지각 경험의 옳음 조건에 대한 관점이 <u>시대에 따라 변화된 과정</u>을 고찰하고 있다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">6 / 20</div>
+  </section>
+
+  <!-- 7 04번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">04</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">①</span>
+        <span class="why">(가)=빨간 사과 <b>사례</b> / (나)=데닛·드레츠키 <b>학자 견해</b></span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가)에서 확인</div>
+          <p>2문단 &lsquo;빨간 사과를 보는 것&rsquo; 사례로 지각 경험 개념 설명, 3문단 옳음 조건으로 정당화 요건 제시</p>
+        </div>
+        <div class="box src">
+          <div class="h">(나)에서 확인</div>
+          <p>2문단 개념주의 &mdash; <b>데닛</b>의 견해로 뒷받침 / 3문단 비개념주의 &mdash; <b>드레츠키</b>의 견해로 뒷받침 &rarr; 상반된 두 입장</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 전개 방식 문항은 서술어만 본다</div>
+        <p>선택지 다섯 개에서 <b>내용</b>은 다 그럴듯하게 들린다. 갈리는 것은 마지막 <b class="u-ok">작업 동사</b>다: ②분류·소개, ③배경 규명·계승 양상, ④원인 분석, ⑤시대적 변화 고찰. 이 넷은 지문 어디에도 없는 작업이다. <b>(가)/(나)를 각각 &lsquo;무엇을 어떻게&rsquo; 한 줄로 요약해 두고 동사만 대조</b>하면 30초 문항이 된다</p>
+      </div>
+    </div>
+    <div class="page-num">7 / 20</div>
+  </section>
+
+  <!-- 8 05번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">05</span><span class="qtext">㉠, ㉡에 대한 설명으로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ②</span></h2>
+    <div class="body-area">
+      <div class="two" style="margin-bottom:1.3cqw; gap:1.5cqw;">
+        <div class="card k" style="padding:1.2cqw 1.5cqw;">
+          <p style="font-size:2.05cqw;"><b>㉠</b> (데닛) 우리는 알아챈 것만큼만 지각한다</p>
+        </div>
+        <div class="card w" style="padding:1.2cqw 1.5cqw;">
+          <p style="font-size:2.05cqw;"><b>㉡</b> (드레츠키) 우리는 지각 경험에 주어진 모든 것을 알아채는 것은 아니다</p>
+        </div>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">㉠은 외부 세계에 대한 감각 기관의 자극과 반응이 인지적 작용과 분리되지 않는 것으로 보는 것이다.</span></li>
+        <li class="ans"><span class="n">②</span><span class="txt">㉠은 지각 경험이 <b>먼저 주어지고</b> 이 경험에 대한 인지 작용이 지각 경험의 내용에 영향을 미치는 것만큼 지각하게 된다는 것이다.</span></li>
+        <li><span class="n">③</span><span class="txt">㉡은 지각 경험과 인지 작용이 분리되어 있다는 관점이 반영된 결과이다.</span></li>
+        <li><span class="n">④</span><span class="txt">㉡은 지각 경험이 개념적 해석 작용에 의해 구체화되기 전에 심적 상태로 존재할 수 있다는 점을 강조한 것이다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">㉡은 실제로 인지하는 것보다 더 많은 정보가 지각 경험 속에 비개념적으로 주어져 있다는 것을 의미한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">8 / 20</div>
+  </section>
+
+  <!-- 9 05번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">05</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">②</span>
+        <span class="why">㉠(개념주의) 설명에 <b>㉡(비개념주의)의 도식</b>을 끼워 넣었다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (나) 2문단</div>
+          <p>데닛은 지각 경험이 판단·추론과 같은 개념적 해석과 <mark><b>분리되어 이해되기는 어렵다</b></mark>고 보았고, 개념적 해석이 지각 경험을 <b>관통하여</b> 영향을 미친다고 보았다</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ②</div>
+          <p>&ldquo;㉠은 지각 경험이 <mark><b>먼저 주어지고</b></mark> 이 경험에 대한 인지 작용이&hellip;&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">&lsquo;먼저 주어지고&rsquo;는 드레츠키(㉡)의 어휘 &mdash; 진영 뒤바꾸기</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 밑줄에 진영 라벨부터 붙인다</div>
+        <p>㉠=개념주의, ㉡=비개념주의. 라벨을 붙이고 나면 이 문항은 <b class="u-ok">선택지에 상대 진영의 신호 어휘가 섞였는지</b>만 보면 된다. ③이 &lsquo;분리되어 있다&rsquo;고 하는데도 적절한 이유는, 같은 말이라도 <b>㉡에 붙었기 때문</b>이다. ②는 정확히 같은 어휘를 <b class="u-warn">㉠에 붙였기 때문에</b> 틀렸다. 어휘가 아니라 <b>어휘가 붙은 자리</b>를 보라</p>
+      </div>
+    </div>
+    <div class="page-num">9 / 20</div>
+  </section>
+
+  <!-- 10 06번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">06</span><span class="qtext">㉮의 이유로 가장 적절한 것은?</span><span class="ans-chip">정답 ②</span></h2>
+    <div class="body-area">
+      <div class="quote-box" style="margin-bottom:1.6cqw;">
+        ㉮ <b>지각 경험과 지각적 믿음을 구분할 필요가 있다</b>
+        <span class="src">(가) 1문단 &mdash; 심리 철학의 문제 제기</span>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">지각 경험은 지각적 믿음과 달리 개념적 해석을 포함하고 있기 때문이다.</span></li>
+        <li class="ans"><span class="n">②</span><span class="txt">지각 경험은 지각적 믿음을 <b>형성하고 정당화하는 근거</b>가 되기 때문이다.</span></li>
+        <li><span class="n">③</span><span class="txt">지각 경험과 지각적 믿음은 모두 동일한 감각 인상에 불과하기 때문이다.</span></li>
+        <li><span class="n">④</span><span class="txt">지각 경험은 언제나 옳음 조건을 충족하지만, 지각적 믿음은 그렇지 않기 때문이다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">지각 경험은 판단을 통해 형성되지만, 지각적 믿음은 판단을 수반하지 않기 때문이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">10 / 20</div>
+  </section>
+
+  <!-- 11 06번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">06</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">②</span>
+        <span class="why"><b>근거</b>와 <b>산물</b>은 역할이 다르므로 갈라 두어야 한다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 ((가) 2문단)</div>
+          <p>&ldquo;우리는 지각 경험에서 여러 정보를 얻고 이를 바탕으로 판단을 내리고&hellip;믿음을 형성한다. 즉 지각 경험은 판단이나 믿음을 <mark><b>정당화하는 근거를 제공</b></mark>하는 것으로 여겨진다.&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">③을 먼저 버려라</div>
+          <p>&lsquo;둘은 <b>동일한</b> 감각 인상에 불과하다&rsquo; &rarr; 그렇다면 <b class="u-warn">구분할 필요가 없어진다</b>. 밑줄의 결론을 스스로 무너뜨리는 선택지</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 이유 추론은 &lsquo;결론을 떠받치는가&rsquo;로 거른다</div>
+        <p>①은 (나)의 개념주의 쟁점을 1문단에 끌어온 <b>출처 오류</b>. ④ &lsquo;언제나 충족&rsquo;은 3문단(착각·환각)과 충돌. ⑤는 2문단의 순서를 통째로 뒤집었다. <b class="u-ok">밑줄 문장의 주장을 강화하지 못하는 선택지는 근거가 될 수 없다</b>는 한 가지 기준으로 넷이 정리된다</p>
+      </div>
+    </div>
+    <div class="page-num">11 / 20</div>
+  </section>
+
+  <!-- 12 07번 문제 -->
+  <section class="slide">
+    <h2 class="slide-title" style="font-size:3.5cqw;"><span class="q">07</span><span class="qtext">활동지 &mdash; (나)의 관점으로 (가)의 핵심 문장 해석하기</span><span class="ans-chip">정답 ③</span></h2>
+    <div class="body-area">
+      <table class="mtable">
+        <thead>
+          <tr><th style="width:13em;">(가)의 핵심 문장</th><th>개념주의에서는</th><th>비개념주의에서는</th></tr>
+        </thead>
+        <tr>
+          <td class="stmt">[문장 1] 지각 경험은 주체가 외부 세계의 사물과 사건, 그것들의 특성을 마주하며 얻게 되는 <b>감각적 표상</b>이다.</td>
+          <td><span class="no">①</span>&lsquo;감각적 표상&rsquo;을 <b>이미 개념적으로 구조화된</b> 표상이라는 의미로 판단할 것이다.</td>
+          <td><span class="no">②</span>&lsquo;감각적 표상&rsquo;을 인지 작용이 개입하지 않은 지각 경험의 <b>비개념적 상태</b>로 볼 것이다.</td>
+        </tr>
+        <tr>
+          <td class="stmt">[문장 2] 어떤 지각 경험이 특정한 믿음의 정당한 근거가 되기 위해서는 <b>&lsquo;지각 경험의 내용&rsquo;이 적절</b>해야 한다.</td>
+          <td class="ans"><span class="no">③</span>지각 경험에 <b>고차 인지 작용이 개입해 비개념적 내용이 제외되어야</b> 지각 경험의 내용이 적절하다고 주장할 것이다.</td>
+          <td><span class="no">④</span>주체가 감각을 통해 획득하는 정보가 <b>실제 세계와 대응한다면</b> 지각 경험의 내용은 적절하다고 생각할 것이다.</td>
+        </tr>
+        <tr>
+          <td class="stmt">[문장 3] <b>옳음 조건</b>은 지각 경험의 내용이 실제 세계와 일치할 때 그 경험이 옳다고 할 수 있는 조건이다.</td>
+          <td>개념적으로 구조화된 지각 경험의 내용이 실제 세계와 일치하지 않는다면, 옳음 조건을 충족하지 않는다고 설명할 것이다.</td>
+          <td><span class="no">⑤</span>지각 경험이 표현하는 내용이 <b>비개념적 감각 정보이더라도</b>, 그 내용이 실제 세계와 대응한다면 옳음 조건을 충족한다고 볼 것이다.</td>
+        </tr>
+      </table>
+    </div>
+    <div class="page-num">12 / 20</div>
+  </section>
+
+  <!-- 13 07번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">07</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">③</span>
+        <span class="why">개념주의 칸에 <b>드레츠키의 도식</b>을 넣었다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">개념주의의 실제 주장 ((나) 2문단)</div>
+          <p>지각 경험은 <mark><b>애초에 개념으로 표현 가능한 방식으로 주어진다</b></mark>. 이미 개념적 내용을 담고 있으므로 정당화 근거가 된다 &mdash; 나중에 무엇을 <b>제외할</b> 필요가 없다</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ③</div>
+          <p>&ldquo;<mark><b>고차 인지 작용이 개입해 비개념적 내용이 제외되어야</b></mark>&rdquo; &rarr; 지각 경험이 먼저 있고 그 뒤에 인지 작용이 들어와 개념적 정보로 <b>변환</b>한다는 것은 드레츠키(비개념주의)의 그림</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 5칸짜리 활동지는 &lsquo;진영 × 신호 어휘&rsquo; 짝만 검산</div>
+        <p>표로 옮겨 놓으면 각 칸이 <b>[진영 이름] + [그 진영의 트레이드마크]</b> 조합인지만 보면 된다. 개념주의 칸에는 <b class="u-key">이미 / 애초에 / 구조화</b>가, 비개념주의 칸에는 <b class="u-warn">먼저 / 이후 / 고차 인지 작용 / 대응</b>이 와야 한다. ③은 개념주의 칸에 비개념주의 어휘가 들어앉았다. <b>문장 1·2·3의 내용을 새로 이해할 필요조차 없다</b></p>
+      </div>
+    </div>
+    <div class="page-num">13 / 20</div>
+  </section>
+
+  <!-- 14 08번 보기 -->
+  <section class="slide">
+    <h2 class="slide-title" style="font-size:3.5cqw;"><span class="q">08</span><span class="qtext">&lt;보기&gt; A의 교통사고 회상 [3점]</span><span class="ans-chip">정답 ③</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.4cqw;">
+        <span class="tag">보기</span>
+        A는 자동차 사고를 당한 뒤 사고 당시를 회상하며 &lsquo;무엇을 보았는지 명확하게 기억이 나지 않는다.&rsquo;라고 말했다. 그는 <mark>사고 직전의 소음과 눈앞의 흔들림 같은 감각적 경험은 간헐적으로 떠올릴 수 있었으나</mark> 사고 당시의 구체적인 장면은 잘 생각이 나지 않는다고 하였다. 하지만 그는 <mark>사고 장소가 도로였다는 점은 분명히 기억</mark>하고 있었고, <mark>사고가 난 도로 주변에서 파란색 지붕의 건물을 보았다</mark>고 하였다. 그런데 경찰 조사 결과 A가 자동차 사고를 당한 도로 주변에 <b class="u-warn">파란색 지붕의 건물은 없었다</b>.
+      </div>
+      <div class="steps">
+        <div class="st">
+          <div class="n">칸 1</div>
+          <div class="t">비개념적으로 남은 것</div>
+          <div class="d">소음, 눈앞의 흔들림 &mdash; 개념화되지 못한 감각 정보의 잔여</div>
+        </div>
+        <div class="st">
+          <div class="n">칸 2</div>
+          <div class="t">개념적 판단이 들어간 것</div>
+          <div class="d">&lsquo;도로였다&rsquo;, &lsquo;파란색 지붕의 건물&rsquo; &mdash; 속성 판단 + 동일성 판단 &rarr; 지각적 믿음</div>
+        </div>
+        <div class="st">
+          <div class="n">칸 3</div>
+          <div class="t">옳음 조건 판정</div>
+          <div class="d">파란 지붕 건물은 실재하지 않음 &rarr; 착각·환각처럼 <b>옳음 조건 불충족</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">14 / 20</div>
+  </section>
+
+  <!-- 15 08번 선택지 -->
+  <section class="slide q-slide q-long">
+    <h2 class="slide-title"><span class="q">08</span><span class="qtext">(가), (나)를 참고하여 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ③</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">사고가 난 도로 주변에서 파란색 지붕의 건물을 보았다는 A의 인식은 지각 경험에 대한 속성 판단과 동일성 판단을 통해 형성된 지각적 믿음에 해당하겠군.</span></li>
+        <li><span class="n">②</span><span class="txt">경찰 조사 결과에서 파란색 지붕의 건물이 없었다는 점에서 A의 지각 경험은 착각이나 환각처럼 실제 대상과 대응하지 않는 것이겠군.</span></li>
+        <li class="ans"><span class="n">③</span><span class="txt">자동차 사고에 대해 A가 기억하는 지각 경험은 <b>개념적 판단이 개입하지 않은 비개념적 정보에 머물러 있었기 때문에</b> 실제 사태와 일치하지 않겠군.</span></li>
+        <li><span class="n">④</span><span class="txt">드레츠키의 관점에서는 사고 장소를 &lsquo;도로&rsquo;로 특정하는 A의 기억은 개념적 판단이지만, 사고 당시의 전체 장면은 비개념적 정보에 의존한 채 불완전하게 남아 있다고 보겠군.</span></li>
+        <li><span class="n">⑤</span><span class="txt">드레츠키의 관점에서는 A의 기억 중, 자동차 사고 상황과 관련된 정보가 손실된 이유는 비개념적 내용으로 이루어진 사고 당시의 지각 경험이 후속 인지 과정에서 일부만 개념화되었기 때문이라고 보겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">15 / 20</div>
+  </section>
+
+  <!-- 16 08번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">08</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">③</span>
+        <span class="why">실제와 어긋난 것은 <b>개념적 판단이 들어간 진술</b>이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">&lt;보기&gt;가 실제로 말하는 것</div>
+          <p>&lsquo;파란색 지붕의 건물을 보았다&rsquo;는 <mark><b>사후적으로 개념적 해석이 개입한 결과</b></mark>다. 비개념적 정보에 머물러 있던 것은 소음·흔들림 쪽이고, 그것들은 실제와 어긋났다고 말할 성질도 아니다</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ③</div>
+          <p>&ldquo;<mark><b>비개념적 정보에 머물러 있었기 때문에</b></mark> 실제 사태와 일치하지 않겠군&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">칸 2의 사실을 칸 1에 옮겨 놓고, 없는 인과까지 만들었다</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; &lsquo;때문에&rsquo;가 붙은 선택지 하나를 표적으로</div>
+        <p>①②④⑤는 모두 <b>대응 진술</b>(이것은 저것에 해당한다)이지만, ③만 유일하게 <b class="u-ok">&lsquo;~때문에 ~하지 않겠군&rsquo;이라는 인과 진술</b>이다. 사례 적용 문항에서 혼자 인과를 주장하는 선택지는 인과의 <b>방향과 주어</b>를 반드시 검산한다. 여기서는 &lsquo;무엇이 실제와 어긋났는가&rsquo;의 주어가 바뀌어 있다</p>
+      </div>
+    </div>
+    <div class="page-num">16 / 20</div>
+  </section>
+
+  <!-- 17 08번 선택지별 확인 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">08</span><span class="qtext">선택지별 확인</span></h2>
+    <div class="body-area">
+      <table class="otable">
+        <tr><th>①</th><td>&lsquo;저 사물은 파랗다&rsquo;(속성) + &lsquo;저 사물은 건물의 지붕이다&rsquo;(동일성) &rarr; 지각적 믿음 &mdash; (가) 2문단 그대로 &rarr; 적절</td></tr>
+        <tr><th>②</th><td>실재하지 않는 건물을 보았다 &rarr; 실제 세계와 대응 실패 &rarr; <b>옳음 조건 불충족</b> &mdash; (가) 3문단 &rarr; 적절</td></tr>
+        <tr class="ans"><th>③</th><td>실제와 어긋난 것은 <b class="u-warn">개념적 판단이 들어간 진술</b>. 비개념적 정보에 머물렀기 &lsquo;때문&rsquo;이 아니다 &rarr; <b>정답</b></td></tr>
+        <tr><th>④</th><td>&lsquo;도로&rsquo;는 개념화된 부분, 전체 장면은 개념화되지 못한 부분 &mdash; 드레츠키의 <b>부분적 개념화</b>와 일치 &rarr; 적절</td></tr>
+        <tr><th>⑤</th><td>개념적 정보로 변환되는 과정에서 <b>정보의 손실</b>이 필연적 &mdash; (나) 3문단 &rarr; 적절</td></tr>
+      </table>
+    </div>
+    <div class="page-num">17 / 20</div>
+  </section>
+
+  <!-- 18 09번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">09</span><span class="qtext">문맥상 ⓐ~ⓔ와 가장 가까운 의미로 쓰인 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
+    <div class="body-area">
+      <div class="quote-box" style="margin-bottom:1.4cqw; font-size:2.1cqw;">
+        ⓐ 판단을 <b>내리고</b> ／ ⓑ 물음을 <b>던졌다</b> ／ ⓒ 감각적 표상에 <b>머무는</b> ／ ⓓ 그림을 <b>바라볼</b> 때 ／ ⓔ 문제를 <b>넘어</b>
+        <span class="src">모두 지문에서는 <b>추상적</b> 작용을 가리키는 자리에 쓰였다</span>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">ⓐ: 기업은 가격을 <u>내리고</u> 생산량을 늘려 가고 있다.</span></li>
+        <li><span class="n">②</span><span class="txt">ⓑ: 친구는 느닷없이 나타나 나에게 불쑥 한마디를 <u>던졌다</u>.</span></li>
+        <li><span class="n">③</span><span class="txt">ⓒ: 여행객은 사찰에 <u>머무는</u> 것이 아니라 체험 후 즉시 하산했다.</span></li>
+        <li><span class="n">④</span><span class="txt">ⓓ: 우리가 현실을 제대로 <u>바라볼</u> 때 미래를 분명히 예측할 수 있다.</span></li>
+        <li class="ans"><span class="n">⑤</span><span class="txt">ⓔ: 그런 말은 빈정거림을 <u>넘어</u> 시비를 거는 것에 가깝다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">18 / 20</div>
+  </section>
+
+  <!-- 19 09번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">09</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why">양쪽 다 &lsquo;일정한 기준·한계를 벗어나 지나다&rsquo;</span>
+      </div>
+      <table class="otable" style="margin-top:0.3cqw;">
+        <tr><th>①</th><td>지문 ⓐ = <b>판단·결정을 하거나 결말을 짓다</b> ／ 선택지 = 값이 낮아지다 &rarr; 불일치</td></tr>
+        <tr><th>②</th><td>지문 ⓑ = <b>어떤 문제를 제기하다</b> ／ 선택지 = 어떤 행동을 상대편에게 하다 &rarr; 불일치</td></tr>
+        <tr><th>③</th><td>지문 ⓒ = <b>더 나아가지 못하고 일정한 수준에 그치다</b> ／ 선택지 = 어떤 곳에 묵다 &rarr; 불일치</td></tr>
+        <tr><th>④</th><td>지문 ⓓ = <b>어떤 대상을 바로 향하여 보다</b> ／ 선택지 = 자신의 시각으로 관찰하다 &rarr; 불일치</td></tr>
+        <tr class="ans"><th>⑤</th><td>양쪽 모두 <b>일정한 기준이나 한계 따위를 벗어나 지나다</b> &rarr; <b>정답</b></td></tr>
+      </table>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 사전 뜻풀이를 떠올리지 말고 &lsquo;구체 / 추상&rsquo;으로 먼저 가른다</div>
+        <p>지문의 ⓐ~ⓔ는 전부 <b>추상적 작용</b>에 쓰였다. 선택지 ①③④는 값·장소·시선처럼 <b class="u-warn">구체적 상황</b>으로 되돌려 놓은 것이라 이 단계에서 걸러진다. 남은 ②와 ⑤ 중 ②는 &lsquo;물음을 제기하다&rsquo;가 아니라 &lsquo;말을 건네다&rsquo;여서 탈락. <b class="u-ok">뜻풀이 암기가 아니라 &lsquo;추상인가 구체인가&rsquo; 한 번, &lsquo;바꿔 넣어 읽어 보기&rsquo; 한 번</b>이면 끝난다</p>
+      </div>
+    </div>
+    <div class="page-num">19 / 20</div>
+  </section>
+
+  <!-- 20 핵심 정리 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">오늘 가져갈 것</span></h2>
+    <div class="body-area">
+      <div class="checks">
+        <div class="check-row"><div class="k">(가)의 뼈대</div><div class="v">지각 경험(근거) &rarr; 판단 &rarr; 지각적 믿음(산물). 근거가 <b>옳음 조건</b>을 통과해야 믿음이 정당화된다</div></div>
+        <div class="check-row"><div class="k">(나)의 뼈대</div><div class="v"><b class="u-key">개념주의</b>=이미 개념적으로 구조화 (데닛, ㉠) / <b class="u-warn">비개념주의</b>=먼저 주어지고 뒤에 개념화 (드레츠키, ㉡)</div></div>
+        <div class="check-row"><div class="k">4번 유형</div><div class="v">전개 방식은 <b>서술어(작업 동사)</b>만 대조한다 &mdash; 분류·규명·계승·원인 분석은 지문에 없다</div></div>
+        <div class="check-row"><div class="k">5·7번 유형</div><div class="v">어휘가 아니라 <b>어휘가 붙은 자리</b>를 본다. 진영 × 신호 어휘 짝 검산</div></div>
+        <div class="check-row"><div class="k">8번 유형</div><div class="v">&lt;보기&gt;를 <b>비개념 / 개념 / 옳음 조건</b> 세 칸에 먼저 배분. 혼자 &lsquo;때문에&rsquo;라고 말하는 선택지를 표적으로</div></div>
+        <div class="check-row"><div class="k">9번 유형</div><div class="v">추상 vs 구체로 한 번 거르고, 남은 것은 <b>원문에 바꿔 넣어</b> 읽어 본다</div></div>
+      </div>
+    </div>
+    <div class="page-num">20 / 20</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 20</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  let idx = 0;
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>

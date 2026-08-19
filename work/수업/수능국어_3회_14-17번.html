@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 국어 실전 3회 14~17번 (독서 과학: 미라쿨린과 맛 인지)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&display=swap');
+
+  :root {
+    --bg: #10131a;
+    --paper: #ffffff;
+    --ink: #14181f;
+    --ink-soft: #4d5665;
+    --ink-faint: #8a93a3;
+    --line: #d9dee6;
+    --line-soft: #eceff4;
+    --key: #1f5fbf;         /* 핵심 파랑 */
+    --key-bg: #eaf1fc;
+    --warn: #c2372d;        /* 정답/함정 빨강 */
+    --warn-bg: #fdeceb;
+    --ok: #1d7a55;          /* 근거 초록 */
+    --ok-bg: #e8f5ef;
+    --hl: #fff3b0;          /* 형광 */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,19,26,0.94); z-index: 50;
+  }
+  .nav-top a { color: #93a0b5; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #dce4f0; }
+  .nav-meta { color: #6c7789; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    border: 1px solid #cfd6e0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.4% 5%;
+  }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity:1; transform:none;} }
+
+  /* ── 타이포: 1920×1080 전체화면에서 본문 ≈50px, 제목 ≈90px ── */
+  h2.slide-title {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 4.7cqw; line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
+    border-bottom: 0.25cqw solid var(--ink);
+  }
+  h2.slide-title .q {
+    color: var(--key); margin-right: 0.5em;
+  }
+  /* 제목은 고정 높이를 유지(flex-shrink:0)하고, 본문은 남은 공간 안에서만 중앙 정렬.
+     내용이 많아도 본문이 제목 영역을 침범하지 않는다. */
+  h2.slide-title { flex-shrink: 0; }
+  .body-area {
+    flex: 1 1 0; display: flex; flex-direction: column;
+    min-height: 0; justify-content: center; overflow: hidden;
+  }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .kicker {
+    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-weight: 700; margin-bottom: 1.6cqw;
+  }
+  .cover h1 {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+  }
+  .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
+  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .foot {
+    position: absolute; left: 5%; right: 5%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: 1.7cqw; color: var(--ink-faint);
+    border-top: 1px solid var(--line); padding-top: 1.2cqw;
+  }
+  .cover .page-num { display: none; }
+
+  /* 공통 텍스트 */
+  .lead { font-size: 2.6cqw; line-height: 1.7; color: var(--ink-soft); }
+  .big { font-size: 3.1cqw; line-height: 1.65; }
+
+  /* 지문 인용 */
+  .quote-box {
+    background: #f7f9fc; border-left: 0.45cqw solid var(--key);
+    padding: 1.9cqw 2.2cqw; font-size: 2.5cqw; line-height: 1.8;
+  }
+  .quote-box .src { display:block; margin-top:0.8cqw; font-size:1.8cqw; color:var(--ink-faint); }
+
+  mark { background: var(--hl); padding: 0 0.15em; }
+  .u-key { color: var(--key); font-weight: 700; }
+  .u-warn { color: var(--warn); font-weight: 700; }
+  .u-ok { color: var(--ok); font-weight: 700; }
+
+  /* 문단 구조도 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.5cqw; }
+  .para-no {
+    flex-shrink: 0; width: 6.2cqw;
+    background: var(--key); color: #fff;
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; border: 1px solid var(--line); border-left: none;
+    padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+
+  /* 4규칙 카드 */
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5cqw; }
+  .rule {
+    border: 1px solid var(--line); border-top: 0.5cqw solid var(--key);
+    padding: 1.7cqw 1.4cqw;
+  }
+  .rule h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; color: var(--key);
+    margin-bottom: 0.9cqw;
+  }
+  .rule p { font-size: 2.05cqw; line-height: 1.6; color: var(--ink-soft); }
+  .rule .ex {
+    margin-top: 1cqw; padding-top: 0.9cqw; border-top: 1px dashed var(--line);
+    font-size: 1.9cqw; line-height: 1.55; color: var(--ink);
+  }
+  .rule .ex b { color: var(--ok); }
+
+  /* 2열 비교 */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; }
+  .card {
+    border: 1px solid var(--line); padding: 1.9cqw 2cqw;
+    display: flex; flex-direction: column;
+  }
+  .card.k { border-top: 0.5cqw solid var(--key); }
+  .card.w { border-top: 0.5cqw solid var(--warn); }
+  .card h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw;
+  }
+  .card.k h3 { color: var(--key); }
+  .card.w h3 { color: var(--warn); }
+  .card p, .card li { font-size: 2.25cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card ul { list-style: none; }
+  .card li { padding-left: 1.5cqw; position: relative; }
+  .card li + li { margin-top: 0.7cqw; }
+  .card li::before { content: "·"; position: absolute; left: 0.35cqw; color: var(--ink-faint); font-weight: 700; }
+
+  /* 선택지 */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
+  .choices li {
+    display: flex; gap: 1.1cqw; align-items: flex-start;
+    font-size: 2.3cqw; line-height: 1.55;
+    padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
+  }
+  .choices .n {
+    flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
+    font-size: 2.3cqw; width: 1.6em;
+  }
+  /* 5행 구조도 슬라이드: 제목과 겹치지 않도록 여백·행높이 축약 */
+  .slide.s-flow h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide.s-flow .para-flow { gap: 0.85cqw; }
+  .slide.s-flow .para-body { padding: 1cqw 1.4cqw; }
+  .slide.s-flow .para-body .t { font-size: 2.2cqw; line-height: 1.4; }
+  .slide.s-flow .para-body .d { font-size: 1.8cqw; line-height: 1.45; }
+  .slide.s-flow .para-no { font-size: 2cqw; width: 5.6cqw; }
+
+  /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
+  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide .choices { gap: 0.35cqw; }
+  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: 2.02cqw; }
+  .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
+  .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
+  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
+  .choices li.ans {
+    background: var(--warn-bg); border-color: #f0c0bc;
+  }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices li.dim { color: var(--ink-faint); }
+  .choices li.dim .n { color: #b9c0cc; }
+
+  .slide.q-long h2.slide-title { font-size: 3.4cqw; margin-bottom: 1.1cqw; }
+  .slide.q-long .bogi { font-size: 1.62cqw; padding: 0.85cqw 1.2cqw; line-height: 1.55; }
+  .slide.q-long .bogi .tag { font-size: 1.4cqw; margin-bottom: 0.5cqw; }
+  .slide.q-long .choices li { font-size: 1.83cqw; line-height: 1.42; padding: 0.35cqw 0.9cqw; }
+  .slide.q-long .choices .n { font-size: 1.83cqw; }
+  .slide.q-long .ans-chip { font-size: 1.6cqw; }
+
+  /* 정답 배너 */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.4cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
+  }
+  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num {
+    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+  }
+  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+
+  /* 근거 대조 */
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
+  .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
+  .evi .box .h {
+    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+
+  /* 함정 포인트 */
+  .trap {
+    margin-top: 1.6cqw; background: var(--key-bg);
+    border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
+  }
+  .trap .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
+  }
+  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+
+  /* 오답 정리 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
+    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+  }
+  .otable th {
+    background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
+    color: var(--ink-soft);
+  }
+  .otable tr.ans th { background: var(--warn); color: #fff; }
+  .otable tr.ans td { background: var(--warn-bg); font-weight: 500; }
+
+  /* 보기 박스 */
+  .bogi {
+    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7;
+  }
+  .bogi .tag {
+    display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
+    font-size: 1.75cqw; margin-bottom: 1cqw;
+  }
+
+  /* 체크 정리 */
+  .checks { display: flex; flex-direction: column; gap: 1.5cqw; }
+  .check-row { display: flex; gap: 1.6cqw; align-items: flex-start; }
+  .check-row .k {
+    flex-shrink: 0; width: 9.5em; font-weight: 700; color: var(--key);
+    font-size: 2.35cqw; text-align: right;
+  }
+  .check-row .v { flex: 1; font-size: 2.35cqw; line-height: 1.65; color: var(--ink-soft); }
+
+  .page-num {
+    position: absolute; right: 3%; bottom: 2.6%;
+    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+  }
+
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #93a0b5; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #232a36; color: #dce4f0; border: 1px solid #3a4454;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2e3746; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #616c7d; font-size: 0.78rem; }
+
+  /* 전체화면 */
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .rules, .two, .evi { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 80vh; }
+  }
+
+  /* ── 정답 표시(이 자료의 추가 요소): 학생들이 이미 풀고 오므로 문제 슬라이드에 정답을 함께 띄운다 ── */
+  h2.slide-title { display: flex; align-items: baseline; gap: 0.4em; }
+  h2.slide-title .qtext { flex: 1; }
+  .ans-chip {
+    flex-shrink: 0; align-self: center;
+    background: var(--warn); color: #fff;
+    font-family: "Noto Sans KR", sans-serif; font-weight: 700;
+    font-size: 1.9cqw; letter-spacing: 0.06em;
+    padding: 0.35cqw 1.1cqw; border-radius: 2cqw; white-space: nowrap;
+  }
+  .slide.q-slide .ans-chip { font-size: 1.75cqw; }
+
+  /* 풀이 논리 박스 ─ 답지 해설이 아니라 '어떻게 끊어 낼 것인가' */
+  .logic {
+    margin-top: 1.5cqw; background: var(--ok-bg);
+    border-left: 0.45cqw solid var(--ok); padding: 1.4cqw 1.8cqw;
+  }
+  .logic .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--ok); margin-bottom: 0.55cqw;
+  }
+  .logic p { font-size: 2.15cqw; line-height: 1.62; color: var(--ink); }
+  .logic p + p { margin-top: 0.55cqw; }
+
+  /* 단계형 소거 순서 */
+  .steps { display: flex; gap: 1.3cqw; }
+  .steps .st {
+    flex: 1; border: 1px solid var(--line); border-top: 0.5cqw solid var(--ok);
+    padding: 1.4cqw 1.4cqw;
+  }
+  .steps .st .n {
+    font-family: "Noto Serif KR", serif; font-size: 2.5cqw; color: var(--ok);
+    font-weight: 700; margin-bottom: 0.7cqw;
+  }
+  .steps .st .t { font-size: 2.1cqw; font-weight: 700; line-height: 1.45; margin-bottom: 0.5cqw; }
+  .steps .st .d { font-size: 1.9cqw; line-height: 1.55; color: var(--ink-soft); }
+
+  /* 3열 분류표 */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .three .card { border-top: 0.5cqw solid var(--key); }
+  .three .card.q2 { border-top-color: var(--warn); }
+  .three .card.q3 { border-top-color: var(--ok); }
+  .three .card h3 { font-size: 2.7cqw; }
+  .three .card.q2 h3 { color: var(--warn); }
+  .three .card.q3 h3 { color: var(--ok); }
+  .three .card li { font-size: 2cqw; }
+
+  /* 매칭 표(2입장 × 문장) */
+  .mtable { width: 100%; border-collapse: collapse; }
+  .mtable th, .mtable td {
+    border: 1px solid var(--line); padding: 1cqw 1.2cqw;
+    font-size: 1.95cqw; line-height: 1.5; text-align: left; vertical-align: top;
+  }
+  .mtable thead th { background: #f2f5f9; text-align: center; font-size: 2.05cqw; }
+  .mtable td.stmt { background: #fbfcfe; font-weight: 700; }
+  .mtable td .no { font-weight: 700; color: var(--ink-faint); margin-right: 0.3em; }
+  .mtable td.ans { background: var(--warn-bg); }
+  .mtable td.ans .no { color: var(--warn); }
+
+  /* 대화 상자 */
+  .talk { border: 1px solid var(--ink); padding: 1.5cqw 1.8cqw; }
+  .talk .row { display: flex; gap: 1cqw; font-size: 2.1cqw; line-height: 1.52; }
+  .talk .row + .row { margin-top: 0.6cqw; }
+  .talk .who { flex-shrink: 0; width: 5.2em; font-weight: 700; color: var(--key); }
+  .talk .row.r2 .who { color: var(--warn); }
+  .talk .row.r3 .who { color: var(--ok); }
+  .talk .tag {
+    display: inline-block; margin-left: 0.4em; padding: 0 0.5em;
+    font-size: 1.6cqw; border: 1px solid var(--line); color: var(--ink-faint);
+  }
+
+  /* 흐름 화살표 */
+  .flow { display: flex; align-items: stretch; gap: 1.1cqw; }
+  .flow .fbox {
+    flex: 1; border: 1px solid var(--line); border-top: 0.45cqw solid var(--key);
+    padding: 1.3cqw 1.3cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .flow .fbox .t { font-size: 2.2cqw; font-weight: 700; line-height: 1.4; }
+  .flow .fbox .d { font-size: 1.85cqw; line-height: 1.5; color: var(--ink-soft); margin-top: 0.4cqw; }
+  .flow .arrow {
+    flex-shrink: 0; display: flex; align-items: center;
+    font-size: 3cqw; color: var(--ink-faint);
+  }
+
+  /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
+  .slide:has(.logic) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.logic) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.logic) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.logic) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.logic) .evi { gap: 1.4cqw; }
+  .slide:has(.logic) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.logic) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.logic) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.logic) .otable th, .slide:has(.logic) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.logic) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.logic) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.logic) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.logic) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.logic) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.logic) .two .card p, .slide:has(.logic) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.logic) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.logic) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.logic) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.logic) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+
+  /* 3열 분류 슬라이드 압축 */
+  .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide:has(.three) .card { padding: 1.4cqw 1.5cqw; }
+  .slide:has(.three) .card h3 { font-size: 2.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.three) .card p { font-size: 1.92cqw; line-height: 1.5; }
+  .slide:has(.three) .card li { font-size: 1.88cqw; line-height: 1.45; }
+  .slide:has(.three) .card li + li { margin-top: 0.45cqw; }
+  .slide:has(.three) .trap { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.three) .trap .h { font-size: 1.92cqw; }
+  .slide:has(.three) .trap p { font-size: 2cqw; line-height: 1.5; }
+
+  /* 대화 슬라이드 압축 */
+  .slide:has(.talk) .talk { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.talk) .talk .row { font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.talk) .talk .row + .row { margin-top: 0.45cqw; }
+  .slide:has(.talk) .talk .tag { font-size: 1.45cqw; }
+  .slide:has(.talk) .trap { margin-top: 1cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.talk) .trap .h { font-size: 1.85cqw; }
+  .slide:has(.talk) .trap p { font-size: 1.95cqw; line-height: 1.48; }
+  .slide:has(.talk) .bogi { font-size: 1.85cqw; line-height: 1.55; }
+
+  /* 문제 슬라이드에 인용 상자가 함께 있는 경우 */
+  .slide.q-slide:has(.quote-box) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.quote-box) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide:has(.two) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.two) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide .two .card { padding: 1.1cqw 1.4cqw; }
+
+  /* 매칭 표가 큰 슬라이드 */
+  .slide:has(.mtable) h2.slide-title { font-size: 4cqw; margin-bottom: 1.4cqw; }
+  .slide:has(.mtable) .mtable th, .slide:has(.mtable) .mtable td { padding: 0.85cqw 1.05cqw; font-size: 1.85cqw; line-height: 1.45; }
+
+  /* 체크 정리 슬라이드가 길어질 때 */
+  .slide:has(.checks) .checks { gap: 1.15cqw; }
+  .slide:has(.checks) .check-row .k, .slide:has(.checks) .check-row .v { font-size: 2.15cqw; line-height: 1.5; }
+
+  /* 2열 비교 슬라이드 압축 */
+  .slide:has(.two) .card { padding: 1.35cqw 1.6cqw; }
+  .slide:has(.two) .card h3 { font-size: 2.6cqw; margin-bottom: 0.75cqw; }
+  .slide:has(.two) .card p, .slide:has(.two) .card li { font-size: 2cqw; line-height: 1.5; }
+  .slide:has(.two) .card li + li { margin-top: 0.5cqw; }
+  .slide:has(.two) .trap { margin-top: 1.05cqw; padding: 1.05cqw 1.5cqw; }
+  .slide:has(.two) .trap .h { font-size: 1.88cqw; }
+  .slide:has(.two) .trap p { font-size: 1.98cqw; line-height: 1.5; }
+  .slide:has(.two) .quote-box { font-size: 2.05cqw; padding: 1.2cqw 1.5cqw; }
+  .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
+
+  /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
+  .slide:has(.logic):has(.otable) .otable th,
+  .slide:has(.logic):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+
+  /* 흐름도 + 해설 박스 슬라이드 */
+  .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
+  .slide:has(.flow) .flow .fbox .t { font-size: 2.1cqw; }
+  .slide:has(.flow) .flow .fbox .d { font-size: 1.82cqw; line-height: 1.45; }
+  .slide:has(.flow) .trap, .slide:has(.flow) .logic { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.flow) .trap p, .slide:has(.flow) .logic p { font-size: 2cqw; line-height: 1.52; }
+
+  /* 그래프 슬라이드 */
+  .slide:has(svg) .bogi { font-size: 1.82cqw; line-height: 1.55; padding: 1.05cqw 1.4cqw; }
+  .slide:has(svg) svg { width: 100%; height: 24cqw; }
+  .slide:has(svg) .trap p, .slide:has(svg) .logic p { font-size: 1.88cqw; line-height: 1.5; }
+  .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
+
+  /* 마지막 미세 조정 */
+  .slide:has(.logic) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(svg) svg { height: 20cqw; }
+  .slide:has(svg) .bogi { font-size: 1.75cqw; }
+  .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
+
+  .slide:has(.logic) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.logic) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.logic):has(.otable) .otable th,
+  .slide:has(.logic):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(svg) svg { height: 18.6cqw; }
+  .slide:has(.two):has(.logic) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.logic) .card p, .slide:has(.two):has(.logic) .card li { line-height: 1.45; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../../work.html">업무용</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">수능완성 3회 14~17번 · 3학년 · 업데이트 2026. 8. 19.</div>
+</div>
+
+<div class="stage" id="stage">
+
+
+  <!-- 1 표지 -->
+  <section class="slide active cover">
+    <div class="kicker">수 능 완 성 　실 전 3 회 　독 서 　과 학</div>
+    <h1>미라쿨린과<br>맛 인지의 맥락 의존성</h1>
+    <div class="rule"></div>
+    <div class="sub">신맛이 단맛으로 바뀌는 이유 &mdash; 14~17번 문항 풀이 · 정답 공개판</div>
+    <div class="foot">
+      <span>고3 · 수능완성 실전 모의고사 3회 (본문 192~193쪽)</span>
+      <span>14~17번 · 3점 문항 16번</span>
+    </div>
+    <div class="page-num">1 / 17</div>
+  </section>
+
+  <!-- 2 지문 구조 -->
+  <section class="slide s-flow">
+    <h2 class="slide-title"><span class="qtext">지문 구조 한눈에 보기</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">맛을 느끼는 과정과 <span class="u-key">맛 변화 물질</span>의 개념</div>
+            <div class="d">분자 결합 &rarr; 전기적·화학적 신호 생성 &rarr; 뇌로 전달 &rarr; 뇌가 해석 ／ ㉠미라클베리 열매 = 대표 사례</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">㉡<span class="u-key">레몬</span>처럼 신맛 나는 음식 &rarr; 수소 이온 &rarr; pH 하강</div>
+            <div class="d">구연산 같은 산 성분이 물에 녹아 수소 이온 방출 &rarr; 입안이 일시적으로 산성 환경</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">산성 환경에서 <span class="u-key">전하 분포 변화</span> &rarr; 조개껍질 구조가 닫힘</div>
+            <div class="d">중성 pH: 미라쿨린은 활성화하지 않고 오히려 억제 ／ 산성: 강하게 활성화</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t">변하는 것은 수용체의 종류가 아니라 <span class="u-key">민감도와 반응도</span></div>
+            <div class="d">신맛 수용체가 단맛 수용체로 바뀌는 것이 <b>아니다</b> &mdash; 같은 자극에도 더 쉽게, 더 크게 반응</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t">맛 인지의 <span class="u-key">맥락 의존성</span>과 응용</div>
+            <div class="d">대체 감미제(당뇨·비만), 항암 치료 중 신맛 과민 환자의 상황 개선</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">2 / 17</div>
+  </section>
+
+  <!-- 3 맛 인지 과정 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">맛 인지 과정 &mdash; 화살표의 방향을 고정하라</span></h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="fbox">
+          <div class="t">① 결합</div>
+          <div class="d">음식 속 물질의 <b>분자</b>가 혀 표면의 <b>미각 수용체</b>에 결합</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">② 신호 생성</div>
+          <div class="d">수용체가 자극을 받아 <b>전기적·화학적 신호</b> 생성</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">③ 전달</div>
+          <div class="d">신호가 <b class="u-key">수용체 &rarr; 뇌</b>로 전달</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">④ 해석</div>
+          <div class="d">뇌가 해석하여 <b>단맛·신맛</b> 등으로 인식</div>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">과학 지문의 첫 문항은 방향·순서 뒤집기가 1순위</div>
+        <p>이 네 칸을 그려 두는 데 20초면 충분하고, 그 20초로 14번이 끝난다. <b class="u-ok">신호는 수용체에서 뇌로 간다.</b> 반대로 &lsquo;뇌의 신호를 수용체로 전달&rsquo;이라고 쓴 선택지가 나오면 그게 답이다. 맛 변화 물질이 하는 일도 신호를 만드는 것이 아니라 <b>수용체의 작동 방식을 바꾸는 것</b>임에 유의</p>
+      </div>
+    </div>
+    <div class="page-num">3 / 17</div>
+  </section>
+
+  <!-- 4 산 pH -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">㉡ 레몬이 하는 일 &mdash; 환경을 바꿀 뿐이다</span></h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="fbox">
+          <div class="t">신맛 나는 음식</div>
+          <div class="d">보통 <b>구연산</b> 같은 산 성분이 포함되어 있다</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">수소 이온 방출</div>
+          <div class="d">산이 물에 녹으면 수소 이온을 내놓아 <b>농도가 높아진다</b></div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">pH 하강</div>
+          <div class="d">수소 이온 농도가 높을수록 <b class="u-key">pH는 낮다</b> &rarr; 입안이 일시적으로 <b>산성 환경</b></div>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">역할 분담을 한 줄로 못 박아 두자</div>
+        <p><b class="u-warn">㉡ 레몬 = 환경 제공자</b>(입안을 산성으로 만들 뿐, 수용체에 결합하지 않는다) ／ <b class="u-key">㉠ 미라클베리(미라쿨린) = 작동자</b>(단맛 수용체에 결합해 있다가 산성이 되면 전하 분포가 바뀐다). 15번은 이 분담만 알면 네 개가 한꺼번에 떨어진다</p>
+      </div>
+    </div>
+    <div class="page-num">4 / 17</div>
+  </section>
+
+  <!-- 5 미라쿨린 작동 원리 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">미라쿨린의 작동 원리 &mdash; 조개껍질이 닫힌다</span></h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>중성 pH일 때</h3>
+          <ul>
+            <li>미라쿨린이 단맛 수용체에 <b>결합해 있다</b></li>
+            <li>단맛 수용체를 <b class="u-key">활성화하지 않는다</b></li>
+            <li>오히려 단맛 물질에 대한 수용체의 반응을 <b class="u-key">억제</b>하기도 한다</li>
+            <li>&rarr; 미라클베리 열매 자체로는 단맛이 느껴지지 않는다</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>산성 환경이 되면</h3>
+          <ul>
+            <li>결합된 미라쿨린의 <b class="u-warn">전하 분포가 달라진다</b></li>
+            <li>이 변화가 단맛 수용체 바깥쪽 <b class="u-warn">조개껍질 모양 구조를 닫히게</b> 만든다</li>
+            <li>&rarr; 수용체가 <b>강하게 활성화</b> &rarr; 신호 생성 &rarr; 뇌가 단맛으로 인식</li>
+          </ul>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">인과 사슬을 통째로 외운다</div>
+        <p><b class="u-ok">신맛 음식 &rarr; pH 하강 &rarr; 미라쿨린 전하 분포 변화 &rarr; 조개껍질 구조 닫힘 &rarr; 단맛 수용체 강한 활성화</b>. 이 사슬의 <b>어느 한 칸을 다른 칸으로 바꿔치기</b>하는 것이 15·16번 오답의 전부다. 특히 &lsquo;신맛 수용체가 단맛 수용체로 바뀐다&rsquo;는 지문이 <b class="u-warn">직접 부정</b>한 진술이다</p>
+      </div>
+    </div>
+    <div class="page-num">5 / 17</div>
+  </section>
+
+  <!-- 6 민감도 vs 반응도 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">정의가 나란히 나오면 반드시 바꿔치기가 나온다</span></h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>민감도</h3>
+          <p style="margin-bottom:1cqw;">수용체가 자극에 의해 <b class="u-key">얼마나 쉽게 활성화되는지</b>를 나타내는 성질</p>
+          <ul>
+            <li>자극 물질의 농도가 낮거나 강도가 작아도 활성화된다면 &rarr; 민감도가 높다</li>
+            <li>&rarr; <b>활성화의 문턱</b>에 관한 성질</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>반응도</h3>
+          <p style="margin-bottom:1cqw;">한 번 활성화된 뒤 <b class="u-warn">신호의 크기가 얼마나 강하고 지속이 얼마나 오래</b> 유지되는지</p>
+          <ul>
+            <li>&rarr; <b>활성화 이후</b>의 세기·지속에 관한 성질</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">4문단의 결론 문장</div>
+        <p>&ldquo;미라쿨린은 입안이 산성 환경과 같은 특정 조건에 놓였을 때 같은 자극에도 단맛 수용체가 <b class="u-key">더 쉽게</b>(민감도), <b class="u-warn">더 크게</b>(반응도) 반응하도록 만든다.&rdquo; &mdash; 산성에서는 <b>두 성질이 함께</b> 올라간다. 16번에서 ①과 ④의 운명이 여기서 갈린다</p>
+      </div>
+    </div>
+    <div class="page-num">6 / 17</div>
+  </section>
+
+  <!-- 7 14번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">14</span><span class="qtext">윗글의 내용과 일치하지 <u>않는</u> 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">미라쿨린을 대체 감미제로 활용하기 위해서는 신맛이 나는 음식을 함께 섭취해야 한다.</span></li>
+        <li><span class="n">②</span><span class="txt">미각 수용체에서 발생한 전기적·화학적 신호가 뇌에 도달하지 못하면 특정 맛을 인식할 수 없다.</span></li>
+        <li><span class="n">③</span><span class="txt">맛 인지 과정은 미각 수용체를 자극하는 음식 속 물질의 분자가 미각 수용체에 결합할 때 시작된다.</span></li>
+        <li><span class="n">④</span><span class="txt">항암 치료 과정에서 미각 이상을 겪는 환자의 상황을 개선하는 데 맛 변화 물질이 도움을 줄 수 있다.</span></li>
+        <li class="ans"><span class="n">⑤</span><span class="txt">미각 수용체의 작동 방식을 바꾸는 물질은 <b>뇌의 신호를 미각 수용체로 전달</b>하여 수용체의 반응을 달라지게 한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">7 / 17</div>
+  </section>
+
+  <!-- 8 14번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">14</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why">신호의 방향을 <b>거꾸로</b> 돌리고, 물질의 역할까지 바꿨다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (1문단)</div>
+          <p>&ldquo;미각 수용체가 자극을 받으면 전기적·화학적 신호가 생성되어 <mark><b>뇌로 전달</b></mark>되며, 뇌는 이 신호를 해석하여&hellip; 인식한다&rdquo; ／ &ldquo;일부 물질은 <mark><b>미각 수용체의 작동 방식을 바꾸어</b></mark>&hellip;다른 맛을 느끼게 한다&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ⑤</div>
+          <p>&ldquo;<mark><b>뇌의 신호를 미각 수용체로 전달</b></mark>하여&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">① 방향이 반대 ② 맛 변화 물질은 신호를 전달하는 것이 아니라 수용체의 작동 방식을 바꾼다 &mdash; 오류가 둘</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; ②는 도식의 &lsquo;대우&rsquo;일 뿐이다</div>
+        <p>②를 보고 &lsquo;지문에 이런 말이 있었나?&rsquo; 하고 되돌아가면 시간을 버린다. 지문이 <b>수용체 &rarr; 뇌 &rarr; 인식</b>이라고 했으면, <b class="u-ok">뇌에 도달하지 못하면 인식할 수 없다</b>는 것은 같은 말의 뒤집기(대우)라서 지문에 그대로 없어도 참이다. 도식 하나를 그려 두면 ②는 검증 없이 통과시키고 ⑤만 잡아낼 수 있다</p>
+      </div>
+    </div>
+    <div class="page-num">8 / 17</div>
+  </section>
+
+  <!-- 9 15번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">15</span><span class="qtext">㉠, ㉡에 대한 설명으로 가장 적절한 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
+    <div class="body-area">
+      <div class="two" style="margin-bottom:1.6cqw; gap:1.5cqw;">
+        <div class="card k" style="padding:1.2cqw 1.5cqw;"><p style="font-size:2.1cqw;"><b>㉠ 미라클베리 열매</b> &mdash; 미라쿨린을 품은 <b>작동자</b></p></div>
+        <div class="card w" style="padding:1.2cqw 1.5cqw;"><p style="font-size:2.1cqw;"><b>㉡ 레몬</b> &mdash; 입안을 산성으로 만드는 <b>환경 제공자</b></p></div>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">㉠은 신맛을 감지하는 미각 수용체의 작용을 억제한다.</span></li>
+        <li><span class="n">②</span><span class="txt">㉠은 입안의 pH 환경을 급속하게 낮춘다.</span></li>
+        <li><span class="n">③</span><span class="txt">㉡은 단맛 수용체의 분포 범위를 확대한다.</span></li>
+        <li><span class="n">④</span><span class="txt">㉡은 단맛 수용체와 결합하여 수용체의 구조를 변화시킨다.</span></li>
+        <li class="ans"><span class="n">⑤</span><span class="txt">㉠은 ㉡을 섭취할 때 단맛 수용체가 <b>강하게 활성화되도록</b> 한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">9 / 17</div>
+  </section>
+
+  <!-- 10 15번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">15</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why">㉠(결합·작동) × ㉡(산성 환경) &rarr; 강한 활성화</span>
+      </div>
+      <table class="otable" style="margin-top:0.2cqw;">
+        <tr><th>①</th><td>㉠이 바꾸는 것은 <b>단맛 수용체</b>의 민감도·반응도다. 4문단은 <b class="u-warn">신맛 수용체 자체는 변하지 않는다</b>고 명시 &rarr; 역할 오지목</td></tr>
+        <tr><th>②</th><td>pH를 낮추는 것은 <b class="u-warn">㉡(산 성분)</b>. 게다가 지문은 &lsquo;일시적으로 낮아져&rsquo;라 했지 &lsquo;급속하게&rsquo;라 한 적이 없다 &rarr; 주체 뒤바꿈 + 정도 부사 추가</td></tr>
+        <tr><th>③</th><td>㉡은 환경만 바꾼다. <b class="u-warn">수용체의 분포 범위</b>를 넓힌다는 서술은 지문 어디에도 없다</td></tr>
+        <tr><th>④</th><td>단맛 수용체에 <b class="u-warn">결합하는 것은 미라쿨린</b>(㉠). ㉡은 결합하지 않는다 &rarr; 역할 뒤바꿈</td></tr>
+        <tr class="ans"><th>⑤</th><td>㉠이 결합해 있는 상태에서 ㉡이 만든 산성 환경이 전하 분포를 바꾸고 구조를 닫아 <b>강한 활성화</b> &rarr; <b>정답</b></td></tr>
+      </table>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 물질이 둘 나오면 &lsquo;누가 결합하고 누가 환경을 바꾸는가&rsquo;</div>
+        <p>㉠과 ㉡의 역할을 한 줄로 확정하는 순간 ①②③④가 <b class="u-ok">모두 &lsquo;역할 뒤바꾸기&rsquo;라는 하나의 장치</b>임이 드러난다. 선택지를 하나씩 지문과 대조하는 대신, <b>역할표를 먼저 만들고 선택지를 그 표에 대입</b>하는 편이 훨씬 빠르다</p>
+      </div>
+    </div>
+    <div class="page-num">10 / 17</div>
+  </section>
+
+  <!-- 11 16번 보기 그래프 -->
+  <section class="slide">
+    <h2 class="slide-title" style="font-size:3.5cqw;"><span class="q">16</span><span class="qtext">&lt;보기&gt; pH에 따른 단맛 수용체 활성화 정도 [3점]</span><span class="ans-chip">정답 ④</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="font-size:1.95cqw; padding:1.2cqw 1.6cqw; margin-bottom:1.1cqw;">
+        <span class="tag" style="font-size:1.6cqw; margin-bottom:0.5cqw;">보기</span>
+        단맛 물질을 일정량 투입한 후, <b>일반 단맛 수용체(A)</b>와 <b>미라쿨린이 결합된 단맛 수용체(B)</b>의 pH에 따른 활성화 정도를 비교한 것이다. (단, pH 변화 이외의 다른 환경 요인은 고려하지 않는다.)
+      </div>
+      <div style="display:flex; gap:2cqw; align-items:center;">
+        <div style="flex:1.35;">
+          <svg viewBox="0 0 520 285" style="width:100%; height:auto;" role="img" aria-label="pH에 따른 A와 B의 활성화 정도 그래프">
+            <g stroke="#e2e7ee" stroke-width="1">
+              <line x1="96.8" y1="40" x2="96.8" y2="250"/><line x1="170.5" y1="40" x2="170.5" y2="250"/><line x1="244.2" y1="40" x2="244.2" y2="250"/><line x1="317.9" y1="40" x2="317.9" y2="250"/><line x1="391.6" y1="40" x2="391.6" y2="250"/><line x1="465.3" y1="40" x2="465.3" y2="250"/>
+              <line x1="60" y1="208" x2="480" y2="208"/><line x1="60" y1="166" x2="480" y2="166"/><line x1="60" y1="124" x2="480" y2="124"/><line x1="60" y1="82" x2="480" y2="82"/><line x1="60" y1="40" x2="480" y2="40"/>
+            </g>
+            <g stroke="#14181f" stroke-width="2">
+              <line x1="60" y1="40" x2="60" y2="250"/><line x1="60" y1="250" x2="480" y2="250"/>
+            </g>
+            <g font-size="13" fill="#4d5665" font-family="Noto Sans KR, sans-serif">
+              <text x="52" y="255" text-anchor="end">0</text><text x="52" y="213" text-anchor="end">20</text><text x="52" y="171" text-anchor="end">40</text><text x="52" y="129" text-anchor="end">60</text><text x="52" y="87" text-anchor="end">80</text><text x="52" y="45" text-anchor="end">100</text>
+              <text x="96.8" y="268" text-anchor="middle">5.0</text><text x="170.5" y="268" text-anchor="middle">5.5</text><text x="244.2" y="268" text-anchor="middle">6.0</text><text x="317.9" y="268" text-anchor="middle">6.5</text><text x="391.6" y="268" text-anchor="middle">7.0</text><text x="465.3" y="268" text-anchor="middle">7.5</text>
+              <text x="492" y="268" text-anchor="middle">pH</text>
+              <text x="18" y="150" text-anchor="middle" transform="rotate(-90 18 150)">활성화 정도(%)</text>
+            </g>
+            <polyline points="67.4,92.5 170.5,86.2 244.2,82 317.9,75.7 391.6,71.5 465.3,67.3" fill="none" stroke="#4d5665" stroke-width="3" stroke-dasharray="7 5"/>
+            <polyline points="67.4,40 96.8,56.8 170.5,119.8 244.2,187 281.1,208 391.6,218.5 465.3,224.8" fill="none" stroke="#c2372d" stroke-width="3"/>
+            <text x="80" y="112" font-size="15" font-weight="700" fill="#4d5665" font-family="Noto Sans KR, sans-serif">A</text>
+            <text x="82" y="36" font-size="15" font-weight="700" fill="#c2372d" font-family="Noto Sans KR, sans-serif">B</text>
+          </svg>
+        </div>
+        <div style="flex:1;">
+          <div class="trap" style="margin-top:0;">
+            <div class="h">그래프를 읽기 전에 축부터</div>
+            <p>x축이 오른쪽으로 갈수록 <b>pH 상승 = 수소 이온 농도 하락 = 중성 쪽</b>. 즉 <b class="u-key">왼쪽이 산성</b>이다.<br>y축은 &lsquo;<b class="u-warn">활성화 정도</b>&rsquo; &mdash; 얼마나 쉽게 활성화되었는가의 지표다.</p>
+          </div>
+          <div class="logic" style="margin-top:1.1cqw;">
+            <div class="h">두 곡선의 뜻</div>
+            <p><b>A(점선)</b> 미라쿨린이 없으니 pH와 큰 상관없이 완만.<br><b class="u-warn">B(실선)</b> 산성(왼쪽)에서 100까지 치솟고 중성(오른쪽)에서 20 아래로 떨어진다 &mdash; 3문단 그대로</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">11 / 17</div>
+  </section>
+
+  <!-- 12 16번 선택지 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">16</span><span class="qtext">윗글을 바탕으로 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ④</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">A와 달리 B는 수소 이온 농도가 증가할수록 반응도가 높아지겠군.</span></li>
+        <li><span class="n">②</span><span class="txt">A의 활성화 정도가 가장 큰 환경에서 B는 단맛 물질에 대한 반응이 억제되겠군.</span></li>
+        <li><span class="n">③</span><span class="txt">B는 pH가 낮아질수록 수용체의 바깥쪽 조개껍질 모양의 구조가 닫히게 되겠군.</span></li>
+        <li class="ans"><span class="n">④</span><span class="txt">pH가 낮을 때 B의 활성화 정도가 큰 것은 단맛 물질에 대한 <b>B의 반응도가 커지기 때문</b>이겠군.</span></li>
+        <li><span class="n">⑤</span><span class="txt">pH 변화에 따라 B의 활성화 정도가 달라지는 것은 B에 결합한 미라쿨린의 전하 분포의 변화와 관련이 있겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">12 / 17</div>
+  </section>
+
+  <!-- 13 16번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">16</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">④</span>
+        <span class="why">활성화가 커진 <b>원인</b>을 엉뚱한 곳에서 찾았다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문이 밝힌 원인 (3문단)</div>
+          <p>산성 환경 &rarr; 미라쿨린의 <mark><b>전하 분포가 달라짐</b></mark> &rarr; 조개껍질 모양 구조가 <mark><b>닫힘</b></mark> &rarr; 수용체가 강하게 <b>활성화</b></p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ④</div>
+          <p>&ldquo;활성화 정도가 큰 것은 <mark><b>반응도가 커지기 때문</b></mark>&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">반응도는 <b>활성화된 뒤</b>의 신호 크기·지속에 관한 성질. 활성화 자체가 커진 이유가 될 수 없다</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">①과 ④는 왜 운명이 갈리는가 &mdash; 반드시 나오는 질문</div>
+        <p>둘 다 &lsquo;반응도&rsquo;를 말하는데 ①은 적절, ④는 오답이다. <b class="u-ok">①은 사실 진술</b>이다 &mdash; 4문단이 산성에서 &lsquo;더 쉽게(민감도), <b>더 크게</b>(반응도)&rsquo; 반응한다고 했으므로 수소 이온 농도가 높아질 때 B의 반응도가 커지는 것은 맞다. <b class="u-warn">④는 인과 진술</b>이다 &mdash; y축 &lsquo;활성화 정도&rsquo;가 커진 <b>원인</b>을 묻고 있고, 지문이 지목한 원인은 전하 분포 변화에 따른 구조 변화이지 반응도가 아니다. <b>같은 낱말이라도 &lsquo;~이다&rsquo;와 &lsquo;~때문이다&rsquo;는 검증 기준이 다르다</b></p>
+      </div>
+    </div>
+    <div class="page-num">13 / 17</div>
+  </section>
+
+  <!-- 14 16번 선택지별 확인 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">16</span><span class="qtext">선택지별 확인</span></h2>
+    <div class="body-area">
+      <table class="otable">
+        <tr><th>①</th><td>수소 이온 농도 증가 = pH 하강 = 그래프 왼쪽 &rarr; B는 상승, A는 하강. 4문단 &lsquo;더 크게 반응&rsquo;과도 부합 &rarr; 적절</td></tr>
+        <tr><th>②</th><td>A가 가장 큰 지점은 pH 약 7.5(중성 쪽). 그때 B는 20% 아래 &mdash; 3문단 &lsquo;중성 pH에서 미라쿨린은 <b>반응을 억제</b>&rsquo; &rarr; 적절</td></tr>
+        <tr><th>③</th><td>pH가 낮아질수록 B의 활성화 정도 상승 &rarr; 조개껍질 구조가 닫힌 상태 &mdash; 3문단의 활성화 조건 &rarr; 적절</td></tr>
+        <tr class="ans"><th>④</th><td>활성화 정도가 커진 원인은 <b class="u-warn">전하 분포 변화 &rarr; 구조 닫힘</b>. &lsquo;반응도가 커져서&rsquo;는 활성화 이후의 성질을 원인으로 삼은 오류 &rarr; <b>정답</b></td></tr>
+        <tr><th>⑤</th><td>pH에 따른 B의 변화는 결합된 미라쿨린의 <b>전하 분포 변화</b>에서 비롯 &mdash; 3문단 그대로 &rarr; 적절</td></tr>
+      </table>
+    </div>
+    <div class="page-num">14 / 17</div>
+  </section>
+
+  <!-- 15 17번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">17</span><span class="qtext">문맥상 ⓐ~ⓔ와 바꿔 쓰기에 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ②</span></h2>
+    <div class="body-area">
+      <div class="quote-box" style="margin-bottom:1.5cqw; font-size:2.1cqw;">
+        ⓐ 현상이 <b>발생한다</b> ／ ⓑ 산 성분이 <b>포함되어</b> 있다 ／ ⓒ 산성 환경이 <b>형성된다</b> ／ ⓓ 지속이 유지되는지를 <b>지칭한다</b> ／ ⓔ 개선하는 데에도 <b>기여할</b> 수 있다
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">ⓐ: 일어난다</span></li>
+        <li class="ans"><span class="n">②</span><span class="txt">ⓑ: <b>딸려</b></span></li>
+        <li><span class="n">③</span><span class="txt">ⓒ: 만들어진다</span></li>
+        <li><span class="n">④</span><span class="txt">ⓓ: 일컫는다</span></li>
+        <li><span class="n">⑤</span><span class="txt">ⓔ: 이바지할</span></li>
+      </ul>
+    </div>
+    <div class="page-num">15 / 17</div>
+  </section>
+
+  <!-- 16 17번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">17</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">②</span>
+        <span class="why">&lsquo;안에 들어 있다&rsquo;와 &lsquo;매여 있다&rsquo;는 다른 관계</span>
+      </div>
+      <table class="otable" style="margin-top:0.2cqw;">
+        <tr><th>①</th><td>발생하다 = 어떤 일이나 사물이 생겨나다 ↔ 일어나다 = 어떤 일이 생기다 &rarr; 적절</td></tr>
+        <tr class="ans"><th>②</th><td><b>포함되다</b> = 어떤 사물이나 현상 <b>가운데 함께 들어가다</b> ↔ <b class="u-warn">딸리다</b> = 어떤 것에 <b>매이거나 붙어 있다</b>／어떤 부서·종류에 속하다 &rarr; <b>정답</b></td></tr>
+        <tr><th>③</th><td>형성되다 = 어떤 형상이 이루어지다 ↔ 만들어지다 = 재료·소재에 노력이나 기술이 들여져 이루어지다 &rarr; 적절</td></tr>
+        <tr><th>④</th><td>지칭하다 = 어떤 대상을 가리켜 이르다 ↔ 일컫다 = 가리켜 말하다 &rarr; 적절</td></tr>
+        <tr><th>⑤</th><td>기여하다 = 도움이 되도록 이바지하다 ↔ 이바지하다 = 도움이 되게 하다 &rarr; 적절</td></tr>
+      </table>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 뜻풀이를 외우지 말고 원문에 도로 넣어 읽어라</div>
+        <p>&ldquo;신맛이 나는 음식에는 보통 구연산과 같은 산 성분이 <b class="u-warn">딸려 있다</b>&rdquo; &mdash; 읽는 순간 어색하다. 이 어색함의 정체는 <b>관계의 종류</b>다. 포함은 <b class="u-ok">전체 안에 부분이 들어 있는 관계</b>, 딸림은 <b class="u-ok">주된 것에 부수적인 것이 붙어 있는 관계</b>. 나머지 넷은 넣어 읽어도 문장이 그대로 살아난다. <b>바꿔 쓰기 문항은 사전 정의 대조보다 삽입 테스트가 먼저다</b></p>
+      </div>
+    </div>
+    <div class="page-num">16 / 17</div>
+  </section>
+
+  <!-- 17 핵심 정리 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">오늘 가져갈 것</span></h2>
+    <div class="body-area">
+      <div class="checks">
+        <div class="check-row"><div class="k">지문 한 줄</div><div class="v">맛 인지는 자극만으로 결정되지 않는다 &mdash; <b>주변 조건에 좌우되는 맥락 의존성</b></div></div>
+        <div class="check-row"><div class="k">인과 사슬</div><div class="v">신맛 음식 &rarr; pH 하강 &rarr; 미라쿨린 <b class="u-warn">전하 분포 변화</b> &rarr; 조개껍질 구조 닫힘 &rarr; 단맛 수용체 강한 활성화</div></div>
+        <div class="check-row"><div class="k">지문이 부정한 것</div><div class="v">신맛 수용체가 단맛 수용체로 <b>바뀌는 것이 아니다</b>. 변하는 것은 단맛 수용체의 <b>민감도와 반응도</b></div></div>
+        <div class="check-row"><div class="k">14번 유형</div><div class="v">과학 지문 첫 문항은 <b>방향·순서 뒤집기</b>. 도식을 그려 두고 화살표만 대조</div></div>
+        <div class="check-row"><div class="k">15번 유형</div><div class="v">물질이 둘이면 <b>역할표</b>부터 &mdash; 누가 결합하고 누가 환경을 바꾸는가</div></div>
+        <div class="check-row"><div class="k">16번 유형</div><div class="v">정의가 나란히 나온 용어(민감도/반응도)는 반드시 출제된다. <b>&lsquo;~이다&rsquo;와 &lsquo;~때문이다&rsquo;를 구별</b>해 검증</div></div>
+        <div class="check-row"><div class="k">17번 유형</div><div class="v">바꿔 쓰기는 <b>원문 삽입 테스트</b>가 가장 빠르다</div></div>
+      </div>
+    </div>
+    <div class="page-num">17 / 17</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 17</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  let idx = 0;
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
