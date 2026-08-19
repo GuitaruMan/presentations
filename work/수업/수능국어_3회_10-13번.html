@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 국어 실전 3회 10~13번 (독서 사회: 법률의 착오)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&display=swap');
+
+  :root {
+    --bg: #10131a;
+    --paper: #ffffff;
+    --ink: #14181f;
+    --ink-soft: #4d5665;
+    --ink-faint: #8a93a3;
+    --line: #d9dee6;
+    --line-soft: #eceff4;
+    --key: #1f5fbf;         /* 핵심 파랑 */
+    --key-bg: #eaf1fc;
+    --warn: #c2372d;        /* 정답/함정 빨강 */
+    --warn-bg: #fdeceb;
+    --ok: #1d7a55;          /* 근거 초록 */
+    --ok-bg: #e8f5ef;
+    --hl: #fff3b0;          /* 형광 */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,19,26,0.94); z-index: 50;
+  }
+  .nav-top a { color: #93a0b5; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #dce4f0; }
+  .nav-meta { color: #6c7789; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    border: 1px solid #cfd6e0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.4% 5%;
+  }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity:1; transform:none;} }
+
+  /* ── 타이포: 1920×1080 전체화면에서 본문 ≈50px, 제목 ≈90px ── */
+  h2.slide-title {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 4.7cqw; line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
+    border-bottom: 0.25cqw solid var(--ink);
+  }
+  h2.slide-title .q {
+    color: var(--key); margin-right: 0.5em;
+  }
+  /* 제목은 고정 높이를 유지(flex-shrink:0)하고, 본문은 남은 공간 안에서만 중앙 정렬.
+     내용이 많아도 본문이 제목 영역을 침범하지 않는다. */
+  h2.slide-title { flex-shrink: 0; }
+  .body-area {
+    flex: 1 1 0; display: flex; flex-direction: column;
+    min-height: 0; justify-content: center; overflow: hidden;
+  }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .kicker {
+    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-weight: 700; margin-bottom: 1.6cqw;
+  }
+  .cover h1 {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+  }
+  .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
+  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .foot {
+    position: absolute; left: 5%; right: 5%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: 1.7cqw; color: var(--ink-faint);
+    border-top: 1px solid var(--line); padding-top: 1.2cqw;
+  }
+  .cover .page-num { display: none; }
+
+  /* 공통 텍스트 */
+  .lead { font-size: 2.6cqw; line-height: 1.7; color: var(--ink-soft); }
+  .big { font-size: 3.1cqw; line-height: 1.65; }
+
+  /* 지문 인용 */
+  .quote-box {
+    background: #f7f9fc; border-left: 0.45cqw solid var(--key);
+    padding: 1.9cqw 2.2cqw; font-size: 2.5cqw; line-height: 1.8;
+  }
+  .quote-box .src { display:block; margin-top:0.8cqw; font-size:1.8cqw; color:var(--ink-faint); }
+
+  mark { background: var(--hl); padding: 0 0.15em; }
+  .u-key { color: var(--key); font-weight: 700; }
+  .u-warn { color: var(--warn); font-weight: 700; }
+  .u-ok { color: var(--ok); font-weight: 700; }
+
+  /* 문단 구조도 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.5cqw; }
+  .para-no {
+    flex-shrink: 0; width: 6.2cqw;
+    background: var(--key); color: #fff;
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; border: 1px solid var(--line); border-left: none;
+    padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+
+  /* 4규칙 카드 */
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5cqw; }
+  .rule {
+    border: 1px solid var(--line); border-top: 0.5cqw solid var(--key);
+    padding: 1.7cqw 1.4cqw;
+  }
+  .rule h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; color: var(--key);
+    margin-bottom: 0.9cqw;
+  }
+  .rule p { font-size: 2.05cqw; line-height: 1.6; color: var(--ink-soft); }
+  .rule .ex {
+    margin-top: 1cqw; padding-top: 0.9cqw; border-top: 1px dashed var(--line);
+    font-size: 1.9cqw; line-height: 1.55; color: var(--ink);
+  }
+  .rule .ex b { color: var(--ok); }
+
+  /* 2열 비교 */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; }
+  .card {
+    border: 1px solid var(--line); padding: 1.9cqw 2cqw;
+    display: flex; flex-direction: column;
+  }
+  .card.k { border-top: 0.5cqw solid var(--key); }
+  .card.w { border-top: 0.5cqw solid var(--warn); }
+  .card h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw;
+  }
+  .card.k h3 { color: var(--key); }
+  .card.w h3 { color: var(--warn); }
+  .card p, .card li { font-size: 2.25cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card ul { list-style: none; }
+  .card li { padding-left: 1.5cqw; position: relative; }
+  .card li + li { margin-top: 0.7cqw; }
+  .card li::before { content: "·"; position: absolute; left: 0.35cqw; color: var(--ink-faint); font-weight: 700; }
+
+  /* 선택지 */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
+  .choices li {
+    display: flex; gap: 1.1cqw; align-items: flex-start;
+    font-size: 2.3cqw; line-height: 1.55;
+    padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
+  }
+  .choices .n {
+    flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
+    font-size: 2.3cqw; width: 1.6em;
+  }
+  /* 5행 구조도 슬라이드: 제목과 겹치지 않도록 여백·행높이 축약 */
+  .slide.s-flow h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide.s-flow .para-flow { gap: 0.85cqw; }
+  .slide.s-flow .para-body { padding: 1cqw 1.4cqw; }
+  .slide.s-flow .para-body .t { font-size: 2.2cqw; line-height: 1.4; }
+  .slide.s-flow .para-body .d { font-size: 1.8cqw; line-height: 1.45; }
+  .slide.s-flow .para-no { font-size: 2cqw; width: 5.6cqw; }
+
+  /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
+  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide .choices { gap: 0.35cqw; }
+  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: 2.02cqw; }
+  .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
+  .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
+  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
+  .choices li.ans {
+    background: var(--warn-bg); border-color: #f0c0bc;
+  }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices li.dim { color: var(--ink-faint); }
+  .choices li.dim .n { color: #b9c0cc; }
+
+  .slide.q-long h2.slide-title { font-size: 3.4cqw; margin-bottom: 1.1cqw; }
+  .slide.q-long .bogi { font-size: 1.62cqw; padding: 0.85cqw 1.2cqw; line-height: 1.55; }
+  .slide.q-long .bogi .tag { font-size: 1.4cqw; margin-bottom: 0.5cqw; }
+  .slide.q-long .choices li { font-size: 1.83cqw; line-height: 1.42; padding: 0.35cqw 0.9cqw; }
+  .slide.q-long .choices .n { font-size: 1.83cqw; }
+  .slide.q-long .ans-chip { font-size: 1.6cqw; }
+
+  /* 정답 배너 */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.4cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
+  }
+  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num {
+    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+  }
+  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+
+  /* 근거 대조 */
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
+  .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
+  .evi .box .h {
+    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+
+  /* 함정 포인트 */
+  .trap {
+    margin-top: 1.6cqw; background: var(--key-bg);
+    border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
+  }
+  .trap .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
+  }
+  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+
+  /* 오답 정리 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
+    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+  }
+  .otable th {
+    background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
+    color: var(--ink-soft);
+  }
+  .otable tr.ans th { background: var(--warn); color: #fff; }
+  .otable tr.ans td { background: var(--warn-bg); font-weight: 500; }
+
+  /* 보기 박스 */
+  .bogi {
+    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7;
+  }
+  .bogi .tag {
+    display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
+    font-size: 1.75cqw; margin-bottom: 1cqw;
+  }
+
+  /* 체크 정리 */
+  .checks { display: flex; flex-direction: column; gap: 1.5cqw; }
+  .check-row { display: flex; gap: 1.6cqw; align-items: flex-start; }
+  .check-row .k {
+    flex-shrink: 0; width: 9.5em; font-weight: 700; color: var(--key);
+    font-size: 2.35cqw; text-align: right;
+  }
+  .check-row .v { flex: 1; font-size: 2.35cqw; line-height: 1.65; color: var(--ink-soft); }
+
+  .page-num {
+    position: absolute; right: 3%; bottom: 2.6%;
+    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+  }
+
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #93a0b5; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #232a36; color: #dce4f0; border: 1px solid #3a4454;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2e3746; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #616c7d; font-size: 0.78rem; }
+
+  /* 전체화면 */
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .rules, .two, .evi { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 80vh; }
+  }
+
+  /* ── 정답 표시(이 자료의 추가 요소): 학생들이 이미 풀고 오므로 문제 슬라이드에 정답을 함께 띄운다 ── */
+  h2.slide-title { display: flex; align-items: baseline; gap: 0.4em; }
+  h2.slide-title .qtext { flex: 1; }
+  .ans-chip {
+    flex-shrink: 0; align-self: center;
+    background: var(--warn); color: #fff;
+    font-family: "Noto Sans KR", sans-serif; font-weight: 700;
+    font-size: 1.9cqw; letter-spacing: 0.06em;
+    padding: 0.35cqw 1.1cqw; border-radius: 2cqw; white-space: nowrap;
+  }
+  .slide.q-slide .ans-chip { font-size: 1.75cqw; }
+
+  /* 풀이 논리 박스 ─ 답지 해설이 아니라 '어떻게 끊어 낼 것인가' */
+  .logic {
+    margin-top: 1.5cqw; background: var(--ok-bg);
+    border-left: 0.45cqw solid var(--ok); padding: 1.4cqw 1.8cqw;
+  }
+  .logic .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--ok); margin-bottom: 0.55cqw;
+  }
+  .logic p { font-size: 2.15cqw; line-height: 1.62; color: var(--ink); }
+  .logic p + p { margin-top: 0.55cqw; }
+
+  /* 단계형 소거 순서 */
+  .steps { display: flex; gap: 1.3cqw; }
+  .steps .st {
+    flex: 1; border: 1px solid var(--line); border-top: 0.5cqw solid var(--ok);
+    padding: 1.4cqw 1.4cqw;
+  }
+  .steps .st .n {
+    font-family: "Noto Serif KR", serif; font-size: 2.5cqw; color: var(--ok);
+    font-weight: 700; margin-bottom: 0.7cqw;
+  }
+  .steps .st .t { font-size: 2.1cqw; font-weight: 700; line-height: 1.45; margin-bottom: 0.5cqw; }
+  .steps .st .d { font-size: 1.9cqw; line-height: 1.55; color: var(--ink-soft); }
+
+  /* 3열 분류표 */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .three .card { border-top: 0.5cqw solid var(--key); }
+  .three .card.q2 { border-top-color: var(--warn); }
+  .three .card.q3 { border-top-color: var(--ok); }
+  .three .card h3 { font-size: 2.7cqw; }
+  .three .card.q2 h3 { color: var(--warn); }
+  .three .card.q3 h3 { color: var(--ok); }
+  .three .card li { font-size: 2cqw; }
+
+  /* 매칭 표(2입장 × 문장) */
+  .mtable { width: 100%; border-collapse: collapse; }
+  .mtable th, .mtable td {
+    border: 1px solid var(--line); padding: 1cqw 1.2cqw;
+    font-size: 1.95cqw; line-height: 1.5; text-align: left; vertical-align: top;
+  }
+  .mtable thead th { background: #f2f5f9; text-align: center; font-size: 2.05cqw; }
+  .mtable td.stmt { background: #fbfcfe; font-weight: 700; }
+  .mtable td .no { font-weight: 700; color: var(--ink-faint); margin-right: 0.3em; }
+  .mtable td.ans { background: var(--warn-bg); }
+  .mtable td.ans .no { color: var(--warn); }
+
+  /* 대화 상자 */
+  .talk { border: 1px solid var(--ink); padding: 1.5cqw 1.8cqw; }
+  .talk .row { display: flex; gap: 1cqw; font-size: 2.1cqw; line-height: 1.52; }
+  .talk .row + .row { margin-top: 0.6cqw; }
+  .talk .who { flex-shrink: 0; width: 5.2em; font-weight: 700; color: var(--key); }
+  .talk .row.r2 .who { color: var(--warn); }
+  .talk .row.r3 .who { color: var(--ok); }
+  .talk .tag {
+    display: inline-block; margin-left: 0.4em; padding: 0 0.5em;
+    font-size: 1.6cqw; border: 1px solid var(--line); color: var(--ink-faint);
+  }
+
+  /* 흐름 화살표 */
+  .flow { display: flex; align-items: stretch; gap: 1.1cqw; }
+  .flow .fbox {
+    flex: 1; border: 1px solid var(--line); border-top: 0.45cqw solid var(--key);
+    padding: 1.3cqw 1.3cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .flow .fbox .t { font-size: 2.2cqw; font-weight: 700; line-height: 1.4; }
+  .flow .fbox .d { font-size: 1.85cqw; line-height: 1.5; color: var(--ink-soft); margin-top: 0.4cqw; }
+  .flow .arrow {
+    flex-shrink: 0; display: flex; align-items: center;
+    font-size: 3cqw; color: var(--ink-faint);
+  }
+
+  /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
+  .slide:has(.logic) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.logic) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.logic) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.logic) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.logic) .evi { gap: 1.4cqw; }
+  .slide:has(.logic) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.logic) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.logic) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.logic) .otable th, .slide:has(.logic) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.logic) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.logic) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.logic) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.logic) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.logic) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.logic) .two .card p, .slide:has(.logic) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.logic) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.logic) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.logic) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.logic) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+
+  /* 3열 분류 슬라이드 압축 */
+  .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide:has(.three) .card { padding: 1.4cqw 1.5cqw; }
+  .slide:has(.three) .card h3 { font-size: 2.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.three) .card p { font-size: 1.92cqw; line-height: 1.5; }
+  .slide:has(.three) .card li { font-size: 1.88cqw; line-height: 1.45; }
+  .slide:has(.three) .card li + li { margin-top: 0.45cqw; }
+  .slide:has(.three) .trap { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.three) .trap .h { font-size: 1.92cqw; }
+  .slide:has(.three) .trap p { font-size: 2cqw; line-height: 1.5; }
+
+  /* 대화 슬라이드 압축 */
+  .slide:has(.talk) .talk { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.talk) .talk .row { font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.talk) .talk .row + .row { margin-top: 0.45cqw; }
+  .slide:has(.talk) .talk .tag { font-size: 1.45cqw; }
+  .slide:has(.talk) .trap { margin-top: 1cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.talk) .trap .h { font-size: 1.85cqw; }
+  .slide:has(.talk) .trap p { font-size: 1.95cqw; line-height: 1.48; }
+  .slide:has(.talk) .bogi { font-size: 1.85cqw; line-height: 1.55; }
+
+  /* 문제 슬라이드에 인용 상자가 함께 있는 경우 */
+  .slide.q-slide:has(.quote-box) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.quote-box) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide:has(.two) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.two) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide .two .card { padding: 1.1cqw 1.4cqw; }
+
+  /* 매칭 표가 큰 슬라이드 */
+  .slide:has(.mtable) h2.slide-title { font-size: 4cqw; margin-bottom: 1.4cqw; }
+  .slide:has(.mtable) .mtable th, .slide:has(.mtable) .mtable td { padding: 0.85cqw 1.05cqw; font-size: 1.85cqw; line-height: 1.45; }
+
+  /* 체크 정리 슬라이드가 길어질 때 */
+  .slide:has(.checks) .checks { gap: 1.15cqw; }
+  .slide:has(.checks) .check-row .k, .slide:has(.checks) .check-row .v { font-size: 2.15cqw; line-height: 1.5; }
+
+  /* 2열 비교 슬라이드 압축 */
+  .slide:has(.two) .card { padding: 1.35cqw 1.6cqw; }
+  .slide:has(.two) .card h3 { font-size: 2.6cqw; margin-bottom: 0.75cqw; }
+  .slide:has(.two) .card p, .slide:has(.two) .card li { font-size: 2cqw; line-height: 1.5; }
+  .slide:has(.two) .card li + li { margin-top: 0.5cqw; }
+  .slide:has(.two) .trap { margin-top: 1.05cqw; padding: 1.05cqw 1.5cqw; }
+  .slide:has(.two) .trap .h { font-size: 1.88cqw; }
+  .slide:has(.two) .trap p { font-size: 1.98cqw; line-height: 1.5; }
+  .slide:has(.two) .quote-box { font-size: 2.05cqw; padding: 1.2cqw 1.5cqw; }
+  .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
+
+  /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
+  .slide:has(.logic):has(.otable) .otable th,
+  .slide:has(.logic):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+
+  /* 흐름도 + 해설 박스 슬라이드 */
+  .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
+  .slide:has(.flow) .flow .fbox .t { font-size: 2.1cqw; }
+  .slide:has(.flow) .flow .fbox .d { font-size: 1.82cqw; line-height: 1.45; }
+  .slide:has(.flow) .trap, .slide:has(.flow) .logic { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.flow) .trap p, .slide:has(.flow) .logic p { font-size: 2cqw; line-height: 1.52; }
+
+  /* 그래프 슬라이드 */
+  .slide:has(svg) .bogi { font-size: 1.82cqw; line-height: 1.55; padding: 1.05cqw 1.4cqw; }
+  .slide:has(svg) svg { width: 100%; height: 24cqw; }
+  .slide:has(svg) .trap p, .slide:has(svg) .logic p { font-size: 1.88cqw; line-height: 1.5; }
+  .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
+
+  /* 마지막 미세 조정 */
+  .slide:has(.logic) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(svg) svg { height: 20cqw; }
+  .slide:has(svg) .bogi { font-size: 1.75cqw; }
+  .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
+
+  .slide:has(.logic) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.logic) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.logic):has(.otable) .otable th,
+  .slide:has(.logic):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(svg) svg { height: 18.6cqw; }
+  .slide:has(.two):has(.logic) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.logic) .card p, .slide:has(.two):has(.logic) .card li { line-height: 1.45; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../../work.html">업무용</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">수능완성 3회 10~13번 · 3학년 · 업데이트 2026. 8. 19.</div>
+</div>
+
+<div class="stage" id="stage">
+
+
+  <!-- 1 표지 -->
+  <section class="slide active cover">
+    <div class="kicker">수 능 완 성 　실 전 3 회 　독 서 　사 회</div>
+    <h1>법률의 착오</h1>
+    <div class="rule"></div>
+    <div class="sub">위법성의 인식과 정당한 이유 &mdash; 10~13번 문항 풀이 · 정답 공개판</div>
+    <div class="foot">
+      <span>고3 · 수능완성 실전 모의고사 3회 (본문 190~191쪽)</span>
+      <span>10~13번 · 3점 문항 13번</span>
+    </div>
+    <div class="page-num">1 / 17</div>
+  </section>
+
+  <!-- 2 지문 구조 -->
+  <section class="slide s-flow">
+    <h2 class="slide-title"><span class="qtext">지문 구조 한눈에 보기</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">법률이 복잡해지는 현대 사회 &rarr; <span class="u-key">모르고 법을 어기는 상황</span></div>
+            <div class="d">기술 발전 · 사회적 가치 변화 · 경제 활동의 복잡성 &rarr; 형법이 &lsquo;법률의 착오&rsquo;를 규정</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">법률의 착오의 개념 &mdash; <span class="u-key">사실의 착오</span>와의 구별</div>
+            <div class="d">형법 제16조: 정당한 이유에 기초한 착오라면 벌하지 아니한다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">쟁점 ① <span class="u-key">위법성의 인식</span> &mdash; ㉠고의설 vs ㉡책임설</div>
+            <div class="d">위법성의 인식을 고의의 요소로 볼 것인가, 고의와 구별할 것인가</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t">쟁점 ② <span class="u-key">정당한 이유</span> &mdash; 상당한 이유설 vs 회피 가능성설</div>
+            <div class="d">사회적으로 이해될 만한가 / 부지를 회피하는 것이 실제로 가능했는가</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t">의의 &mdash; 법적 책임은 <span class="u-key">법규 위반 사실만으로</span> 결정되지 않는다</div>
+            <div class="d">인식 가능성 + 주의 의무 이행 여부를 함께 고려 &rarr; 판단의 공정성·합리성 제고</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">2 / 17</div>
+  </section>
+
+  <!-- 3 법률의 착오 vs 사실의 착오 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">경계선 ① 법률의 착오 vs 사실의 착오</span></h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>법률의 착오</h3>
+          <p style="margin-bottom:1cqw;">행위자가 자신의 행위가 <b class="u-key">법적으로 금지된 것임</b>을 알지 못하거나 잘못 이해한 경우</p>
+          <ul>
+            <li><b>규범적 의미</b>를 인식하지 못함</li>
+            <li>또는 그 규범을 <b>잘못 해석</b>함</li>
+            <li><b>예</b> 남의 물건을 가져간 사실은 알면서도 그것이 <b class="u-key">절도죄에 해당한다는 규범적 금지</b>를 몰랐다</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>사실의 착오</h3>
+          <p style="margin-bottom:1cqw;">행위자가 <b class="u-warn">객관적 사실</b>을 잘못 인식하거나 알지 못한 경우</p>
+          <ul>
+            <li>대상 자체를 오인함</li>
+            <li><b>예</b> 남의 물건을 <b class="u-warn">자신의 것이라 착각해</b> 가져간 경우</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">가르는 질문 하나</div>
+        <p>&ldquo;<b>무엇을</b> 몰랐는가?&rdquo; &mdash; <b class="u-warn">사물·상황</b>을 몰랐으면 사실의 착오, <b class="u-key">그것이 금지된다는 규범</b>을 몰랐으면 법률의 착오. 11번과 13번이 이 한 줄에 걸려 있다</p>
+      </div>
+    </div>
+    <div class="page-num">3 / 17</div>
+  </section>
+
+  <!-- 4 위법성의 인식 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">쟁점 ① 위법성의 인식 &mdash; ㉠고의설 vs ㉡책임설</span></h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>㉠ 고의설</h3>
+          <p style="margin-bottom:1cqw;">위법성의 인식은 <b class="u-key">고의의 중요한 요소</b>다</p>
+          <ul>
+            <li>법에 위반된다는 사실을 <b>인식하고 의도적으로</b> 행했을 때 고의 성립</li>
+            <li>고의는 <b>범죄 성립의 핵심 요소</b></li>
+            <li>&rarr; 위법성의 인식이 없으면 고의가 성립하지 않아 <b class="u-key">범죄가 성립하지 않을 수 있다</b></li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>㉡ 책임설</h3>
+          <p style="margin-bottom:1cqw;">위법성의 인식을 <b class="u-warn">고의와 구별</b>한다</p>
+          <ul>
+            <li>위법성의 인식이 <b>결여된 경우에도</b> 정당한 이유가 없다면 법적 책임을 물을 수 있다</li>
+            <li>결여된 이유가 정당하게 뒷받침될 때에만 <b class="u-warn">면책</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">두 학설의 차이는 &lsquo;몰랐다&rsquo;의 처리 방식</div>
+        <p>고의설에서 &lsquo;몰랐다&rsquo;는 <b>고의 자체를 없앤다</b>. 책임설에서 &lsquo;몰랐다&rsquo;는 고의를 없애지 않고, <b class="u-ok">정당한 이유가 있느냐를 따로 심사</b>하게 만든다. 그래서 <b>&lsquo;정당한 이유&rsquo;라는 논점은 책임설 쪽에서 나온다</b> &mdash; 12번의 정답이 여기서 나온다</p>
+      </div>
+    </div>
+    <div class="page-num">4 / 17</div>
+  </section>
+
+  <!-- 5 정당한 이유 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">쟁점 ② 정당한 이유 &mdash; 두 판단 기준</span></h2>
+    <div class="body-area">
+      <div class="quote-box" style="margin-bottom:1.5cqw; font-size:2.2cqw;">
+        <b>정당한 이유</b> = 법을 알기 위해 <b>통상적으로 요구되는 주의 의무를 다했음에도</b> 법규를 인식하기 어려운 사정이 존재하는 경우
+        <span class="src">&lsquo;주의 의무를 다했음에도&rsquo;라는 <b>조건절</b>이 핵심 &mdash; 그냥 몰랐다는 것만으로는 인정되지 않는다</span>
+      </div>
+      <div class="two">
+        <div class="card k">
+          <h3>상당한 이유설</h3>
+          <p style="margin-bottom:0.9cqw;">법규를 알지 못한 이유가 <b class="u-key">사회적 관점에서 충분히 이해될 수 있는가</b></p>
+          <ul>
+            <li>법령의 내용이 지나치게 난해함</li>
+            <li>제·개정이 최근이라 널리 공지되지 않음</li>
+            <li>관련 행정 기관의 안내가 미비함</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>회피 가능성설</h3>
+          <p style="margin-bottom:0.9cqw;">필요한 주의 의무를 다했는가, 그 부지를 <b class="u-warn">회피하는 것이 실제로 가능했는가</b></p>
+          <ul>
+            <li>간단한 확인 절차만 거쳤어도 알 수 있었다면</li>
+            <li>&rarr; <b class="u-warn">정당한 이유 인정 어려움</b></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">5 / 17</div>
+  </section>
+
+  <!-- 6 10번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">10</span><span class="qtext">&lsquo;법률의 착오&rsquo;를 이해하기 위해 윗글을 읽을 때, 독서 전략으로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ③</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">법률의 착오와 혼동되는 개념을 구별하여 그 의미를 확인하며 읽는다.</span></li>
+        <li><span class="n">②</span><span class="txt">법률의 착오가 행위자의 책임 판단에 어떤 의미를 지니는지에 주목하며 읽는다.</span></li>
+        <li class="ans"><span class="n">③</span><span class="txt">법률의 착오가 <b>현대 사회의 법 복잡성 증가에 미치는 영향</b>을 분석하며 읽는다.</span></li>
+        <li><span class="n">④</span><span class="txt">법률의 착오 규정이 법적 책임 판단의 공정성에 어떤 기여를 하는지 알아보며 읽는다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">법률의 착오에 대한 논의에서 핵심이 되는 요소를 파악하고 각 요소에 대한 쟁점 사항을 정리하며 읽는다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">6 / 17</div>
+  </section>
+
+  <!-- 7 10번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">10</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">③</span>
+        <span class="why">지문의 <b>인과 화살표를 거꾸로</b> 돌려 놓았다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문의 인과 (1문단)</div>
+          <p>법률이 복잡해짐 <mark><b>&rarr;</b></mark> 시민이 법규를 모르고 위반 <mark><b>&rarr;</b></mark> 형법이 &lsquo;법률의 착오&rsquo;를 규정</p>
+          <p style="margin-top:0.8cqw; color:var(--ok); font-weight:700;">복잡성이 원인, 법률의 착오가 결과</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ③</div>
+          <p>&ldquo;법률의 착오<mark><b>가</b></mark> 법 복잡성 증가<mark><b>에 미치는 영향</b></mark>&rdquo;</p>
+          <p style="margin-top:0.8cqw; color:var(--warn); font-weight:700;">결과를 원인 자리에 앉혔다. 지문에 없는 논의</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 독서 전략 문항은 &lsquo;지문에 그 내용이 있는가&rsquo;만 본다</div>
+        <p>독서 전략 문항은 전략의 <b>세련됨</b>을 묻지 않는다. 오직 <b class="u-ok">그 전략으로 읽을 거리가 지문에 실제로 있는가</b>만 본다. ①②④⑤는 각각 2문단·5문단·5문단·3~4문단에 대응하는 내용이 있고, ③만 대응할 문단이 없다. 그리고 없는 내용을 만들 때 출제자가 가장 즐겨 쓰는 방법이 <b>1문단 도입부 인과의 방향을 뒤집는 것</b>이다</p>
+      </div>
+    </div>
+    <div class="page-num">7 / 17</div>
+  </section>
+
+  <!-- 8 11번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">11</span><span class="qtext">윗글을 읽고 알 수 있는 내용으로 가장 적절한 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">행위자가 객관적 사실을 잘못 인식하거나 해석한 경우도 법률의 착오에 해당한다.</span></li>
+        <li><span class="n">②</span><span class="txt">행위자의 행위에 대한 정당한 이유는 법규와 규범을 알지 못했다는 사실만으로 인정된다.</span></li>
+        <li><span class="n">③</span><span class="txt">행위자의 행위가 법률의 착오로 인정되면 정당한 이유와 관계없이 법적 책임을 부담해야 한다.</span></li>
+        <li><span class="n">④</span><span class="txt">시민들이 법에 대한 인식과 지식이 부족한 상황에서 발생하는 문제는 사실의 착오에 해당한다.</span></li>
+        <li class="ans"><span class="n">⑤</span><span class="txt">법령의 내용이 지나치게 난해하게 만들어진 경우는 위법성의 인식의 결여를 뒷받침하는 <b>정당한 이유</b>가 된다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">8 / 17</div>
+  </section>
+
+  <!-- 9 11번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">11</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why">3문단(결여 &rarr; 면책 가능) + 4문단(난해함 = 정당한 이유)의 결합</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (3문단)</div>
+          <p>&ldquo;위법성의 인식이 결여된 이유가 <mark><b>정당하게 뒷받침될 경우</b></mark> 착오로 인한 법적 책임을 면할 수 있게 된다.&rdquo;</p>
+        </div>
+        <div class="box src">
+          <div class="h">지문 근거 (4문단)</div>
+          <p>상당한 이유설의 고려 사유: &ldquo;<mark><b>법령의 내용이 지나치게 난해하거나</b></mark>, 제·개정이 최근 이루어져 널리 공지되지 않은 경우&hellip;&rdquo;</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 짝 개념 지문은 선택지에 &lsquo;소속&rsquo;을 적는다</div>
+        <p>이 지문에는 짝 개념이 두 쌍(법률의 착오/사실의 착오, 고의설/책임설)과 기준 두 개(상당한 이유설/회피 가능성설)뿐이다. 선택지를 읽으며 <b class="u-ok">&lsquo;이 진술은 어느 칸의 것인가&rsquo;를 여백에 적으면</b> ①④는 <b>칸 침범</b>, ③은 형법 제16조와 <b>정반대</b>, ②는 &lsquo;주의 의무를 다했음에도&rsquo;라는 <b class="u-warn">조건을 지운 것</b>으로 한꺼번에 정리된다</p>
+      </div>
+    </div>
+    <div class="page-num">9 / 17</div>
+  </section>
+
+  <!-- 10 11번 선택지별 확인 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">11</span><span class="qtext">선택지별 확인</span></h2>
+    <div class="body-area">
+      <table class="otable">
+        <tr><th>①</th><td>객관적 사실의 오인은 <b class="u-warn">사실의 착오</b>. 법률의 착오는 규범을 모르거나 잘못 해석한 경우 &rarr; 칸 침범</td></tr>
+        <tr><th>②</th><td>4문단은 &lsquo;<b class="u-warn">통상적으로 요구되는 주의 의무를 다했음에도</b>&rsquo;라는 조건을 달았다. 몰랐다는 사실만으로는 불인정 &rarr; 조건 삭제</td></tr>
+        <tr><th>③</th><td>형법 제16조는 <b class="u-warn">정당한 이유에 기초하면 벌하지 아니한다</b>고 규정. &lsquo;정당한 이유와 관계없이&rsquo;는 정반대</td></tr>
+        <tr><th>④</th><td>법에 대한 인식·지식 부족 = <b class="u-warn">법률의 착오</b> 영역. 사실의 착오라 한 것이 오류 &rarr; 칸 침범</td></tr>
+        <tr class="ans"><th>⑤</th><td>난해한 법령 = 상당한 이유설이 드는 사유 &rarr; 위법성 인식 결여를 뒷받침하는 <b>정당한 이유</b> &rarr; <b>정답</b></td></tr>
+      </table>
+    </div>
+    <div class="page-num">10 / 17</div>
+  </section>
+
+  <!-- 11 12번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">12</span><span class="qtext">㉠, ㉡에 대한 이해로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
+    <div class="body-area">
+      <div class="two" style="margin-bottom:1.3cqw; gap:1.5cqw;">
+        <div class="card k" style="padding:1.1cqw 1.5cqw;"><p style="font-size:2.05cqw;"><b>㉠ 고의설</b> &mdash; 위법성의 인식은 고의의 중요한 요소</p></div>
+        <div class="card w" style="padding:1.1cqw 1.5cqw;"><p style="font-size:2.05cqw;"><b>㉡ 책임설</b> &mdash; 위법성의 인식을 고의와 구별</p></div>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">㉠은 고의의 성립 여부를 행위의 범죄 성립을 판단하는 중요한 기준으로 제시한다.</span></li>
+        <li><span class="n">②</span><span class="txt">㉠에 따르면, 규범을 잘못 해석한 줄 모르는 행위자의 행위가 법규를 위반했다면 법적 책임을 묻지 않을 수 있다.</span></li>
+        <li><span class="n">③</span><span class="txt">㉡에 따르면, 위법성의 인식이 결여되었더라도 정당한 이유가 없다면 법적 책임을 물을 수 있다.</span></li>
+        <li><span class="n">④</span><span class="txt">㉡은 행위자가 위법성의 인식이 결여된 상태를 회피할 수 있는 상황이었다면 법적 책임을 면할 수 없다고 본다.</span></li>
+        <li class="ans"><span class="n">⑤</span><span class="txt">㉠과 ㉡은 <b>모두</b> 행위자가 법을 알기 위한 통상적인 주의 의무를 다했다는 사실을 위법성 인식의 정당한 이유로 인정한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">11 / 17</div>
+  </section>
+
+  <!-- 12 12번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">12</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why"><b>㉠이 다룬 적 없는 논점</b>을 공통 견해로 묶었다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">논점의 소속을 확인하라</div>
+          <p><b>&lsquo;정당한 이유&rsquo;</b>는 4문단의 주제이며, 3문단에서 이를 끌어들이는 것은 <mark><b>책임설(㉡)뿐</b></mark>이다. 고의설은 &lsquo;위법성의 인식 = 고의의 요소&rsquo;까지만 말하고 <b>주의 의무 기준을 논하지 않는다</b></p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ⑤</div>
+          <p>&ldquo;㉠과 ㉡은 <mark><b>모두</b></mark>&hellip;주의 의무를 다했다는 사실을 정당한 이유로 인정한다&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">한쪽이 아예 언급하지 않은 논점을 &lsquo;공통항&rsquo;으로 위장</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 대립 구도에서 &lsquo;모두&rsquo;는 경보음</div>
+        <p>두 학설을 <b>대립</b>시켜 서술한 지문에서 &lsquo;㉠과 ㉡ 모두~&rsquo;로 시작하는 선택지는 일단 의심한다. 검산 방법은 두 가지다. ㉠ 지문이 그 공통항을 <b class="u-ok">명시했는가</b>, ㉡ 아니면 <b class="u-warn">한쪽이 그 논점을 꺼낸 적조차 없는가</b>. 여기서는 후자다. 다섯 선택지 중 유일하게 &lsquo;모두&rsquo;가 붙은 ⑤부터 확인하면 나머지를 볼 필요가 없다</p>
+      </div>
+    </div>
+    <div class="page-num">12 / 17</div>
+  </section>
+
+  <!-- 13 13번 보기 -->
+  <section class="slide">
+    <h2 class="slide-title" style="font-size:3.4cqw;"><span class="q">13</span><span class="qtext">&lt;보기&gt; 모의 재판 &mdash; 드론 비행 제한 구역 [3점]</span><span class="ans-chip">정답 ④</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.1cqw; font-size:1.95cqw; padding:1.2cqw 1.5cqw;">
+        <span class="tag" style="font-size:1.6cqw; margin-bottom:0.6cqw;">사건 개요</span>
+        A는 경관 촬영을 위해 도심 하천 인근에서 드론을 날렸다. A는 &lsquo;항공안전법&rsquo;에 따라 <b>드론 비행 제한 구역에서는 날리지 않았다</b>. A가 드론을 날린 지역은 제한 구역이 아니었으나 <b>최근에 제한 구역으로 지정</b>되었고, 관련 정보는 <b>국토교통부 드론 안내 사이트에서 확인할 수 있었다</b>. 하지만 A는 지정 사실 자체를 알지 못한 채 드론을 날려 신고되었다.
+      </div>
+      <div class="talk" style="padding:1.1cqw 1.5cqw;">
+        <div class="row"><span class="who">학생 1</span><span style="font-size:1.95cqw;">A는 법령은 알고 있었지만, 지정된 사실을 모르고 있었습니다.<span class="tag">사실 정리</span></span></div>
+        <div class="row r2"><span class="who">학생 2</span><span style="font-size:1.95cqw;">최근 지정되었고 안내가 부족했다는 이유가 인정됩니다.<span class="tag">면책 · 상당한 이유설</span></span></div>
+        <div class="row r2"><span class="who">학생 3</span><span style="font-size:1.95cqw;">알았다면 날리지 않았을 것이니 A에게는 잘못이 없습니다.<span class="tag">면책 · 위법성 인식 결여</span></span></div>
+        <div class="row r3"><span class="who">학생 4</span><span style="font-size:1.95cqw;">날리기 전 안내 사이트를 확인했다면 알 수 있었을 것입니다.<span class="tag">책임 · 회피 가능성설</span></span></div>
+        <div class="row r3"><span class="who">학생 5</span><span style="font-size:1.95cqw;">정보가 공식 제공되었으니 확인하지 않은 A에게 책임을 물을 수 있습니다.<span class="tag">책임 · 회피 가능성설</span></span></div>
+      </div>
+    </div>
+    <div class="page-num">13 / 17</div>
+  </section>
+
+  <!-- 14 13번 선택지 -->
+  <section class="slide q-slide q-long">
+    <h2 class="slide-title"><span class="q">13</span><span class="qtext">학생의 발화를 분석한 내용으로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ④</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">&lsquo;학생 1&rsquo;은 A가 법령을 인식하지 못한 것이 아니라, 비행 제한 구역으로 지정된 사실을 알지 못한 경우임을 지적하고 있다.</span></li>
+        <li><span class="n">②</span><span class="txt">&lsquo;학생 2&rsquo;는 상당한 이유설을 기반으로 A가 비행 제한 구역에 대해 충분히 인지할 수 없는 상황을 법률의 착오 근거로 보고 있다.</span></li>
+        <li><span class="n">③</span><span class="txt">&lsquo;학생 3&rsquo;은 A가 해당 지역이 비행 제한 구역이라는 사실을 알지 못했던 점을 위법성의 인식을 결여한 사유로 제시하고 있다.</span></li>
+        <li class="ans"><span class="n">④</span><span class="txt">&lsquo;학생 4&rsquo;는 A가 비행 제한 구역에 대한 확인 절차를 거치지 않은 것은 규정에 대한 부지에 <b>정당한 이유가 있다</b>고 보고 있다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">&lsquo;학생 5&rsquo;는 A가 비행 제한 구역 정보를 알 수 있었음에도 불구하고 이를 확인하지 않았다는 점에서 책임을 물을 수 있다는 입장을 취하고 있다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">14 / 17</div>
+  </section>
+
+  <!-- 15 13번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">13</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">④</span>
+        <span class="why">학생 4는 <b>책임</b> 쪽인데 선택지는 <b>면책</b>이라 읽었다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (4문단, 회피 가능성설)</div>
+          <p>&ldquo;<mark><b>간단한 확인 절차를 거쳤다면</b></mark> 그 법규의 존재를 알 수 있었던 경우와 같이, 법규에 대한 부지를 피할 수 있었던 상황에서는 <mark><b>정당한 이유가 인정되기 어렵다</b></mark>.&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ④</div>
+          <p>학생 4의 발화 = &lsquo;확인했다면 알 수 있었을 것&rsquo; &rarr; 회피 <b>가능</b>했다 &rarr; 정당한 이유 <b class="u-warn">불인정</b></p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">선택지는 &lsquo;정당한 이유가 있다&rsquo;로 방향을 180도 돌렸다</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 발화 다섯 개를 두 방향으로 먼저 가른다</div>
+        <p>모의 재판·토론 &lt;보기&gt;는 발화 내용을 정밀하게 이해할 필요가 없다. <b class="u-ok">&lsquo;A를 봐주자(면책)&rsquo;와 &lsquo;A에게 책임을 묻자&rsquo; 두 칸으로 화살표만 그으면</b> 된다. 학생 2·3 = 면책, 학생 4·5 = 책임, 학생 1 = 사실 정리. 선택지가 이 화살표를 뒤집었는지만 보면 ④가 즉시 걸린다. 실제로 이 문항의 유일한 장치가 <b>방향 뒤집기</b> 하나다</p>
+      </div>
+    </div>
+    <div class="page-num">15 / 17</div>
+  </section>
+
+  <!-- 16 13번 선택지별 확인 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">13</span><span class="qtext">선택지별 확인</span></h2>
+    <div class="body-area">
+      <table class="otable">
+        <tr><th>①</th><td>A가 몰랐던 것은 &lsquo;법령&rsquo;이 아니라 &lsquo;<b>이 지역이 제한 구역으로 지정되었다</b>&rsquo;는 점 &mdash; 발화를 정확히 옮김 &rarr; 적절</td></tr>
+        <tr><th>②</th><td>최근 지정 + 안내 부족 = 상당한 이유설이 드는 사유(제·개정이 널리 공지되지 않음, 행정 기관 안내 미비) &rarr; 적절</td></tr>
+        <tr><th>③</th><td>제한 구역임을 몰랐다 = 자기 행위가 금지된 것임을 인식하지 못함 = <b>위법성의 인식 결여</b> &rarr; 적절</td></tr>
+        <tr class="ans"><th>④</th><td>&lsquo;확인했다면 알 수 있었다&rsquo; = 회피 가능 &rarr; 회피 가능성설상 <b class="u-warn">정당한 이유 불인정</b>. 선택지는 반대로 진술 &rarr; <b>정답</b></td></tr>
+        <tr><th>⑤</th><td>정보가 공식 제공되었는데 확인하지 않음 &rarr; 주의 의무 미이행 &rarr; 책임 인정 &mdash; 회피 가능성설 &rarr; 적절</td></tr>
+      </table>
+    </div>
+    <div class="page-num">16 / 17</div>
+  </section>
+
+  <!-- 17 핵심 정리 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">오늘 가져갈 것</span></h2>
+    <div class="body-area">
+      <div class="checks">
+        <div class="check-row"><div class="k">지문 한 줄</div><div class="v">법적 책임은 <b>법규 위반 사실만으로</b> 결정되지 않는다 &mdash; 인식 가능성과 주의 의무 이행까지 본다</div></div>
+        <div class="check-row"><div class="k">경계선 ①</div><div class="v"><b class="u-key">규범을 몰랐다 = 법률의 착오</b> / <b class="u-warn">사실을 몰랐다 = 사실의 착오</b></div></div>
+        <div class="check-row"><div class="k">경계선 ②</div><div class="v"><b>고의설</b>: 인식 없으면 고의 불성립 / <b>책임설</b>: 인식 없어도 정당한 이유가 없으면 책임</div></div>
+        <div class="check-row"><div class="k">경계선 ③</div><div class="v"><b>상당한 이유설</b>: 사회적으로 이해되는가 / <b>회피 가능성설</b>: 피할 수 있었는가</div></div>
+        <div class="check-row"><div class="k">10번 유형</div><div class="v">독서 전략 문항은 <b>대응할 문단이 있는가</b>만 본다. 1문단 도입부 인과의 방향 뒤집기가 단골</div></div>
+        <div class="check-row"><div class="k">12번 유형</div><div class="v">대립 구도에서 &lsquo;<b>모두</b>&rsquo;가 붙은 선택지 &mdash; 한쪽이 언급조차 안 한 논점은 아닌지 확인</div></div>
+        <div class="check-row"><div class="k">13번 유형</div><div class="v">토론 &lt;보기&gt;는 발화를 <b>면책 / 책임</b> 두 방향으로 가른 뒤 선택지의 화살표를 검산</div></div>
+      </div>
+    </div>
+    <div class="page-num">17 / 17</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 17</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  let idx = 0;
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>

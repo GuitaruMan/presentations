@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 국어 실전 3회 1~3번 (독서 이론: 텍스트 복잡도)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&display=swap');
+
+  :root {
+    --bg: #10131a;
+    --paper: #ffffff;
+    --ink: #14181f;
+    --ink-soft: #4d5665;
+    --ink-faint: #8a93a3;
+    --line: #d9dee6;
+    --line-soft: #eceff4;
+    --key: #1f5fbf;         /* 핵심 파랑 */
+    --key-bg: #eaf1fc;
+    --warn: #c2372d;        /* 정답/함정 빨강 */
+    --warn-bg: #fdeceb;
+    --ok: #1d7a55;          /* 근거 초록 */
+    --ok-bg: #e8f5ef;
+    --hl: #fff3b0;          /* 형광 */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,19,26,0.94); z-index: 50;
+  }
+  .nav-top a { color: #93a0b5; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #dce4f0; }
+  .nav-meta { color: #6c7789; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    background: var(--paper);
+    border: 1px solid #cfd6e0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.4% 5%;
+  }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity:1; transform:none;} }
+
+  /* ── 타이포: 1920×1080 전체화면에서 본문 ≈50px, 제목 ≈90px ── */
+  h2.slide-title {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 4.7cqw; line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
+    border-bottom: 0.25cqw solid var(--ink);
+  }
+  h2.slide-title .q {
+    color: var(--key); margin-right: 0.5em;
+  }
+  /* 제목은 고정 높이를 유지(flex-shrink:0)하고, 본문은 남은 공간 안에서만 중앙 정렬.
+     내용이 많아도 본문이 제목 영역을 침범하지 않는다. */
+  h2.slide-title { flex-shrink: 0; }
+  .body-area {
+    flex: 1 1 0; display: flex; flex-direction: column;
+    min-height: 0; justify-content: center; overflow: hidden;
+  }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .kicker {
+    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-weight: 700; margin-bottom: 1.6cqw;
+  }
+  .cover h1 {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+  }
+  .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
+  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .foot {
+    position: absolute; left: 5%; right: 5%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: 1.7cqw; color: var(--ink-faint);
+    border-top: 1px solid var(--line); padding-top: 1.2cqw;
+  }
+  .cover .page-num { display: none; }
+
+  /* 공통 텍스트 */
+  .lead { font-size: 2.6cqw; line-height: 1.7; color: var(--ink-soft); }
+  .big { font-size: 3.1cqw; line-height: 1.65; }
+
+  /* 지문 인용 */
+  .quote-box {
+    background: #f7f9fc; border-left: 0.45cqw solid var(--key);
+    padding: 1.9cqw 2.2cqw; font-size: 2.5cqw; line-height: 1.8;
+  }
+  .quote-box .src { display:block; margin-top:0.8cqw; font-size:1.8cqw; color:var(--ink-faint); }
+
+  mark { background: var(--hl); padding: 0 0.15em; }
+  .u-key { color: var(--key); font-weight: 700; }
+  .u-warn { color: var(--warn); font-weight: 700; }
+  .u-ok { color: var(--ok); font-weight: 700; }
+
+  /* 문단 구조도 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.5cqw; }
+  .para-no {
+    flex-shrink: 0; width: 6.2cqw;
+    background: var(--key); color: #fff;
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; border: 1px solid var(--line); border-left: none;
+    padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+
+  /* 4규칙 카드 */
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5cqw; }
+  .rule {
+    border: 1px solid var(--line); border-top: 0.5cqw solid var(--key);
+    padding: 1.7cqw 1.4cqw;
+  }
+  .rule h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; color: var(--key);
+    margin-bottom: 0.9cqw;
+  }
+  .rule p { font-size: 2.05cqw; line-height: 1.6; color: var(--ink-soft); }
+  .rule .ex {
+    margin-top: 1cqw; padding-top: 0.9cqw; border-top: 1px dashed var(--line);
+    font-size: 1.9cqw; line-height: 1.55; color: var(--ink);
+  }
+  .rule .ex b { color: var(--ok); }
+
+  /* 2열 비교 */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; }
+  .card {
+    border: 1px solid var(--line); padding: 1.9cqw 2cqw;
+    display: flex; flex-direction: column;
+  }
+  .card.k { border-top: 0.5cqw solid var(--key); }
+  .card.w { border-top: 0.5cqw solid var(--warn); }
+  .card h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw;
+  }
+  .card.k h3 { color: var(--key); }
+  .card.w h3 { color: var(--warn); }
+  .card p, .card li { font-size: 2.25cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card ul { list-style: none; }
+  .card li { padding-left: 1.5cqw; position: relative; }
+  .card li + li { margin-top: 0.7cqw; }
+  .card li::before { content: "·"; position: absolute; left: 0.35cqw; color: var(--ink-faint); font-weight: 700; }
+
+  /* 선택지 */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
+  .choices li {
+    display: flex; gap: 1.1cqw; align-items: flex-start;
+    font-size: 2.3cqw; line-height: 1.55;
+    padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
+  }
+  .choices .n {
+    flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
+    font-size: 2.3cqw; width: 1.6em;
+  }
+  /* 5행 구조도 슬라이드: 제목과 겹치지 않도록 여백·행높이 축약 */
+  .slide.s-flow h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide.s-flow .para-flow { gap: 0.85cqw; }
+  .slide.s-flow .para-body { padding: 1cqw 1.4cqw; }
+  .slide.s-flow .para-body .t { font-size: 2.2cqw; line-height: 1.4; }
+  .slide.s-flow .para-body .d { font-size: 1.8cqw; line-height: 1.45; }
+  .slide.s-flow .para-no { font-size: 2cqw; width: 5.6cqw; }
+
+  /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
+  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide .choices { gap: 0.35cqw; }
+  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: 2.02cqw; }
+  .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
+  .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
+  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
+  .choices li.ans {
+    background: var(--warn-bg); border-color: #f0c0bc;
+  }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices li.dim { color: var(--ink-faint); }
+  .choices li.dim .n { color: #b9c0cc; }
+
+  .slide.q-long h2.slide-title { font-size: 3.4cqw; margin-bottom: 1.1cqw; }
+  .slide.q-long .bogi { font-size: 1.62cqw; padding: 0.85cqw 1.2cqw; line-height: 1.55; }
+  .slide.q-long .bogi .tag { font-size: 1.4cqw; margin-bottom: 0.5cqw; }
+  .slide.q-long .choices li { font-size: 1.83cqw; line-height: 1.42; padding: 0.35cqw 0.9cqw; }
+  .slide.q-long .choices .n { font-size: 1.83cqw; }
+  .slide.q-long .ans-chip { font-size: 1.6cqw; }
+
+  /* 정답 배너 */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.4cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
+  }
+  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num {
+    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+  }
+  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+
+  /* 근거 대조 */
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
+  .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
+  .evi .box .h {
+    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+
+  /* 함정 포인트 */
+  .trap {
+    margin-top: 1.6cqw; background: var(--key-bg);
+    border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
+  }
+  .trap .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
+  }
+  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+
+  /* 오답 정리 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
+    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+  }
+  .otable th {
+    background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
+    color: var(--ink-soft);
+  }
+  .otable tr.ans th { background: var(--warn); color: #fff; }
+  .otable tr.ans td { background: var(--warn-bg); font-weight: 500; }
+
+  /* 보기 박스 */
+  .bogi {
+    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7;
+  }
+  .bogi .tag {
+    display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
+    font-size: 1.75cqw; margin-bottom: 1cqw;
+  }
+
+  /* 체크 정리 */
+  .checks { display: flex; flex-direction: column; gap: 1.5cqw; }
+  .check-row { display: flex; gap: 1.6cqw; align-items: flex-start; }
+  .check-row .k {
+    flex-shrink: 0; width: 9.5em; font-weight: 700; color: var(--key);
+    font-size: 2.35cqw; text-align: right;
+  }
+  .check-row .v { flex: 1; font-size: 2.35cqw; line-height: 1.65; color: var(--ink-soft); }
+
+  .page-num {
+    position: absolute; right: 3%; bottom: 2.6%;
+    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+  }
+
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #93a0b5; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #232a36; color: #dce4f0; border: 1px solid #3a4454;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2e3746; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #616c7d; font-size: 0.78rem; }
+
+  /* 전체화면 */
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .rules, .two, .evi { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 80vh; }
+  }
+
+  /* ── 정답 표시(이 자료의 추가 요소): 학생들이 이미 풀고 오므로 문제 슬라이드에 정답을 함께 띄운다 ── */
+  h2.slide-title { display: flex; align-items: baseline; gap: 0.4em; }
+  h2.slide-title .qtext { flex: 1; }
+  .ans-chip {
+    flex-shrink: 0; align-self: center;
+    background: var(--warn); color: #fff;
+    font-family: "Noto Sans KR", sans-serif; font-weight: 700;
+    font-size: 1.9cqw; letter-spacing: 0.06em;
+    padding: 0.35cqw 1.1cqw; border-radius: 2cqw; white-space: nowrap;
+  }
+  .slide.q-slide .ans-chip { font-size: 1.75cqw; }
+
+  /* 풀이 논리 박스 ─ 답지 해설이 아니라 '어떻게 끊어 낼 것인가' */
+  .logic {
+    margin-top: 1.5cqw; background: var(--ok-bg);
+    border-left: 0.45cqw solid var(--ok); padding: 1.4cqw 1.8cqw;
+  }
+  .logic .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--ok); margin-bottom: 0.55cqw;
+  }
+  .logic p { font-size: 2.15cqw; line-height: 1.62; color: var(--ink); }
+  .logic p + p { margin-top: 0.55cqw; }
+
+  /* 단계형 소거 순서 */
+  .steps { display: flex; gap: 1.3cqw; }
+  .steps .st {
+    flex: 1; border: 1px solid var(--line); border-top: 0.5cqw solid var(--ok);
+    padding: 1.4cqw 1.4cqw;
+  }
+  .steps .st .n {
+    font-family: "Noto Serif KR", serif; font-size: 2.5cqw; color: var(--ok);
+    font-weight: 700; margin-bottom: 0.7cqw;
+  }
+  .steps .st .t { font-size: 2.1cqw; font-weight: 700; line-height: 1.45; margin-bottom: 0.5cqw; }
+  .steps .st .d { font-size: 1.9cqw; line-height: 1.55; color: var(--ink-soft); }
+
+  /* 3열 분류표 */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .three .card { border-top: 0.5cqw solid var(--key); }
+  .three .card.q2 { border-top-color: var(--warn); }
+  .three .card.q3 { border-top-color: var(--ok); }
+  .three .card h3 { font-size: 2.7cqw; }
+  .three .card.q2 h3 { color: var(--warn); }
+  .three .card.q3 h3 { color: var(--ok); }
+  .three .card li { font-size: 2cqw; }
+
+  /* 매칭 표(2입장 × 문장) */
+  .mtable { width: 100%; border-collapse: collapse; }
+  .mtable th, .mtable td {
+    border: 1px solid var(--line); padding: 1cqw 1.2cqw;
+    font-size: 1.95cqw; line-height: 1.5; text-align: left; vertical-align: top;
+  }
+  .mtable thead th { background: #f2f5f9; text-align: center; font-size: 2.05cqw; }
+  .mtable td.stmt { background: #fbfcfe; font-weight: 700; }
+  .mtable td .no { font-weight: 700; color: var(--ink-faint); margin-right: 0.3em; }
+  .mtable td.ans { background: var(--warn-bg); }
+  .mtable td.ans .no { color: var(--warn); }
+
+  /* 대화 상자 */
+  .talk { border: 1px solid var(--ink); padding: 1.5cqw 1.8cqw; }
+  .talk .row { display: flex; gap: 1cqw; font-size: 2.1cqw; line-height: 1.52; }
+  .talk .row + .row { margin-top: 0.6cqw; }
+  .talk .who { flex-shrink: 0; width: 5.2em; font-weight: 700; color: var(--key); }
+  .talk .row.r2 .who { color: var(--warn); }
+  .talk .row.r3 .who { color: var(--ok); }
+  .talk .tag {
+    display: inline-block; margin-left: 0.4em; padding: 0 0.5em;
+    font-size: 1.6cqw; border: 1px solid var(--line); color: var(--ink-faint);
+  }
+
+  /* 흐름 화살표 */
+  .flow { display: flex; align-items: stretch; gap: 1.1cqw; }
+  .flow .fbox {
+    flex: 1; border: 1px solid var(--line); border-top: 0.45cqw solid var(--key);
+    padding: 1.3cqw 1.3cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .flow .fbox .t { font-size: 2.2cqw; font-weight: 700; line-height: 1.4; }
+  .flow .fbox .d { font-size: 1.85cqw; line-height: 1.5; color: var(--ink-soft); margin-top: 0.4cqw; }
+  .flow .arrow {
+    flex-shrink: 0; display: flex; align-items: center;
+    font-size: 3cqw; color: var(--ink-faint);
+  }
+
+  /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
+  .slide:has(.logic) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.logic) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.logic) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.logic) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.logic) .evi { gap: 1.4cqw; }
+  .slide:has(.logic) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.logic) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.logic) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.logic) .otable th, .slide:has(.logic) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.logic) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.logic) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.logic) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.logic) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.logic) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.logic) .two .card p, .slide:has(.logic) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.logic) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.logic) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.logic) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.logic) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+
+  /* 3열 분류 슬라이드 압축 */
+  .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide:has(.three) .card { padding: 1.4cqw 1.5cqw; }
+  .slide:has(.three) .card h3 { font-size: 2.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.three) .card p { font-size: 1.92cqw; line-height: 1.5; }
+  .slide:has(.three) .card li { font-size: 1.88cqw; line-height: 1.45; }
+  .slide:has(.three) .card li + li { margin-top: 0.45cqw; }
+  .slide:has(.three) .trap { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.three) .trap .h { font-size: 1.92cqw; }
+  .slide:has(.three) .trap p { font-size: 2cqw; line-height: 1.5; }
+
+  /* 대화 슬라이드 압축 */
+  .slide:has(.talk) .talk { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.talk) .talk .row { font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.talk) .talk .row + .row { margin-top: 0.45cqw; }
+  .slide:has(.talk) .talk .tag { font-size: 1.45cqw; }
+  .slide:has(.talk) .trap { margin-top: 1cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.talk) .trap .h { font-size: 1.85cqw; }
+  .slide:has(.talk) .trap p { font-size: 1.95cqw; line-height: 1.48; }
+  .slide:has(.talk) .bogi { font-size: 1.85cqw; line-height: 1.55; }
+
+  /* 문제 슬라이드에 인용 상자가 함께 있는 경우 */
+  .slide.q-slide:has(.quote-box) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.quote-box) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide:has(.two) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.two) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide .two .card { padding: 1.1cqw 1.4cqw; }
+
+  /* 매칭 표가 큰 슬라이드 */
+  .slide:has(.mtable) h2.slide-title { font-size: 4cqw; margin-bottom: 1.4cqw; }
+  .slide:has(.mtable) .mtable th, .slide:has(.mtable) .mtable td { padding: 0.85cqw 1.05cqw; font-size: 1.85cqw; line-height: 1.45; }
+
+  /* 체크 정리 슬라이드가 길어질 때 */
+  .slide:has(.checks) .checks { gap: 1.15cqw; }
+  .slide:has(.checks) .check-row .k, .slide:has(.checks) .check-row .v { font-size: 2.15cqw; line-height: 1.5; }
+
+  /* 2열 비교 슬라이드 압축 */
+  .slide:has(.two) .card { padding: 1.35cqw 1.6cqw; }
+  .slide:has(.two) .card h3 { font-size: 2.6cqw; margin-bottom: 0.75cqw; }
+  .slide:has(.two) .card p, .slide:has(.two) .card li { font-size: 2cqw; line-height: 1.5; }
+  .slide:has(.two) .card li + li { margin-top: 0.5cqw; }
+  .slide:has(.two) .trap { margin-top: 1.05cqw; padding: 1.05cqw 1.5cqw; }
+  .slide:has(.two) .trap .h { font-size: 1.88cqw; }
+  .slide:has(.two) .trap p { font-size: 1.98cqw; line-height: 1.5; }
+  .slide:has(.two) .quote-box { font-size: 2.05cqw; padding: 1.2cqw 1.5cqw; }
+  .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
+
+  /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
+  .slide:has(.logic):has(.otable) .otable th,
+  .slide:has(.logic):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+
+  /* 흐름도 + 해설 박스 슬라이드 */
+  .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
+  .slide:has(.flow) .flow .fbox .t { font-size: 2.1cqw; }
+  .slide:has(.flow) .flow .fbox .d { font-size: 1.82cqw; line-height: 1.45; }
+  .slide:has(.flow) .trap, .slide:has(.flow) .logic { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.flow) .trap p, .slide:has(.flow) .logic p { font-size: 2cqw; line-height: 1.52; }
+
+  /* 그래프 슬라이드 */
+  .slide:has(svg) .bogi { font-size: 1.82cqw; line-height: 1.55; padding: 1.05cqw 1.4cqw; }
+  .slide:has(svg) svg { width: 100%; height: 24cqw; }
+  .slide:has(svg) .trap p, .slide:has(svg) .logic p { font-size: 1.88cqw; line-height: 1.5; }
+  .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
+
+  /* 마지막 미세 조정 */
+  .slide:has(.logic) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(svg) svg { height: 20cqw; }
+  .slide:has(svg) .bogi { font-size: 1.75cqw; }
+  .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
+
+  .slide:has(.logic) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.logic) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.logic):has(.otable) .otable th,
+  .slide:has(.logic):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(svg) svg { height: 18.6cqw; }
+  .slide:has(.two):has(.logic) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.logic) .card p, .slide:has(.two):has(.logic) .card li { line-height: 1.45; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../../work.html">업무용</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">수능완성 3회 1~3번 · 3학년 · 업데이트 2026. 8. 19.</div>
+</div>
+
+<div class="stage" id="stage">
+
+
+  <!-- 1 표지 -->
+  <section class="slide active cover">
+    <div class="kicker">수 능 완 성 　실 전 3 회 　독 서 　이 론</div>
+    <h1>텍스트 복잡도</h1>
+    <div class="rule"></div>
+    <div class="sub">지문 구조 분석 &amp; 1~3번 문항 풀이 &mdash; 정답 공개판</div>
+    <div class="foot">
+      <span>고3 · 수능완성 실전 모의고사 3회 (본문 186~187쪽)</span>
+      <span>1~3번 · 배점 2 / 2 / 3점</span>
+    </div>
+    <div class="page-num">1 / 14</div>
+  </section>
+
+  <!-- 2 지문 구조 -->
+  <section class="slide s-flow">
+    <h2 class="slide-title"><span class="qtext">지문 구조 한눈에 보기</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t"><span class="u-key">텍스트 복잡도</span>의 개념과 읽기에 미치는 영향</div>
+            <div class="d">어휘·문장 구조·내용 전개의 복잡한 정도가 요구하는 주의력·인지적 노력의 정도 → 높을수록 읽기 속도 저하, 이해도 감소</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">복잡도를 형성하는 <span class="u-key">세 요인</span> &mdash; 단일 요인이 아니라 <mark>상호 작용</mark></div>
+            <div class="d">양적 요인 · 질적 요인 · 독자 및 과제 요인</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">㉠ <span class="u-key">요인별 특성에 맞춘 읽기 전략</span></div>
+            <div class="d">의미 추론 / 문장 쪼개기 / 사례·자기 언어로 정리 / 구조 표시 / 배경지식 보완 / 읽기 목적 점검</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t">복잡도는 <span class="u-key">난이도</span>의 문제가 아니라 <span class="u-key">이해 확장</span>의 문제</div>
+            <div class="d">요인을 분석하고 적합한 전략을 적용하면 복잡한 텍스트도 심층적으로 이해 가능</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">2 / 14</div>
+  </section>
+
+  <!-- 3 세 요인 분류표 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">복잡도를 만드는 세 요인 &mdash; 이 표가 3문항을 다 푼다</span></h2>
+    <div class="body-area">
+      <div class="three">
+        <div class="card">
+          <h3>양적 요인</h3>
+          <p style="margin-bottom:0.9cqw;"><b>수치로 측정</b>되는 언어적·구조적 특성</p>
+          <ul>
+            <li>어휘의 사용 빈도 (드문 전문 용어)</li>
+            <li><b class="u-key">문장의 길이</b></li>
+            <li>텍스트의 응집성</li>
+            <li><b class="u-key">문장 구조의 복잡성</b> (안긴문장)</li>
+          </ul>
+        </div>
+        <div class="card q2">
+          <h3>질적 요인</h3>
+          <p style="margin-bottom:0.9cqw;">세어서 잴 수 없는 <b>의미·구성</b>의 성질</p>
+          <ul>
+            <li>주제의 추상성</li>
+            <li>의미의 복합성</li>
+            <li><b class="u-warn">비유 같은 간접 표현</b></li>
+            <li>구성·전개 방식의 복잡성</li>
+          </ul>
+        </div>
+        <div class="card q3">
+          <h3>독자 및 과제 요인</h3>
+          <p style="margin-bottom:0.9cqw;"><b>텍스트 외부</b>, 읽는 사람 쪽의 조건</p>
+          <ul>
+            <li><b class="u-ok">배경지식</b> (주제 친숙도)</li>
+            <li>읽기 능력 · 흥미</li>
+            <li><b class="u-ok">읽기 목적</b> (추론 vs 단순 습득)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">여기서 갈린다</div>
+        <p>&lsquo;<b>문장이 길고 구조가 복잡하다</b>&rsquo;는 느낌상 질적 요인 같지만 2문단이 <b class="u-key">양적 요인</b>으로 못 박아 두었다. 3번 문항의 오답 두 개가 정확히 이 착각을 노린다</p>
+      </div>
+    </div>
+    <div class="page-num">3 / 14</div>
+  </section>
+
+  <!-- 4 읽기 전략 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">㉠ 요인별 읽기 전략 &mdash; 요인과 처방의 짝</span></h2>
+    <div class="body-area">
+      <table class="mtable">
+        <thead>
+          <tr><th style="width:14em;">복잡하게 만드는 요인</th><th>지문이 제시한 처방</th></tr>
+        </thead>
+        <tr><td class="stmt">모르는 단어 (양적)</td><td>문맥과 전후 문장으로 <b>의미를 추론</b>, 필요하면 사전·참고 자료로 확인</td></tr>
+        <tr><td class="stmt">긴 문장 · 복잡한 구조 (양적)</td><td>주어·서술어·목적어를 구분하고 <b>여러 구절로 나누어</b> 이해</td></tr>
+        <tr><td class="stmt">추상적 주제 · 복합적 의미 (질적)</td><td><b>구체적 사례</b>를 떠올리거나 <b>자신만의 언어로 다시 정리</b></td></tr>
+        <tr><td class="stmt">복잡한 전개 구조 (질적)</td><td><b>중심 문장과 연결어를 표시</b>하고 문단별 핵심을 정리해 전체 주제 파악</td></tr>
+        <tr><td class="stmt">생소한 주제 (독자·과제)</td><td>읽기 전이나 읽는 중에 <b>관련 배경지식을 보완</b></td></tr>
+        <tr><td class="stmt">목적이 흐릿함 (독자·과제)</td><td><b>읽기 목적을 명확히</b> 하여 속도와 깊이를 조절, 필요한 정보에 집중</td></tr>
+      </table>
+    </div>
+    <div class="page-num">4 / 14</div>
+  </section>
+
+  <!-- 5 01번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">01</span><span class="qtext">윗글을 이해한 내용으로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ④</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">정보 추론을 위한 읽기보다 단순 정보 습득을 위한 읽기에서 독자의 인지적 노력이 덜 요구된다.</span></li>
+        <li><span class="n">②</span><span class="txt">텍스트 복잡도의 양적 요인은 어휘의 사용 빈도, 문장의 길이 등을 수치로 측정하여 확인할 수 있다.</span></li>
+        <li><span class="n">③</span><span class="txt">텍스트의 주제와 관련된 독자의 배경지식 부족은 텍스트 복잡도를 높이는 원인으로 작용할 수 있다.</span></li>
+        <li class="ans"><span class="n">④</span><span class="txt">텍스트 복잡도를 형성하는 요인 중 질적 요인은 텍스트의 양적 요인보다 독자가 느끼는 인지적 부담이 크다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">어휘, 문장 구조, 내용 전개 등에서 나타나는 텍스트 복잡도가 높을수록 독자는 더 많은 인지적 자원을 사용한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">5 / 14</div>
+  </section>
+
+  <!-- 6 01번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">01</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">④</span>
+        <span class="why">지문에 <b>없는 우열 관계</b>를 만들어 낸 선택지</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (2문단)</div>
+          <p>&ldquo;텍스트 복잡도는 단일 요인으로 결정되지 않고, 양적 요인, 질적 요인, 독자 및 과제 요인 등이 <mark><b>상호 작용하여 형성된다</b></mark>.&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ④</div>
+          <p>&ldquo;질적 요인은 양적 요인<mark><b>보다</b></mark> 독자가 느끼는 인지적 부담이 <b>크다</b>&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">병렬로 나열된 세 요인을 우열 관계로 바꿔치기</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 비교급을 먼저 사냥한다</div>
+        <p>이 문항의 다섯 선택지 중 <b>비교 표현이 들어간 것은 ①과 ④ 둘뿐</b>이다. 비교급이 보이면 &lsquo;지문이 실제로 두 항을 견주었는가&rsquo;만 확인하면 된다. ①은 2문단이 &lsquo;정보 추론보다 단순 정보 습득일 경우가 상대적으로 쉽다&rsquo;고 <b class="u-ok">직접 견주었으므로 적절</b>. ④는 세 요인을 <b class="u-warn">나란히 늘어놓기만 했지 견준 적이 없다</b>. 나머지 셋을 대조하지 않고도 답이 나온다</p>
+      </div>
+    </div>
+    <div class="page-num">6 / 14</div>
+  </section>
+
+  <!-- 7 02번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">02</span><span class="qtext">㉠에 대한 이해로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ④</span></h2>
+    <div class="body-area">
+      <div class="quote-box" style="margin-bottom:1.5cqw;">
+        ㉠ <b>복잡도가 높은 텍스트를 이해하기 위해서는 요인별 특성에 맞춘 읽기 전략이 필요하다.</b>
+        <span class="src">3문단 첫 문장 &mdash; 뒤에 이어지는 전략 목록 전체를 총괄하는 문장</span>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">어려운 단어가 많이 포함된 텍스트일 경우, 문맥을 통해 단어의 의미를 추론하며 읽는다.</span></li>
+        <li><span class="n">②</span><span class="txt">글의 전개 구조가 복잡할 경우, 중심 문장과 연결어를 표시하여 문단별 핵심 내용을 파악한다.</span></li>
+        <li><span class="n">③</span><span class="txt">글의 주제가 추상적이고 의미가 복합성을 지닌 경우, 구체적인 사례와 연결하고 자신의 언어로 내용을 정리하며 읽는다.</span></li>
+        <li class="ans"><span class="n">④</span><span class="txt">텍스트 주제에 대한 친숙도가 낮을 경우, 관련 배경지식을 보완하기보다 텍스트의 세부적인 정보를 빠르게 훑어보며 읽는다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">문장 안에 또 다른 문장이 여러 번 들어간 구조의 문장이 많을 경우, 주어, 서술어, 목적어를 구분하고 문장을 여러 구절로 나누어 정리하며 이해한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">7 / 14</div>
+  </section>
+
+  <!-- 8 02번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">02</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">④</span>
+        <span class="why">지문이 &lsquo;하라&rsquo;고 한 것을 &lsquo;<b>하기보다</b>&rsquo;로 밀어냈다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (3문단)</div>
+          <p>&ldquo;텍스트의 주제가 생소하다면 읽기 전이나 읽는 과정에서 <mark><b>관련 배경지식을 보완하는 것도 도움이 된다</b></mark>.&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ④</div>
+          <p>&ldquo;관련 배경지식을 <mark><b>보완하기보다</b></mark> 세부적인 정보를 빠르게 훑어보며 읽는다&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">처방을 정반대로 뒤집고, 지문에 없는 &lsquo;빠르게 훑어보기&rsquo;를 끼워 넣음</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 짝짓기 문항은 &lsquo;배제 표현&rsquo;부터 본다</div>
+        <p>①~⑤가 전부 &lsquo;<b>어떤 요인 → 어떤 전략</b>&rsquo; 형태다. 이런 1:1 매칭 문항은 3문단의 전략 목록에서 짝을 찾아 대조하면 되는데, 순서대로 다 볼 필요가 없다. <b class="u-ok">&lsquo;~보다&rsquo;, &lsquo;~하기보다&rsquo;, &lsquo;~대신&rsquo;처럼 지문의 전략 하나를 배제하는 표현이 붙은 선택지</b>를 먼저 집으면 된다. 지문은 전략을 <b>더하라</b>고만 했지 어느 하나를 <b>버리라</b>고 한 적이 없기 때문이다</p>
+      </div>
+    </div>
+    <div class="page-num">8 / 14</div>
+  </section>
+
+  <!-- 9 02번 선택지별 확인 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">02</span><span class="qtext">선택지별 확인</span></h2>
+    <div class="body-area">
+      <table class="otable">
+        <tr><th>①</th><td>모르는 단어 &rarr; <b>문맥·전후 문장으로 의미 추론</b> (3문단 그대로) &rarr; 적절</td></tr>
+        <tr><th>②</th><td>복잡한 전개 구조 &rarr; <b>중심 문장·연결어 표시, 문단별 핵심 정리</b> (3문단 그대로) &rarr; 적절</td></tr>
+        <tr><th>③</th><td>추상적·복합적 의미 &rarr; <b>구체적 사례, 자신만의 언어로 재정리</b> (3문단 그대로) &rarr; 적절</td></tr>
+        <tr class="ans"><th>④</th><td>생소한 주제 &rarr; 지문은 <b>배경지식 보완</b>, 선택지는 <b class="u-warn">보완하지 말고 빠르게 훑기</b> &rarr; <b>정답</b></td></tr>
+        <tr><th>⑤</th><td>안긴문장 많음 &rarr; <b>성분 구분 후 구절로 분할</b> (3문단 그대로) &rarr; 적절</td></tr>
+      </table>
+    </div>
+    <div class="page-num">9 / 14</div>
+  </section>
+
+  <!-- 10 03번 문제 (대화) -->
+  <section class="slide">
+    <h2 class="slide-title" style="font-size:3.5cqw;"><span class="q">03</span><span class="qtext">독서 수업 중 기사문을 읽고 나눈 대화 [3점]</span><span class="ans-chip">정답 ②</span></h2>
+    <div class="body-area">
+      <div class="talk">
+        <div class="row"><span class="who">학생 1</span><span>나는 기사문에 <mark>경제 관련 전문 용어가 너무 많아서</mark> 읽기가 힘들었어.<span class="tag">양적</span></span></div>
+        <div class="row r2"><span class="who">학생 2</span><span>맞아, 나도 그랬어. <mark>모르는 단어의 의미를 일일이 사전에서 찾다가</mark>, 수업 시간 안에 기사문을 다 읽지 못했어.<span class="tag">양적 · 속도 저하</span></span></div>
+        <div class="row r3"><span class="who">학생 3</span><span>나는 경제 동아리 활동에서 다루어 본 주제라 내용은 친숙했지만, <mark>문장이 길고 구조가 복잡해서</mark> 의미를 파악하기가 힘들었어.<span class="tag">양적 (질적 아님!)</span></span></div>
+        <div class="row r2"><span class="who">학생 2</span><span>선생님께서 그럴 땐 문장을 끊어서 읽고, 구절 단위로 내용을 정리하는 게 도움이 될 것이라고 하셨어.</span></div>
+        <div class="row"><span class="who">학생 1</span><span>응, 그리고 기사문에 <mark>비유적인 표현도 많아서</mark> 내용을 명확하게 정리하기가 힘들었어. 실제 사례나 사회 시간에 배운 경제 개념을 떠올리며 이해하려고 노력했어.<span class="tag">질적</span></span></div>
+        <div class="row r3"><span class="who">학생 3</span><span>나도 경제 동아리 활동에서 <mark>조사했던 개념과 연결하며</mark> 이해하니까 내용 정리에 도움이 되었어.<span class="tag">독자 및 과제</span></span></div>
+      </div>
+      <div class="trap" style="margin-top:1.2cqw;">
+        <div class="h">발화 → 요인 태깅이 전부다</div>
+        <p>학생 1 = 양적 + 질적 / 학생 2 = 양적 / 학생 3 = 양적(어려움) + 독자 및 과제(완화). <b class="u-warn">학생 3에게 질적 요인은 나온 적이 없다</b></p>
+      </div>
+    </div>
+    <div class="page-num">10 / 14</div>
+  </section>
+
+  <!-- 11 03번 선택지 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">03</span><span class="qtext">학생의 대화를 이해한 것으로 가장 적절한 것은?</span><span class="ans-chip">정답 ②</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">&lsquo;학생 1&rsquo;에게 기사문은 양적 요인에서 복잡도가 높은 텍스트이지만, 질적 요인으로 인한 텍스트 복잡도는 높지 않다.</span></li>
+        <li class="ans"><span class="n">②</span><span class="txt">&lsquo;학생 2&rsquo;에게 기사문은 양적 요인으로 인한 텍스트 복잡도가 높아 읽기 속도 면에서 어려움을 초래하고 있다.</span></li>
+        <li><span class="n">③</span><span class="txt">&lsquo;학생 3&rsquo;에게 기사문은 질적 요인과 독자 및 과제 요인이 복합적으로 작용하여 높은 텍스트 복잡도를 보인다.</span></li>
+        <li><span class="n">④</span><span class="txt">&lsquo;학생 2&rsquo;와 달리 &lsquo;학생 3&rsquo;은 주제에 대한 배경지식을 통해 질적 요인으로 인한 기사문의 복잡도를 완화하고 있다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">&lsquo;학생 2&rsquo;와 &lsquo;학생 3&rsquo;은 모두 복잡도가 높은 기사문을 이해하기 위해 자신의 읽기 목적을 점검하고 있다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">11 / 14</div>
+  </section>
+
+  <!-- 12 03번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">03</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">②</span>
+        <span class="why">어휘(양적) → <b>읽기 속도</b> 저하까지, 인과가 지문과 정확히 일치</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (1·2문단)</div>
+          <p>2문단 &ldquo;<mark><b>드물게 쓰이는 전문 용어가 다수 포함</b></mark>되거나&hellip;복잡도를 높인다&rdquo; + 1문단 &ldquo;복잡도가 높을수록&hellip;<mark><b>읽기 속도의 저하</b></mark>와 이해도의 감소로 이어진다&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">학생 2의 발화</div>
+          <p>&ldquo;모르는 단어의 의미를 일일이 사전에서 찾다가, <b>수업 시간 안에 다 읽지 못했어</b>&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--ok); font-weight:700;">어휘 = 양적 요인, 다 못 읽음 = 속도 문제 &rarr; 두 축이 모두 맞는 유일한 선택지</p>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="h">풀이 논리 &mdash; 발화에 태그를 붙인 뒤 선택지를 본다</div>
+        <p>선택지를 먼저 읽으면 진다. <b>2문단의 세 요인 목록을 손에 쥐고 발화 여섯 개에 태그를 다는 것</b>이 먼저다. 그러면 오답 셋(①③④)이 모두 <b class="u-warn">&lsquo;양적을 질적이라고 부르거나, 질적을 없다고 하는&rsquo;</b> 한 가지 장치로 묶인다는 게 보인다. 이 문항이 3점인 이유는 추론이 어려워서가 아니라 <b>분류를 정확히 했는지</b>를 묻기 때문이다</p>
+      </div>
+    </div>
+    <div class="page-num">12 / 14</div>
+  </section>
+
+  <!-- 13 03번 선택지별 확인 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">03</span><span class="qtext">선택지별 확인</span></h2>
+    <div class="body-area">
+      <table class="otable">
+        <tr><th>①</th><td>학생 1은 &lsquo;전문 용어&rsquo;(양적)와 &lsquo;<b class="u-warn">비유적인 표현</b>&rsquo;(질적)을 <b>모두</b> 말했다. 질적 복잡도가 높지 않다는 진술은 오류 &rarr; 부적절</td></tr>
+        <tr class="ans"><th>②</th><td>어휘 = 양적 요인 &rarr; 사전 찾느라 다 읽지 못함 = <b>읽기 속도</b> 저하 &rarr; <b>정답</b></td></tr>
+        <tr><th>③</th><td>학생 3의 어려움은 &lsquo;문장 길이·구조&rsquo; = <b class="u-warn">양적 요인</b>. 질적 요인은 언급된 적 없고, 독자 및 과제 요인은 어려움이 아니라 <b>완화 수단</b>이었다 &rarr; 부적절</td></tr>
+        <tr><th>④</th><td>학생 3이 배경지식으로 완화한 것은 <b class="u-warn">양적 요인</b>의 복잡도. &lsquo;질적 요인&rsquo;이라 한 것이 오류 &rarr; 부적절</td></tr>
+        <tr><th>⑤</th><td>두 학생 모두 <b class="u-warn">읽기 목적을 점검한 발화가 없다</b>. 지문에 있는 전략이라고 해서 대화에도 있는 것은 아니다 &rarr; 부적절</td></tr>
+      </table>
+    </div>
+    <div class="page-num">13 / 14</div>
+  </section>
+
+  <!-- 14 핵심 정리 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">오늘 가져갈 것</span></h2>
+    <div class="body-area">
+      <div class="checks">
+        <div class="check-row"><div class="k">지문 한 줄</div><div class="v">텍스트 복잡도 = 세 요인의 <b>상호 작용</b>. 요인을 알면 처방이 나온다</div></div>
+        <div class="check-row"><div class="k">암기할 경계선</div><div class="v"><b class="u-key">문장 길이·구조의 복잡성 = 양적 요인</b> (질적 아님) / <b class="u-warn">비유 = 질적</b> / <b class="u-ok">배경지식·읽기 목적 = 독자 및 과제</b></div></div>
+        <div class="check-row"><div class="k">1번 유형</div><div class="v">비교급이 보이면 &lsquo;지문이 실제로 견주었는가&rsquo;만 확인 &mdash; 병렬 나열을 우열로 바꾸면 오답</div></div>
+        <div class="check-row"><div class="k">2번 유형</div><div class="v">요인-전략 짝짓기에서는 <b>&lsquo;~하기보다&rsquo;</b>처럼 지문의 처방을 배제하는 표현을 먼저 찍는다</div></div>
+        <div class="check-row"><div class="k">3번 유형</div><div class="v">사례 적용은 <b>발화에 태그를 먼저 붙이고</b> 선택지를 본다. 순서를 바꾸면 낚인다</div></div>
+      </div>
+    </div>
+    <div class="page-num">14 / 14</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 14</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  let idx = 0;
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
