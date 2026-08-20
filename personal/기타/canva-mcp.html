@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canva MCP 사용설명서 - My Presentations</title>
+<style>
+  :root { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270; --accent: #3a5ba0;
+    --shadow: rgba(28, 34, 48, 0.10); --line: #e8eaee; --code: #f3f4f7; --warn: #c0392b; --ok: #2b7a4b; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #14161c; --card: #1f232c; --ink: #eceef2;
+    --ink-soft: #a3aab8; --accent: #7fa2e0; --shadow: rgba(0,0,0,0.4); --line: #2c313c; --code: #171a21;
+    --warn: #e8807a; --ok: #6cc48f; } }
+  :root[data-theme="dark"] { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8;
+    --accent: #7fa2e0; --shadow: rgba(0,0,0,0.4); --line: #2c313c; --code: #171a21; --warn: #e8807a; --ok: #6cc48f; }
+  :root[data-theme="light"] { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270;
+    --accent: #3a5ba0; --shadow: rgba(28, 34, 48, 0.10); --line: #e8eaee; --code: #f3f4f7; --warn: #c0392b; --ok: #2b7a4b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+    display: flex; flex-direction: column; align-items: center; padding: 6vh 5vw 8vh; line-height: 1.65; }
+  .top { width: 100%; max-width: 820px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; }
+  a.back { color: var(--ink-soft); text-decoration: none; font-size: 0.9rem; }
+  a.back:hover { color: var(--accent); }
+  .wrap { width: 100%; max-width: 820px; }
+  h1 { font-size: 1.65rem; margin: 0.5rem 0 0.6rem; }
+  .lead { color: var(--ink-soft); font-size: 0.95rem; margin-bottom: 0.6rem; }
+  .stamp { font-size: 0.8rem; color: var(--ink-soft); border-top: 1px solid var(--line);
+    padding-top: 0.8rem; margin-bottom: 2.4rem; }
+  h2 { font-size: 1.15rem; margin: 2.6rem 0 0.9rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--line); }
+  h3 { font-size: 0.98rem; margin: 1.6rem 0 0.5rem; color: var(--accent); }
+  p { margin: 0.6rem 0; font-size: 0.94rem; }
+  .box { background: var(--card); border-radius: 14px; padding: 1.2rem 1.4rem;
+    box-shadow: 0 3px 12px var(--shadow); margin: 1rem 0; }
+  .box b { color: var(--accent); }
+  ol, ul { margin: 0.4rem 0 0; padding-left: 1.3rem; }
+  li { margin: 0.35rem 0; font-size: 0.93rem; }
+  code { background: var(--code); border-radius: 6px; padding: 0.15rem 0.45rem; font-size: 0.87em;
+    font-family: "Cascadia Mono", Consolas, monospace; word-break: break-all; }
+  pre { background: var(--code); border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto;
+    font-size: 0.85rem; font-family: "Cascadia Mono", Consolas, monospace; margin: 0.7rem 0 0; line-height: 1.55; }
+  pre code { background: none; padding: 0; word-break: normal; }
+  .note { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.8rem; }
+  .tablewrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.89rem; }
+  th, td { border-bottom: 1px solid var(--line); padding: 0.6rem 0.5rem; text-align: left; vertical-align: top; }
+  th { color: var(--ink-soft); font-weight: 600; font-size: 0.82rem; white-space: nowrap; }
+  td code { white-space: nowrap; }
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.5rem; margin-top: 0.9rem; }
+  .step { flex: 1 1 150px; background: var(--code); border-radius: 10px; padding: 0.8rem 0.9rem;
+    border-left: 3px solid var(--accent); }
+  .step .n { font-size: 0.74rem; color: var(--ink-soft); display: block; }
+  .step .t { font-size: 0.88rem; font-weight: 600; }
+  .step .d { font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.2rem; }
+  .warn { border-left: 3px solid var(--warn); }
+  .warn b { color: var(--warn); }
+  .ok { border-left: 3px solid var(--ok); }
+  .ok b { color: var(--ok); }
+  .tag { display: inline-block; font-size: 0.72rem; padding: 0.1rem 0.45rem; border-radius: 5px;
+    background: var(--code); color: var(--ink-soft); margin-left: 0.3rem; vertical-align: middle; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <a class="back" href="../기타.html">&larr; 기타</a>
+    <a class="back" href="../../index.html">홈으로</a>
+  </div>
+  <div class="wrap">
+
+    <h1>🎨 Canva MCP 사용설명서</h1>
+    <div class="lead">
+      Claude Code(CLI)에 Canva를 도구로 붙여, 대화만으로 프레젠테이션·문서·이미지를 만들고 고치고 내려받는 방법.
+      작동 원리부터 실제 워크플로, 그리고 못 하는 일까지.
+    </div>
+    <div class="stamp">기준일 2026-08-20 · 연결 시점에 노출된 Canva 도구 33개 기준</div>
+
+    <h2>1. 작동 방식</h2>
+    <p>
+      Canva MCP는 로컬에 설치하는 프로그램이 아니라 <b>Canva가 운영하는 원격 서버</b>다.
+      Claude Code는 <code>https://mcp.canva.com/mcp</code> 로 JSON-RPC 요청을 보내고, 실제 디자인 조작은 전부 Canva 쪽에서 일어난다.
+    </p>
+    <div class="flow">
+      <div class="step"><span class="n">① 클라이언트</span><span class="t">Claude Code</span>
+        <span class="d">어떤 도구를 어떤 인자로 부를지 결정</span></div>
+      <div class="step"><span class="n">② 전송</span><span class="t">HTTP + OAuth 2.1</span>
+        <span class="d">토큰은 내 PC에만 저장, 브라우저로 최초 1회 승인</span></div>
+      <div class="step"><span class="n">③ 서버</span><span class="t">Canva</span>
+        <span class="d">디자인 생성·편집·렌더링을 직접 수행</span></div>
+      <div class="step"><span class="n">④ 응답</span><span class="t">JSON + 썸네일</span>
+        <span class="d">디자인 ID·URL·미리보기가 대화로 돌아옴</span></div>
+    </div>
+    <p>
+      그래서 <b>클로드 데스크탑과 CLI의 기능 차이는 없다.</b> 서버·프로토콜·권한이 동일하기 때문이다.
+      차이가 있다면 커넥션을 누가 들고 있고 토큰을 어디에 저장하느냐 정도이고, CLI는 OAuth 콜백을 로컬 포트로 받으므로
+      브라우저를 띄울 수 없는 원격 SSH 환경에서만 인증이 곤란해진다.
+    </p>
+    <div class="box">
+      <b>중요 —</b> 파일이 오가지 않는다. 내 PC의 이미지·PDF를 Canva로 밀어 넣는 경로는 기본적으로 없고,
+      Canva가 접근 가능한 <b>공개 HTTPS URL</b>만 받는다. 이 제약이 뒤의 여러 한계를 만든다.
+    </div>
+
+    <h2>2. 연결하기</h2>
+    <pre><code>claude mcp add canva --transport http https://mcp.canva.com/mcp</code></pre>
+    <p>등록 후 세션 안에서 <code>/mcp</code> → <code>canva</code> → Authenticate. 브라우저가 열리면 Canva 계정으로 승인하면 끝이다.</p>
+
+    <h3>등록 범위(scope) 고르기</h3>
+    <div class="tablewrap">
+      <table>
+        <tr><th>scope</th><th>저장 위치</th><th>적용 범위</th><th>공유</th></tr>
+        <tr><td><code>local</code> (기본)</td><td><code>~/.claude.json</code> 의 프로젝트 경로 키</td><td>이 폴더에서만</td><td>안 됨</td></tr>
+        <tr><td><code>user</code></td><td><code>~/.claude.json</code> 전역</td><td>모든 폴더에서</td><td>안 됨</td></tr>
+        <tr><td><code>project</code></td><td>프로젝트 루트의 <code>.mcp.json</code></td><td>이 저장소를 여는 모두</td><td>Git 커밋됨</td></tr>
+      </table>
+    </div>
+    <p class="note">
+      여기서 "프로젝트"는 <code>claude</code>를 실행한 <b>디렉터리 하나</b>를 뜻한다(절대 경로가 그대로 키가 된다).
+      폴더를 옮겨 다니며 쓸 거면 <code>-s user</code>로 등록하는 편이 낫다.
+      이름이 겹칠 때 우선순위는 local &gt; project &gt; user.
+      토큰은 scope와 무관하게 로컬에 따로 저장되므로 로그인은 한 번이면 된다.
+    </p>
+    <pre><code>claude mcp add canva -s user --transport http https://mcp.canva.com/mcp   # 전역
+claude mcp get canva      # 상태 확인
+claude mcp remove canva -s local   # 해제</code></pre>
+
+    <h2>3. 할 수 있는 일 — 도구 33개</h2>
+    <p>도구 이름을 외울 필요는 없다. 아래는 "무엇을 시킬 수 있는지"의 범위를 보기 위한 지도다.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th>분류</th><th>도구</th><th>하는 일</th></tr>
+        <tr>
+          <td><b>생성</b></td>
+          <td><code>generate-design</code> <code>get-design-candidates</code> <code>create-design-from-candidate</code></td>
+          <td>프롬프트로 디자인 후보를 여러 개 만들고, 고른 하나를 내 계정의 편집 가능한 디자인으로 확정</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><code>import-design-from-url</code></td>
+          <td>공개 URL의 PDF·PPTX·DOCX·XLSX·CSV·HTML·Markdown·PSD·AI·Keynote 등을 Canva 디자인으로 가져오기</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><code>copy-design</code> <code>resize-design</code></td>
+          <td>기존 디자인 복제(원하는 페이지만 골라서도 가능), 프레젠테이션·화이트보드·임의 픽셀 크기로 리사이즈</td>
+        </tr>
+        <tr>
+          <td><b>읽기</b></td>
+          <td><code>search-designs</code> <code>get-design</code> <code>get-design-content</code> <code>get-design-pages</code> <code>get-presenter-notes</code></td>
+          <td>내 디자인 검색, 메타데이터·페이지 목록·본문 텍스트·발표자 노트 읽기</td>
+        </tr>
+        <tr>
+          <td><b>편집</b></td>
+          <td><code>start-editing-transaction</code> <code>perform-editing-operations</code> <code>commit-/cancel-editing-transaction</code> <code>get-design-thumbnail</code></td>
+          <td>트랜잭션을 열고 텍스트·이미지·서식을 바꾼 뒤 저장 또는 폐기. 페이지 썸네일로 결과 확인</td>
+        </tr>
+        <tr>
+          <td><b>내보내기</b></td>
+          <td><code>get-export-formats</code> <code>export-design</code></td>
+          <td>PDF·PNG·JPG·GIF·PPTX·MP4·CSV 중 지원 형식을 확인한 뒤 내려받기 URL 생성</td>
+        </tr>
+        <tr>
+          <td><b>에셋</b></td>
+          <td><code>upload-asset-from-url</code> <code>get-assets</code></td>
+          <td>공개 URL의 이미지·영상을 Canva 계정에 올리고, 에셋 메타데이터·썸네일 조회</td>
+        </tr>
+        <tr>
+          <td><b>템플릿·브랜드</b></td>
+          <td><code>search-brand-templates</code> <code>get-brand-template-dataset</code> <code>create-design-from-brand-template</code> <code>list-brand-kits</code></td>
+          <td>브랜드 템플릿 검색, 자동채움 필드 스키마 조회, 템플릿으로 새 디자인 만들기, 브랜드 킷 목록</td>
+        </tr>
+        <tr>
+          <td><b>정리</b></td>
+          <td><code>create-folder</code> <code>search-folders</code> <code>list-folder-items</code> <code>move-item-to-folder</code></td>
+          <td>폴더 만들기·검색·내용 나열·항목 이동</td>
+        </tr>
+        <tr>
+          <td><b>협업</b></td>
+          <td><code>list-comments</code> <code>comment-on-design</code> <code>list-replies</code> <code>reply-to-comment</code></td>
+          <td>디자인 댓글 읽기·달기·답글</td>
+        </tr>
+        <tr>
+          <td><b>보조</b></td>
+          <td><code>resolve-shortlink</code></td>
+          <td><code>canva.link/abc123</code> 형태의 단축 링크를 실제 디자인 URL로 변환</td>
+        </tr>
+      </table>
+    </div>
+
+    <h2>4. 실전 워크플로</h2>
+
+    <h3>① 새 프레젠테이션 만들기</h3>
+    <div class="box">
+      <div class="flow">
+        <div class="step"><span class="n">1</span><span class="t">요청</span><span class="d">"~ 주제로 5장짜리 발표자료"</span></div>
+        <div class="step"><span class="n">2</span><span class="t">후보 생성</span><span class="d">여러 시안이 썸네일로 제시됨</span></div>
+        <div class="step"><span class="n">3</span><span class="t">선택</span><span class="d">고른 것만 내 계정에 확정</span></div>
+        <div class="step"><span class="n">4</span><span class="t">다듬기 → 내보내기</span><span class="d">텍스트 수정 후 PDF/PPTX</span></div>
+      </div>
+      <div class="note">
+        <b>장수는 적게 시작하는 게 좋다.</b> 슬라이드가 늘어날수록 생성 시간이 가파르게 늘어난다(15장이면 5장의 3배 수준).
+        기본값은 1~5장이고, 명시적으로 요청해야 <code>balanced</code>(5~15장)·<code>comprehensive</code>(15장 이상)로 간다.
+      </div>
+      <div class="note">
+        만드는 종류는 프레젠테이션 말고도 26가지가 있다 — 문서(Canva Doc), 리포트, 제안서, 포스터, 전단, 인포그래픽,
+        명함, 로고, 이력서, 초대장, 인스타/페북/X 게시물, 유튜브 썸네일·배너, 스토리, 배경화면 등.
+      </div>
+    </div>
+
+    <h3>② 이미 있는 디자인 고치기</h3>
+    <p>
+      제목 변경, 오탈자 수정, 번역, 텍스트·이미지 교체, 서식 변경이 모두 여기 해당한다.
+      반드시 <b>트랜잭션 3단계</b>를 거친다.
+    </p>
+    <pre><code>디자인 찾기 → 트랜잭션 시작 → 편집 조작(여러 개 한꺼번에) → 커밋</code></pre>
+    <div class="box warn">
+      <b>커밋하지 않으면 전부 사라진다.</b> 편집 결과는 커밋 전까지 초안 상태로만 존재한다.
+      반대로 말하면 <b>마음껏 시켜봐도 안전하다</b> — 마음에 안 들면 취소하면 원본은 그대로다.
+    </div>
+    <p>가능한 조작:</p>
+    <ul>
+      <li>제목 변경, 텍스트 통째 교체, <b>특정 문자열만 찾아 바꾸기</b></li>
+      <li>이미지·영상 교체 및 새로 삽입(위치·크기·회전·투명도 지정 가능), 요소 삭제</li>
+      <li>요소 이동·크기 조정</li>
+      <li>서식: 색상, 크기, 굵기, 기울임, 밑줄, 취소선, 정렬, 줄간격, 링크, 글머리표/번호 목록</li>
+      <li>브랜드 템플릿의 자동채움 필드 연결·해제</li>
+    </ul>
+
+    <h3>③ 내가 만든 파일을 Canva로 가져오기</h3>
+    <p>
+      직접 만든 HTML 슬라이드나 PDF를 Canva에서 마저 다듬고 싶을 때 쓴다. <b>공개 HTTPS URL이면</b> 그대로 가져온다.
+      이 사이트(GitHub Pages)에 올려둔 파일이나 GitHub raw 링크가 바로 그 조건을 만족한다.
+    </p>
+    <div class="box ok">
+      <b>HTML을 페이지로 쪼개려면</b> 슬라이드가 될 요소마다 <code>data-document-role="page"</code> 속성을 붙인다.
+      페이지끼리 중첩되면 안 된다. <code>data-label</code>로 페이지 제목,
+      <code>data-speaker-notes</code>로 발표자 노트도 같이 넘길 수 있다.
+      속성을 안 붙이고 그냥 넣으면 웹사이트/앱 같은 인터랙티브 디자인으로 해석된다.
+    </div>
+
+    <h2>5. 한계와 주의점</h2>
+    <div class="box warn">
+      <b>로컬 파일은 못 올린다.</b> <code>C:\...</code>, <code>file://</code> 경로는 받지 않는다.
+      이걸 우회하려고 개인 파일을 임시 공유 사이트에 올리는 건 하지 말 것 — 되돌릴 수 없이 인터넷에 공개된다.
+      Canva 웹에서 직접 업로드하고, MCP로는 그 다음부터 다루는 게 맞다.
+    </div>
+    <ul>
+      <li><b>글꼴(font family)은 바꿀 수 없다.</b> 크기·굵기·스타일은 되지만 서체 자체 교체는 지원하지 않는다.
+        한국어 자료라면 생성 단계에서 서체가 정해지고, 이후엔 Canva 에디터에서 손대야 한다.</li>
+      <li><b>반응형 페이지는 조작이 제한된다.</b> Canva Doc처럼 유동 레이아웃인 페이지에서는
+        제목 변경·텍스트 교체·찾아 바꾸기·이미지 교체·요소 삭제만 되고, 위치/크기 조정 같은 건 통하지 않는다.</li>
+      <li><b>정밀 레이아웃 설계용 도구가 아니다.</b> 빈 캔버스에 도형을 그리거나 새 텍스트 상자를 만들어 배치하는 조작은 없다.
+        구조는 생성·템플릿이 잡고, MCP는 그 안의 내용을 갈아끼우는 쪽에 강하다.</li>
+      <li><b>내보내기 형식은 먼저 확인해야 한다.</b> 디자인마다 지원 형식이 달라서, PPTX나 MP4가 항상 되는 건 아니다.</li>
+      <li><b>디자인 검색의 종류 필터는 현재 프레젠테이션만 지원한다.</b> 다른 종류는 제목·내용 검색으로 찾아야 한다.</li>
+      <li><b>Canva 계정의 요금제를 그대로 따른다.</b> 프로 전용 소재나 고품질 내보내기는 계정 권한이 없으면 막힌다.</li>
+    </ul>
+
+    <h2>6. 언제 쓰면 좋은가</h2>
+    <div class="tablewrap">
+      <table>
+        <tr><th>상황</th><th>판단</th></tr>
+        <tr><td>디자인 감각이 필요한 홍보물·안내문·게시물을 빠르게</td><td>👍 Canva MCP가 가장 강한 영역</td></tr>
+        <tr><td>같은 양식에 내용만 바꿔 여러 벌 만들기</td><td>👍 브랜드 템플릿 + 자동채움 필드</td></tr>
+        <tr><td>이미 있는 Canva 자료의 오탈자·문구 일괄 수정</td><td>👍 트랜잭션 편집이 정확하고 안전</td></tr>
+        <tr><td>PDF·PPTX를 Canva로 옮겨 이어서 작업</td><td>👍 단, 공개 URL이 필요</td></tr>
+        <tr><td>글자 위치·여백까지 규격을 맞춰야 하는 자료</td><td>👎 HTML 덱을 직접 만드는 편이 빠르고 정확</td></tr>
+        <tr><td>수식·특수문자·옛한글 표기가 정확해야 하는 자료</td><td>👎 서체 통제가 안 돼 깨질 위험</td></tr>
+      </table>
+    </div>
+    <p class="note">
+      요약하면 <b>"보기 좋게"가 목적이면 Canva, "정확하게"가 목적이면 직접 HTML</b>.
+      둘을 섞을 수도 있다 — 초안을 Canva로 뽑고 세부는 에디터에서 손보거나,
+      반대로 HTML로 정확히 만든 뒤 가져와 디자인만 입히는 식이다.
+    </p>
+
+  </div>
+</body>
+</html>
