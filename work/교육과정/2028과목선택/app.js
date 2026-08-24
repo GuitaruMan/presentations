@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260825a';
+var VERSION = '20260825b';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -632,8 +632,9 @@ function renderPick() {
   var h = '';
 
   if (t) {
+    // 이 탭은 '그 과목이 편성표 어디에 있는지' 보는 곳이다.
+    // 무엇을 담으라는 안내는 '내 과목 담기'에서 한다.
     h += summaryHTML(t, want);
-    h += hierarchyWarn(want);
   } else {
     h += '<div class="empty"><h3>' +
       (!state.pUniv ? '먼저 대학을 골라 주세요'
@@ -674,7 +675,9 @@ function schoolInGroup(group, type) {
     if (c.교과군 !== group) return false;
     if (type && c.유형 !== type) return false;
     return true;
-  }).map(function (c) { return c.과목; });
+  }).map(function (c) { return c.과목; })
+    // 2·3학년에 모두 열리는 과목은 두 번 잡힌다. 같은 과목을 두 번 보여줄 이유가 없다.
+    .filter(function (n, i, a) { return a.indexOf(n) === i; });
 }
 
 function summaryHTML(t, want) {
@@ -736,20 +739,33 @@ function summaryHTML(t, want) {
       var list = schoolInGroup(c.교과군, c.과목유형);
       // 대학이 과목을 특정하지 않고 교과군으로만 제시한 경우.
       // 대학의 조건과, 그것을 채울 수 있는 우리 학교 과목은 서로 다른 것이므로 줄을 나눈다.
-      h += '<div class="sum-row"><span class="sum-key">조건</span><div class="sum-pills">' +
-        '<span class="sum-note sum-note-b">' + esc(c.설명 || '') + '</span></div></div>';
-      h += '<div class="sum-row"><span class="sum-key">우리 학교 개설</span>' +
-        '<div class="sum-pills">' +
+      // 대학이 과목을 특정하지 않고 교과군으로만 말한 경우.
+      // 요구사항을 굵게 앞세우고, 그것을 채울 수 있는 우리 학교 과목을 바로 아래 편다.
+      h += '<div class="sum-row"><span class="sum-key">' + esc(c.교과군) + '</span>' +
+        '<div class="sum-pills"><span class="sum-need">' + esc(c.설명 || '') + '</span>' +
         (list.length
-          ? chips(list, 'sum-cond') +
-            '<span class="sum-note">이 가운데에서 고르면 위 조건을 채웁니다.</span>'
+          ? '<div class="sum-fold-in">' + chips(list, 'sum-cond') + '</div>'
           : '<span class="sum-note">우리 학교에 해당 과목이 없습니다.</span>') +
         '</div></div>';
       return;
     }
     var cand = (c.후보 || []).filter(function (s) { return !GROUP_NAME[s]; });
     if (!cand.length) return;
-    h += '<div class="sum-row"><span class="sum-key">조건</span><div class="sum-pills">' +
+
+    // 후보가 위 권장과목에 이미 다 나와 있으면 목록을 되풀이하지 않는다.
+    // 같은 과목이 두 번 나오면 다른 과목인 줄 알고 읽게 된다.
+    var 위에있음 = cand.every(function (s) {
+      return core.indexOf(s) !== -1 || rec.indexOf(s) !== -1;
+    });
+    if (위에있음) {
+      h += '<div class="sum-row"><span class="sum-key">몇 과목</span>' +
+        '<div class="sum-pills"><span class="sum-note sum-note-b">' +
+        '위 ' + cand.length + '과목 가운데 <b>' + c.최소 + '과목 이상</b>을 들으면 됩니다.' +
+        '</span></div></div>';
+      return;
+    }
+
+    h += '<div class="sum-row"><span class="sum-key">이 중에서</span><div class="sum-pills">' +
       chips(cand, 'sum-cond') +
       '<span class="sum-note">' + esc(c.설명 || '') + '</span></div></div>';
   });
@@ -762,16 +778,6 @@ function summaryHTML(t, want) {
       '">모아 보기</button></p>';
   }
   return h + '</div>';
-}
-
-function hierarchyWarn(want) {
-  // 미적분Ⅱ는 미적분Ⅰ을 전제한다 (README 주의 2)
-  if (!want['미적분Ⅱ']) return '';
-  return '<div class="warn"><h4>미적분Ⅰ을 2학년에 넣어야 합니다</h4>' +
-    '<p>미적분Ⅱ는 미적분Ⅰ을 먼저 들어야 합니다. ' +
-    '우리 학교는 미적분Ⅰ이 2학년(선택군1), 미적분Ⅱ가 3학년(선택군2)에 있습니다. ' +
-    '2학년에서 미적분Ⅰ을 빼면 3학년에 미적분Ⅱ를 들을 수 없습니다. ' +
-    '<button type="button" class="cond-open" data-help="order">순서 설명 보기</button></p></div>';
 }
 
 function slotHTML(slot, want) {
