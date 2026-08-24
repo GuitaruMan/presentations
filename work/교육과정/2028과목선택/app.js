@@ -897,7 +897,8 @@ function checkRules() {
   var out = [];
   var R = (D.school.meta && D.school.meta.이수규칙) || {};
 
-  // ① 교과(군)별 최소 이수 — 어느 교과군을 몇 과목 이상 들어야 하는지는 학년도마다 다르다
+  // ① 교과(군)별 최소 이수 — 어느 교과군을 몇 과목 이상 들어야 하는지는 학년도마다 다르다.
+  //    2·3학년을 통틀어 충족하면 되는데 지난 학년 선택은 앱에 남지 않으므로, 안내만 한다.
   (R.교과군최소 || []).forEach(function (rule) {
     var got = picked.filter(function (p) {
       return rule.교과군.indexOf(p.교과군) !== -1;
@@ -907,8 +908,7 @@ function checkRules() {
       text: rule.이름,
       detail: got.length >= rule.최소
         ? got.map(function (p) { return p.name; }).join(', ')
-        : '아직 담지 않았습니다. 필수 이수 학점을 채우려면 ' +
-          (rule.최소 - got.length) + '과목이 필요합니다.'
+        : '2·3학년을 통틀어 1과목 이상 들으면 됩니다. 지난 학년에 이미 들었다면 괜찮습니다.'
     });
   });
 
