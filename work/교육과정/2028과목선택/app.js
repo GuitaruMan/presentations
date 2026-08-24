@@ -895,67 +895,86 @@ function checkRules() {
     return picked.filter(function (p) { return p.교과군 === g; });
   };
   var out = [];
+  var R = (D.school.meta && D.school.meta.이수규칙) || {};
 
-  // ① 기술·가정/정보 · 제2외국어/한문 · 교양 — 각 교과(군)에서 1과목 이상
-  ['기술·가정/정보', '제2외국어/한문', '교양'].forEach(function (g) {
-    var n = byGroup(g).length;
+  // ① 교과(군)별 최소 이수 — 어느 교과군을 몇 과목 이상 들어야 하는지는 학년도마다 다르다
+  (R.교과군최소 || []).forEach(function (rule) {
+    var got = picked.filter(function (p) {
+      return rule.교과군.indexOf(p.교과군) !== -1;
+    });
     out.push({
-      ok: n >= 1,
-      text: g + ' 1과목 이상',
-      detail: n >= 1 ? byGroup(g).map(function (p) { return p.name; }).join(', ')
-                     : '아직 담지 않았습니다. 필수 이수 학점을 채우려면 1과목이 필요합니다.'
+      ok: got.length >= rule.최소,
+      text: rule.이름,
+      detail: got.length >= rule.최소
+        ? got.map(function (p) { return p.name; }).join(', ')
+        : '아직 담지 않았습니다. 필수 이수 학점을 채우려면 ' +
+          (rule.최소 - got.length) + '과목이 필요합니다.'
     });
   });
 
-  // ② 국어·수학·영어 합계 14과목 이하 (이수학점 총합 81학점 제한)
-  var kme = picked.filter(function (p) {
-    return ['국어', '수학', '영어'].indexOf(p.교과군) !== -1;
-  });
-  out.push({
-    ok: kme.length <= 14,
-    text: '국어·수학·영어 합계 14과목 이하',
-    detail: '지금 ' + kme.length + '과목' +
-      (kme.length > 14 ? ' — ' + (kme.length - 14) + '과목을 빼야 합니다.'
-                       : ' (남은 자리 ' + (14 - kme.length) + ')')
-  });
+  // ② 국어·수학·영어 합계 상한 (이수학점 총합 81학점 제한)
+  if (R.교과군최대) {
+    var mx = R.교과군최대;
+    var kme = picked.filter(function (p) {
+      return mx.교과군.indexOf(p.교과군) !== -1;
+    });
+    out.push({
+      ok: kme.length <= mx.최대,
+      text: mx.이름,
+      detail: '지금 ' + kme.length + '과목' +
+        (kme.length > mx.최대 ? ' — ' + (kme.length - mx.최대) + '과목을 빼야 합니다.'
+                              : ' (남은 자리 ' + (mx.최대 - kme.length) + ')')
+    });
+  }
 
-  if (state.course !== '과학중점') return out;
+  if (state.course !== '과학중점' || !R.과학중점) return out;
+  var S = R.과학중점;
 
-  // ③ 과학중점 — 과학과제 연구 필수
-  var hasPjt = picked.some(function (p) { return p.name === '과학과제 연구'; });
-  out.push({
-    ok: hasPjt, text: '과학과제 연구 이수 (과학중점)',
-    detail: hasPjt ? '담았습니다.' : '2학년 1·2학기 중 한 학기에 반드시 담아야 합니다.'
-  });
+  // ③ 과학중점 — 과제 연구 필수
+  if (S.과제연구) {
+    var hasPjt = picked.some(function (p) { return p.name === S.과제연구; });
+    out.push({
+      ok: hasPjt, text: S.과제연구 + ' 이수 (과학중점)',
+      detail: hasPjt ? '담았습니다.' : '1·2학기 중 한 학기에 반드시 담아야 합니다.'
+    });
+  }
 
-  // ④ 과학중점 — 과학 일반선택 4과목 모두 + 진로·융합 4과목 이상
-  var 일반4 = ['물리학', '화학', '생명과학', '지구과학'];
-  var got4 = 일반4.filter(function (n) { return picked.some(function (p) { return p.name === n; }); });
-  out.push({
-    ok: got4.length === 4,
-    text: '과학 일반선택 4과목 모두 이수 (과학중점)',
-    detail: got4.length === 4 ? '물리학·화학·생명과학·지구과학 모두 담았습니다.'
-      : '빠진 과목: ' + 일반4.filter(function (n) { return got4.indexOf(n) === -1; }).join(', ')
-  });
+  // ④ 과학중점 — 과학 일반선택 모두 + 진로·융합 최소
+  if (S.일반선택필수 && S.일반선택필수.length) {
+    var need = S.일반선택필수;
+    var got4 = need.filter(function (n) {
+      return picked.some(function (p) { return p.name === n; });
+    });
+    out.push({
+      ok: got4.length === need.length,
+      text: '과학 일반선택 ' + need.length + '과목 모두 이수 (과학중점)',
+      detail: got4.length === need.length ? need.join('·') + ' 모두 담았습니다.'
+        : '빠진 과목: ' + need.filter(function (n) { return got4.indexOf(n) === -1; }).join(', ')
+    });
+  }
 
-  var 심화 = byGroup('과학').filter(function (p) {
-    return p.유형 === '진로' || p.유형 === '융합';
-  });
-  out.push({
-    ok: 심화.length >= 4,
-    text: '과학 진로·융합 4과목 이상 (과학중점)',
-    detail: '지금 ' + 심화.length + '과목' +
-      (심화.length >= 4 ? '' : ' — ' + (4 - 심화.length) + '과목 더 필요합니다.')
-  });
+  if (S.심화최소) {
+    var 심화 = byGroup('과학').filter(function (p) {
+      return p.유형 === '진로' || p.유형 === '융합';
+    });
+    out.push({
+      ok: 심화.length >= S.심화최소,
+      text: '과학 진로·융합 ' + S.심화최소 + '과목 이상 (과학중점)',
+      detail: '지금 ' + 심화.length + '과목' +
+        (심화.length >= S.심화최소 ? '' : ' — ' + (S.심화최소 - 심화.length) + '과목 더 필요합니다.')
+    });
+  }
 
-  // ⑤ 과학중점 — 수학 4과목 이상
-  var math = byGroup('수학');
-  out.push({
-    ok: math.length >= 4,
-    text: '수학 4과목 이상 (과학중점)',
-    detail: '지금 ' + math.length + '과목' +
-      (math.length >= 4 ? '' : ' — ' + (4 - math.length) + '과목 더 필요합니다.')
-  });
+  // ⑤ 과학중점 — 수학 최소
+  if (S.수학최소) {
+    var math = byGroup('수학');
+    out.push({
+      ok: math.length >= S.수학최소,
+      text: '수학 ' + S.수학최소 + '과목 이상 (과학중점)',
+      detail: '지금 ' + math.length + '과목' +
+        (math.length >= S.수학최소 ? '' : ' — ' + (S.수학최소 - math.length) + '과목 더 필요합니다.')
+    });
+  }
 
   return out;
 }
