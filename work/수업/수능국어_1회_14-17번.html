@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 국어 실전 1회 14~17번 (독서 과학: 지구 기후와 천문학적 요인)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&display=swap');
+
+  :root {
+    --bg: #10131a;
+    --paper: #ffffff;
+    --ink: #14181f;
+    --ink-soft: #4d5665;
+    --ink-faint: #8a93a3;
+    --line: #d9dee6;
+    --line-soft: #eceff4;
+    --key: #1f5fbf;         /* 핵심 파랑 */
+    --key-bg: #eaf1fc;
+    --warn: #c2372d;        /* 정답/함정 빨강 */
+    --warn-bg: #fdeceb;
+    --ok: #1d7a55;          /* 근거 초록 */
+    --ok-bg: #e8f5ef;
+    --hl: #fff3b0;          /* 형광 */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    /* 한국어는 어절 단위로만 줄을 바꾸고(keep-all), 마지막 줄에 한두 글자만
+       남는 것을 피한다(pretty). 낱말 중간에서 끊기는 것을 막기 위한 설정. */
+    word-break: keep-all; overflow-wrap: break-word; text-wrap: pretty;
+    letter-spacing: -0.015em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,19,26,0.94); z-index: 50;
+  }
+  .nav-top a { color: #93a0b5; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #dce4f0; }
+  .nav-meta { color: #6c7789; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    width: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    border: 1px solid #cfd6e0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 4.4% 5%;
+  }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity:1; transform:none;} }
+
+  /* ── 타이포: 1920×1080 전체화면에서 본문 ≈50px, 제목 ≈90px ── */
+  h2.slide-title {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 4.7cqw; line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
+    border-bottom: 0.25cqw solid var(--ink);
+  }
+  h2.slide-title .q {
+    color: var(--key); margin-right: 0.5em;
+  }
+  /* 제목은 고정 높이를 유지(flex-shrink:0)하고, 본문은 남은 공간 안에서만 중앙 정렬.
+     내용이 많아도 본문이 제목 영역을 침범하지 않는다. */
+  h2.slide-title { flex-shrink: 0; }
+  .body-area {
+    flex: 1 1 0; display: flex; flex-direction: column;
+    min-height: 0; justify-content: center; overflow: hidden;
+  }
+
+  /* 표지 */
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .kicker {
+    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-weight: 700; margin-bottom: 1.6cqw;
+  }
+  .cover h1 {
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+  }
+  .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
+  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .foot {
+    position: absolute; left: 5%; right: 5%; bottom: 5%;
+    display: flex; justify-content: space-between;
+    font-size: 1.7cqw; color: var(--ink-faint);
+    border-top: 1px solid var(--line); padding-top: 1.2cqw;
+  }
+  .cover .page-num { display: none; }
+
+  /* 공통 텍스트 */
+  .lead { font-size: 2.6cqw; line-height: 1.7; color: var(--ink-soft); }
+  .big { font-size: 3.1cqw; line-height: 1.65; }
+
+  /* 지문 인용 */
+  .quote-box {
+    background: #f7f9fc; border-left: 0.45cqw solid var(--key);
+    padding: 1.9cqw 2.2cqw; font-size: 2.5cqw; line-height: 1.8;
+  }
+  .quote-box .src { display:block; margin-top:0.8cqw; font-size:1.8cqw; color:var(--ink-faint); }
+
+  mark { background: var(--hl); padding: 0 0.15em; }
+  .u-key { color: var(--key); font-weight: 700; }
+  .u-warn { color: var(--warn); font-weight: 700; }
+  .u-ok { color: var(--ok); font-weight: 700; }
+
+  /* 문단 구조도 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.15cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.5cqw; }
+  .para-no {
+    flex-shrink: 0; width: 6.2cqw;
+    background: var(--key); color: #fff;
+    font-family: "Noto Serif KR", serif; font-weight: 700;
+    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; border: 1px solid var(--line); border-left: none;
+    padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+
+  /* 4규칙 카드 */
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5cqw; }
+  .rule {
+    border: 1px solid var(--line); border-top: 0.5cqw solid var(--key);
+    padding: 1.7cqw 1.4cqw;
+  }
+  .rule h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; color: var(--key);
+    margin-bottom: 0.9cqw;
+  }
+  .rule p { font-size: 2.05cqw; line-height: 1.6; color: var(--ink-soft); }
+  .rule .ex {
+    margin-top: 1cqw; padding-top: 0.9cqw; border-top: 1px dashed var(--line);
+    font-size: 1.9cqw; line-height: 1.55; color: var(--ink);
+  }
+  .rule .ex b { color: var(--ok); }
+
+  /* 2열 비교 */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; }
+  .card {
+    border: 1px solid var(--line); padding: 1.9cqw 2cqw;
+    display: flex; flex-direction: column;
+  }
+  .card.k { border-top: 0.5cqw solid var(--key); }
+  .card.w { border-top: 0.5cqw solid var(--warn); }
+  .card h3 {
+    font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw;
+  }
+  .card.k h3 { color: var(--key); }
+  .card.w h3 { color: var(--warn); }
+  .card p, .card li { font-size: 2.25cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card ul { list-style: none; }
+  .card li { padding-left: 1.5cqw; position: relative; }
+  .card li + li { margin-top: 0.7cqw; }
+  .card li::before { content: "·"; position: absolute; left: 0.35cqw; color: var(--ink-faint); font-weight: 700; }
+
+  /* 선택지 */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
+  .choices li {
+    display: flex; gap: 1.1cqw; align-items: flex-start;
+    font-size: 2.3cqw; line-height: 1.55;
+    padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
+  }
+  .choices .n {
+    flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
+    font-size: 2.3cqw; width: 1.6em;
+  }
+  /* 5행 구조도 슬라이드: 제목과 겹치지 않도록 여백·행높이 축약 */
+  .slide.s-flow h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide.s-flow .para-flow { gap: 0.85cqw; }
+  .slide.s-flow .para-body { padding: 1cqw 1.4cqw; }
+  .slide.s-flow .para-body .t { font-size: 2.2cqw; line-height: 1.4; }
+  .slide.s-flow .para-body .d { font-size: 1.8cqw; line-height: 1.45; }
+  .slide.s-flow .para-no { font-size: 2cqw; width: 5.6cqw; }
+
+  /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
+  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide .choices { gap: 0.35cqw; }
+  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: 2.02cqw; }
+  .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
+  .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
+  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
+  .choices li.ans {
+    background: var(--warn-bg); border-color: #f0c0bc;
+  }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices li.dim { color: var(--ink-faint); }
+  .choices li.dim .n { color: #b9c0cc; }
+
+  .slide.q-long h2.slide-title { font-size: 3.4cqw; margin-bottom: 1.1cqw; }
+  .slide.q-long .bogi { font-size: 1.62cqw; padding: 0.85cqw 1.2cqw; line-height: 1.55; }
+  .slide.q-long .bogi .tag { font-size: 1.4cqw; margin-bottom: 0.5cqw; }
+  .slide.q-long .choices li { font-size: 1.83cqw; line-height: 1.42; padding: 0.35cqw 0.9cqw; }
+  .slide.q-long .choices .n { font-size: 1.83cqw; }
+  .slide.q-long .ans-chip { font-size: 1.6cqw; }
+
+  /* 정답 배너 */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.4cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
+  }
+  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num {
+    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+  }
+  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+
+  /* 근거 대조 */
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
+  .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
+  .evi .box .h {
+    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+
+  /* 함정 포인트 */
+  .trap {
+    margin-top: 1.6cqw; background: var(--key-bg);
+    border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
+  }
+  .trap .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
+  }
+  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+
+  /* 오답 정리 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
+    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+  }
+  .otable th {
+    background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
+    color: var(--ink-soft);
+  }
+  .otable tr.ans th { background: var(--warn); color: #fff; }
+  .otable tr.ans td { background: var(--warn-bg); font-weight: 500; }
+
+  /* 보기 박스 */
+  .bogi {
+    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7;
+  }
+  .bogi .tag {
+    display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
+    font-size: 1.75cqw; margin-bottom: 1cqw;
+  }
+
+  /* 체크 정리 */
+  .checks { display: flex; flex-direction: column; gap: 1.5cqw; }
+  .check-row { display: flex; gap: 1.6cqw; align-items: flex-start; }
+  .check-row .k {
+    flex-shrink: 0; width: 9.5em; font-weight: 700; color: var(--key);
+    font-size: 2.35cqw; text-align: right;
+  }
+  .check-row .v { flex: 1; font-size: 2.35cqw; line-height: 1.65; color: var(--ink-soft); }
+
+  .page-num {
+    position: absolute; right: 3%; bottom: 2.6%;
+    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+  }
+
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #93a0b5; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #232a36; color: #dce4f0; border: 1px solid #3a4454;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2e3746; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #616c7d; font-size: 0.78rem; }
+
+  /* 전체화면 */
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .rules, .two, .evi { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: auto; min-height: 80vh; }
+  }
+
+  /* ── 정답 표시(이 자료의 추가 요소): 학생들이 이미 풀고 오므로 문제 슬라이드에 정답을 함께 띄운다 ── */
+  h2.slide-title { display: flex; align-items: baseline; gap: 0.4em; }
+  h2.slide-title .qtext { flex: 1; }
+  .ans-chip {
+    flex-shrink: 0; align-self: center;
+    background: var(--warn); color: #fff;
+    font-family: "Noto Sans KR", sans-serif; font-weight: 700;
+    font-size: 1.9cqw; letter-spacing: 0.06em;
+    padding: 0.35cqw 1.1cqw; border-radius: 2cqw; white-space: nowrap;
+  }
+  .slide.q-slide .ans-chip { font-size: 1.75cqw; }
+
+  /* 풀이 논리 박스 ─ 답지 해설이 아니라 '어떻게 끊어 낼 것인가' */
+  .logic {
+    margin-top: 1.5cqw; background: var(--ok-bg);
+    border-left: 0.45cqw solid var(--ok); padding: 1.4cqw 1.8cqw;
+  }
+  .logic .h {
+    font-size: 2.05cqw; font-weight: 700; color: var(--ok); margin-bottom: 0.55cqw;
+  }
+  .logic p { font-size: 2.15cqw; line-height: 1.62; color: var(--ink); }
+  .logic p + p { margin-top: 0.55cqw; }
+
+  /* 단계형 소거 순서 */
+  .steps { display: flex; gap: 1.3cqw; }
+  .steps .st {
+    flex: 1; border: 1px solid var(--line); border-top: 0.5cqw solid var(--ok);
+    padding: 1.4cqw 1.4cqw;
+  }
+  .steps .st .n {
+    font-family: "Noto Serif KR", serif; font-size: 2.5cqw; color: var(--ok);
+    font-weight: 700; margin-bottom: 0.7cqw;
+  }
+  .steps .st .t { font-size: 2.1cqw; font-weight: 700; line-height: 1.45; margin-bottom: 0.5cqw; }
+  .steps .st .d { font-size: 1.9cqw; line-height: 1.55; color: var(--ink-soft); }
+
+  /* 3열 분류표 */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .three .card { border-top: 0.5cqw solid var(--key); }
+  .three .card.q2 { border-top-color: var(--warn); }
+  .three .card.q3 { border-top-color: var(--ok); }
+  .three .card h3 { font-size: 2.7cqw; }
+  .three .card.q2 h3 { color: var(--warn); }
+  .three .card.q3 h3 { color: var(--ok); }
+  .three .card li { font-size: 2cqw; }
+
+  /* 매칭 표(2입장 × 문장) */
+  .mtable { width: 100%; border-collapse: collapse; }
+  .mtable th, .mtable td {
+    border: 1px solid var(--line); padding: 1cqw 1.2cqw;
+    font-size: 1.95cqw; line-height: 1.5; text-align: left; vertical-align: top;
+  }
+  .mtable thead th { background: #f2f5f9; text-align: center; font-size: 2.05cqw; }
+  .mtable td.stmt { background: #fbfcfe; font-weight: 700; }
+  .mtable td .no { font-weight: 700; color: var(--ink-faint); margin-right: 0.3em; }
+  .mtable td.ans { background: var(--warn-bg); }
+  .mtable td.ans .no { color: var(--warn); }
+
+  /* 대화 상자 */
+  .talk { border: 1px solid var(--ink); padding: 1.5cqw 1.8cqw; }
+  .talk .row { display: flex; gap: 1cqw; font-size: 2.1cqw; line-height: 1.52; }
+  .talk .row + .row { margin-top: 0.6cqw; }
+  .talk .who { flex-shrink: 0; width: 5.2em; font-weight: 700; color: var(--key); }
+  .talk .row.r2 .who { color: var(--warn); }
+  .talk .row.r3 .who { color: var(--ok); }
+  .talk .tag {
+    display: inline-block; margin-left: 0.4em; padding: 0 0.5em;
+    font-size: 1.6cqw; border: 1px solid var(--line); color: var(--ink-faint);
+  }
+
+  /* 흐름 화살표 */
+  .flow { display: flex; align-items: stretch; gap: 1.1cqw; }
+  .flow .fbox {
+    flex: 1; border: 1px solid var(--line); border-top: 0.45cqw solid var(--key);
+    padding: 1.3cqw 1.3cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .flow .fbox .t { font-size: 2.2cqw; font-weight: 700; line-height: 1.4; }
+  .flow .fbox .d { font-size: 1.85cqw; line-height: 1.5; color: var(--ink-soft); margin-top: 0.4cqw; }
+  .flow .arrow {
+    flex-shrink: 0; display: flex; align-items: center;
+    font-size: 3cqw; color: var(--ink-faint);
+  }
+
+  /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
+  .slide:has(.ans-banner) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
+  .slide:has(.ans-banner) .ans-banner .lb { font-size: 1.7cqw; }
+  .slide:has(.ans-banner) .ans-banner .num { font-size: 3.8cqw; }
+  .slide:has(.ans-banner) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.ans-banner) .evi { gap: 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box { padding: 1.15cqw 1.4cqw; }
+  .slide:has(.ans-banner) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.ans-banner) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .otable th, .slide:has(.ans-banner) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.ans-banner) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
+  .slide:has(.ans-banner) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .two .card { padding: 1.4cqw 1.6cqw; }
+  .slide:has(.ans-banner) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
+  .slide:has(.ans-banner) .two .card p, .slide:has(.ans-banner) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .flow .fbox { padding: 1.1cqw 1.15cqw; }
+  .slide:has(.ans-banner) .flow .fbox .t { font-size: 2.05cqw; }
+  .slide:has(.ans-banner) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+
+  /* 3열 분류 슬라이드 압축 */
+  .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide:has(.three) .card { padding: 1.4cqw 1.5cqw; }
+  .slide:has(.three) .card h3 { font-size: 2.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.three) .card p { font-size: 1.92cqw; line-height: 1.5; }
+  .slide:has(.three) .card li { font-size: 1.88cqw; line-height: 1.45; }
+  .slide:has(.three) .card li + li { margin-top: 0.45cqw; }
+  .slide:has(.three) .trap { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.three) .trap .h { font-size: 1.92cqw; }
+  .slide:has(.three) .trap p { font-size: 2cqw; line-height: 1.5; }
+
+  /* 대화 슬라이드 압축 */
+  .slide:has(.talk) .talk { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.talk) .talk .row { font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.talk) .talk .row + .row { margin-top: 0.45cqw; }
+  .slide:has(.talk) .talk .tag { font-size: 1.45cqw; }
+  .slide:has(.talk) .trap { margin-top: 1cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.talk) .trap .h { font-size: 1.85cqw; }
+  .slide:has(.talk) .trap p { font-size: 1.95cqw; line-height: 1.48; }
+  .slide:has(.talk) .bogi { font-size: 1.85cqw; line-height: 1.55; }
+
+  /* 문제 슬라이드에 인용 상자가 함께 있는 경우 */
+  .slide.q-slide:has(.quote-box) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.quote-box) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide:has(.two) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.two) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide .two .card { padding: 1.1cqw 1.4cqw; }
+
+  /* 매칭 표가 큰 슬라이드 */
+  .slide:has(.mtable) h2.slide-title { font-size: 4cqw; margin-bottom: 1.4cqw; }
+  .slide:has(.mtable) .mtable th, .slide:has(.mtable) .mtable td { padding: 0.85cqw 1.05cqw; font-size: 1.85cqw; line-height: 1.45; }
+
+  /* 체크 정리 슬라이드가 길어질 때 */
+  .slide:has(.checks) .checks { gap: 1.15cqw; }
+  .slide:has(.checks) .check-row .k, .slide:has(.checks) .check-row .v { font-size: 2.15cqw; line-height: 1.5; }
+
+  /* 2열 비교 슬라이드 압축 */
+  .slide:has(.two) .card { padding: 1.35cqw 1.6cqw; }
+  .slide:has(.two) .card h3 { font-size: 2.6cqw; margin-bottom: 0.75cqw; }
+  .slide:has(.two) .card p, .slide:has(.two) .card li { font-size: 2cqw; line-height: 1.5; }
+  .slide:has(.two) .card li + li { margin-top: 0.5cqw; }
+  .slide:has(.two) .trap { margin-top: 1.05cqw; padding: 1.05cqw 1.5cqw; }
+  .slide:has(.two) .trap .h { font-size: 1.88cqw; }
+  .slide:has(.two) .trap p { font-size: 1.98cqw; line-height: 1.5; }
+  .slide:has(.two) .quote-box { font-size: 2.05cqw; padding: 1.2cqw 1.5cqw; }
+  .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
+
+  /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+
+  /* 흐름도 + 해설 박스 슬라이드 */
+  .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
+  .slide:has(.flow) .flow .fbox .t { font-size: 2.1cqw; }
+  .slide:has(.flow) .flow .fbox .d { font-size: 1.82cqw; line-height: 1.45; }
+  .slide:has(.flow) .trap, .slide:has(.flow) .logic { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
+  .slide:has(.flow) .trap p, .slide:has(.flow) .logic p { font-size: 2cqw; line-height: 1.52; }
+
+  /* 그래프 슬라이드 */
+  .slide:has(svg) .bogi { font-size: 1.82cqw; line-height: 1.55; padding: 1.05cqw 1.4cqw; }
+  .slide:has(svg) svg { width: 100%; height: 24cqw; }
+  .slide:has(svg) .trap p, .slide:has(svg) .logic p { font-size: 1.88cqw; line-height: 1.5; }
+  .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
+
+  /* 마지막 미세 조정 */
+  .slide:has(.ans-banner) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(svg) svg { height: 20cqw; }
+  .slide:has(svg) .bogi { font-size: 1.75cqw; }
+  .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
+
+  .slide:has(.ans-banner) .ans-banner { margin-bottom: 0.95cqw; }
+  .slide:has(.two):has(.ans-banner) .card { padding: 1.2cqw 1.5cqw; }
+  .slide:has(.ans-banner):has(.otable) .otable th,
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.5cqw 0.9cqw; }
+  .slide:has(svg) svg { height: 18.6cqw; }
+  .slide:has(.two):has(.ans-banner) .card li + li { margin-top: 0.4cqw; }
+  .slide:has(.two):has(.ans-banner) .card p, .slide:has(.two):has(.ans-banner) .card li { line-height: 1.45; }
+
+  /* 해설 슬라이드 안의 보충 박스 */
+  .slide:has(.ans-banner) .trap { margin-top: 1.05cqw; padding: 1cqw 1.4cqw; }
+  .slide:has(.ans-banner) .trap .h { font-size: 1.9cqw; margin-bottom: 0.4cqw; }
+  .slide:has(.ans-banner) .trap p { font-size: 1.9cqw; line-height: 1.5; }
+  .slide.s-flow .para-body { padding: 0.9cqw 1.3cqw; }
+  .slide:has(.steps) .steps .st { padding: 1.15cqw 1.2cqw; }
+  .slide:has(.steps) .steps .st .d { font-size: 1.82cqw; }
+
+  /* 문단이 여섯인 구조도 슬라이드 */
+  .slide.s-flow6 .para-flow { gap: 0.45cqw; }
+  .slide.s-flow6 .para-body { padding: 0.6cqw 1.2cqw; }
+  .slide.s-flow6 .para-body .t { font-size: 2.05cqw; line-height: 1.35; }
+  .slide.s-flow6 .para-body .d { font-size: 1.7cqw; line-height: 1.4; }
+  .slide.s-flow6 .para-no { font-size: 1.9cqw; width: 5.2cqw; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업.html">&larr; 수업</a>
+    <a href="../../work.html">업무용</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">수능완성 1회 14~17번 · 3학년 · 업데이트 2026. 8. 24.</div>
+</div>
+
+<div class="stage" id="stage">
+
+
+  <!-- 1 표지 -->
+  <section class="slide active cover">
+    <div class="kicker">수 능 완 성 　실 전 1 회 　독 서 　과 학</div>
+    <h1>지구 기후를 만드는<br>천문학적 요인</h1>
+    <div class="rule"></div>
+    <div class="sub">대기 구조 · 위도 · 자전축 · 공전 궤도 · 14~17번 문항 풀이</div>
+    <div class="foot">
+      <span>고3 · 수능완성 실전 모의고사 1회 (본문 141~142쪽)</span>
+      <span>14~17번 · 3점 문항 17번</span>
+    </div>
+    <div class="page-num">1 / 15</div>
+  </section>
+
+  <!-- 2 지문 구조 -->
+  <section class="slide s-flow s-flow6">
+    <h2 class="slide-title"><span class="qtext">지문 구조 한눈에 보기</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">지구 기후에 영향을 미치는 여러 요인</div>
+            <div class="d">화산 폭발·온실가스 배출 외에 태양과 자전축 같은 <span class="u-key">천문학적 요인</span>이 장기적인 기후 변화에 작용한다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">태양 에너지와 대기의 온도 구조 &mdash; ㉠대류권 · ㉡성층권</div>
+            <div class="d">지표면이 흡수한 에너지를 대기 하층으로 방출 &rarr; 대류권의 공기 상승 ／ 성층권은 온도 역전으로 공기가 안정</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">태양 복사 에너지의 <span class="u-key">위도별 불균등 분포</span></div>
+            <div class="d">저위도는 태양 고도가 높고 고위도는 광선이 비스듬히 입사 &rarr; 대기 대순환, 고압대·저압대 분포</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t">자전축의 경사각과 <span class="u-key">계절의 순환</span></div>
+            <div class="d">공전하는 1년 동안 경사각은 거의 일정 &rarr; 태양 쪽으로 기운 반구가 더 따뜻해진다 (ⓐ가 놓인 자리)</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t">경사각의 <span class="u-key">장기 변화</span> &mdash; 약 4만 1천 년 주기</div>
+            <div class="d">21.5도~24.5도, 현재 약 23.5도이며 작아지는 중 ／ 커지면 계절 간 온도 차가 커진다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">6</div>
+          <div class="para-body">
+            <div class="t">공전 궤도 <span class="u-key">이심률</span>의 변화와 빙하기</div>
+            <div class="d">약 10만 년 주기로 0.005~0.06, 현재 0.0167이며 작아지는 중 ／ 원일점에 북반구가 여름이면 이심률이 클수록 빙하기에 유리</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">2 / 15</div>
+  </section>
+
+  <!-- 3 대류권과 성층권 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">㉠대류권과 ㉡성층권 (2문단)</span></h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>㉠ 대류권</h3>
+          <ul>
+            <li>태양 에너지 일부가 대기를 통과해 <b>지표면에 흡수</b>된다</li>
+            <li>지표면이 그 에너지를 <b class="u-key">대기 하층으로 방출</b> &rarr; 하층이 데워지고 고도가 높아질수록 기온이 낮아진다</li>
+            <li>따뜻한 공기는 상승하고 찬 공기는 하강하므로 <b>공기의 상승</b>이 일어난다</li>
+            <li>&rarr; 대기 순환은 주로 이 층 안에서 이루어진다</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>㉡ 성층권</h3>
+          <ul>
+            <li><b class="u-warn">오존이 자외선을 흡수</b>하여 고도가 높아질수록 기온이 오르는 <b>온도 역전 구조</b>가 나타난다</li>
+            <li>위로 갈수록 기온이 높아 공기가 <b>안정</b>되고, 대류권과 달리 상승이 쉽게 일어나지 않는다</li>
+            <li>&rarr; 대류권에서 상승한 공기의 <b class="u-warn">수직 운동을 제한</b>한다</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">두 층의 온도 구조를 만드는 것</div>
+        <p>대류권에서 고도에 따라 기온이 낮아지는 것은 지표면이 방출한 에너지가 하층부터 데우기 때문이고, 성층권에서 기온이 오르는 것은 그 층의 오존이 자외선을 흡수하기 때문이다.</p>
+      </div>
+    </div>
+    <div class="page-num">3 / 15</div>
+  </section>
+
+  <!-- 4 위도별 복사 에너지 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">태양 복사 에너지의 위도별 분포 (3문단)</span></h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="fbox">
+          <div class="t">저위도(열대)</div>
+          <div class="d"><b>태양 고도가 높다</b> &rarr; 단위 면적당 에너지 유입량이 많다</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">고위도</div>
+          <div class="d">태양 광선이 <b class="u-key">비스듬히 입사</b> &rarr; 복사 에너지가 넓은 면적에 분산되어 단위 면적당 도달량이 적다</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">평균 기온의 차이</div>
+          <div class="d">고위도는 저위도보다 <b>평균 기온이 낮다</b></div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">기후 특성</div>
+          <div class="d">대기 대순환, 고압대·저압대 분포 &rarr; 지역별 <b>강수량의 편차</b>, 바람의 방향</div>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">차이를 만드는 것은 거리가 아니라 입사 각도</div>
+        <p>고위도가 추운 이유로 지문이 든 것은 태양과의 거리가 아니라 광선이 비스듬히 들어와 같은 양의 에너지가 더 넓은 면적에 퍼진다는 점이다. 4문단은 이 요인을 계절 설명에 그대로 가져다 쓴다.</p>
+      </div>
+    </div>
+    <div class="page-num">4 / 15</div>
+  </section>
+
+  <!-- 5 자전축과 계절 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">자전축의 경사각과 계절 (4문단)</span></h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="fbox">
+          <div class="t">경사각 유지</div>
+          <div class="d">공전하는 1년 동안 자전축은 공전 궤도면에 대해 <b>거의 일정한 경사각</b>을 유지한다</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">반구별 기울기</div>
+          <div class="d">한때는 북극이 태양 쪽으로, 한때는 태양으로부터 멀어져 있다. <b>남극은 북극과 반대</b></div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">ⓐ 같은 요인이 작용</div>
+          <div class="d">고위도를 저위도보다 춥게 만든 요인이 <b class="u-key">태양에서 먼 쪽으로 기운 반구</b>를 더 차갑게 만든다</div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="fbox">
+          <div class="t">계절의 순환</div>
+          <div class="d">같은 반구가 1년을 주기로 더워졌다 추워졌다 한다</div>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">4문단이 3문단에서 가져온 것</div>
+        <p>ⓐ가 가리키는 요인은 3문단에서 위도별 기온 차를 설명한 그 요인이다. 위도가 높을수록 광선이 비스듬히 들어오듯, 태양에서 먼 쪽으로 기운 반구도 광선을 비스듬히 받게 된다.</p>
+      </div>
+    </div>
+    <div class="page-num">5 / 15</div>
+  </section>
+
+  <!-- 6 두 가지 장기 변화 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="qtext">경사각의 변화와 이심률의 변화 (5·6문단)</span></h2>
+    <div class="body-area">
+      <div class="two">
+        <div class="card k">
+          <h3>자전축 경사각</h3>
+          <ul>
+            <li>약 <b>4만 1천 년</b>을 주기로 21.5도~24.5도 사이를 오르내린다. 현재 약 23.5도이며 점점 <b class="u-key">작아지는</b> 중</li>
+            <li>경사각이 <b>커질수록</b> 계절 간 온도 차가 커져 여름은 더 덥고 겨울은 더 춥다</li>
+            <li>경사각이 작아져 여름 기온이 낮아지면 고위도에서 겨울에 쌓인 눈이 <b class="u-key">여름에도 녹지 않고 축적</b>된다</li>
+          </ul>
+        </div>
+        <div class="card w">
+          <h3>공전 궤도 이심률</h3>
+          <ul>
+            <li>목성·토성 같은 행성의 <b>중력장</b>으로 변화한다. 약 <b>10만 년</b> 주기로 0.005~0.06, 현재 0.0167이며 <b class="u-warn">작아지는</b> 중</li>
+            <li>이심률이 클수록 1년 중 지구와 태양이 가까울 때와 멀 때의 <b>거리 차가 커진다</b></li>
+            <li>원일점일 때 북반구가 여름이라면, 이심률이 클수록 북반구 여름 기온이 <b class="u-warn">낮아진다</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">빙하기가 되는 조건</div>
+        <p>6문단은 여름의 기온이 낮아 겨울 동안 내린 눈이 많이 녹지 않고 해마다 새 얼음층을 더할 수 있느냐가 중요하다고 밝힌다. 두 변화가 빙하기에 유리한지 불리한지는 모두 <b>여름 기온</b>을 통해 판단하게 된다.</p>
+      </div>
+    </div>
+    <div class="page-num">6 / 15</div>
+  </section>
+
+  <!-- 7 14번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">14</span><span class="qtext">윗글의 내용과 일치하지 <u>않는</u> 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">태양계에는 지구의 장기적인 기후 변화에 영향을 주는 행성이 존재한다.</span></li>
+        <li><span class="n">②</span><span class="txt">지구가 공전할 때 북극이 남극보다 태양과의 거리가 가까울 때가 존재한다.</span></li>
+        <li><span class="n">③</span><span class="txt">지구의 대기 운동은 지구 내에서 에너지를 이동시켜 각 지역의 기후 형성에 영향을 미친다.</span></li>
+        <li><span class="n">④</span><span class="txt">지구는 태양을 한 초점으로 하면서 특정한 주기로 변화하는 타원 궤도를 따라 공전하고 있다.</span></li>
+        <li class="ans"><span class="n">⑤</span><span class="txt">지구 자전축의 경사각은 <b>1년 주기로 미세한 변화를 반복</b>하여 지구의 기후 변화에 영향을 미친다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">7 / 15</div>
+  </section>
+
+  <!-- 8 14번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">14</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why">1년 동안은 거의 일정하고, 변화의 주기는 약 4만 1천 년이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (4·5문단)</div>
+          <p>4문단 &ldquo;지구가 공전하는 1년 동안 지구의 자전축은 공전 궤도면에 대해 <mark><b>거의 일정한 경사각을 유지</b></mark>하고 있으므로&rdquo;<br>5문단 &ldquo;수만 년에 걸쳐 서서히 변화하며, 약 <mark><b>4만 1천 년을 주기로</b></mark> 약 21.5도에서 24.5도 사이를 오르내리는데&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 ⑤</div>
+          <p>&ldquo;경사각은 <mark><b>1년 주기로 미세한 변화를 반복</b></mark>하여&rdquo;</p>
+          <p style="margin-top:1cqw; color:var(--warn); font-weight:700;">지문이 1년과 연결한 것은 경사각의 변화가 아니라 경사각이 유지된다는 사실이다</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">②와 ④에 대하여</div>
+        <p>②는 4문단에서 북극이 태양 쪽으로 기울어져 있을 때가 있다고 했으므로 일치한다. ④는 6문단에서 지구가 태양을 한 초점으로 하는 타원 궤도를 따라 공전하고 그 이심률이 약 10만 년 주기로 오르내린다고 했으므로 일치한다.</p>
+      </div>
+    </div>
+    <div class="page-num">8 / 15</div>
+  </section>
+
+  <!-- 9 15번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">15</span><span class="qtext">㉠과 ㉡을 이해한 내용으로 가장 적절한 것은?</span><span class="ans-chip">정답 ③</span></h2>
+    <div class="body-area">
+      <div class="two" style="margin-bottom:1.6cqw; gap:1.5cqw;">
+        <div class="card k" style="padding:1.2cqw 1.5cqw;"><p style="font-size:2.1cqw;"><b>㉠ 대류권</b> &mdash; 지표면이 데워 놓아 <b>공기가 상승</b>하는 층</p></div>
+        <div class="card w" style="padding:1.2cqw 1.5cqw;"><p style="font-size:2.1cqw;"><b>㉡ 성층권</b> &mdash; 오존의 자외선 흡수로 <b>온도가 역전</b>된 층</p></div>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">㉡의 온도는 지표면이 방출한 에너지로 인해 ㉠의 상층보다 높다.</span></li>
+        <li><span class="n">②</span><span class="txt">㉠은 ㉡의 온도 상승을 유발하여 지구 기후가 일정하게 유지될 수 있도록 한다.</span></li>
+        <li class="ans"><span class="n">③</span><span class="txt">㉡은 ㉠의 공기의 상승을 <b>억제하는 역할</b>을 하여 대기 순환의 상한선을 형성하게 한다.</span></li>
+        <li><span class="n">④</span><span class="txt">㉠과 ㉡의 고도에 따른 온도 분포는 ㉠의 자외선 흡수와 관련이 있다.</span></li>
+        <li><span class="n">⑤</span><span class="txt">㉠은 고도가 높아질수록 온도가 하락하며, 이는 ㉠과 ㉡ 간의 대기 순환이 활발하게 일어나는 원인이 된다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">9 / 15</div>
+  </section>
+
+  <!-- 10 15번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">15</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">③</span>
+        <span class="why">성층권이 수직 운동을 제한해 순환이 대류권 안에서 이루어진다</span>
+      </div>
+      <table class="otable" style="margin-top:0.2cqw;">
+        <tr><th>①</th><td>㉡이 ㉠의 상층보다 온도가 높은 것은 맞지만, 그 원인은 <b class="u-warn">오존의 자외선 흡수</b>다. 지표면이 방출한 에너지는 대기 하층을 데운다</td></tr>
+        <tr><th>②</th><td>㉡의 온도를 올리는 것도 ㉡의 오존이다. ㉠이 ㉡의 온도 상승을 유발한다는 서술은 없다</td></tr>
+        <tr class="ans"><th>③</th><td>&lsquo;성층권은 대류권에서 상승한 공기의 <b>수직 운동을 제한</b>하는 역할을 한다. 결국 대기 순환은 주로 대류권 내에서 이루어지게 되며&rsquo; &rarr; <b>정답</b></td></tr>
+        <tr><th>④</th><td>자외선을 흡수하는 것은 <b class="u-warn">㉡의 오존</b>이다. ㉠의 온도 분포는 지표면이 방출한 에너지와 관련이 있다</td></tr>
+        <tr><th>⑤</th><td>㉠에서 고도가 높아질수록 온도가 낮아지는 것은 맞지만, 그 결과는 ㉠ <b>안에서의</b> 순환이다. ㉠과 ㉡ 사이의 상승은 제한된다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&lsquo;대기 순환의 상한선&rsquo;이라는 말</div>
+        <p>지문에 그대로 나오지는 않지만, 성층권이 수직 운동을 제한해 대기 순환이 대류권 안에서 이루어진다는 2문단의 서술을 달리 옮긴 표현이다.</p>
+      </div>
+    </div>
+    <div class="page-num">10 / 15</div>
+  </section>
+
+  <!-- 11 16번 문제 -->
+  <section class="slide q-slide">
+    <h2 class="slide-title"><span class="q">16</span><span class="qtext">윗글을 바탕으로 ⓐ를 추론한 내용으로 가장 적절한 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
+    <div class="body-area">
+      <div class="quote-box" style="margin-bottom:1.4cqw;">
+        이런 상황에서 <b>ⓐ고위도를 저위도보다 춥게 만들었던 요인</b>이 태양에서 먼 쪽으로 기울어져 있는 반구를 태양을 향해 기울어져 있는 반구보다 더 차갑게 만든다.
+        <span class="src">4문단</span>
+      </div>
+      <ul class="choices">
+        <li><span class="n">①</span><span class="txt">저위도 지역이 고위도 지역보다 계절에 따른 태양 복사 에너지의 차이가 크다.</span></li>
+        <li><span class="n">②</span><span class="txt">고위도 지역이 저위도 지역보다 항상 태양과의 거리가 멀어 태양 복사 에너지가 적다.</span></li>
+        <li><span class="n">③</span><span class="txt">고위도 지역이 저위도 지역보다 태양 고도가 낮아 지표면이 빠르게 가열되고 빠르게 식는다.</span></li>
+        <li><span class="n">④</span><span class="txt">저위도 지역이 고위도 지역과 달리 대기 대순환이 일어나지 않아 높아진 기온이 낮아지기 어렵다.</span></li>
+        <li class="ans"><span class="n">⑤</span><span class="txt">고위도 지역이 저위도 지역에 비해 <b>태양 광선이 비스듬히 입사</b>하여 단위 면적당 도달하는 복사 에너지가 적다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">11 / 15</div>
+  </section>
+
+  <!-- 12 16번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">16</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">⑤</span>
+        <span class="why">ⓐ가 가리키는 요인은 3문단이 밝힌 입사 각도의 차이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">지문 근거 (3문단)</div>
+          <p>&ldquo;저위도인 열대 지방은 <b>태양 고도가 높아</b> 단위 면적당 에너지 유입량이 많지만, 고위도 지방은 <mark><b>태양 광선이 비스듬히 입사</b></mark>하여 복사 에너지가 넓은 면적에 분산되므로 단위 면적당 도달하는 에너지가 적다.&rdquo;</p>
+        </div>
+        <div class="box opt">
+          <div class="h">②·③이 갈리는 곳</div>
+          <p>②는 원인을 <b class="u-warn">태양과의 거리</b>로 바꾸었다. 지구는 자전축이 기울어진 채 공전하므로 고위도가 항상 더 먼 것도 아니다.</p>
+          <p style="margin-top:0.9cqw;">③은 태양 고도가 낮다는 데까지는 맞지만, 유입량이 적으면 지표면은 오히려 <b class="u-warn">더 느리게</b> 가열된다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">①에 대하여</div>
+        <p>계절에 따른 복사 에너지의 차이가 큰 쪽은 고위도다. 자전축이 기울어진 채 공전하므로 고위도일수록 여름과 겨울의 태양 고도 차가 크고, 그래서 계절 간 온도 차도 크다.</p>
+      </div>
+    </div>
+    <div class="page-num">12 / 15</div>
+  </section>
+
+  <!-- 13 17번 보기 -->
+  <section class="slide">
+    <h2 class="slide-title" style="font-size:3.5cqw;"><span class="q">17</span><span class="qtext">&lt;보기&gt;의 ㉮~㉱에 들어갈 말 [3점]</span><span class="ans-chip">정답 ②</span></h2>
+    <div class="body-area">
+      <div class="bogi">
+        <span class="tag">보기</span>
+        <div class="talk" style="border:none; padding:0;">
+          <div class="row"><span class="who">선생님</span><span>이번 시간에는 지구 공전 궤도의 이심률이나 지구 자전축 경사각의 변화가 지구 기후에 어떻게 영향을 미칠지 예측해 봅시다. 우선 지구 자전축의 경사각이 23.5도에서 <b>점점 작아질 경우</b>, 지구 기후에 영향을 미치는 다른 조건이 동일하다면 어떻게 될까요?</span></div>
+          <div class="row r2"><span class="who">학생</span><span>계절 간 온도 차가 <b class="u-warn">［ ㉮ ］</b>할 것이고, 빙하기 발생에 <b class="u-warn">［ ㉯ ］</b>하게 작용할 것입니다.</span></div>
+          <div class="row"><span class="who">선생님</span><span>그렇다면 지구 공전 궤도의 이심률이 <b>점점 작아질 경우</b>, 지구가 원일점일 때 북반구가 여름이고 지구 기후에 영향을 미치는 다른 조건이 동일하다면 어떻게 될까요?</span></div>
+          <div class="row r2"><span class="who">학생</span><span>북반구에 겨울에 쌓인 눈이 여름에도 녹지 않는 지역이 <b class="u-warn">［ ㉰ ］</b>할 것이고, 빙하기 발생에 <b class="u-warn">［ ㉱ ］</b>하게 작용할 것입니다.</span></div>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">두 물음이 다루는 문단</div>
+        <p>앞 물음은 자전축 경사각이 작아지는 경우이므로 5문단에서, 뒤 물음은 공전 궤도 이심률이 작아지는 경우이므로 6문단에서 근거를 찾는다. 네 빈칸 모두 여름 기온이 오르는지 내리는지로 판단이 갈린다.</p>
+      </div>
+    </div>
+    <div class="page-num">13 / 15</div>
+  </section>
+
+  <!-- 14 17번 선택지 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">17</span><span class="qtext">선택지</span><span class="ans-chip">정답 ②</span></h2>
+    <div class="body-area">
+      <div class="quote-box" style="margin-bottom:1.6cqw; font-size:2.05cqw;">
+        ㉮ 경사각이 작아질 때 계절 간 온도 차 ／ ㉯ 그때 빙하기 발생에 ／ ㉰ 이심률이 작아질 때 눈이 여름에도 녹지 않는 지역 ／ ㉱ 그때 빙하기 발생에
+      </div>
+      <table class="mtable">
+        <thead>
+          <tr><th style="width:5em;"></th><th>㉮</th><th>㉯</th><th>㉰</th><th>㉱</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="stmt" style="text-align:center;">①</td><td style="text-align:center;">감소</td><td style="text-align:center;">유리</td><td style="text-align:center;">증가</td><td style="text-align:center;">불리</td></tr>
+          <tr><td class="stmt ans" style="text-align:center;">②</td><td class="ans" style="text-align:center;"><b>감소</b></td><td class="ans" style="text-align:center;"><b>유리</b></td><td class="ans" style="text-align:center;"><b>감소</b></td><td class="ans" style="text-align:center;"><b>불리</b></td></tr>
+          <tr><td class="stmt" style="text-align:center;">③</td><td style="text-align:center;">감소</td><td style="text-align:center;">불리</td><td style="text-align:center;">증가</td><td style="text-align:center;">유리</td></tr>
+          <tr><td class="stmt" style="text-align:center;">④</td><td style="text-align:center;">증가</td><td style="text-align:center;">유리</td><td style="text-align:center;">감소</td><td style="text-align:center;">유리</td></tr>
+          <tr><td class="stmt" style="text-align:center;">⑤</td><td style="text-align:center;">증가</td><td style="text-align:center;">불리</td><td style="text-align:center;">증가</td><td style="text-align:center;">불리</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">14 / 15</div>
+  </section>
+
+  <!-- 15 17번 해설 -->
+  <section class="slide">
+    <h2 class="slide-title"><span class="q">17</span><span class="qtext">정답과 근거</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">②</span>
+        <span class="why">감소 · 유리 · 감소 · 불리</span>
+      </div>
+      <table class="otable" style="margin-top:0.2cqw;">
+        <tr><th>㉮ 감소</th><td>5문단은 경사각이 <b>커질수록</b> 계절 간 온도 차가 커진다고 했다. 경사각이 23.5도에서 작아지면 계절 간 온도 차는 <b class="u-key">감소</b>한다</td></tr>
+        <tr><th>㉯ 유리</th><td>경사각이 작아져 여름 기온이 낮아지면 고위도에서 겨울에 쌓인 눈이 여름에도 남는다(5문단). 얼음층을 계속 더할 수 있으므로 빙하기 발생에 <b class="u-key">유리</b>하다</td></tr>
+        <tr><th>㉰ 감소</th><td>6문단은 원일점에 북반구가 여름일 때 이심률이 <b>클수록</b> 북반구 여름 기온이 낮아진다고 했다. 이심률이 작아지면 여름 기온이 올라 눈이 남는 지역은 <b class="u-key">감소</b>한다</td></tr>
+        <tr><th>㉱ 불리</th><td>같은 이유로 얼음층이 해마다 쌓이기 어려워지므로 빙하기 발생에 <b class="u-key">불리</b>하게 작용한다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">두 변화가 여름 기온에 작용하는 방향</div>
+        <p>경사각은 작아질수록 여름 기온을 낮추고, 이심률은 작아질수록 (원일점 여름인 북반구의) 여름 기온을 높인다. 그래서 같은 &lsquo;작아진다&rsquo;는 조건인데도 ㉯는 유리, ㉱는 불리로 갈린다.</p>
+      </div>
+    </div>
+    <div class="page-num">15 / 15</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 15</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 · 스페이스 · 클릭으로 이동 · F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  let idx = 0;
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
