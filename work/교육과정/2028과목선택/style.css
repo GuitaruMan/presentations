@@ -1,0 +1,749 @@
+@charset "UTF-8";
+/* 2028 과목 선택 안내 — 수채 스케치북
+   종이 위에 먹선으로 적고 수채로 표시한 노트. */
+
+:root{
+  /* 종이와 먹 */
+  --paper:      #F7F4EC;
+  --paper-deep: #EFEADC;
+  --paper-card: #FCFAF4;
+  --ink:        #2A2724;
+  --ink-soft:   #6B655C;
+  --ink-faint:  #A69F92;
+  --rule:       #D8D1C0;
+
+  /* 수채 — 청록 / 살구 / 라벤더 */
+  --teal:       #5B8C89;
+  --teal-wash:  #DCE9E6;
+  --apricot:    #D98E73;
+  --apricot-wash:#F6E3D9;
+  --lavender:   #8B84A8;
+  --lavender-wash:#E6E2EE;
+  --moss:       #8A9A5B;
+  --moss-wash:  #E8EBDA;
+
+  --shadow: 0 1px 2px rgba(42,39,36,.06), 0 6px 18px -10px rgba(42,39,36,.22);
+
+  --sans: "Pretendard Variable", Pretendard, -apple-system, "Segoe UI",
+          "Malgun Gothic", "맑은 고딕", system-ui, sans-serif;
+  --serif: "Nanum Myeongjo", "나눔명조", "Batang", "바탕", Georgia, serif;
+
+  --wrap: 1240px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+/* hidden 속성은 어떤 display 선언보다 우선한다 */
+[hidden]{display:none!important}
+
+html{-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.65;
+  color:var(--ink);
+  background-color:var(--paper);
+  /* 종이 결: 아주 옅은 섬유 얼룩 */
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(139,132,168,.05) 0, transparent 42%),
+    radial-gradient(circle at 82% 8%,  rgba(91,140,137,.055) 0, transparent 38%),
+    radial-gradient(circle at 62% 88%, rgba(217,142,115,.045) 0, transparent 44%);
+  background-attachment:fixed;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px}
+
+.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:var(--paper);
+  padding:10px 16px;z-index:100;border-radius:0 0 4px 0}
+.skip:focus{left:0}
+
+:focus-visible{outline:2.5px solid var(--teal);outline-offset:3px;border-radius:3px}
+
+/* ── 머리 ─────────────────────────────────────────── */
+.masthead{padding:44px 0 0;position:relative}
+.masthead-in{display:flex;justify-content:space-between;align-items:flex-start;gap:28px;flex-wrap:wrap}
+
+.brand-year{
+  font-family:var(--serif);
+  font-size:13px;letter-spacing:.34em;color:var(--teal);
+  display:block;margin-bottom:6px;font-weight:700;
+}
+.brand-name{
+  font-family:var(--serif);
+  font-size:clamp(30px,5.2vw,46px);
+  font-weight:700;line-height:1.14;letter-spacing:-.015em;
+  margin:0 0 10px;
+}
+.brand-sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:34em}
+
+.brand-tools{display:flex;gap:9px;flex-shrink:0;padding-top:6px}
+.tool{
+  font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--ink);
+  background:var(--paper-card);
+  border:1.5px solid var(--ink);
+  border-radius:14px 12px 15px 11px;   /* 손으로 그린 사각형 */
+  padding:8px 15px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  box-shadow:1.5px 1.5px 0 var(--ink);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.tool:hover{transform:translate(-1px,-1px);box-shadow:2.5px 2.5px 0 var(--ink)}
+.tool:active{transform:translate(1px,1px);box-shadow:0 0 0 var(--ink)}
+.tool-mark{color:var(--teal);font-size:15px;line-height:1}
+
+/* 번진 수채 띠 */
+.wash{
+  height:16px;margin-top:26px;
+  background:
+    radial-gradient(ellipse 260px 12px at 12% 55%, rgba(91,140,137,.42) 0, transparent 70%),
+    radial-gradient(ellipse 200px 10px at 40% 45%, rgba(217,142,115,.34) 0, transparent 72%),
+    radial-gradient(ellipse 300px 13px at 72% 60%, rgba(139,132,168,.32) 0, transparent 70%),
+    radial-gradient(ellipse 180px  9px at 93% 42%, rgba(138,154,91,.30) 0, transparent 72%);
+}
+
+/* ── 탭 ─────────────────────────────────────────────
+   고른 탭은 종이 카드처럼 떠오르고 나머지는 가라앉는다.
+   밑줄 하나로는 어느 탭인지 잘 보이지 않는다. */
+.tabs{
+  border-bottom:1.5px solid var(--ink);margin-bottom:30px;
+  background:linear-gradient(to bottom, transparent 60%, rgba(216,209,192,.28));
+}
+.tabs-in{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-top:6px}
+.tabs-in::-webkit-scrollbar{display:none}
+
+.tab{
+  flex:0 0 auto;text-align:left;cursor:pointer;font-family:inherit;
+  padding:11px 20px 12px;margin-bottom:-1.5px;position:relative;
+  color:var(--ink-soft);
+  background:transparent;
+  border:1.5px solid transparent;
+  border-radius:13px 11px 0 0;
+  transition:background .12s ease, color .12s ease;
+}
+.tab em{
+  display:block;font-style:normal;font-weight:700;font-size:16px;
+  font-family:var(--serif);letter-spacing:-.01em;
+}
+.tab span{display:block;font-size:12.5px;color:var(--ink-faint);margin-top:1px}
+
+.tab:hover{color:var(--ink);background:rgba(255,255,255,.5)}
+
+/* 고른 탭 — 테두리로 감싸고 바닥선을 끊어 본문과 이어 붙인다 */
+.tab[aria-selected="true"]{
+  color:var(--ink);
+  background:var(--paper-card);
+  border-color:var(--ink);
+  border-bottom-color:var(--paper-card);
+  box-shadow:0 -2px 6px -3px rgba(42,39,36,.25);
+}
+.tab[aria-selected="true"] em{color:var(--ink)}
+.tab[aria-selected="true"] span{color:var(--teal)}
+
+/* 위쪽에 수채 띠를 얹어 한 번 더 눈에 걸리게 */
+.tab[aria-selected="true"]::before{
+  content:"";position:absolute;left:8px;right:8px;top:-1px;height:3px;
+  border-radius:2px;background:var(--teal);
+}
+
+/* ── 레이아웃 ─────────────────────────────────────── */
+.panes{display:grid;grid-template-columns:1fr;gap:26px;padding-bottom:60px}
+@media (min-width:900px){
+  .panes{grid-template-columns:264px minmax(0,1fr);gap:34px;align-items:start}
+  .pane-filter{position:sticky;top:20px}
+}
+
+.field{border:0;padding:0;margin:0 0 22px;min-width:0}
+.field label,.field legend{
+  display:block;font-size:11.5px;font-weight:700;letter-spacing:.13em;
+  color:var(--ink-soft);text-transform:uppercase;margin-bottom:9px;padding:0;
+}
+.field input[type="search"]{
+  width:100%;font-family:inherit;font-size:15px;color:var(--ink);
+  background:var(--paper-card);
+  border:0;border-bottom:1.5px solid var(--ink);
+  border-radius:0;padding:8px 2px;
+}
+.field input::placeholder{color:var(--ink-faint)}
+.field input:focus{outline:0;border-bottom-color:var(--teal);border-bottom-width:2.5px}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  font-family:inherit;font-size:13px;color:var(--ink-soft);
+  background:transparent;border:1.5px solid var(--rule);
+  border-radius:13px 11px 14px 10px;
+  padding:4px 11px;cursor:pointer;transition:all .12s ease;
+}
+.chip:hover{border-color:var(--ink-soft);color:var(--ink)}
+.chip[aria-pressed="true"]{
+  background:var(--teal-wash);border-color:var(--teal);color:#31534F;font-weight:600;
+}
+/* 계열 칩은 계열색을 띤다 */
+.chip[data-tone="공학"][aria-pressed="true"],
+.chip[data-tone="자연"][aria-pressed="true"]{background:var(--teal-wash);border-color:var(--teal);color:#31534F}
+.chip[data-tone="의약"][aria-pressed="true"],
+.chip[data-tone="예체능"][aria-pressed="true"]{background:var(--apricot-wash);border-color:var(--apricot);color:#8C4A31}
+.chip[data-tone="인문"][aria-pressed="true"],
+.chip[data-tone="사회"][aria-pressed="true"]{background:var(--lavender-wash);border-color:var(--lavender);color:#514A6B}
+.chip[data-tone="상경"][aria-pressed="true"],
+.chip[data-tone="교육"][aria-pressed="true"]{background:var(--moss-wash);border-color:var(--moss);color:#4E5A2C}
+
+/* 칩 안의 개수 */
+.chip-n{
+  font-size:10.5px;color:var(--ink-faint);margin-left:5px;font-weight:400;
+}
+.chip[aria-pressed="true"] .chip-n{color:inherit;opacity:.7}
+
+/* 단계 번호 */
+.step-n{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;margin-right:6px;
+  background:var(--ink);color:var(--paper);font-size:10px;font-weight:700;
+  vertical-align:1px;letter-spacing:0;
+}
+
+/* 학과 목록 */
+.unit-list{max-height:340px;overflow-y:auto;overscroll-behavior:contain;
+  border:1.5px solid var(--rule);border-radius:12px 10px 13px 9px;padding:5px}
+.unit-col{
+  font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--ink-faint);
+  margin:8px 0 3px;padding:0 6px;
+}
+.unit-col:first-child{margin-top:2px}
+.unit-btn{
+  display:block;width:100%;text-align:left;background:none;border:0;
+  padding:5px 8px;border-radius:7px;cursor:pointer;font-family:inherit;
+  font-size:13.5px;color:var(--ink);line-height:1.4;
+}
+.unit-btn:hover{background:var(--teal-wash)}
+.unit-btn.on{background:var(--teal);color:#fff;font-weight:600}
+
+/* 체크박스 */
+.check{display:flex;align-items:center;gap:7px;font-size:13px;
+  color:var(--ink-soft);cursor:pointer;margin-bottom:18px}
+.check input{width:15px;height:15px;accent-color:var(--teal);cursor:pointer}
+
+.reset{
+  font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;
+  border:0;border-bottom:1px dashed var(--ink-faint);padding:0 0 1px;cursor:pointer;
+}
+.reset:hover{color:var(--ink);border-bottom-color:var(--ink)}
+
+.pane-note{font-size:12.5px;color:var(--ink-faint);line-height:1.6;margin:16px 0 0}
+
+.count{font-size:13px;color:var(--ink-soft);margin:0 0 16px}
+.count strong{color:var(--ink);font-weight:700}
+
+/* ── 카드 ─────────────────────────────────────────── */
+.cards{display:grid;gap:14px}
+@media (min-width:1180px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.card{
+  background:var(--paper-card);
+  border:1.5px solid var(--ink);
+  border-radius:16px 13px 17px 12px;
+  padding:18px 20px 17px;
+  box-shadow:var(--shadow);
+  position:relative;
+}
+/* 계열 수채 얼룩 — 카드 왼쪽 위 */
+.card::before{
+  content:"";position:absolute;left:-1px;top:16px;width:5px;height:34px;
+  border-radius:4px;background:var(--teal);opacity:.65;
+}
+.card[data-track="의약"]::before,.card[data-track="예체능"]::before{background:var(--apricot)}
+.card[data-track="인문"]::before,.card[data-track="사회"]::before{background:var(--lavender)}
+.card[data-track="상경"]::before,.card[data-track="교육"]::before{background:var(--moss)}
+
+.card-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:3px}
+.card-unit{font-family:var(--serif);font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em}
+.card-univ{font-size:13px;color:var(--ink-soft);flex-shrink:0;font-weight:600}
+.card-meta{font-size:12.5px;color:var(--ink-faint);margin:0 0 11px}
+
+/* 비고 — 과목이 왜 그렇게 묶였는지 알려주는 문장 */
+.card-memo{
+  font-size:12.5px;line-height:1.6;color:var(--ink-soft);
+  background:var(--paper-deep);border-radius:9px 7px 10px 6px;
+  padding:7px 11px;margin:0 0 13px;
+}
+
+/* 뺀 과목 안내 */
+.card-off{font-size:12px;color:var(--ink-faint);margin:12px 0 0;line-height:1.6}
+.off-see{
+  font-family:inherit;font-size:12px;background:none;border:0;cursor:pointer;
+  color:var(--ink-soft);border-bottom:1px dashed var(--ink-faint);padding:0 0 1px;
+}
+.off-see:hover{color:var(--ink);border-bottom-style:solid}
+
+.grade{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;
+  padding:2px 8px;border-radius:9px 7px 10px 6px;margin-left:6px;vertical-align:1px;
+}
+.grade-강{background:var(--apricot-wash);color:#8C4A31;border:1px solid var(--apricot)}
+.grade-중{background:var(--teal-wash);color:#31534F;border:1px solid var(--teal)}
+.grade-참고{background:var(--paper-deep);color:var(--ink-soft);border:1px solid var(--rule)}
+
+.row{margin:0 0 11px;display:flex;gap:11px;align-items:baseline}
+.row:last-child{margin-bottom:0}
+.row-key{
+  flex:0 0 46px;font-size:11px;font-weight:700;letter-spacing:.1em;
+  color:var(--ink-soft);padding-top:3px;
+}
+/* 핵심 행은 살구 세로선으로 묶어 권장과 갈라 놓는다 */
+.row-core{
+  border-left:2.5px solid var(--apricot);padding-left:9px;margin-left:-11px;
+}
+.row-core .row-key{color:#8C4A31}
+.row-val{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:5px}
+
+.sub{
+  font-size:13.5px;padding:3px 10px;border-radius:12px 10px 13px 9px;
+  background:var(--paper-deep);border:1px solid var(--rule);color:var(--ink);
+  cursor:pointer;font-family:inherit;line-height:1.45;
+}
+.sub:hover{border-color:var(--ink);background:#fff}
+.sub-core{background:var(--apricot-wash);border-color:var(--apricot);font-weight:600}
+.sub-has{border-style:solid}
+.sub-none{
+  color:var(--ink-faint);border-style:dashed;background:transparent;
+}
+.sub-none::after{content:" · 미개설";font-size:10.5px;letter-spacing:.02em}
+/* 과목이 아니라 교과군을 지정한 경우 */
+.sub-grp{
+  background:var(--lavender-wash);border-color:var(--lavender);color:#514A6B;
+  border-style:solid;
+}
+.sub-grp::after{content:" ▸";font-size:11px}
+/* 접힌 과목 펼치기 */
+.sub-more{
+  background:transparent;border-style:dashed;border-color:var(--ink-faint);
+  color:var(--ink-soft);font-size:12.5px;
+}
+.sub-more:hover{border-style:solid;border-color:var(--ink);color:var(--ink);background:transparent}
+
+.cond{
+  font-size:13px;color:var(--ink);background:var(--lavender-wash);
+  border:1px solid var(--lavender);border-left-width:3px;
+  border-radius:0 10px 10px 0;padding:7px 12px;margin:9px 0 0;line-height:1.55;
+}
+.cond b{font-weight:700;color:#514A6B}
+.cond-open{
+  display:inline-block;margin-top:5px;font-size:12px;font-family:inherit;
+  background:none;border:0;border-bottom:1px dashed var(--lavender);
+  color:#514A6B;cursor:pointer;padding:0 0 1px;
+}
+.cond-open:hover{border-bottom-style:solid}
+
+.note{font-size:12.5px;color:var(--ink-soft);margin:10px 0 0;font-style:italic}
+
+/* 빈 상태 */
+.empty{
+  border:1.5px dashed var(--rule);border-radius:16px 13px 17px 12px;
+  padding:34px 26px;text-align:center;color:var(--ink-soft);background:rgba(255,255,255,.4);
+}
+.empty h3{font-family:var(--serif);font-size:18px;margin:0 0 8px;color:var(--ink)}
+.empty p{margin:0;font-size:14px;line-height:1.7}
+.empty .why{
+  display:inline-block;margin-top:14px;font-size:12.5px;
+  background:none;border:0;border-bottom:1px dashed var(--ink-soft);
+  color:var(--ink-soft);cursor:pointer;font-family:inherit;padding:0 0 1px;
+}
+
+/* ── 과목 고르기 ──────────────────────────────────── */
+.target-box{
+  background:var(--paper-card);border:1.5px solid var(--ink);
+  border-radius:14px 12px 15px 11px;padding:13px 15px;box-shadow:1.5px 1.5px 0 var(--ink);
+}
+.target-box h3{font-family:var(--serif);font-size:16px;margin:0 0 2px}
+.target-box p{margin:0;font-size:12.5px;color:var(--ink-soft)}
+.target-box .clear{
+  margin-top:9px;font-size:12px;background:none;border:0;cursor:pointer;
+  border-bottom:1px dashed var(--ink-faint);color:var(--ink-soft);padding:0 0 1px;font-family:inherit;
+}
+
+.group{margin-bottom:34px}
+.group-head{
+  display:flex;align-items:baseline;gap:10px;
+  border-bottom:1.5px solid var(--ink);padding-bottom:7px;margin-bottom:15px;
+}
+.group-head h3{font-family:var(--serif);font-size:20px;margin:0;letter-spacing:-.01em}
+.group-head .slot{font-size:12.5px;color:var(--ink-soft)}
+
+.sect{margin-bottom:17px}
+.sect-key{
+  font-size:11.5px;font-weight:700;letter-spacing:.12em;color:var(--ink-soft);
+  margin:0 0 7px;
+}
+.pick-grid{display:flex;flex-wrap:wrap;gap:6px}
+
+.pill{
+  font-family:inherit;font-size:13.5px;line-height:1.45;
+  background:var(--paper-card);border:1.5px solid var(--rule);
+  border-radius:13px 11px 14px 10px;padding:5px 11px;color:var(--ink-soft);
+  position:relative;
+}
+.pill-hit{
+  border-color:var(--teal);background:var(--teal-wash);color:#2E4F4B;font-weight:600;
+  box-shadow:1.5px 1.5px 0 rgba(91,140,137,.45);
+}
+.pill-core{
+  border-color:var(--apricot);background:var(--apricot-wash);color:#8C4A31;font-weight:700;
+  box-shadow:1.5px 1.5px 0 rgba(217,142,115,.5);
+}
+.pill-cond{border-color:var(--lavender);background:var(--lavender-wash);color:#514A6B}
+/* 선수과목 — 대학이 적지 않았지만 위계상 필요한 과목 */
+.pill-pre{
+  border-color:var(--teal);border-style:dashed;background:transparent;
+  color:#2E4F4B;font-weight:600;
+}
+.pill-type{font-size:10.5px;color:var(--ink-faint);margin-left:5px;font-weight:400}
+
+/* 편성표의 과목을 눌러 상세 창을 여는 경우 */
+button.pill{
+  cursor:pointer;text-align:left;font-weight:inherit;
+  transition:transform .09s ease, box-shadow .09s ease;
+}
+button.pill:hover{
+  transform:translate(-1px,-1px);
+  box-shadow:2.5px 2.5px 0 rgba(60,56,52,.16);
+  border-color:var(--ink-faint);
+}
+button.pill.pill-hit:hover{box-shadow:2.5px 2.5px 0 rgba(91,140,137,.55);border-color:var(--teal)}
+button.pill.pill-core:hover{box-shadow:2.5px 2.5px 0 rgba(217,142,115,.6);border-color:var(--apricot)}
+button.pill.pill-cond:hover{box-shadow:2.5px 2.5px 0 rgba(120,110,160,.4);border-color:var(--lavender)}
+button.pill:active{transform:translate(0,0);box-shadow:none}
+
+/* ── 권장과목 목록 (편성표에 표시 탭 요약) ── */
+.sum-list{margin:14px 0 4px;display:flex;flex-direction:column;gap:9px}
+.sum-row{display:flex;gap:10px;align-items:flex-start}
+.sum-key{
+  flex:0 0 62px;font-size:12px;font-weight:700;color:var(--ink-soft);
+  padding-top:5px;letter-spacing:-.02em;
+}
+.sum-pills{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.sum-pill{
+  font-family:inherit;font-size:12.5px;padding:4px 9px;cursor:pointer;
+  border-radius:11px 9px 12px 8px;border:1.5px solid var(--rule);
+  background:var(--paper-card);color:var(--ink-soft);
+}
+.sum-pill:hover{border-color:var(--ink-faint)}
+.sum-core{border-color:var(--apricot);background:var(--apricot-wash);color:#8C4A31;font-weight:700}
+.sum-rec{border-color:var(--teal);background:var(--teal-wash);color:#2E4F4B;font-weight:600}
+.sum-cond{border-color:var(--lavender);background:var(--lavender-wash);color:#514A6B}
+.sum-off{opacity:.55;border-style:dashed;background:transparent}
+.sum-x{font-size:10px;margin-left:4px;color:var(--ink-faint)}
+.sum-note{font-size:11.5px;color:var(--ink-faint);margin-left:2px}
+
+/* ── 내 과목 담기 ── */
+.my-intro{margin:0 0 18px}
+.my-intro h3{font-size:17px;margin:0 0 5px}
+.my-intro p{font-size:13.5px;color:var(--ink-soft);margin:0;line-height:1.6}
+.my-slot{margin-bottom:22px}
+.slot-full{color:#2E4F4B;font-weight:700}
+button.my-pill{position:relative}
+button.my-pill.on{
+  border-color:var(--ink);background:var(--ink);color:var(--paper);
+  font-weight:700;box-shadow:2px 2px 0 rgba(60,56,52,.25);
+}
+button.my-pill.on .pill-type{color:rgba(255,255,255,.7)}
+button.my-pill.on::after{content:'✓';margin-left:6px;font-size:11px}
+
+.my-count{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:4px}
+.my-count li{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12.5px;color:var(--ink-soft);
+  padding:5px 8px;border:1px solid var(--rule);border-radius:8px;
+}
+.my-count li.full{border-color:var(--teal);background:var(--teal-wash);color:#2E4F4B}
+.my-count li b{font-variant-numeric:tabular-nums}
+/* 교양은 3학년 1학기에 딸린 자리 — 들여쓰고 작게 */
+.my-count li.sub{
+  margin-left:14px;font-size:11.5px;padding:4px 8px;
+  border-style:dashed;color:var(--ink-faint);
+}
+.my-count li.sub.full{border-style:solid}
+
+/* 본문에서도 하위 슬롯임이 보이게 */
+.my-sub{
+  margin-left:18px;padding-left:14px;
+  border-left:2px dashed var(--rule);
+}
+.my-sub .group-head h4{
+  font-size:14px;margin:0;font-weight:600;color:var(--ink-soft);
+}
+.my-sub .group-head h4::before{
+  content:'↳ ';color:var(--ink-faint);font-weight:400;
+}
+.my-sub .pill{font-size:12.5px;padding:4px 9px}
+.my-sub .sect-key{font-size:11px}
+/* ── 진입 화면 ── */
+.gate{padding:52px 0 70px}
+.gate-in{max-width:760px}
+.gate-h{font-size:clamp(22px,4.4vw,30px);margin:0 0 10px;letter-spacing:-.03em}
+.gate-p{font-size:14.5px;color:var(--ink-soft);line-height:1.65;margin:0 0 28px}
+.gate-cards{display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:720px){.gate-cards{grid-template-columns:1fr 1fr}}
+.gate-card{
+  font-family:inherit;text-align:left;cursor:pointer;
+  display:flex;flex-direction:column;gap:6px;
+  padding:22px 22px 24px;
+  background:var(--paper-card);border:1.5px solid var(--rule);
+  border-radius:18px 14px 20px 12px;
+  box-shadow:2px 3px 0 rgba(60,56,52,.08);
+  transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.gate-card:hover{
+  transform:translate(-2px,-2px);
+  box-shadow:4px 5px 0 rgba(60,56,52,.16);
+  border-color:var(--teal);
+}
+.gate-card:active{transform:none;box-shadow:1px 1px 0 rgba(60,56,52,.16)}
+.gate-who{
+  font-size:11px;font-weight:700;letter-spacing:.02em;
+  color:#2E4F4B;background:var(--teal-wash);border:1px solid var(--teal);
+  align-self:flex-start;padding:2px 9px;border-radius:9px;
+}
+.gate-title{font-size:17.5px;color:var(--ink);letter-spacing:-.02em;line-height:1.35}
+.gate-desc{font-size:12.5px;color:var(--ink-faint);line-height:1.5}
+
+/* 상단 코호트 배지 */
+.cohort-tag{
+  font-family:inherit;font-size:11.5px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 10px;margin-right:6px;
+  background:var(--teal-wash);border:1.5px solid var(--teal);
+  border-radius:11px 9px 12px 8px;color:#2E4F4B;font-weight:600;
+}
+.cohort-tag:hover{background:#fff}
+.cohort-x{font-size:10px;font-weight:400;color:var(--ink-faint);border-left:1px solid var(--teal);padding-left:7px}
+@media (max-width:600px){.cohort-x{display:none}}
+
+/* 이수 조건 체크리스트 */
+.rules{margin:14px 0 0}
+.rules h4{
+  font-size:13px;margin:0 0 7px;display:flex;align-items:center;gap:7px;
+}
+.rules-ok,.rules-bad{
+  font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:8px;letter-spacing:-.02em;
+}
+.rules-ok{background:var(--teal-wash);color:#2E4F4B;border:1px solid var(--teal)}
+.rules-bad{background:var(--apricot-wash);color:#8C4A31;border:1px solid var(--apricot)}
+.rules ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.rules li{display:flex;gap:7px;align-items:flex-start;font-size:12px;line-height:1.45}
+.r-mark{
+  flex:0 0 16px;height:16px;border-radius:50%;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;
+}
+.r-ok .r-mark{background:var(--teal-wash);color:#2E4F4B;border:1px solid var(--teal)}
+.r-no .r-mark{background:var(--apricot-wash);color:#8C4A31;border:1px solid var(--apricot)}
+.r-txt{display:flex;flex-direction:column;gap:1px}
+.r-txt b{font-weight:600;color:var(--ink)}
+.r-txt em{font-style:normal;font-size:11px;color:var(--ink-faint)}
+.r-no .r-txt em{color:#8C4A31}
+.warn-sm{margin:10px 0 0;padding:10px 12px}
+.warn-sm h4{font-size:13px;margin:0 0 5px}
+.warn-sm ul{margin:0;padding-left:16px;font-size:12px;line-height:1.55}
+
+/* 안내 토스트 */
+.flash{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,140%);
+  max-width:min(560px,calc(100vw - 32px));z-index:60;
+  background:var(--ink);color:var(--paper);font-size:13.5px;line-height:1.55;
+  padding:12px 18px;border-radius:14px 11px 15px 10px;
+  box-shadow:3px 4px 0 rgba(60,56,52,.22);
+  transition:transform .22s cubic-bezier(.2,.9,.3,1.2);
+}
+.flash.on{transform:translate(-50%,0)}
+.flash-warn{background:#8C4A31}
+@media (prefers-reduced-motion:reduce){.flash{transition:none}}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 24px;font-size:12.5px;color:var(--ink-soft)}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:4px;margin-right:5px;
+  vertical-align:-2px;border:1.5px solid}
+.legend .l-core{background:var(--apricot-wash);border-color:var(--apricot)}
+.legend .l-hit{background:var(--teal-wash);border-color:var(--teal)}
+.legend .l-cond{background:var(--lavender-wash);border-color:var(--lavender)}
+.legend .l-pre{background:transparent;border-color:var(--teal);border-style:dashed}
+.legend .l-off{background:transparent;border-color:var(--rule);border-style:dashed}
+
+.warn{
+  background:var(--apricot-wash);border:1.5px solid var(--apricot);
+  border-radius:14px 12px 15px 11px;padding:13px 16px;margin:0 0 22px;
+}
+.warn h4{margin:0 0 5px;font-size:14px;font-family:var(--serif)}
+.warn p{margin:0;font-size:13.5px;line-height:1.65;color:#7A4029}
+
+.summary{
+  background:var(--paper-card);border:1.5px solid var(--ink);
+  border-radius:16px 13px 17px 12px;padding:16px 19px;margin-bottom:24px;
+  box-shadow:var(--shadow);
+}
+.summary h3{font-family:var(--serif);font-size:17px;margin:0 0 4px}
+.summary p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
+.summary .miss{color:#8C4A31;margin-top:7px}
+
+/* ── 과목으로 찾기 ────────────────────────────────── */
+.subj-group{margin-bottom:26px}
+.subj-h{
+  font-family:var(--serif);font-size:15px;margin:0 0 6px;
+  padding-bottom:5px;border-bottom:1.5px solid var(--ink);
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.subj-h-n{font-size:12px;color:var(--ink-faint);font-family:var(--sans);font-weight:400}
+
+/* 한 줄에 모두 담아 조밀하게 — 55과목이 스크롤 지옥이 되지 않도록 */
+.subj-row{
+  width:100%;display:flex;align-items:center;gap:9px;
+  background:none;border:0;border-bottom:1px solid var(--rule);
+  padding:7px 4px;cursor:pointer;font-family:inherit;text-align:left;
+}
+.subj-row:hover{background:var(--paper-card)}
+.subj-name{
+  font-size:14.5px;color:var(--ink);font-weight:600;
+  flex:0 0 auto;max-width:11em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.subj-tag{font-size:11px;color:var(--ink-faint);flex:0 0 auto}
+.subj-off{
+  font-size:10.5px;color:var(--ink-faint);border:1px dashed var(--ink-faint);
+  border-radius:6px;padding:0 5px;flex:0 0 auto;
+}
+.subj-bar{
+  flex:1 1 auto;min-width:36px;height:5px;border-radius:3px;
+  background:var(--paper-deep);overflow:hidden;
+}
+.subj-bar i{
+  display:block;height:100%;border-radius:3px;
+  background:linear-gradient(90deg,rgba(91,140,137,.5),var(--teal));
+}
+.subj-n{
+  flex:0 0 2.6em;text-align:right;font-size:13px;color:var(--teal);
+  font-weight:700;font-family:var(--serif);
+}
+
+/* 권장 대학·학과 — 대학별로 접어 둔다 */
+.subj-detail{margin-top:13px}
+.du{border-top:1px solid var(--rule)}
+.du:last-child{border-bottom:1px solid var(--rule)}
+.du summary{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:9px 4px;cursor:pointer;list-style:none;
+}
+.du summary::-webkit-details-marker{display:none}
+.du summary:hover{background:var(--paper-card)}
+.du-univ{
+  font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink);
+}
+/* 삼각형 표시 — 펼치면 돌아간다 */
+.du-univ::before{
+  content:"▸";display:inline-block;color:var(--teal);
+  margin-right:7px;font-size:11px;transition:transform .12s ease;
+}
+.du[open] .du-univ::before{transform:rotate(90deg)}
+.du-n{font-size:12.5px;color:var(--ink-faint);flex-shrink:0}
+.du-units{
+  margin:0;padding:0 6px 12px 22px;
+  font-size:13.5px;line-height:1.75;color:var(--ink-soft);
+}
+.sub-quiet{color:var(--ink-faint);font-size:13px}
+
+/* ── 모달 ─────────────────────────────────────────── */
+.modal{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center}
+@media (min-width:720px){.modal{align-items:center;padding:28px}}
+.modal-scrim{position:absolute;inset:0;background:rgba(42,39,36,.42);backdrop-filter:blur(2px)}
+.modal-box{
+  position:relative;background:var(--paper);width:100%;max-width:820px;
+  max-height:88vh;display:flex;flex-direction:column;
+  border:1.5px solid var(--ink);border-radius:18px 18px 0 0;
+  box-shadow:0 -6px 40px rgba(42,39,36,.3);
+}
+@media (min-width:720px){.modal-box{border-radius:18px 15px 19px 14px;box-shadow:3px 3px 0 var(--ink)}}
+.modal-head{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:17px 22px;border-bottom:1.5px solid var(--ink);flex-shrink:0;
+}
+.modal-head h2{font-family:var(--serif);font-size:20px;margin:0;letter-spacing:-.01em}
+.modal-x{background:none;border:0;font-size:17px;cursor:pointer;color:var(--ink-soft);
+  padding:4px 8px;line-height:1;font-family:inherit}
+.modal-x:hover{color:var(--ink)}
+.modal-body{padding:22px;overflow-y:auto;overscroll-behavior:contain}
+
+.doc h3{
+  font-family:var(--serif);font-size:18px;margin:30px 0 9px;
+  padding-bottom:5px;border-bottom:1.5px solid var(--rule);
+}
+.doc h3:first-child{margin-top:0}
+.doc p{margin:0 0 11px;font-size:14.5px;line-height:1.78}
+.doc dl{margin:0 0 12px}
+.doc dt{font-weight:700;font-size:14.5px;margin-top:10px;font-family:var(--serif)}
+.doc dd{margin:2px 0 0;font-size:14px;color:var(--ink-soft);line-height:1.7}
+.doc .accent{
+  background:var(--teal-wash);border-left:3px solid var(--teal);
+  border-radius:0 10px 10px 0;padding:11px 15px;margin:13px 0;
+  font-size:14px;line-height:1.7;
+}
+/* 과목 설명 — 모달 맨 위에서 이 과목이 무엇인지 알려준다 */
+.subj-desc{
+  background:var(--teal-wash);border-left:3px solid var(--teal);
+  border-radius:0 10px 10px 0;padding:12px 15px;margin:0 0 14px!important;
+  font-size:14.5px;line-height:1.75;
+}
+
+/* 자료 원문 링크 */
+.srclist{list-style:none;padding:0;margin:0}
+.srclist li{
+  padding:11px 0;border-top:1px solid var(--rule);
+}
+.srclist a{
+  font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink);
+  text-decoration:none;border-bottom:1.5px solid var(--teal);
+}
+.srclist a:hover{color:var(--teal)}
+.srclist a::after{content:" ↗";font-size:12px;border:0;color:var(--teal)}
+.src-pub,.src-note{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:3px}
+.src-note{color:var(--ink-faint)}
+
+.doc table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+.doc th,.doc td{border:1px solid var(--rule);padding:7px 10px;text-align:left;vertical-align:top}
+.doc th{background:var(--paper-deep);font-weight:700;font-size:12.5px}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* 편성표 */
+.cur-slot{margin-bottom:26px}
+.cur-slot h3{font-family:var(--serif);font-size:18px;margin:0 0 3px}
+.cur-slot .sl{font-size:12.5px;color:var(--ink-soft);margin:0 0 11px}
+.cur-row{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--rule);align-items:baseline}
+.cur-g{flex:0 0 88px;font-size:12px;font-weight:700;color:var(--ink-soft);letter-spacing:.05em}
+.cur-s{flex:1;display:flex;flex-wrap:wrap;gap:5px}
+
+.loading{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:var(--paper);color:var(--ink-soft);font-size:14px;z-index:80;
+}
+
+/* ── 바닥 ─────────────────────────────────────────── */
+.foot{border-top:1.5px solid var(--rule);padding:24px 0 46px;margin-top:20px}
+.foot p{margin:0 0 5px;font-size:12.5px;color:var(--ink-faint);line-height:1.7}
+.foot-warn strong{color:var(--ink-soft)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+
+@media print{
+  .masthead,.tabs,.pane-filter,.foot-warn,.modal,.tool{display:none!important}
+  body{background:#fff}
+  .card{break-inside:avoid;box-shadow:none}
+}
+
+/* ── ForWeb 사이트 네비게이션 ── */
+.site-top{
+  display:flex;gap:16px;align-items:center;
+  max-width:1180px;margin:0 auto;padding:10px 20px 0;font-size:12.5px;
+}
+.site-top .site-updated{margin-right:auto;color:var(--ink-faint)}
+.site-top a{color:var(--ink-faint);text-decoration:none}
+.site-top a:hover{color:var(--teal);text-decoration:underline}

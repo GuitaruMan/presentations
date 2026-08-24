@@ -15,7 +15,23 @@
   a.back { color: var(--ink-soft); text-decoration: none; font-size: 0.9rem; }
   a.back:hover { color: var(--accent); }
   h1 { font-size: 1.6rem; margin: 0.5rem 0 2.5rem; }
-  .empty { color: var(--ink-soft); font-size: 0.95rem; margin-top: 2rem; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem; width: 100%; max-width: 700px;
+  }
+  a.card {
+    background: var(--card); border-radius: 16px; padding: 1.8rem 1.2rem; text-align: center;
+    text-decoration: none; color: var(--ink); box-shadow: 0 4px 16px var(--shadow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex; flex-direction: column; gap: 0.5rem; align-items: center;
+  }
+  a.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--shadow); }
+  .icon2 { font-size: 1.8rem; }
+  .label { font-size: 1.05rem; font-weight: 600; }
+  .updated { font-size: 0.78rem; color: var(--ink-soft); }
+  a.card.admin { border: 1.5px dashed var(--ink-soft); box-shadow: none; }
+  a.card.admin:hover { border-color: var(--accent); }
+  .sect { width: 100%; max-width: 700px; margin: 2.4rem 0 0.8rem; font-size: 0.85rem; color: var(--ink-soft); }
 </style>
 </head>
 <body>
@@ -24,6 +40,22 @@
     <a class="back" href="../index.html">홈으로</a>
   </div>
   <h1>📘 교육과정</h1>
-  <div class="empty">아직 등록된 자료가 없습니다.</div>
+
+  <div class="grid">
+    <a class="card" href="교육과정/2028과목선택/index.html">
+      <div class="icon2">🧭</div>
+      <div class="label">2028 과목 선택 안내</div>
+      <div class="updated">업데이트: 2026. 8. 24.</div>
+    </a>
+  </div>
+
+  <div class="sect">관리자용</div>
+  <div class="grid">
+    <a class="card admin" href="교육과정/2028과목선택/admin.html">
+      <div class="icon2">⚙️</div>
+      <div class="label">개설 현황 관리</div>
+      <div class="updated">업데이트: 2026. 8. 24.</div>
+    </a>
+  </div>
 </body>
 </html>

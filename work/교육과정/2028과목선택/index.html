@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title>2028 과목 선택 안내</title>
+<meta name="description" content="2028학년도 대학별 권장과목과 우리 학교 편성표를 함께 보는 과목 선택 안내">
+<link rel="stylesheet" href="style.css?v=20260824a">
+</head>
+<body>
+
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<div class="site-top"><span class="site-updated">업데이트: 2026. 8. 24.</span><a href="../../교육과정.html">&larr; 교육과정</a><a href="../../work.html">업무용</a><a href="../../../index.html">홈으로</a></div>
+
+
+<header class="masthead">
+  <div class="wrap masthead-in">
+    <div class="brand">
+      <span class="brand-year">2028</span>
+      <h1 class="brand-name">과목 선택 안내</h1>
+      <p class="brand-sub">9개 대학이 알려준 것과, 우리 학교가 열어둔 것을 나란히 봅니다.</p>
+    </div>
+    <div class="brand-tools">
+      <button type="button" class="cohort-tag" id="cohort-tag" hidden>
+        <span id="cohort-name"></span>
+        <span class="cohort-x" aria-hidden="true">바꾸기</span>
+      </button>
+      <button type="button" class="tool" id="tool-curriculum" data-open="curriculum" hidden>
+        <span class="tool-mark" aria-hidden="true">▤</span>편성표
+      </button>
+      <button type="button" class="tool" data-open="help">
+        <span class="tool-mark" aria-hidden="true">?</span>설명서
+      </button>
+    </div>
+  </div>
+  <div class="wash" aria-hidden="true"></div>
+</header>
+
+<!-- ── 진입 화면 — 어느 학년 것을 고를지 ─────────────── -->
+<section id="gate" class="gate" hidden aria-label="학년 고르기">
+  <div class="wrap gate-in">
+    <h2 class="gate-h">어느 과목을 고르시나요?</h2>
+    <p class="gate-p">학년마다 교육과정이 달라 열리는 과목이 다릅니다.<br>
+      본인 학년을 골라 주세요.</p>
+    <div class="gate-cards" id="gate-cards"></div>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="주요 기능" id="tabs" hidden>
+  <div class="wrap tabs-in" role="tablist">
+    <button role="tab" class="tab" data-view="univ" aria-selected="true">
+      <em>학과별 권장과목</em><span>희망 학과가 원하는 과목 보기</span>
+    </button>
+    <button role="tab" class="tab" data-view="pick" aria-selected="false">
+      <em>편성표에 표시</em><span>그 과목이 우리 학교 어디에 있나</span>
+    </button>
+    <button role="tab" class="tab" data-view="subject" aria-selected="false">
+      <em>과목별 수요</em><span>이 과목을 권장하는 곳은 어디</span>
+    </button>
+    <button role="tab" class="tab tab-my" data-view="my" aria-selected="false">
+      <em>내 과목 담기</em><span>학년·학기별로 직접 골라보기</span>
+    </button>
+  </div>
+</nav>
+
+<main id="main" class="wrap">
+
+  <!-- ── 1. 대학으로 찾기 ───────────────────────────── -->
+  <section class="view" id="view-univ" aria-label="대학으로 찾기">
+    <div class="panes">
+      <aside class="pane-filter">
+        <div class="field">
+          <label for="q-univ">학과 · 대학 검색</label>
+          <input type="search" id="q-univ" placeholder="예: 신소재공학부, 고려대" autocomplete="off">
+        </div>
+
+        <fieldset class="field">
+          <legend>대학</legend>
+          <div class="chips" id="f-univ"></div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend>계열</legend>
+          <div class="chips" id="f-track"></div>
+        </fieldset>
+
+        <button type="button" class="reset" id="reset-univ">조건 지우기</button>
+      </aside>
+
+      <div class="pane-result">
+        <p class="count" id="count-univ" role="status"></p>
+        <div id="list-univ" class="cards"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. 과목 고르기 ─────────────────────────────── -->
+  <section class="view" id="view-pick" hidden aria-label="과목 고르기">
+    <div class="panes">
+      <aside class="pane-filter">
+        <div id="target-box" class="target-box" hidden></div>
+
+        <fieldset class="field" id="step-univ">
+          <legend><span class="step-n">1</span>대학</legend>
+          <div class="chips" id="p-univ"></div>
+        </fieldset>
+
+        <fieldset class="field" id="step-track" hidden>
+          <legend><span class="step-n">2</span>계열</legend>
+          <div class="chips" id="p-track"></div>
+        </fieldset>
+
+        <fieldset class="field" id="step-unit" hidden>
+          <legend><span class="step-n">3</span>학과</legend>
+          <div class="unit-list" id="p-unit"></div>
+        </fieldset>
+
+        <p class="pane-note">학과를 고르면 권장과목이 편성표 위에 표시됩니다. 학교에 없는 과목은 빼고 보여줍니다.</p>
+      </aside>
+
+      <div class="pane-result">
+        <div id="pick-body"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. 과목으로 찾기 ───────────────────────────── -->
+  <section class="view" id="view-subject" hidden aria-label="과목으로 찾기">
+    <div class="panes">
+      <aside class="pane-filter">
+        <fieldset class="field">
+          <legend>교과군</legend>
+          <div class="chips" id="f-group"></div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend>과목 유형</legend>
+          <div class="chips" id="f-type"></div>
+        </fieldset>
+
+        <div class="field">
+          <label for="q-subject">과목 이름으로 찾기</label>
+          <input type="search" id="q-subject" placeholder="예: 미적분" autocomplete="off">
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="show-off">
+          <span>우리 학교에 없는 과목도 보기</span>
+        </label>
+
+        <button type="button" class="reset" id="reset-subject">조건 지우기</button>
+      </aside>
+      <div class="pane-result">
+        <p class="count" id="count-subject" role="status"></p>
+        <div id="subject-body"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4. 내 과목 담기 ────────────────────────────── -->
+  <section class="view" id="view-my" hidden aria-label="내 과목 담기">
+    <div class="panes">
+      <aside class="pane-filter">
+        <fieldset class="field">
+          <legend>과정</legend>
+          <div class="chips" id="my-course"></div>
+        </fieldset>
+
+        <div id="my-status"></div>
+
+        <button type="button" class="reset" id="my-reset">담은 과목 모두 비우기</button>
+        <p class="pane-note">고른 과목은 이 기기에 저장됩니다.
+          주소를 복사해 두면 다른 기기에서도 그대로 열립니다.</p>
+      </aside>
+
+      <div class="pane-result">
+        <div id="my-body"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p id="stamp"></p>
+    <p class="foot-warn">대학이 발표한 <strong>권장</strong> 사항입니다. 지원 자격이 아니며, 대학 사정에 따라 바뀔 수 있습니다.</p>
+  </div>
+</footer>
+
+<!-- 모달 -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <h2 id="modal-title"></h2>
+      <button type="button" class="modal-x" data-close aria-label="닫기">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div class="loading" id="loading">자료를 불러오는 중입니다…</div>
+
+<script src="logic.js?v=20260824a"></script>
+<script src="app.js?v=20260824a"></script>
+</body>
+</html>

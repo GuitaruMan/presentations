@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title>개설 현황 관리 — 2028 과목 선택 안내</title>
+<style>
+:root{
+  --paper:#FBFAF7; --card:#fff; --ink:#3C3834; --soft:#6B655E; --faint:#9A938A;
+  --rule:#E2DDD4; --teal:#5B8C89; --teal-w:#EAF3F1; --red:#B4553A; --red-w:#FBEDE8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif;
+  font-size:15px;line-height:1.6;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{border-bottom:1.5px solid var(--rule);padding:22px 0 18px;margin-bottom:22px}
+.top{display:flex;gap:16px;justify-content:flex-end;font-size:12.5px;padding-bottom:10px}
+.top a{color:var(--faint);text-decoration:none}
+.top a:hover{color:var(--teal);text-decoration:underline}
+.site-updated{margin-right:auto;color:var(--faint)}
+h1{font-size:22px;margin:0 0 4px;letter-spacing:-.02em}
+.sub{font-size:13px;color:var(--soft);margin:0}
+
+.bar{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  padding:14px 16px;background:var(--card);border:1.5px solid var(--rule);
+  border-radius:12px;margin-bottom:20px;position:sticky;top:0;z-index:5;
+}
+.bar label{font-size:12.5px;color:var(--soft)}
+select,input[type=text],input[type=date]{
+  font-family:inherit;font-size:13.5px;padding:6px 9px;
+  border:1.5px solid var(--rule);border-radius:8px;background:#fff;color:var(--ink);
+}
+.btn{
+  font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+  padding:7px 14px;border-radius:9px;border:1.5px solid var(--teal);
+  background:var(--teal);color:#fff;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:#fff;color:var(--teal)}
+.btn.ghost:hover{background:var(--teal-w)}
+.count{margin-left:auto;font-size:13px;color:var(--soft)}
+.count b{color:var(--red);font-variant-numeric:tabular-nums}
+
+.grp{margin-bottom:26px}
+.grp h2{font-size:15.5px;margin:0 0 4px;letter-spacing:-.02em}
+.grp .meta{font-size:12px;color:var(--faint);margin:0 0 10px}
+.sect{margin-bottom:12px}
+.sect-k{font-size:11.5px;color:var(--faint);margin:0 0 6px;letter-spacing:.02em}
+.rowg{display:flex;flex-wrap:wrap;gap:7px}
+
+.sw{
+  font-family:inherit;font-size:13px;cursor:pointer;text-align:left;
+  padding:7px 11px;border-radius:11px 9px 12px 8px;
+  border:1.5px solid var(--rule);background:var(--card);color:var(--ink);
+  display:inline-flex;align-items:center;gap:7px;transition:transform .09s ease;
+}
+.sw:hover{transform:translate(-1px,-1px)}
+.sw .t{font-size:10.5px;color:var(--faint)}
+.sw .sem{font-size:10px;color:var(--faint);border-left:1px solid var(--rule);padding-left:6px}
+.sw.off{
+  border-color:var(--red);background:var(--red-w);color:var(--red);
+  text-decoration:line-through;font-weight:600;
+}
+.sw.off .t,.sw.off .sem{color:var(--red);opacity:.75}
+
+.out{margin-top:26px;border-top:1.5px solid var(--rule);padding-top:18px}
+.out h2{font-size:15px;margin:0 0 8px}
+textarea{
+  width:100%;min-height:160px;font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:12.5px;line-height:1.5;padding:12px;border:1.5px solid var(--rule);
+  border-radius:10px;background:#fff;color:var(--ink);resize:vertical;
+}
+.hint{font-size:12.5px;color:var(--soft);margin:10px 0 0;line-height:1.65}
+.hint code{background:var(--card);border:1px solid var(--rule);border-radius:5px;padding:1px 5px;font-size:12px}
+.ok{color:var(--teal);font-weight:600}
+footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
+
+/* 비밀번호 잠금 */
+.gate{position:fixed;inset:0;z-index:80;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px}
+.gate[hidden]{display:none}
+.gbox{
+  background:var(--card);border:1.5px solid var(--rule);border-radius:16px;
+  padding:30px 28px;max-width:340px;width:100%;text-align:center;
+  box-shadow:3px 4px 0 rgba(60,56,52,.12);display:flex;flex-direction:column;gap:10px;
+}
+.gbox h2{font-size:18px;margin:0}
+.gbox p{font-size:13px;color:var(--soft);margin:0 0 6px}
+#gpw{font-family:inherit;font-size:15px;text-align:center;letter-spacing:.18em;padding:10px;border:1.5px solid var(--rule);border-radius:9px}
+.gmsg{font-size:12.5px;color:var(--red);min-height:1.2em;margin:0}
+.gback{font-size:12px;color:var(--faint);text-decoration:none;margin-top:4px}
+.gback:hover{color:var(--teal);text-decoration:underline}
+
+/* 깃헙 반영 */
+.pub{border-top:1.5px solid var(--teal)}
+.pubrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+#tok{
+  flex:1 1 300px;min-width:220px;font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:12.5px;padding:7px 10px;border:1.5px solid var(--rule);border-radius:8px;
+}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--soft)}
+.st{font-size:12.5px;color:var(--soft);margin:10px 0 0}
+.st.good{color:var(--teal);font-weight:600}
+.st.bad{color:var(--red);font-weight:600}
+
+/* 사용법 모달 */
+.q{
+  font-size:11.5px;font-weight:600;cursor:pointer;color:var(--teal);
+  border:1.5px solid var(--teal);border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:2px;
+}
+.q:hover{background:var(--teal-w)}
+.modal[hidden]{display:none}
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
+.scrim{position:absolute;inset:0;background:rgba(60,56,52,.45)}
+.box{
+  position:relative;background:var(--paper);border:1.5px solid var(--rule);border-radius:16px;
+  max-width:640px;width:100%;max-height:86vh;display:flex;flex-direction:column;
+  box-shadow:4px 6px 0 rgba(60,56,52,.2);
+}
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1.5px solid var(--rule)}
+.mhead h2{font-size:17px;margin:0}
+.mx{font-family:inherit;font-size:15px;cursor:pointer;line-height:1;background:none;border:0;color:var(--faint);padding:4px 6px}
+.mx:hover{color:var(--ink)}
+.mbody{padding:18px 20px 24px;overflow:auto;font-size:13.5px;line-height:1.7}
+.mbody h3{font-size:14px;margin:20px 0 6px;color:var(--teal)}
+.mbody h3:first-child{margin-top:0}
+.mbody p{margin:0 0 10px;color:var(--soft)}
+.mbody ul,.mbody ol{margin:0 0 10px;padding-left:20px;color:var(--soft)}
+.mbody li{margin-bottom:5px}
+.mbody dl{margin:0 0 10px}
+.mbody dt{font-weight:700;color:var(--ink);margin-top:10px;font-size:13px}
+.mbody dd{margin:2px 0 0;color:var(--soft)}
+.mbody code{background:var(--card);border:1px solid var(--rule);border-radius:5px;padding:1px 5px;font-size:12px}
+.mbody b{color:var(--ink)}
+.mbody .sem{font-size:10.5px;color:var(--faint);border:1px solid var(--rule);border-radius:5px;padding:1px 5px}
+.mbody .warn{background:var(--red-w);border:1.5px solid var(--red);border-radius:10px;padding:10px 12px;color:var(--red);font-size:12.5px;margin:12px 0 0}
+</style>
+</head>
+<body>
+
+<!-- 비밀번호 잠금 -->
+<div class="gate" id="gate">
+  <form class="gbox" id="gform">
+    <h2>개설 현황 관리</h2>
+    <p>관리자만 쓰는 화면입니다.</p>
+    <input type="password" id="gpw" placeholder="비밀번호" autocomplete="current-password" autofocus>
+    <button type="submit" class="btn">들어가기</button>
+    <p class="gmsg" id="gmsg"></p>
+    <a class="gback" href="index.html">학생용 페이지로 가기</a>
+  </form>
+</div>
+
+<div id="page" hidden>
+
+  <div class="wrap top">
+    <span class="site-updated">업데이트: 2026. 8. 24.</span>
+    <a href="index.html">학생용 페이지</a>
+    <a href="../../교육과정.html">&larr; 교육과정</a>
+    <a href="../../work.html">업무용</a>
+    <a href="../../../index.html">홈으로</a>
+  </div>
+
+  <header><div class="wrap">
+    <h1>개설 현황 관리</h1>
+    <p class="sub">폐강된 과목을 눌러 표시한 뒤 <b>지금 반영하기</b>를 누르면 학생 화면에 적용됩니다.</p>
+  </div></header>
+
+  <div class="wrap">
+
+    <div class="bar">
+      <label for="co">대상</label>
+      <select id="co"></select>
+      <label for="stage">단계</label>
+      <select id="stage">
+        <option value="신청 전">신청 전</option>
+        <option value="1차 정정 전">1차 정정 전</option>
+        <option value="2차 정정 전">2차 정정 전</option>
+      </select>
+      <label for="date">갱신일</label>
+      <input type="date" id="date">
+      <button type="button" class="btn ghost" id="help">? 사용법</button>
+      <button type="button" class="btn ghost" id="clear">폐강 모두 해제</button>
+      <span class="count" id="cnt"></span>
+    </div>
+
+    <div id="body"></div>
+
+    <div class="out pub">
+      <h2>학생 화면에 반영하기 <span class="q" id="help3">토큰이 뭔가요</span></h2>
+      <div class="pubrow">
+        <input type="password" id="tok" placeholder="깃헙 토큰 (github_pat_… 또는 ghp_…)" autocomplete="off">
+        <label class="chk"><input type="checkbox" id="save"> 이 기기에 저장</label>
+        <button type="button" class="btn" id="push">지금 반영하기</button>
+        <button type="button" class="btn ghost" id="dl">JSON 내려받기</button>
+      </div>
+      <p class="st" id="st">토큰을 한 번 넣어 두면 버튼 하나로 커밋됩니다.</p>
+    </div>
+
+    <div class="out">
+      <h2>올라갈 내용 <span class="q" id="help2">사용법</span></h2>
+      <textarea id="json" readonly></textarea>
+      <p class="hint">
+        토큰을 쓰지 않으실 때는 <b>JSON 내려받기</b>로 받아 저장소의 <code>data/</code> 폴더에
+        <code id="fname">closed-2026.json</code> 으로 덮어쓴 뒤 커밋하시면 됩니다.
+      </p>
+    </div>
+
+  </div>
+
+  <footer class="wrap">폐강 표시는 편성표 원본을 건드리지 않습니다. 2차 정정에서 되살아나면 다시 눌러 해제하면 됩니다.</footer>
+</div>
+
+<!-- 사용법 -->
+<div class="modal" id="modal" hidden>
+  <div class="scrim" data-close></div>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <div class="mhead">
+      <h2 id="mt">개설 현황 관리 사용법</h2>
+      <button type="button" class="mx" data-close aria-label="닫기">✕</button>
+    </div>
+    <div class="mbody">
+
+      <h3>이 페이지가 하는 일</h3>
+      <p>학생 신청 결과 <b>폐강된 과목을 학생 화면에서 지우는</b> 일만 합니다.
+        편성표 자체는 건드리지 않으므로, 2차 정정에서 되살아나면 다시 켜면 됩니다.</p>
+
+      <h3>위쪽 항목이 뜻하는 것</h3>
+      <dl>
+        <dt>대상</dt>
+        <dd>어느 학년의 과목 선택인지 고릅니다. 학년마다 교육과정이 달라 열리는 과목도 다릅니다.
+          고르면 아래 목록이 통째로 바뀝니다.</dd>
+        <dt>단계</dt>
+        <dd>지금이 어느 시점인지 고릅니다. 고른 값이 <b>학생 화면 맨 아래에 그대로 표시</b>되어,
+          학생이 지금 보는 것이 언제 기준인지 알 수 있습니다.</dd>
+        <dt>갱신일</dt>
+        <dd>개설 현황을 정리한 날짜입니다. 역시 학생 화면 아래에 표시됩니다. 기본값은 오늘입니다.</dd>
+        <dt>폐강 모두 해제</dt>
+        <dd>표시한 폐강을 전부 지웁니다. 새 정정기간을 처음부터 시작할 때 씁니다.</dd>
+      </dl>
+
+      <h3>과목 버튼 읽는 법</h3>
+      <p>과목을 누르면 빨갛게 바뀌며 폐강으로 잡힙니다. 다시 누르면 풀립니다.</p>
+      <ul>
+        <li><b>학기가 다르면 별개입니다.</b> 2학년 1학기 프랑스어와 2학년 2학기 프랑스어는
+          서로 다른 수업이므로 따로 눌러야 하고, 둘 다 누르면 2과목으로 셉니다.</li>
+        <li><b>일반·과학중점 양쪽에 열리는 과목</b>은 버튼이 하나입니다.
+          한 번 누르면 두 과정 모두 폐강되고 1과목으로 셉니다.</li>
+        <li><b>한쪽 과정에만 열리는 과목</b>은 버튼 옆에 <span class="sem">일반</span> 처럼
+          과정 이름이 붙습니다. 영어 독해와 작문이 그런 경우입니다.</li>
+      </ul>
+
+      <h3>반영하는 법 — 두 가지</h3>
+      <p><b>① 토큰을 넣어 자동 커밋</b><br>
+        토큰을 한 번 넣어 두면 <b>지금 반영하기</b> 버튼만 누르면 됩니다.
+        저장소에 바로 커밋되고, 1분쯤 뒤 학생 화면에 반영됩니다.</p>
+      <p><b>② 내려받아 직접 커밋</b><br>
+        <b>JSON 내려받기</b>로 파일을 받아 저장소의
+        <code>work/교육과정/2028과목선택/data/</code> 폴더에 덮어쓰고 커밋합니다.</p>
+
+      <h3>토큰 만들기</h3>
+      <ol>
+        <li>깃헙 &rarr; Settings &rarr; Developer settings &rarr;
+          <b>Fine-grained personal access tokens</b> &rarr; Generate new token</li>
+        <li>Repository access는 <code>presentations</code> <b>하나만</b> 고릅니다.</li>
+        <li>Permissions에서 <b>Contents: Read and write</b> 만 켭니다.</li>
+        <li>만료일을 정하고 만든 뒤, 나온 토큰을 위 칸에 붙여 넣습니다.</li>
+      </ol>
+      <p class="warn">토큰은 비밀번호와 같습니다. <b>공용 컴퓨터에서는 '이 기기에 저장'을 켜지 마세요.</b>
+        권한을 이 저장소의 파일 쓰기로만 좁혀 두면 새어 나가도 피해가 이 저장소에 그칩니다.
+        의심되면 깃헙에서 즉시 폐기(revoke)하시면 됩니다.</p>
+
+      <h3>이미 담아둔 학생은</h3>
+      <p>폐강된 과목을 담아둔 학생이 페이지를 열면 안내가 뜬 뒤 그 과목이 자동으로 빠집니다.</p>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── 비밀번호 잠금 ────────────────────────────────
+   정적 페이지라 이 잠금은 '아무나 들어와 헷갈리지 않게' 막는 문턱입니다.
+   소스를 보면 비밀번호가 보이므로 진짜 보안은 아닙니다.
+   실제 잠금은 깃헙 토큰입니다 — 토큰 없이는 아무것도 바꿀 수 없습니다.
+   비밀번호를 바꾸려면 아래 PW 값만 고치면 됩니다. */
+var PW = '850525';
+
+function $(s){ return document.querySelector(s); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+function unlock(){
+  $('#gate').hidden = true;
+  $('#page').hidden = false;
+  boot();
+}
+
+$('#gform').addEventListener('submit', function(e){
+  e.preventDefault();
+  if($('#gpw').value.trim() === PW){
+    try{ sessionStorage.setItem('adm_ok','1'); }catch(err){}
+    unlock();
+  } else {
+    $('#gmsg').textContent = '비밀번호가 다릅니다.';
+    $('#gpw').value = ''; $('#gpw').focus();
+  }
+});
+
+/* ── 자료 ─────────────────────────────────────── */
+var V = '20260819a';
+var D = {}, CO = null, SCHOOL = [], OFF = {};   // OFF: '과목|선택군|과정|학기' → true
+
+function getJSON(n){
+  return fetch('data/'+n+'?v='+V).then(function(r){
+    if(!r.ok) throw new Error(n+' '+r.status); return r.json(); });
+}
+
+function key(과목,선택군,과정,학기){ return [과목,선택군,과정,학기].join('|'); }
+
+/* 기존 폐강 파일 → 토글 상태로 펼치기 */
+function spread(closed){
+  OFF = {};
+  ((closed&&closed.폐강)||[]).forEach(function(x){
+    SCHOOL.forEach(function(c){
+      if(c.과목!==x.과목) return;
+      if(x.선택군 && c.선택군!==x.선택군) return;
+      var 과정들 = (x.과정&&x.과정.length)?x.과정:['일반','과학중점'];
+      var 학기들 = (x.학기&&x.학기.length)?x.학기:[1,2];
+      과정들.forEach(function(g){
+        (c.학기[g]||[]).forEach(function(s){
+          if(학기들.indexOf(s)!==-1) OFF[key(c.과목,c.선택군,g,s)] = true;
+        });
+      });
+    });
+  });
+}
+
+/* 토글 상태 → 폐강 파일 */
+function collect(){
+  var byCourse = {};
+  SCHOOL.forEach(function(c){
+    ['일반','과학중점'].forEach(function(g){
+      (c.학기[g]||[]).forEach(function(s){
+        if(!OFF[key(c.과목,c.선택군,g,s)]) return;
+        var k = c.과목+'|'+c.선택군;
+        (byCourse[k]||(byCourse[k]=[])).push({과정:g,학기:s});
+      });
+    });
+  });
+
+  var out = [];
+  Object.keys(byCourse).sort().forEach(function(k){
+    var p = k.split('|'), 과목 = p[0], 선택군 = p[1], hit = byCourse[k];
+    var c = SCHOOL.filter(function(x){ return x.과목===과목 && x.선택군===선택군; })[0];
+    var 전체 = 0;
+    ['일반','과학중점'].forEach(function(g){ 전체 += (c.학기[g]||[]).length; });
+
+    var rec = { 과목:과목, 선택군:선택군 };
+    if(hit.length < 전체){
+      var 과정들 = hit.map(function(h){return h.과정}).filter(function(v,i,a){return a.indexOf(v)===i});
+      var 학기들 = hit.map(function(h){return h.학기}).filter(function(v,i,a){return a.indexOf(v)===i}).sort();
+      if(과정들.length===1) rec.과정 = 과정들;
+      rec.학기 = 학기들;
+    }
+    out.push(rec);
+  });
+  return out;
+}
+
+function build(){
+  return JSON.stringify({
+    meta: {
+      코호트: CO.id,
+      갱신일: $('#date').value || '',
+      단계: $('#stage').value || '',
+      설명: '학생 신청 결과 폐강된 과목. 여기 적힌 과목은 학생 화면에서 사라진다.',
+      만든곳: 'admin.html'
+    },
+    폐강: collect()
+  }, null, 2);
+}
+
+/* 폐강 건수 — 학기가 다르면 별개로 센다.
+   같은 프랑스어라도 1학기와 2학기는 다른 수업이므로 2건.
+   반면 일반·과학중점은 같은 수업이라 1건으로 묶는다. */
+function countUnits(){
+  var seen = {};
+  Object.keys(OFF).forEach(function(k){
+    if(!OFF[k]) return;
+    var p = k.split('|');
+    seen[p[0]+'|'+p[1]+'|'+p[3]] = true;
+  });
+  return Object.keys(seen).length;
+}
+
+function refresh(){
+  var n = countUnits();
+  $('#cnt').innerHTML = n ? '폐강 <b>'+n+'</b>과목' : '<span class="ok">폐강 없음</span>';
+  $('#json').value = build();
+  $('#fname').textContent = CO.폐강;
+}
+
+function render(){
+  var slots = [];
+  (CO.선택군||[]).forEach(function(g){
+    var m = (D.school.meta.선택슬롯||{})[g];
+    if(!m) return;
+    [1,2].forEach(function(s){ if(m[s+'학기']) slots.push({선택군:g,학년:m.학년,학기:s}); });
+  });
+
+  var h = '';
+  slots.forEach(function(sl){
+    var rows = SCHOOL.filter(function(c){
+      if(c.선택군!==sl.선택군) return false;
+      return (c.학기['일반']||[]).indexOf(sl.학기)!==-1 ||
+             (c.학기['과학중점']||[]).indexOf(sl.학기)!==-1;
+    });
+    if(!rows.length) return;
+
+    h += '<section class="grp"><h2>'+sl.학년+'학년 '+sl.학기+'학기'+
+         (sl.선택군==='선택군3'?' · 교양':'')+'</h2>'+
+         '<p class="meta">'+esc(sl.선택군)+' · '+rows.length+'과목</p>';
+
+    var gs = [];
+    rows.forEach(function(c){ if(gs.indexOf(c.교과군)===-1) gs.push(c.교과군); });
+    gs.forEach(function(g){
+      h += '<div class="sect"><p class="sect-k">'+esc(g)+'</p><div class="rowg">';
+      rows.filter(function(c){return c.교과군===g}).forEach(function(c){
+        ['일반','과학중점'].forEach(function(course){
+          if((c.학기[course]||[]).indexOf(sl.학기)===-1) return;
+          var both = (c.학기['일반']||[]).indexOf(sl.학기)!==-1 &&
+                     (c.학기['과학중점']||[]).indexOf(sl.학기)!==-1;
+          if(both && course==='과학중점') return;   // 한 버튼으로 묶는다
+          var k = key(c.과목,c.선택군,course,sl.학기);
+          h += '<button type="button" class="sw'+(OFF[k]?' off':'')+'" data-k="'+esc(k)+
+               '" data-both="'+(both?1:0)+'">'+esc(c.과목)+
+               '<span class="t">'+esc(c.유형)+'</span>'+
+               (both?'':'<span class="sem">'+esc(course)+'</span>')+'</button>';
+        });
+      });
+      h += '</div></div>';
+    });
+    h += '</section>';
+  });
+
+  $('#body').innerHTML = h;
+  Array.prototype.forEach.call($('#body').querySelectorAll('.sw'), function(b){
+    b.onclick = function(){
+      var p = b.dataset.k.split('|');
+      var on = !OFF[b.dataset.k];
+      var 과정들 = b.dataset.both === '1' ? ['일반','과학중점'] : [p[2]];
+      과정들.forEach(function(g){
+        var kk = key(p[0],p[1],g,p[3]);
+        if(on) OFF[kk] = true; else delete OFF[kk];
+      });
+      b.classList.toggle('off', on);
+      refresh();
+    };
+  });
+  refresh();
+}
+
+function pick(id){
+  CO = D.cohorts.목록.filter(function(c){return c.id===id})[0];
+  Promise.all([ getJSON(CO.편성표), getJSON(CO.폐강).catch(function(){return {폐강:[]}}) ])
+  .then(function(res){
+    D.school = res[0];
+    // 이 코호트가 다루는 선택군만 본다
+    var 대상 = CO.선택군 || [];
+    SCHOOL = D.school.개설.filter(function(c){
+      return c.선택군!=='지정' && c.학기 && (!대상.length || 대상.indexOf(c.선택군)!==-1);
+    });
+    var cl = res[1];
+    var st = (cl.meta&&cl.meta.단계) || '신청 전';
+    var opt = Array.prototype.map.call($('#stage').options, function(o){return o.value});
+    $('#stage').value = opt.indexOf(st)!==-1 ? st : '신청 전';
+    $('#date').value  = (cl.meta&&cl.meta.갱신일) || new Date().toISOString().slice(0,10);
+    spread(cl);
+    render();
+  });
+}
+
+function boot(){
+  getJSON('cohorts.json').then(function(c){
+    D.cohorts = c;
+    var list = c.목록;   // 관리자는 숨긴 코호트도 손볼 수 있어야 한다
+    $('#co').innerHTML = list.map(function(x){
+      return '<option value="'+esc(x.id)+'">'+esc(x.제목)+(x.노출?'':' (숨김)')+'</option>';
+    }).join('');
+    $('#co').onchange = function(){ pick(this.value); };
+    pick(list[0].id);
+  }).catch(function(e){
+    $('#body').innerHTML = '<p class="st bad">자료를 불러오지 못했습니다. ('+esc(e.message)+')</p>';
+  });
+}
+
+/* ── 깃헙에 바로 반영 ─────────────────────────────
+   깃헙 페이지는 정적 호스팅이라 서버가 없다. 그래서 브라우저에서
+   깃헙 Contents API 로 파일을 직접 커밋한다.
+   토큰은 이 기기 밖으로 나가지 않으며 api.github.com 으로만 보내진다. */
+var REPO = { owner:'GuitaruMan', repo:'presentations', branch:'main' };
+var BASE = 'work/교육과정/2028과목선택/data/';
+
+function tokenOf(){ return $('#tok').value.trim(); }
+
+function say(msg, kind){
+  $('#st').textContent = msg;
+  $('#st').className = 'st' + (kind ? ' ' + kind : '');
+}
+
+function b64(str){
+  var bytes = new TextEncoder().encode(str), bin = '';
+  for(var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+
+function api(path, opt){
+  opt = opt || {};
+  opt.headers = Object.assign({
+    'Authorization':'Bearer ' + tokenOf(),
+    'Accept':'application/vnd.github+json',
+    'X-GitHub-Api-Version':'2022-11-28'
+  }, opt.headers || {});
+  return fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.repo+path, opt);
+}
+
+function pushNow(){
+  if(!tokenOf()){ say('토큰을 먼저 넣어 주세요.', 'bad'); return; }
+
+  var file = BASE + CO.폐강;
+  var url = '/contents/' + file.split('/').map(encodeURIComponent).join('/');
+  var msg = '개설 현황 갱신 — ' + CO.제목 + ' / ' + $('#stage').value +
+            ' / 폐강 ' + countUnits() + '과목';
+
+  say('올리는 중…');
+  $('#push').disabled = true;
+
+  api(url + '?ref=' + REPO.branch).then(function(r){
+    if(r.status===401 || r.status===403)
+      throw new Error('토큰이 거부되었습니다. 권한(Contents: Read and write)과 만료일을 확인해 주세요.');
+    return r.status===404 ? null : r.json();
+  }).then(function(cur){
+    return api(url, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        message: msg,
+        content: b64(build()),
+        branch: REPO.branch,
+        sha: cur && cur.sha ? cur.sha : undefined
+      })
+    });
+  }).then(function(r){
+    if(!r.ok) return r.json().then(function(e){ throw new Error(e.message || ('HTTP '+r.status)); });
+    return r.json();
+  }).then(function(){
+    say('올렸습니다. 깃헙 페이지가 다시 만들어지는 데 1분쯤 걸립니다. ' +
+        '그 뒤 학생 화면을 새로고침하면 반영됩니다.', 'good');
+  }).catch(function(e){
+    say('실패: ' + e.message, 'bad');
+  }).then(function(){
+    $('#push').disabled = false;
+  });
+}
+
+/* ── 사용법 모달 ──────────────────────────────── */
+function openHelp(){ $('#modal').hidden = false; document.body.style.overflow='hidden'; $('.mx').focus(); }
+function closeHelp(){ $('#modal').hidden = true; document.body.style.overflow=''; }
+
+/* ── 연결 ─────────────────────────────────────── */
+$('#help').onclick = openHelp;
+$('#help2').onclick = openHelp;
+$('#help3').onclick = openHelp;
+Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function(b){ b.onclick = closeHelp; });
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape' && !$('#modal').hidden) closeHelp();
+});
+
+$('#stage').onchange = refresh;
+$('#date').onchange = refresh;
+$('#clear').onclick = function(){ OFF = {}; render(); };
+$('#push').onclick = pushNow;
+
+$('#dl').onclick = function(){
+  var blob = new Blob([build()], {type:'application/json;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = CO.폐강;
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+};
+
+$('#save').onchange = function(){
+  try{
+    if(this.checked) localStorage.setItem('ghtok', tokenOf());
+    else localStorage.removeItem('ghtok');
+  }catch(e){}
+};
+$('#tok').oninput = function(){
+  if($('#save').checked){ try{ localStorage.setItem('ghtok', tokenOf()); }catch(e){} }
+};
+try{
+  var saved = localStorage.getItem('ghtok');
+  if(saved){ $('#tok').value = saved; $('#save').checked = true; }
+}catch(e){}
+
+// 같은 창에서 이미 통과했으면 다시 묻지 않는다
+try{ if(sessionStorage.getItem('adm_ok')==='1') unlock(); }catch(e){}
+</script>
+</body>
+</html>
