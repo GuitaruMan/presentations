@@ -401,6 +401,50 @@ body{
 }
 .pill-type{font-size:10.5px;color:var(--ink-faint);margin-left:5px;font-weight:400}
 
+/* 평가 유형 배지 — 편성표 색상 범례를 종이 톤으로 옮겼다.
+   '상대평가·절대평가 모두 기재'는 대다수라 배지를 붙이지 않는다. */
+.pill-eval{
+  font-size:10px;font-weight:600;margin-left:5px;padding:1px 5px;
+  border-radius:4px;white-space:nowrap;vertical-align:1px;
+}
+.ev-수능        {background:#F6EBC4;color:#6B5A1E}
+.ev-석차미기재    {background:#DCEAF3;color:#2F5670}
+.ev-성취3단계    {background:#F5DFE2;color:#71404A}
+.ev-이수여부     {background:#DFEBDC;color:#3E5C3A}
+
+/* 담긴 과목은 배경이 짙어지므로 배지도 함께 뒤집는다 */
+button.my-pill.on .pill-eval{background:rgba(255,255,255,.22);color:#fff}
+
+/* 범례 */
+.eval-legend{
+  display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;
+  margin-top:10px;font-size:11.5px;color:var(--ink-soft);
+}
+.eval-legend .pill-eval{margin-left:0}
+
+/* 과목 설명의 평가 방식 — 목록 배지와 같은 색을 쓴다 */
+.subj-eval{
+  display:flex;align-items:center;gap:7px;
+  margin-top:8px;padding:7px 11px;border-radius:6px;
+  font-size:13px;font-weight:600;
+}
+.subj-eval-icon{font-size:14px;line-height:1}
+p.subj-eval.ev-수능        {background:#F6EBC4;color:#6B5A1E}
+p.subj-eval.ev-석차미기재    {background:#DCEAF3;color:#2F5670}
+p.subj-eval.ev-성취3단계    {background:#F5DFE2;color:#71404A}
+p.subj-eval.ev-이수여부     {background:#DFEBDC;color:#3E5C3A}
+p.subj-eval.ev-상대절대     {background:var(--paper-deep);color:var(--ink-soft)}
+
+/* 선수과목 — 놓치면 그 과목을 아예 들을 수 없으므로 강하게 표시한다 */
+.subj-pre{
+  display:flex;align-items:center;gap:7px;
+  margin-top:8px;padding:9px 12px;border-radius:6px;
+  background:#FBEAE6;border-left:4px solid #C0392B;
+  color:#A03325;font-size:13.5px;font-weight:700;
+}
+.subj-pre b{color:#8E2A1E}
+.subj-pre-icon{font-size:15px;line-height:1}
+
 /* 편성표의 과목을 눌러 상세 창을 여는 경우 */
 button.pill{
   cursor:pointer;text-align:left;font-weight:inherit;
@@ -547,6 +591,15 @@ button.my-pill.on::after{content:'✓';margin-left:6px;font-size:11px}
 .warn-sm{margin:10px 0 0;padding:10px 12px}
 .warn-sm h4{font-size:13px;margin:0 0 5px}
 .warn-sm ul{margin:0;padding-left:16px;font-size:12px;line-height:1.55}
+
+/* 선수과목 미충족 — 순서를 어기면 그 과목을 들을 수 없다.
+   .warn 이 뒤에 정의돼 있어 같은 특이도로는 덮이므로 클래스를 겹쳐 올린다. */
+.warn.warn-pre{
+  background:#FBEAE6;border:1.5px solid #C0392B;border-left-width:4px;
+}
+.warn.warn-pre h4{color:#A03325}
+.warn.warn-pre ul{color:#A03325;font-weight:600}
+.warn.warn-pre b{color:#8E2A1E}
 
 /* 안내 토스트 */
 .flash{

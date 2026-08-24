@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260824a';
+var VERSION = '20260825a';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -149,12 +149,17 @@ function applyClosed() {
 }
 
 function prepare() {
+  // 학년을 바꾸면 앞 코호트의 자료가 남아 있으면 안 된다.
+  // 비우지 않으면 모집단위가 두 배로 세어지고, 없는 과목이 개설된 것처럼 보인다.
+  SCHOOL = {}; SUBJ = {}; INDEX = {}; UNITS = [];
+
   GROUP_NAME = D.rec.meta.교과군지정 || {};
 
   // 과목 마스터
   D.master.forEach(function (m) { SUBJ[m.name] = m; });
 
-  // 학교 개설 과목
+  // 학교 개설 과목 — 같은 과목이 2·3학년에 모두 열리기도 한다.
+  // 여기서는 과목 소개용으로 하나만 잡아 두고, 슬롯이 걸린 곳에서는 courseIn() 을 쓴다.
   D.school.개설.forEach(function (c) { SCHOOL[c.과목] = c; });
 
   // 모집단위 평탄화 + 역인덱스
@@ -729,12 +734,15 @@ function summaryHTML(t, want) {
     if (c.유형 === '교과군') {
       // 과목이 특정되지 않았으니 우리 학교의 해당 과목을 바로 펼쳐 보여 준다
       var list = schoolInGroup(c.교과군, c.과목유형);
+      // 대학이 과목을 특정하지 않고 교과군으로만 제시한 경우.
+      // 대학의 조건과, 그것을 채울 수 있는 우리 학교 과목은 서로 다른 것이므로 줄을 나눈다.
       h += '<div class="sum-row"><span class="sum-key">조건</span><div class="sum-pills">' +
-        '<span class="sum-note sum-note-b">' + esc(c.설명 || '') + '</span>' +
+        '<span class="sum-note sum-note-b">' + esc(c.설명 || '') + '</span></div></div>';
+      h += '<div class="sum-row"><span class="sum-key">우리 학교 개설</span>' +
+        '<div class="sum-pills">' +
         (list.length
           ? chips(list, 'sum-cond') +
-            '<span class="sum-note">↑ 우리 학교에서 고를 수 있는 ' +
-            esc(c.교과군) + (c.과목유형 ? ' ' + esc(c.과목유형) + '선택' : '') + ' 과목</span>'
+            '<span class="sum-note">이 가운데에서 고르면 위 조건을 채웁니다.</span>'
           : '<span class="sum-note">우리 학교에 해당 과목이 없습니다.</span>') +
         '</div></div>';
       return;
@@ -865,6 +873,62 @@ function offeredIn(c, slot) {
   return sem.indexOf(slot.학기) !== -1;
 }
 
+/* 그 슬롯에서 열리는 레코드를 찾는다.
+   같은 과목이 2·3학년에 모두 열리는 경우(세포와 물질대사 등)가 있어
+   과목 이름만으로 찾으면 한쪽(뒤에 읽힌 3학년)만 잡힌다. */
+function courseIn(name, slot) {
+  var rows = D.school.개설;
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].과목 === name && offeredIn(rows[i], slot)) return rows[i];
+  }
+  return null;
+}
+
+/* 평가 유형 표시 — 편성표의 색상 범례를 그대로 옮긴 것.
+   '상대절대'(가장 흔한 경우)는 표시하지 않는다. 모든 과목에 배지가 붙으면 구분이 안 된다. */
+var EVAL_MARK = {
+  수능: { 약칭: '수능', 설명: '대학수학능력시험 출제과목' },
+  석차미기재: { 약칭: '석차 미기재', 설명: '상대평가 석차 등급을 기재하지 않는 과목' },
+  성취3단계: { 약칭: '성취 3단계', 설명: '성취도 3단계(A·B·C)로 평가하는 과목' },
+  이수여부: { 약칭: 'P', 설명: '이수 여부만 기재하는 과목' },
+  // 가장 흔한 경우라 목록에서는 배지를 붙이지 않는다(bare:true).
+  // 다만 과목 설명에서는 이것도 분명히 밝힌다.
+  상대절대: { 약칭: '', 설명: '상대평가와 절대평가를 모두 기재하는 과목', bare: true }
+};
+
+/* 과목 설명에 붙는 아이콘 — 글자만으로는 유형이 잘 구분되지 않는다 */
+var EVAL_ICON = {
+  수능: '◎', 석차미기재: '◑', 성취3단계: '△', 이수여부: 'P', 상대절대: '●'
+};
+
+function evalMark(c) {
+  var m = EVAL_MARK[c.평가];
+  if (!m || m.bare) return '';
+  return '<span class="pill-eval ev-' + c.평가 + '" title="' + esc(m.설명) + '">' +
+    EVAL_ICON[c.평가] + ' ' + esc(m.약칭) + '</span>';
+}
+
+/* 범례 — 지금 이 코호트에 실제로 나오는 평가 유형만 보여 준다.
+   쓰이지 않는 유형까지 늘어놓으면 학생이 없는 배지를 찾게 된다. */
+function evalLegend() {
+  var 있는유형 = {};
+  D.school.개설.forEach(function (c) {
+    if (c.선택군 !== '지정' && EVAL_MARK[c.평가] && !EVAL_MARK[c.평가].bare) {
+      있는유형[c.평가] = true;
+    }
+  });
+  var keys = Object.keys(EVAL_MARK).filter(function (k) { return 있는유형[k]; });
+  if (!keys.length) return '';
+
+  return '<div class="eval-legend"><span>표시 안내</span>' +
+    keys.map(function (k) {
+      return '<span><span class="pill-eval ev-' + k + '">' + EVAL_ICON[k] + ' ' +
+        esc(EVAL_MARK[k].약칭) + '</span> ' + esc(EVAL_MARK[k].설명) + '</span>';
+    }).join('') +
+    '<span>' + EVAL_ICON.상대절대 + ' 표시가 없으면 ' +
+    esc(EVAL_MARK.상대절대.설명) + '입니다.</span></div>';
+}
+
 function cartOf(key) { return state.cart[key] || (state.cart[key] = []); }
 
 function cartHas(name) {
@@ -887,7 +951,7 @@ function checkRules() {
   var picked = [];
   SLOTS.forEach(function (s) {
     cartOf(s.key).forEach(function (n) {
-      var c = SCHOOL[n];
+      var c = courseIn(n, s) || SCHOOL[n];
       if (c) picked.push({ name: n, 교과군: c.교과군, 유형: c.유형, slot: s });
     });
   });
@@ -1000,6 +1064,18 @@ function toggleCart(name, key) {
   if (i !== -1) { arr.splice(i, 1); saveCart(); renderMy(); return; }
 
   var slot = SLOTS.filter(function (s) { return s.key === key; })[0];
+
+  // 같은 과목이 2·3학년에 모두 열려도 이수는 한 번뿐이다.
+  // 양쪽에 담으면 이수 조건을 채운 것처럼 잘못 세어진다.
+  if (cartHas(name)) {
+    var 담은곳 = SLOTS.filter(function (s) {
+      return cartOf(s.key).indexOf(name) !== -1;
+    })[0];
+    flash('‘' + name + '’은(는) 이미 ' + (담은곳 ? 담은곳.이름 + '에 ' : '') +
+          '담았습니다. 같은 과목은 한 번만 이수합니다.');
+    return;
+  }
+
   if (arr.length >= slot.정원) {
     flash(slot.이름 + '은(는) ' + slot.정원 + '과목까지만 고를 수 있습니다. ' +
           '하나를 빼고 다시 담아 주세요.');
@@ -1088,8 +1164,7 @@ function renderMy() {
         // 과정을 바꾸면 그 과정에 없는 과목은 자동으로 빠진다
         SLOTS.forEach(function (s) {
           state.cart[s.key] = cartOf(s.key).filter(function (n) {
-            var c = SCHOOL[n];
-            return c && offeredIn(c, s);
+            return !!courseIn(n, s);
           });
         });
         saveCart(); renderMy();
@@ -1130,11 +1205,11 @@ function renderMy() {
 
   var lack = preCheck();
   if (lack.length) {
-    st += '<div class="warn warn-sm"><h4>과목 순서를 확인하세요</h4><ul>';
+    st += '<div class="warn warn-sm warn-pre"><h4>⚠ 먼저 이수해야 하는 과목이 있습니다</h4><ul>';
     lack.forEach(function (x) {
       st += '<li>‘' + esc(x.과목) + '’(' + esc(x.슬롯) + ')을(를) 들으려면 ' +
-        x.필요.map(function (p) { return '‘' + esc(p) + '’'; }).join('와 ') +
-        ' 과목의 이수가 필수적으로 요구됩니다.</li>';
+        '<b>' + x.필요.map(function (p) { return '‘' + esc(p) + '’'; }).join('와 ') +
+        '</b>을(를) 먼저 이수해야 합니다.</li>';
     });
     st += '</ul></div>';
   }
@@ -1145,7 +1220,7 @@ function renderMy() {
     '<p>우리 학교 편성표에 맞춰 그 학기에 열리는 과목만 나옵니다. ' +
     '과목을 누르면 담기고, 다시 누르면 빠집니다. ' +
     '이수 조건은 2·3학년을 합쳐서 따지므로 두 학년을 함께 놓고 봐야 확인됩니다. ' +
-    '이미 들은 학년이 있다면 그대로 짚어 두면 됩니다.</p></div>';
+    '이미 들은 학년이 있다면 그대로 짚어 두면 됩니다.</p>' + evalLegend() + '</div>';
 
   SLOTS.forEach(function (s) {
     var rows = D.school.개설.filter(function (c) { return offeredIn(c, s); });
@@ -1167,7 +1242,8 @@ function renderMy() {
           (kind === 'core' ? ' pill-core' : kind ? ' pill-hit' : '');
         return '<button type="button" class="' + cls + '" data-add="' + esc(c.과목) +
           '" data-slot="' + s.key + '" aria-pressed="' + on + '">' +
-          esc(c.과목) + '<span class="pill-type">' + esc(c.유형) + '</span></button>';
+          esc(c.과목) + '<span class="pill-type">' + esc(c.유형) + '</span>' +
+          evalMark(c) + '</button>';
       }).join('');
       h += '</div></div>';
     });
@@ -1218,11 +1294,29 @@ function openSubject(name) {
 
   h += '<p>';
   if (m) h += esc(m.교과군) + ' 교과 · ' + esc(m.유형) + '선택. ';
-  var sc = SCHOOL[name];
-  h += sc
-    ? '우리 학교 <b>' + esc(sc.선택군) + '</b>(' + esc(sc.학년) + '학년)에 열려 있습니다.'
+  // 같은 과목이 2·3학년에 모두 열리기도 한다. 한쪽만 알려 주면 선택 폭이 좁아 보인다.
+  var scs = D.school.개설.filter(function (c) { return c.과목 === name; });
+  var sc = scs[0];
+  h += scs.length
+    ? '우리 학교 ' + scs.map(function (c) {
+        return '<b>' + esc(c.선택군) + '</b>(' + esc(c.학년) + '학년)';
+      }).join(', ') + '에 열려 있습니다.'
     : '<b>우리 학교에는 개설되지 않았습니다.</b>';
   h += '</p>';
+
+  // 평가 방식 — 목록의 배지와 같은 색으로 묶어 한눈에 이어지게 한다
+  if (sc && EVAL_MARK[sc.평가]) {
+    h += '<p class="subj-eval ev-' + sc.평가 + '">' +
+      '<span class="subj-eval-icon" aria-hidden="true">' + EVAL_ICON[sc.평가] + '</span>' +
+      esc(EVAL_MARK[sc.평가].설명) + '입니다.</p>';
+  }
+
+  // 선수과목 — 먼저 들어야 하는 과목이 있으면 알려 준다
+  var need = ((D.school.meta && D.school.meta.선수과목) || {})[name];
+  if (need && need.length) {
+    h += '<p class="subj-pre"><span class="subj-pre-icon" aria-hidden="true">⚠</span>' +
+      '<span><b>' + esc(need.join(', ')) + '</b> 과목을 먼저 이수해야 합니다.</span></p>';
+  }
 
   if (!arr.length) {
     h += '<p>이 과목을 권장한 모집단위가 없습니다.</p>';
@@ -1500,8 +1594,7 @@ function dropClosedFromCart() {
   SLOTS.forEach(function (s) {
     var arr = cartOf(s.key);
     state.cart[s.key] = arr.filter(function (n) {
-      var c = SCHOOL[n];
-      var ok = c && offeredIn(c, s);
+      var ok = !!courseIn(n, s);
       if (!ok) gone.push(n + ' (' + s.이름 + ')');
       return ok;
     });
