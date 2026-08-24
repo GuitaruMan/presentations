@@ -1141,10 +1141,11 @@ function renderMy() {
   $('#my-status').innerHTML = st;
 
   // 본문 — 슬롯마다 고를 수 있는 과목
-  var h = '<div class="my-intro"><h3>학년·학기별로 골라 보세요</h3>' +
+  var h = '<div class="my-intro"><h3>2·3학년 과목을 함께 골라 보세요</h3>' +
     '<p>우리 학교 편성표에 맞춰 그 학기에 열리는 과목만 나옵니다. ' +
     '과목을 누르면 담기고, 다시 누르면 빠집니다. ' +
-    '왼쪽에서 이수 조건이 채워졌는지 함께 확인할 수 있습니다.</p></div>';
+    '이수 조건은 2·3학년을 합쳐서 따지므로 두 학년을 함께 놓고 봐야 확인됩니다. ' +
+    '이미 들은 학년이 있다면 그대로 짚어 두면 됩니다.</p></div>';
 
   SLOTS.forEach(function (s) {
     var rows = D.school.개설.filter(function (c) { return offeredIn(c, s); });
