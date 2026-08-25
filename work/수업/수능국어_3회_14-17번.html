@@ -22,6 +22,7 @@
     --ok: #1d7a55;          /* 근거 초록 */
     --ok-bg: #e8f5ef;
     --hl: #fff3b0;          /* 형광 */
+    --fs: 1;            /* 글자 크기 배율 — 슬라이드마다 inline style로 덮어써 확대한다 */
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -50,13 +51,16 @@
 
   .stage {
     container-type: inline-size;
-    width: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9); aspect-ratio: 16 / 9;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
     background: var(--paper);
     border: 1px solid #cfd6e0;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: 4.4% 5%;
+    padding: calc(var(--stage-w) * 0.044) calc(var(--stage-w) * 0.05);
   }
 
   .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
@@ -66,7 +70,7 @@
   /* ── 타이포: 1920×1080 전체화면에서 본문 ≈50px, 제목 ≈90px ── */
   h2.slide-title {
     font-family: "Noto Serif KR", serif; font-weight: 700;
-    font-size: 4.7cqw; line-height: 1.2;
+    font-size: calc(4.7cqw * var(--fs)); line-height: 1.2;
     padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
     border-bottom: 0.25cqw solid var(--ink);
   }
@@ -81,36 +85,39 @@
     min-height: 0; justify-content: center; overflow: hidden;
   }
 
+  /* 제목·쪽번호는 배율에서 제외해 본문 글자만 키운다 */
+  h2.slide-title, .page-num { --fs: 1; }
+
   /* 표지 */
   .cover { justify-content: center; align-items: flex-start; }
   .cover .kicker {
-    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-size: calc(1.95cqw * var(--fs)); letter-spacing: 0.3em; color: var(--key);
     font-weight: 700; margin-bottom: 1.6cqw;
   }
   .cover h1 {
     font-family: "Noto Serif KR", serif; font-weight: 700;
-    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+    font-size: calc(7.2cqw * var(--fs)); line-height: 1.2; letter-spacing: -0.02em;
   }
   .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
-  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .sub { font-size: calc(2.8cqw * var(--fs)); color: var(--ink-soft); line-height: 1.6; }
   .cover .foot {
     position: absolute; left: 5%; right: 5%; bottom: 5%;
     display: flex; justify-content: space-between;
-    font-size: 1.7cqw; color: var(--ink-faint);
+    font-size: calc(1.7cqw * var(--fs)); color: var(--ink-faint);
     border-top: 1px solid var(--line); padding-top: 1.2cqw;
   }
   .cover .page-num { display: none; }
 
   /* 공통 텍스트 */
-  .lead { font-size: 2.6cqw; line-height: 1.7; color: var(--ink-soft); }
-  .big { font-size: 3.1cqw; line-height: 1.65; }
+  .lead { font-size: calc(2.6cqw * var(--fs)); line-height: 1.7; color: var(--ink-soft); }
+  .big { font-size: calc(3.1cqw * var(--fs)); line-height: 1.65; }
 
   /* 지문 인용 */
   .quote-box {
     background: #f7f9fc; border-left: 0.45cqw solid var(--key);
-    padding: 1.9cqw 2.2cqw; font-size: 2.5cqw; line-height: 1.8;
+    padding: 1.9cqw 2.2cqw; font-size: calc(2.5cqw * var(--fs)); line-height: 1.8;
   }
-  .quote-box .src { display:block; margin-top:0.8cqw; font-size:1.8cqw; color:var(--ink-faint); }
+  .quote-box .src { display:block; margin-top:0.8cqw; font-size: calc(1.8cqw * var(--fs)); color:var(--ink-faint); }
 
   mark { background: var(--hl); padding: 0 0.15em; }
   .u-key { color: var(--key); font-weight: 700; }
@@ -124,14 +131,14 @@
     flex-shrink: 0; width: 6.2cqw;
     background: var(--key); color: #fff;
     font-family: "Noto Serif KR", serif; font-weight: 700;
-    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+    font-size: calc(2.2cqw * var(--fs)); display: flex; align-items: center; justify-content: center;
   }
   .para-body {
     flex: 1; border: 1px solid var(--line); border-left: none;
     padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
   }
-  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
-  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+  .para-body .t { font-size: calc(2.35cqw * var(--fs)); font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: calc(1.95cqw * var(--fs)); color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
 
   /* 4규칙 카드 */
   .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5cqw; }
@@ -140,13 +147,13 @@
     padding: 1.7cqw 1.4cqw;
   }
   .rule h3 {
-    font-family: "Noto Serif KR", serif; font-size: 3cqw; color: var(--key);
+    font-family: "Noto Serif KR", serif; font-size: calc(3cqw * var(--fs)); color: var(--key);
     margin-bottom: 0.9cqw;
   }
-  .rule p { font-size: 2.05cqw; line-height: 1.6; color: var(--ink-soft); }
+  .rule p { font-size: calc(2.05cqw * var(--fs)); line-height: 1.6; color: var(--ink-soft); }
   .rule .ex {
     margin-top: 1cqw; padding-top: 0.9cqw; border-top: 1px dashed var(--line);
-    font-size: 1.9cqw; line-height: 1.55; color: var(--ink);
+    font-size: calc(1.9cqw * var(--fs)); line-height: 1.55; color: var(--ink);
   }
   .rule .ex b { color: var(--ok); }
 
@@ -159,11 +166,11 @@
   .card.k { border-top: 0.5cqw solid var(--key); }
   .card.w { border-top: 0.5cqw solid var(--warn); }
   .card h3 {
-    font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw;
+    font-family: "Noto Serif KR", serif; font-size: calc(3cqw * var(--fs)); margin-bottom: 1.1cqw;
   }
   .card.k h3 { color: var(--key); }
   .card.w h3 { color: var(--warn); }
-  .card p, .card li { font-size: 2.25cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card p, .card li { font-size: calc(2.25cqw * var(--fs)); line-height: 1.7; color: var(--ink-soft); }
   .card ul { list-style: none; }
   .card li { padding-left: 1.5cqw; position: relative; }
   .card li + li { margin-top: 0.7cqw; }
@@ -173,30 +180,30 @@
   .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
   .choices li {
     display: flex; gap: 1.1cqw; align-items: flex-start;
-    font-size: 2.3cqw; line-height: 1.55;
+    font-size: calc(2.3cqw * var(--fs)); line-height: 1.55;
     padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
   }
   .choices .n {
     flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
-    font-size: 2.3cqw; width: 1.6em;
+    font-size: calc(2.3cqw * var(--fs)); width: 1.6em;
   }
   /* 5행 구조도 슬라이드: 제목과 겹치지 않도록 여백·행높이 축약 */
-  .slide.s-flow h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide.s-flow h2.slide-title { font-size: calc(4cqw * var(--fs)); margin-bottom: 1.5cqw; }
   .slide.s-flow .para-flow { gap: 0.85cqw; }
   .slide.s-flow .para-body { padding: 1cqw 1.4cqw; }
-  .slide.s-flow .para-body .t { font-size: 2.2cqw; line-height: 1.4; }
-  .slide.s-flow .para-body .d { font-size: 1.8cqw; line-height: 1.45; }
-  .slide.s-flow .para-no { font-size: 2cqw; width: 5.6cqw; }
+  .slide.s-flow .para-body .t { font-size: calc(2.2cqw * var(--fs)); line-height: 1.4; }
+  .slide.s-flow .para-body .d { font-size: calc(1.8cqw * var(--fs)); line-height: 1.45; }
+  .slide.s-flow .para-no { font-size: calc(2cqw * var(--fs)); width: 5.6cqw; }
 
   /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
-  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide h2.slide-title { font-size: calc(3.7cqw * var(--fs)); margin-bottom: 1.5cqw; }
   .slide.q-slide .choices { gap: 0.35cqw; }
-  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
-  .slide.q-slide .choices .n { font-size: 2.02cqw; }
-  .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
-  .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
-  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
-  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
+  .slide.q-slide .choices li { font-size: calc(2.02cqw * var(--fs)); line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: calc(2.02cqw * var(--fs)); }
+  .slide.q-slide .quote-box { font-size: calc(2.2cqw * var(--fs)); padding: 1.4cqw 1.7cqw; }
+  .slide.q-slide .quote-box .src { font-size: calc(1.6cqw * var(--fs)); }
+  .slide.q-slide .bogi { font-size: calc(1.78cqw * var(--fs)); padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: calc(1.55cqw * var(--fs)); margin-bottom: 0.7cqw; }
   .choices li.ans {
     background: var(--warn-bg); border-color: #f0c0bc;
   }
@@ -205,12 +212,12 @@
   .choices li.dim { color: var(--ink-faint); }
   .choices li.dim .n { color: #b9c0cc; }
 
-  .slide.q-long h2.slide-title { font-size: 3.4cqw; margin-bottom: 1.1cqw; }
-  .slide.q-long .bogi { font-size: 1.62cqw; padding: 0.85cqw 1.2cqw; line-height: 1.55; }
-  .slide.q-long .bogi .tag { font-size: 1.4cqw; margin-bottom: 0.5cqw; }
-  .slide.q-long .choices li { font-size: 1.83cqw; line-height: 1.42; padding: 0.35cqw 0.9cqw; }
-  .slide.q-long .choices .n { font-size: 1.83cqw; }
-  .slide.q-long .ans-chip { font-size: 1.6cqw; }
+  .slide.q-long h2.slide-title { font-size: calc(3.4cqw * var(--fs)); margin-bottom: 1.1cqw; }
+  .slide.q-long .bogi { font-size: calc(1.62cqw * var(--fs)); padding: 0.85cqw 1.2cqw; line-height: 1.55; }
+  .slide.q-long .bogi .tag { font-size: calc(1.4cqw * var(--fs)); margin-bottom: 0.5cqw; }
+  .slide.q-long .choices li { font-size: calc(1.83cqw * var(--fs)); line-height: 1.42; padding: 0.35cqw 0.9cqw; }
+  .slide.q-long .choices .n { font-size: calc(1.83cqw * var(--fs)); }
+  .slide.q-long .ans-chip { font-size: calc(1.6cqw * var(--fs)); }
 
   /* 정답 배너 */
   .ans-banner {
@@ -218,22 +225,22 @@
     background: var(--warn); color: #fff;
     padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
   }
-  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .lb { font-size: calc(1.9cqw * var(--fs)); letter-spacing: 0.22em; opacity: 0.85; }
   .ans-banner .num {
-    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+    font-family: "Noto Serif KR", serif; font-size: calc(4.4cqw * var(--fs)); font-weight: 700; line-height: 1;
   }
-  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+  .ans-banner .why { font-size: calc(2.3cqw * var(--fs)); line-height: 1.45; }
 
   /* 근거 대조 */
   .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
   .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
   .evi .box .h {
-    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    font-size: calc(1.95cqw * var(--fs)); font-weight: 700; letter-spacing: 0.1em;
     padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
   }
   .evi .box.src .h { color: var(--ok); }
   .evi .box.opt .h { color: var(--warn); }
-  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+  .evi .box p { font-size: calc(2.2cqw * var(--fs)); line-height: 1.7; }
 
   /* 함정 포인트 */
   .trap {
@@ -241,15 +248,15 @@
     border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
   }
   .trap .h {
-    font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
+    font-size: calc(2.05cqw * var(--fs)); font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
   }
-  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+  .trap p { font-size: calc(2.2cqw * var(--fs)); line-height: 1.65; color: var(--ink); }
 
   /* 오답 정리 표 */
   .otable { width: 100%; border-collapse: collapse; }
   .otable th, .otable td {
     border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
-    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+    font-size: calc(2.15cqw * var(--fs)); line-height: 1.55; text-align: left; vertical-align: top;
   }
   .otable th {
     background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
@@ -260,11 +267,11 @@
 
   /* 보기 박스 */
   .bogi {
-    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7;
+    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: calc(2.15cqw * var(--fs)); line-height: 1.7;
   }
   .bogi .tag {
     display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
-    font-size: 1.75cqw; margin-bottom: 1cqw;
+    font-size: calc(1.75cqw * var(--fs)); margin-bottom: 1cqw;
   }
 
   /* 체크 정리 */
@@ -272,13 +279,13 @@
   .check-row { display: flex; gap: 1.6cqw; align-items: flex-start; }
   .check-row .k {
     flex-shrink: 0; width: 9.5em; font-weight: 700; color: var(--key);
-    font-size: 2.35cqw; text-align: right;
+    font-size: calc(2.35cqw * var(--fs)); text-align: right;
   }
-  .check-row .v { flex: 1; font-size: 2.35cqw; line-height: 1.65; color: var(--ink-soft); }
+  .check-row .v { flex: 1; font-size: calc(2.35cqw * var(--fs)); line-height: 1.65; color: var(--ink-soft); }
 
   .page-num {
     position: absolute; right: 3%; bottom: 2.6%;
-    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+    font-size: calc(1.6cqw * var(--fs)); color: #b6bdc9; letter-spacing: 0.08em;
   }
 
   .controls {
@@ -300,7 +307,8 @@
   body:fullscreen .controls { display: none; }
   body:fullscreen .stage {
     max-width: none; aspect-ratio: 16 / 9;
-    width: min(100vw, calc(100vh * 16 / 9));
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w);
     height: min(100vh, calc(100vw * 9 / 16));
     border: none; box-shadow: none;
   }
@@ -317,10 +325,10 @@
     flex-shrink: 0; align-self: center;
     background: var(--warn); color: #fff;
     font-family: "Noto Sans KR", sans-serif; font-weight: 700;
-    font-size: 1.9cqw; letter-spacing: 0.06em;
+    font-size: calc(1.9cqw * var(--fs)); letter-spacing: 0.06em;
     padding: 0.35cqw 1.1cqw; border-radius: 2cqw; white-space: nowrap;
   }
-  .slide.q-slide .ans-chip { font-size: 1.75cqw; }
+  .slide.q-slide .ans-chip { font-size: calc(1.75cqw * var(--fs)); }
 
   /* 풀이 논리 박스 ─ 답지 해설이 아니라 '어떻게 끊어 낼 것인가' */
   .logic {
@@ -328,9 +336,9 @@
     border-left: 0.45cqw solid var(--ok); padding: 1.4cqw 1.8cqw;
   }
   .logic .h {
-    font-size: 2.05cqw; font-weight: 700; color: var(--ok); margin-bottom: 0.55cqw;
+    font-size: calc(2.05cqw * var(--fs)); font-weight: 700; color: var(--ok); margin-bottom: 0.55cqw;
   }
-  .logic p { font-size: 2.15cqw; line-height: 1.62; color: var(--ink); }
+  .logic p { font-size: calc(2.15cqw * var(--fs)); line-height: 1.62; color: var(--ink); }
   .logic p + p { margin-top: 0.55cqw; }
 
   /* 단계형 소거 순서 */
@@ -340,29 +348,29 @@
     padding: 1.4cqw 1.4cqw;
   }
   .steps .st .n {
-    font-family: "Noto Serif KR", serif; font-size: 2.5cqw; color: var(--ok);
+    font-family: "Noto Serif KR", serif; font-size: calc(2.5cqw * var(--fs)); color: var(--ok);
     font-weight: 700; margin-bottom: 0.7cqw;
   }
-  .steps .st .t { font-size: 2.1cqw; font-weight: 700; line-height: 1.45; margin-bottom: 0.5cqw; }
-  .steps .st .d { font-size: 1.9cqw; line-height: 1.55; color: var(--ink-soft); }
+  .steps .st .t { font-size: calc(2.1cqw * var(--fs)); font-weight: 700; line-height: 1.45; margin-bottom: 0.5cqw; }
+  .steps .st .d { font-size: calc(1.9cqw * var(--fs)); line-height: 1.55; color: var(--ink-soft); }
 
   /* 3열 분류표 */
   .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
   .three .card { border-top: 0.5cqw solid var(--key); }
   .three .card.q2 { border-top-color: var(--warn); }
   .three .card.q3 { border-top-color: var(--ok); }
-  .three .card h3 { font-size: 2.7cqw; }
+  .three .card h3 { font-size: calc(2.7cqw * var(--fs)); }
   .three .card.q2 h3 { color: var(--warn); }
   .three .card.q3 h3 { color: var(--ok); }
-  .three .card li { font-size: 2cqw; }
+  .three .card li { font-size: calc(2cqw * var(--fs)); }
 
   /* 매칭 표(2입장 × 문장) */
   .mtable { width: 100%; border-collapse: collapse; }
   .mtable th, .mtable td {
     border: 1px solid var(--line); padding: 1cqw 1.2cqw;
-    font-size: 1.95cqw; line-height: 1.5; text-align: left; vertical-align: top;
+    font-size: calc(1.95cqw * var(--fs)); line-height: 1.5; text-align: left; vertical-align: top;
   }
-  .mtable thead th { background: #f2f5f9; text-align: center; font-size: 2.05cqw; }
+  .mtable thead th { background: #f2f5f9; text-align: center; font-size: calc(2.05cqw * var(--fs)); }
   .mtable td.stmt { background: #fbfcfe; font-weight: 700; }
   .mtable td .no { font-weight: 700; color: var(--ink-faint); margin-right: 0.3em; }
   .mtable td.ans { background: var(--warn-bg); }
@@ -370,14 +378,14 @@
 
   /* 대화 상자 */
   .talk { border: 1px solid var(--ink); padding: 1.5cqw 1.8cqw; }
-  .talk .row { display: flex; gap: 1cqw; font-size: 2.1cqw; line-height: 1.52; }
+  .talk .row { display: flex; gap: 1cqw; font-size: calc(2.1cqw * var(--fs)); line-height: 1.52; }
   .talk .row + .row { margin-top: 0.6cqw; }
   .talk .who { flex-shrink: 0; width: 5.2em; font-weight: 700; color: var(--key); }
   .talk .row.r2 .who { color: var(--warn); }
   .talk .row.r3 .who { color: var(--ok); }
   .talk .tag {
     display: inline-block; margin-left: 0.4em; padding: 0 0.5em;
-    font-size: 1.6cqw; border: 1px solid var(--line); color: var(--ink-faint);
+    font-size: calc(1.6cqw * var(--fs)); border: 1px solid var(--line); color: var(--ink-faint);
   }
 
   /* 흐름 화살표 */
@@ -386,102 +394,102 @@
     flex: 1; border: 1px solid var(--line); border-top: 0.45cqw solid var(--key);
     padding: 1.3cqw 1.3cqw; display: flex; flex-direction: column; justify-content: center;
   }
-  .flow .fbox .t { font-size: 2.2cqw; font-weight: 700; line-height: 1.4; }
-  .flow .fbox .d { font-size: 1.85cqw; line-height: 1.5; color: var(--ink-soft); margin-top: 0.4cqw; }
+  .flow .fbox .t { font-size: calc(2.2cqw * var(--fs)); font-weight: 700; line-height: 1.4; }
+  .flow .fbox .d { font-size: calc(1.85cqw * var(--fs)); line-height: 1.5; color: var(--ink-soft); margin-top: 0.4cqw; }
   .flow .arrow {
     flex-shrink: 0; display: flex; align-items: center;
-    font-size: 3cqw; color: var(--ink-faint);
+    font-size: calc(3cqw * var(--fs)); color: var(--ink-faint);
   }
 
   /* ── 해설 슬라이드(정답 배너 + 근거 + 풀이 논리 3층) 압축 ── */
   .slide:has(.ans-banner) .ans-banner { padding: 1cqw 1.6cqw; margin-bottom: 1.15cqw; gap: 1.1cqw; }
-  .slide:has(.ans-banner) .ans-banner .lb { font-size: 1.7cqw; }
-  .slide:has(.ans-banner) .ans-banner .num { font-size: 3.8cqw; }
-  .slide:has(.ans-banner) .ans-banner .why { font-size: 2.05cqw; line-height: 1.4; }
+  .slide:has(.ans-banner) .ans-banner .lb { font-size: calc(1.7cqw * var(--fs)); }
+  .slide:has(.ans-banner) .ans-banner .num { font-size: calc(3.8cqw * var(--fs)); }
+  .slide:has(.ans-banner) .ans-banner .why { font-size: calc(2.05cqw * var(--fs)); line-height: 1.4; }
   .slide:has(.ans-banner) .evi { gap: 1.4cqw; }
   .slide:has(.ans-banner) .evi .box { padding: 1.15cqw 1.4cqw; }
-  .slide:has(.ans-banner) .evi .box .h { font-size: 1.8cqw; padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
-  .slide:has(.ans-banner) .evi .box p { font-size: 1.98cqw; line-height: 1.55; }
-  .slide:has(.ans-banner) .otable th, .slide:has(.ans-banner) .otable td { padding: 0.8cqw 1.05cqw; font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.ans-banner) .evi .box .h { font-size: calc(1.8cqw * var(--fs)); padding-bottom: 0.5cqw; margin-bottom: 0.7cqw; }
+  .slide:has(.ans-banner) .evi .box p { font-size: calc(1.98cqw * var(--fs)); line-height: 1.55; }
+  .slide:has(.ans-banner) .otable th, .slide:has(.ans-banner) .otable td { padding: 0.8cqw 1.05cqw; font-size: calc(1.92cqw * var(--fs)); line-height: 1.45; }
   .slide:has(.ans-banner) .logic { margin-top: 1.1cqw; padding: 1.1cqw 1.5cqw; }
-  .slide:has(.ans-banner) .logic .h { font-size: 1.92cqw; margin-bottom: 0.45cqw; }
-  .slide:has(.ans-banner) .logic p { font-size: 1.98cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .logic .h { font-size: calc(1.92cqw * var(--fs)); margin-bottom: 0.45cqw; }
+  .slide:has(.ans-banner) .logic p { font-size: calc(1.98cqw * var(--fs)); line-height: 1.55; }
   .slide:has(.ans-banner) .two .card { padding: 1.4cqw 1.6cqw; }
-  .slide:has(.ans-banner) .two .card h3 { font-size: 2.7cqw; margin-bottom: 0.8cqw; }
-  .slide:has(.ans-banner) .two .card p, .slide:has(.ans-banner) .two .card li { font-size: 2.05cqw; line-height: 1.55; }
+  .slide:has(.ans-banner) .two .card h3 { font-size: calc(2.7cqw * var(--fs)); margin-bottom: 0.8cqw; }
+  .slide:has(.ans-banner) .two .card p, .slide:has(.ans-banner) .two .card li { font-size: calc(2.05cqw * var(--fs)); line-height: 1.55; }
   .slide:has(.ans-banner) .flow .fbox { padding: 1.1cqw 1.15cqw; }
-  .slide:has(.ans-banner) .flow .fbox .t { font-size: 2.05cqw; }
-  .slide:has(.ans-banner) .flow .fbox .d { font-size: 1.78cqw; line-height: 1.45; }
-  .slide:has(.ans-banner) .quote-box { font-size: 2.1cqw; padding: 1.3cqw 1.6cqw; }
+  .slide:has(.ans-banner) .flow .fbox .t { font-size: calc(2.05cqw * var(--fs)); }
+  .slide:has(.ans-banner) .flow .fbox .d { font-size: calc(1.78cqw * var(--fs)); line-height: 1.45; }
+  .slide:has(.ans-banner) .quote-box { font-size: calc(2.1cqw * var(--fs)); padding: 1.3cqw 1.6cqw; }
 
   /* 3열 분류 슬라이드 압축 */
-  .slide:has(.three) h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide:has(.three) h2.slide-title { font-size: calc(4cqw * var(--fs)); margin-bottom: 1.5cqw; }
   .slide:has(.three) .card { padding: 1.4cqw 1.5cqw; }
-  .slide:has(.three) .card h3 { font-size: 2.5cqw; margin-bottom: 0.7cqw; }
-  .slide:has(.three) .card p { font-size: 1.92cqw; line-height: 1.5; }
-  .slide:has(.three) .card li { font-size: 1.88cqw; line-height: 1.45; }
+  .slide:has(.three) .card h3 { font-size: calc(2.5cqw * var(--fs)); margin-bottom: 0.7cqw; }
+  .slide:has(.three) .card p { font-size: calc(1.92cqw * var(--fs)); line-height: 1.5; }
+  .slide:has(.three) .card li { font-size: calc(1.88cqw * var(--fs)); line-height: 1.45; }
   .slide:has(.three) .card li + li { margin-top: 0.45cqw; }
   .slide:has(.three) .trap { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
-  .slide:has(.three) .trap .h { font-size: 1.92cqw; }
-  .slide:has(.three) .trap p { font-size: 2cqw; line-height: 1.5; }
+  .slide:has(.three) .trap .h { font-size: calc(1.92cqw * var(--fs)); }
+  .slide:has(.three) .trap p { font-size: calc(2cqw * var(--fs)); line-height: 1.5; }
 
   /* 대화 슬라이드 압축 */
   .slide:has(.talk) .talk { padding: 1.2cqw 1.5cqw; }
-  .slide:has(.talk) .talk .row { font-size: 1.92cqw; line-height: 1.45; }
+  .slide:has(.talk) .talk .row { font-size: calc(1.92cqw * var(--fs)); line-height: 1.45; }
   .slide:has(.talk) .talk .row + .row { margin-top: 0.45cqw; }
-  .slide:has(.talk) .talk .tag { font-size: 1.45cqw; }
+  .slide:has(.talk) .talk .tag { font-size: calc(1.45cqw * var(--fs)); }
   .slide:has(.talk) .trap { margin-top: 1cqw; padding: 1cqw 1.4cqw; }
-  .slide:has(.talk) .trap .h { font-size: 1.85cqw; }
-  .slide:has(.talk) .trap p { font-size: 1.95cqw; line-height: 1.48; }
-  .slide:has(.talk) .bogi { font-size: 1.85cqw; line-height: 1.55; }
+  .slide:has(.talk) .trap .h { font-size: calc(1.85cqw * var(--fs)); }
+  .slide:has(.talk) .trap p { font-size: calc(1.95cqw * var(--fs)); line-height: 1.48; }
+  .slide:has(.talk) .bogi { font-size: calc(1.85cqw * var(--fs)); line-height: 1.55; }
 
   /* 문제 슬라이드에 인용 상자가 함께 있는 경우 */
-  .slide.q-slide:has(.quote-box) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
-  .slide.q-slide:has(.quote-box) .choices .n { font-size: 1.92cqw; }
-  .slide.q-slide:has(.two) .choices li { font-size: 1.92cqw; padding: 0.42cqw 1cqw; }
-  .slide.q-slide:has(.two) .choices .n { font-size: 1.92cqw; }
+  .slide.q-slide:has(.quote-box) .choices li { font-size: calc(1.92cqw * var(--fs)); padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.quote-box) .choices .n { font-size: calc(1.92cqw * var(--fs)); }
+  .slide.q-slide:has(.two) .choices li { font-size: calc(1.92cqw * var(--fs)); padding: 0.42cqw 1cqw; }
+  .slide.q-slide:has(.two) .choices .n { font-size: calc(1.92cqw * var(--fs)); }
   .slide.q-slide .two .card { padding: 1.1cqw 1.4cqw; }
 
   /* 매칭 표가 큰 슬라이드 */
-  .slide:has(.mtable) h2.slide-title { font-size: 4cqw; margin-bottom: 1.4cqw; }
-  .slide:has(.mtable) .mtable th, .slide:has(.mtable) .mtable td { padding: 0.85cqw 1.05cqw; font-size: 1.85cqw; line-height: 1.45; }
+  .slide:has(.mtable) h2.slide-title { font-size: calc(4cqw * var(--fs)); margin-bottom: 1.4cqw; }
+  .slide:has(.mtable) .mtable th, .slide:has(.mtable) .mtable td { padding: 0.85cqw 1.05cqw; font-size: calc(1.85cqw * var(--fs)); line-height: 1.45; }
 
   /* 체크 정리 슬라이드가 길어질 때 */
   .slide:has(.checks) .checks { gap: 1.15cqw; }
-  .slide:has(.checks) .check-row .k, .slide:has(.checks) .check-row .v { font-size: 2.15cqw; line-height: 1.5; }
+  .slide:has(.checks) .check-row .k, .slide:has(.checks) .check-row .v { font-size: calc(2.15cqw * var(--fs)); line-height: 1.5; }
 
   /* 2열 비교 슬라이드 압축 */
   .slide:has(.two) .card { padding: 1.35cqw 1.6cqw; }
-  .slide:has(.two) .card h3 { font-size: 2.6cqw; margin-bottom: 0.75cqw; }
-  .slide:has(.two) .card p, .slide:has(.two) .card li { font-size: 2cqw; line-height: 1.5; }
+  .slide:has(.two) .card h3 { font-size: calc(2.6cqw * var(--fs)); margin-bottom: 0.75cqw; }
+  .slide:has(.two) .card p, .slide:has(.two) .card li { font-size: calc(2cqw * var(--fs)); line-height: 1.5; }
   .slide:has(.two) .card li + li { margin-top: 0.5cqw; }
   .slide:has(.two) .trap { margin-top: 1.05cqw; padding: 1.05cqw 1.5cqw; }
-  .slide:has(.two) .trap .h { font-size: 1.88cqw; }
-  .slide:has(.two) .trap p { font-size: 1.98cqw; line-height: 1.5; }
-  .slide:has(.two) .quote-box { font-size: 2.05cqw; padding: 1.2cqw 1.5cqw; }
-  .slide:has(.two) .quote-box .src { font-size: 1.6cqw; margin-top: 0.6cqw; }
+  .slide:has(.two) .trap .h { font-size: calc(1.88cqw * var(--fs)); }
+  .slide:has(.two) .trap p { font-size: calc(1.98cqw * var(--fs)); line-height: 1.5; }
+  .slide:has(.two) .quote-box { font-size: calc(2.05cqw * var(--fs)); padding: 1.2cqw 1.5cqw; }
+  .slide:has(.two) .quote-box .src { font-size: calc(1.6cqw * var(--fs)); margin-top: 0.6cqw; }
 
   /* 해설 슬라이드에서 오답 정리 표를 함께 쓰는 경우 */
   .slide:has(.ans-banner):has(.otable) .otable th,
-  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: 1.8cqw; line-height: 1.4; }
+  .slide:has(.ans-banner):has(.otable) .otable td { padding: 0.6cqw 0.95cqw; font-size: calc(1.8cqw * var(--fs)); line-height: 1.4; }
 
   /* 흐름도 + 해설 박스 슬라이드 */
   .slide:has(.flow) .flow .fbox { padding: 1.15cqw 1.25cqw; }
-  .slide:has(.flow) .flow .fbox .t { font-size: 2.1cqw; }
-  .slide:has(.flow) .flow .fbox .d { font-size: 1.82cqw; line-height: 1.45; }
+  .slide:has(.flow) .flow .fbox .t { font-size: calc(2.1cqw * var(--fs)); }
+  .slide:has(.flow) .flow .fbox .d { font-size: calc(1.82cqw * var(--fs)); line-height: 1.45; }
   .slide:has(.flow) .trap, .slide:has(.flow) .logic { margin-top: 1.2cqw; padding: 1.1cqw 1.5cqw; }
-  .slide:has(.flow) .trap p, .slide:has(.flow) .logic p { font-size: 2cqw; line-height: 1.52; }
+  .slide:has(.flow) .trap p, .slide:has(.flow) .logic p { font-size: calc(2cqw * var(--fs)); line-height: 1.52; }
 
   /* 그래프 슬라이드 */
-  .slide:has(svg) .bogi { font-size: 1.82cqw; line-height: 1.55; padding: 1.05cqw 1.4cqw; }
+  .slide:has(svg) .bogi { font-size: calc(1.82cqw * var(--fs)); line-height: 1.55; padding: 1.05cqw 1.4cqw; }
   .slide:has(svg) svg { width: 100%; height: 24cqw; }
-  .slide:has(svg) .trap p, .slide:has(svg) .logic p { font-size: 1.88cqw; line-height: 1.5; }
-  .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: 1.8cqw; }
+  .slide:has(svg) .trap p, .slide:has(svg) .logic p { font-size: calc(1.88cqw * var(--fs)); line-height: 1.5; }
+  .slide:has(svg) .trap .h, .slide:has(svg) .logic .h { font-size: calc(1.8cqw * var(--fs)); }
 
   /* 마지막 미세 조정 */
-  .slide:has(.ans-banner) .logic p { font-size: 1.92cqw; line-height: 1.52; }
+  .slide:has(.ans-banner) .logic p { font-size: calc(1.92cqw * var(--fs)); line-height: 1.52; }
   .slide:has(svg) svg { height: 20cqw; }
-  .slide:has(svg) .bogi { font-size: 1.75cqw; }
+  .slide:has(svg) .bogi { font-size: calc(1.75cqw * var(--fs)); }
   .slide:has(svg) .trap, .slide:has(svg) .logic { padding: 0.95cqw 1.35cqw; }
 
   .slide:has(.ans-banner) .ans-banner { margin-bottom: 0.95cqw; }
@@ -494,11 +502,11 @@
 
   /* 해설 슬라이드 안의 보충 박스 */
   .slide:has(.ans-banner) .trap { margin-top: 1.05cqw; padding: 1cqw 1.4cqw; }
-  .slide:has(.ans-banner) .trap .h { font-size: 1.9cqw; margin-bottom: 0.4cqw; }
-  .slide:has(.ans-banner) .trap p { font-size: 1.9cqw; line-height: 1.5; }
+  .slide:has(.ans-banner) .trap .h { font-size: calc(1.9cqw * var(--fs)); margin-bottom: 0.4cqw; }
+  .slide:has(.ans-banner) .trap p { font-size: calc(1.9cqw * var(--fs)); line-height: 1.5; }
   .slide.s-flow .para-body { padding: 0.9cqw 1.3cqw; }
   .slide:has(.steps) .steps .st { padding: 1.15cqw 1.2cqw; }
-  .slide:has(.steps) .steps .st .d { font-size: 1.82cqw; }
+  .slide:has(.steps) .steps .st .d { font-size: calc(1.82cqw * var(--fs)); }
 </style>
 </head>
 <body>
@@ -529,7 +537,7 @@
   </section>
 
   <!-- 2 지문 구조 -->
-  <section class="slide s-flow">
+  <section class="slide s-flow" style="--fs:1.05">
     <h2 class="slide-title"><span class="qtext">지문 구조 한눈에 보기</span></h2>
     <div class="body-area">
       <div class="para-flow">
@@ -574,7 +582,7 @@
   </section>
 
   <!-- 3 맛 인지 과정 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.39">
     <h2 class="slide-title"><span class="qtext">맛 인지 과정 (1문단)</span></h2>
     <div class="body-area">
       <div class="flow">
@@ -607,7 +615,7 @@
   </section>
 
   <!-- 4 산 pH -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.39">
     <h2 class="slide-title"><span class="qtext">산 성분과 pH (2문단)</span></h2>
     <div class="body-area">
       <div class="flow">
@@ -666,7 +674,7 @@
   </section>
 
   <!-- 6 민감도 vs 반응도 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.11">
     <h2 class="slide-title"><span class="qtext">민감도와 반응도 (4문단)</span></h2>
     <div class="body-area">
       <div class="two">
@@ -695,7 +703,7 @@
   </section>
 
   <!-- 7 14번 문제 -->
-  <section class="slide q-slide">
+  <section class="slide q-slide" style="--fs:1.26">
     <h2 class="slide-title"><span class="q">14</span><span class="qtext">윗글의 내용과 일치하지 <u>않는</u> 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
     <div class="body-area">
       <ul class="choices">
@@ -710,7 +718,7 @@
   </section>
 
   <!-- 8 14번 해설 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.08">
     <h2 class="slide-title"><span class="q">14</span><span class="qtext">정답과 근거</span></h2>
     <div class="body-area">
       <div class="ans-banner">
@@ -738,12 +746,12 @@
   </section>
 
   <!-- 9 15번 문제 -->
-  <section class="slide q-slide">
+  <section class="slide q-slide" style="--fs:1.45">
     <h2 class="slide-title"><span class="q">15</span><span class="qtext">㉠, ㉡에 대한 설명으로 가장 적절한 것은?</span><span class="ans-chip">정답 ⑤</span></h2>
     <div class="body-area">
       <div class="two" style="margin-bottom:1.6cqw; gap:1.5cqw;">
-        <div class="card k" style="padding:1.2cqw 1.5cqw;"><p style="font-size:2.1cqw;"><b>㉠ 미라클베리 열매</b> &mdash; 미라쿨린을 품은 <b>작동자</b></p></div>
-        <div class="card w" style="padding:1.2cqw 1.5cqw;"><p style="font-size:2.1cqw;"><b>㉡ 레몬</b> &mdash; 입안을 산성으로 만드는 <b>환경 제공자</b></p></div>
+        <div class="card k" style="padding:1.2cqw 1.5cqw;"><p style="font-size: calc(2.1cqw * var(--fs));"><b>㉠ 미라클베리 열매</b> &mdash; 미라쿨린을 품은 <b>작동자</b></p></div>
+        <div class="card w" style="padding:1.2cqw 1.5cqw;"><p style="font-size: calc(2.1cqw * var(--fs));"><b>㉡ 레몬</b> &mdash; 입안을 산성으로 만드는 <b>환경 제공자</b></p></div>
       </div>
       <ul class="choices">
         <li><span class="n">①</span><span class="txt">㉠은 신맛을 감지하는 미각 수용체의 작용을 억제한다.</span></li>
@@ -757,7 +765,7 @@
   </section>
 
   <!-- 10 15번 해설 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.04">
     <h2 class="slide-title"><span class="q">15</span><span class="qtext">정답과 근거</span></h2>
     <div class="body-area">
       <div class="ans-banner">
@@ -781,11 +789,11 @@
   </section>
 
   <!-- 11 16번 보기 그래프 -->
-  <section class="slide">
-    <h2 class="slide-title" style="font-size:3.5cqw;"><span class="q">16</span><span class="qtext">&lt;보기&gt; pH에 따른 단맛 수용체 활성화 정도 [3점]</span><span class="ans-chip">정답 ④</span></h2>
+  <section class="slide" style="--fs:1.20">
+    <h2 class="slide-title" style="font-size: calc(3.5cqw * var(--fs));"><span class="q">16</span><span class="qtext">&lt;보기&gt; pH에 따른 단맛 수용체 활성화 정도 [3점]</span><span class="ans-chip">정답 ④</span></h2>
     <div class="body-area">
-      <div class="bogi" style="font-size:1.95cqw; padding:1.2cqw 1.6cqw; margin-bottom:1.1cqw;">
-        <span class="tag" style="font-size:1.6cqw; margin-bottom:0.5cqw;">보기</span>
+      <div class="bogi" style="font-size: calc(1.95cqw * var(--fs)); padding:1.2cqw 1.6cqw; margin-bottom:1.1cqw;">
+        <span class="tag" style="font-size: calc(1.6cqw * var(--fs)); margin-bottom:0.5cqw;">보기</span>
         단맛 물질을 일정량 투입한 후, <b>일반 단맛 수용체(A)</b>와 <b>미라쿨린이 결합된 단맛 수용체(B)</b>의 pH에 따른 활성화 정도를 비교한 것이다. (단, pH 변화 이외의 다른 환경 요인은 고려하지 않는다.)
       </div>
       <div style="display:flex; gap:2cqw; align-items:center;">
@@ -822,7 +830,7 @@
   </section>
 
   <!-- 12 16번 선택지 -->
-  <section class="slide q-slide">
+  <section class="slide q-slide" style="--fs:1.37">
     <h2 class="slide-title"><span class="q">16</span><span class="qtext">윗글을 바탕으로 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ④</span></h2>
     <div class="body-area">
       <ul class="choices">
@@ -837,7 +845,7 @@
   </section>
 
   <!-- 13 16번 해설 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.10">
     <h2 class="slide-title"><span class="q">16</span><span class="qtext">정답과 근거</span></h2>
     <div class="body-area">
       <div class="ans-banner">
@@ -865,7 +873,7 @@
   </section>
 
   <!-- 14 16번 선택지별 확인 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.04">
     <h2 class="slide-title"><span class="q">16</span><span class="qtext">선택지별 확인</span></h2>
     <div class="body-area">
       <table class="otable">
@@ -880,10 +888,10 @@
   </section>
 
   <!-- 15 17번 문제 -->
-  <section class="slide q-slide">
+  <section class="slide q-slide" style="--fs:1.36">
     <h2 class="slide-title"><span class="q">17</span><span class="qtext">문맥상 ⓐ~ⓔ와 바꿔 쓰기에 적절하지 <u>않은</u> 것은?</span><span class="ans-chip">정답 ②</span></h2>
     <div class="body-area">
-      <div class="quote-box" style="margin-bottom:1.5cqw; font-size:2.1cqw;">
+      <div class="quote-box" style="margin-bottom:1.5cqw; font-size: calc(2.1cqw * var(--fs));">
         ⓐ 현상이 <b>발생한다</b> ／ ⓑ 산 성분이 <b>포함되어</b> 있다 ／ ⓒ 산성 환경이 <b>형성된다</b> ／ ⓓ 지속이 유지되는지를 <b>지칭한다</b> ／ ⓔ 개선하는 데에도 <b>기여할</b> 수 있다
       </div>
       <ul class="choices">
@@ -898,7 +906,7 @@
   </section>
 
   <!-- 16 17번 해설 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.07">
     <h2 class="slide-title"><span class="q">17</span><span class="qtext">정답과 근거</span></h2>
     <div class="body-area">
       <div class="ans-banner">

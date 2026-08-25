@@ -22,6 +22,7 @@
     --ok: #1d7a55;          /* 근거 초록 */
     --ok-bg: #e8f5ef;
     --hl: #fff3b0;          /* 형광 */
+    --fs: 1;            /* 글자 크기 배율 — 슬라이드마다 inline style로 덮어써 확대한다 */
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -46,13 +47,16 @@
 
   .stage {
     container-type: inline-size;
-    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
     background: var(--paper);
     border: 1px solid #cfd6e0;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: 4.4% 5%;
+    padding: calc(var(--stage-w) * 0.044) calc(var(--stage-w) * 0.05);
   }
 
   .slide { display: none; flex-direction: column; height: 100%; animation: fade .25s ease; }
@@ -62,7 +66,7 @@
   /* ── 타이포: 1920×1080 전체화면에서 본문 ≈50px, 제목 ≈90px ── */
   h2.slide-title {
     font-family: "Noto Serif KR", serif; font-weight: 700;
-    font-size: 4.7cqw; line-height: 1.2;
+    font-size: calc(4.7cqw * var(--fs)); line-height: 1.2;
     padding-bottom: 0.7cqw; margin-bottom: 2.2cqw;
     border-bottom: 0.25cqw solid var(--ink);
   }
@@ -77,36 +81,39 @@
     min-height: 0; justify-content: center; overflow: hidden;
   }
 
+  /* 제목·쪽번호는 배율에서 제외해 본문 글자만 키운다 */
+  h2.slide-title, .page-num { --fs: 1; }
+
   /* 표지 */
   .cover { justify-content: center; align-items: flex-start; }
   .cover .kicker {
-    font-size: 1.95cqw; letter-spacing: 0.3em; color: var(--key);
+    font-size: calc(1.95cqw * var(--fs)); letter-spacing: 0.3em; color: var(--key);
     font-weight: 700; margin-bottom: 1.6cqw;
   }
   .cover h1 {
     font-family: "Noto Serif KR", serif; font-weight: 700;
-    font-size: 7.2cqw; line-height: 1.2; letter-spacing: -0.02em;
+    font-size: calc(7.2cqw * var(--fs)); line-height: 1.2; letter-spacing: -0.02em;
   }
   .cover .rule { width: 7cqw; height: 0.4cqw; background: var(--key); margin: 2.2cqw 0 2cqw; }
-  .cover .sub { font-size: 2.8cqw; color: var(--ink-soft); line-height: 1.6; }
+  .cover .sub { font-size: calc(2.8cqw * var(--fs)); color: var(--ink-soft); line-height: 1.6; }
   .cover .foot {
     position: absolute; left: 5%; right: 5%; bottom: 5%;
     display: flex; justify-content: space-between;
-    font-size: 1.7cqw; color: var(--ink-faint);
+    font-size: calc(1.7cqw * var(--fs)); color: var(--ink-faint);
     border-top: 1px solid var(--line); padding-top: 1.2cqw;
   }
   .cover .page-num { display: none; }
 
   /* 공통 텍스트 */
-  .lead { font-size: 2.6cqw; line-height: 1.7; color: var(--ink-soft); }
-  .big { font-size: 3.1cqw; line-height: 1.65; }
+  .lead { font-size: calc(2.6cqw * var(--fs)); line-height: 1.7; color: var(--ink-soft); }
+  .big { font-size: calc(3.1cqw * var(--fs)); line-height: 1.65; }
 
   /* 지문 인용 */
   .quote-box {
     background: #f7f9fc; border-left: 0.45cqw solid var(--key);
-    padding: 1.9cqw 2.2cqw; font-size: 2.5cqw; line-height: 1.8;
+    padding: 1.9cqw 2.2cqw; font-size: calc(2.5cqw * var(--fs)); line-height: 1.8;
   }
-  .quote-box .src { display:block; margin-top:0.8cqw; font-size:1.8cqw; color:var(--ink-faint); }
+  .quote-box .src { display:block; margin-top:0.8cqw; font-size: calc(1.8cqw * var(--fs)); color:var(--ink-faint); }
 
   mark { background: var(--hl); padding: 0 0.15em; }
   .u-key { color: var(--key); font-weight: 700; }
@@ -120,14 +127,14 @@
     flex-shrink: 0; width: 6.2cqw;
     background: var(--key); color: #fff;
     font-family: "Noto Serif KR", serif; font-weight: 700;
-    font-size: 2.2cqw; display: flex; align-items: center; justify-content: center;
+    font-size: calc(2.2cqw * var(--fs)); display: flex; align-items: center; justify-content: center;
   }
   .para-body {
     flex: 1; border: 1px solid var(--line); border-left: none;
     padding: 1.25cqw 1.6cqw; display: flex; flex-direction: column; justify-content: center;
   }
-  .para-body .t { font-size: 2.35cqw; font-weight: 700; line-height: 1.45; }
-  .para-body .d { font-size: 1.95cqw; color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
+  .para-body .t { font-size: calc(2.35cqw * var(--fs)); font-weight: 700; line-height: 1.45; }
+  .para-body .d { font-size: calc(1.95cqw * var(--fs)); color: var(--ink-soft); line-height: 1.55; margin-top: 0.35cqw; }
 
   /* 4규칙 카드 */
   .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5cqw; }
@@ -136,13 +143,13 @@
     padding: 1.7cqw 1.4cqw;
   }
   .rule h3 {
-    font-family: "Noto Serif KR", serif; font-size: 3cqw; color: var(--key);
+    font-family: "Noto Serif KR", serif; font-size: calc(3cqw * var(--fs)); color: var(--key);
     margin-bottom: 0.9cqw;
   }
-  .rule p { font-size: 2.05cqw; line-height: 1.6; color: var(--ink-soft); }
+  .rule p { font-size: calc(2.05cqw * var(--fs)); line-height: 1.6; color: var(--ink-soft); }
   .rule .ex {
     margin-top: 1cqw; padding-top: 0.9cqw; border-top: 1px dashed var(--line);
-    font-size: 1.9cqw; line-height: 1.55; color: var(--ink);
+    font-size: calc(1.9cqw * var(--fs)); line-height: 1.55; color: var(--ink);
   }
   .rule .ex b { color: var(--ok); }
 
@@ -155,11 +162,11 @@
   .card.k { border-top: 0.5cqw solid var(--key); }
   .card.w { border-top: 0.5cqw solid var(--warn); }
   .card h3 {
-    font-family: "Noto Serif KR", serif; font-size: 3cqw; margin-bottom: 1.1cqw;
+    font-family: "Noto Serif KR", serif; font-size: calc(3cqw * var(--fs)); margin-bottom: 1.1cqw;
   }
   .card.k h3 { color: var(--key); }
   .card.w h3 { color: var(--warn); }
-  .card p, .card li { font-size: 2.25cqw; line-height: 1.7; color: var(--ink-soft); }
+  .card p, .card li { font-size: calc(2.25cqw * var(--fs)); line-height: 1.7; color: var(--ink-soft); }
   .card ul { list-style: none; }
   .card li { padding-left: 1.5cqw; position: relative; }
   .card li + li { margin-top: 0.7cqw; }
@@ -169,30 +176,30 @@
   .choices { list-style: none; display: flex; flex-direction: column; gap: 0.85cqw; }
   .choices li {
     display: flex; gap: 1.1cqw; align-items: flex-start;
-    font-size: 2.3cqw; line-height: 1.55;
+    font-size: calc(2.3cqw * var(--fs)); line-height: 1.55;
     padding: 0.9cqw 1.2cqw; border: 1px solid transparent;
   }
   .choices .n {
     flex-shrink: 0; font-weight: 700; color: var(--ink-faint);
-    font-size: 2.3cqw; width: 1.6em;
+    font-size: calc(2.3cqw * var(--fs)); width: 1.6em;
   }
   /* 5행 구조도 슬라이드: 제목과 겹치지 않도록 여백·행높이 축약 */
-  .slide.s-flow h2.slide-title { font-size: 4cqw; margin-bottom: 1.5cqw; }
+  .slide.s-flow h2.slide-title { font-size: calc(4cqw * var(--fs)); margin-bottom: 1.5cqw; }
   .slide.s-flow .para-flow { gap: 0.85cqw; }
   .slide.s-flow .para-body { padding: 1cqw 1.4cqw; }
-  .slide.s-flow .para-body .t { font-size: 2.2cqw; line-height: 1.4; }
-  .slide.s-flow .para-body .d { font-size: 1.8cqw; line-height: 1.45; }
-  .slide.s-flow .para-no { font-size: 2cqw; width: 5.6cqw; }
+  .slide.s-flow .para-body .t { font-size: calc(2.2cqw * var(--fs)); line-height: 1.4; }
+  .slide.s-flow .para-body .d { font-size: calc(1.8cqw * var(--fs)); line-height: 1.45; }
+  .slide.s-flow .para-no { font-size: calc(2cqw * var(--fs)); width: 5.6cqw; }
 
   /* 문제 슬라이드: 선택지 5개가 한 화면에 들어가도록 축약 */
-  .slide.q-slide h2.slide-title { font-size: 3.7cqw; margin-bottom: 1.5cqw; }
+  .slide.q-slide h2.slide-title { font-size: calc(3.7cqw * var(--fs)); margin-bottom: 1.5cqw; }
   .slide.q-slide .choices { gap: 0.35cqw; }
-  .slide.q-slide .choices li { font-size: 2.02cqw; line-height: 1.5; padding: 0.5cqw 1cqw; }
-  .slide.q-slide .choices .n { font-size: 2.02cqw; }
-  .slide.q-slide .quote-box { font-size: 2.2cqw; padding: 1.4cqw 1.7cqw; }
-  .slide.q-slide .quote-box .src { font-size: 1.6cqw; }
-  .slide.q-slide .bogi { font-size: 1.78cqw; padding: 1.05cqw 1.4cqw; line-height: 1.6; }
-  .slide.q-slide .bogi .tag { font-size: 1.55cqw; margin-bottom: 0.7cqw; }
+  .slide.q-slide .choices li { font-size: calc(2.02cqw * var(--fs)); line-height: 1.5; padding: 0.5cqw 1cqw; }
+  .slide.q-slide .choices .n { font-size: calc(2.02cqw * var(--fs)); }
+  .slide.q-slide .quote-box { font-size: calc(2.2cqw * var(--fs)); padding: 1.4cqw 1.7cqw; }
+  .slide.q-slide .quote-box .src { font-size: calc(1.6cqw * var(--fs)); }
+  .slide.q-slide .bogi { font-size: calc(1.78cqw * var(--fs)); padding: 1.05cqw 1.4cqw; line-height: 1.6; }
+  .slide.q-slide .bogi .tag { font-size: calc(1.55cqw * var(--fs)); margin-bottom: 0.7cqw; }
   .choices li.ans {
     background: var(--warn-bg); border-color: #f0c0bc;
   }
@@ -207,22 +214,22 @@
     background: var(--warn); color: #fff;
     padding: 1.3cqw 1.9cqw; margin-bottom: 1.7cqw;
   }
-  .ans-banner .lb { font-size: 1.9cqw; letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .lb { font-size: calc(1.9cqw * var(--fs)); letter-spacing: 0.22em; opacity: 0.85; }
   .ans-banner .num {
-    font-family: "Noto Serif KR", serif; font-size: 4.4cqw; font-weight: 700; line-height: 1;
+    font-family: "Noto Serif KR", serif; font-size: calc(4.4cqw * var(--fs)); font-weight: 700; line-height: 1;
   }
-  .ans-banner .why { font-size: 2.3cqw; line-height: 1.45; }
+  .ans-banner .why { font-size: calc(2.3cqw * var(--fs)); line-height: 1.45; }
 
   /* 근거 대조 */
   .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
   .evi .box { border: 1px solid var(--line); padding: 1.6cqw 1.8cqw; }
   .evi .box .h {
-    font-size: 1.95cqw; font-weight: 700; letter-spacing: 0.1em;
+    font-size: calc(1.95cqw * var(--fs)); font-weight: 700; letter-spacing: 0.1em;
     padding-bottom: 0.7cqw; margin-bottom: 1cqw; border-bottom: 1px solid var(--line);
   }
   .evi .box.src .h { color: var(--ok); }
   .evi .box.opt .h { color: var(--warn); }
-  .evi .box p { font-size: 2.2cqw; line-height: 1.7; }
+  .evi .box p { font-size: calc(2.2cqw * var(--fs)); line-height: 1.7; }
 
   /* 함정 포인트 */
   .trap {
@@ -230,15 +237,15 @@
     border-left: 0.45cqw solid var(--key); padding: 1.5cqw 1.9cqw;
   }
   .trap .h {
-    font-size: 2.05cqw; font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
+    font-size: calc(2.05cqw * var(--fs)); font-weight: 700; color: var(--key); margin-bottom: 0.6cqw;
   }
-  .trap p { font-size: 2.2cqw; line-height: 1.65; color: var(--ink); }
+  .trap p { font-size: calc(2.2cqw * var(--fs)); line-height: 1.65; color: var(--ink); }
 
   /* 오답 정리 표 */
   .otable { width: 100%; border-collapse: collapse; }
   .otable th, .otable td {
     border: 1px solid var(--line); padding: 1.15cqw 1.3cqw;
-    font-size: 2.15cqw; line-height: 1.55; text-align: left; vertical-align: top;
+    font-size: calc(2.15cqw * var(--fs)); line-height: 1.55; text-align: left; vertical-align: top;
   }
   .otable th {
     background: #f2f5f9; font-weight: 700; width: 4.5em; text-align: center;
@@ -249,11 +256,11 @@
 
   /* 보기 박스 */
   .bogi {
-    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: 2.15cqw; line-height: 1.7;
+    border: 1px solid var(--ink); padding: 1.6cqw 1.9cqw; font-size: calc(2.15cqw * var(--fs)); line-height: 1.7;
   }
   .bogi .tag {
     display: inline-block; border: 1px solid var(--ink); padding: 0.15cqw 0.9cqw;
-    font-size: 1.75cqw; margin-bottom: 1cqw;
+    font-size: calc(1.75cqw * var(--fs)); margin-bottom: 1cqw;
   }
 
   /* 체크 정리 */
@@ -261,13 +268,13 @@
   .check-row { display: flex; gap: 1.6cqw; align-items: flex-start; }
   .check-row .k {
     flex-shrink: 0; width: 9.5em; font-weight: 700; color: var(--key);
-    font-size: 2.35cqw; text-align: right;
+    font-size: calc(2.35cqw * var(--fs)); text-align: right;
   }
-  .check-row .v { flex: 1; font-size: 2.35cqw; line-height: 1.65; color: var(--ink-soft); }
+  .check-row .v { flex: 1; font-size: calc(2.35cqw * var(--fs)); line-height: 1.65; color: var(--ink-soft); }
 
   .page-num {
     position: absolute; right: 3%; bottom: 2.6%;
-    font-size: 1.6cqw; color: #b6bdc9; letter-spacing: 0.08em;
+    font-size: calc(1.6cqw * var(--fs)); color: #b6bdc9; letter-spacing: 0.08em;
   }
 
   .controls {
@@ -289,7 +296,8 @@
   body:fullscreen .controls { display: none; }
   body:fullscreen .stage {
     max-width: none; aspect-ratio: 16 / 9;
-    width: min(100vw, calc(100vh * 16 / 9));
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w);
     height: min(100vh, calc(100vw * 9 / 16));
     border: none; box-shadow: none;
   }
@@ -372,7 +380,7 @@
   </section>
 
   <!-- 4 요약 4규칙 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.03">
     <h2 class="slide-title">판데이크의 요약 규칙 4가지</h2>
     <div class="body-area">
       <div class="rules">
@@ -437,7 +445,7 @@
   </section>
 
   <!-- 6 1번 문제 -->
-  <section class="slide q-slide">
+  <section class="slide q-slide" style="--fs:1.37">
     <h2 class="slide-title"><span class="q">01</span>윗글을 이해한 내용으로 적절하지 <u>않은</u> 것은?</h2>
     <div class="body-area">
       <ul class="choices">
@@ -452,7 +460,7 @@
   </section>
 
   <!-- 7 1번 해설 -->
-  <section class="slide">
+  <section class="slide" style="--fs:0.96">
     <h2 class="slide-title"><span class="q">01</span>정답과 근거</h2>
     <div class="body-area">
       <div class="ans-banner">
@@ -499,7 +507,7 @@
   </section>
 
   <!-- 10 2번 해설 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.14">
     <h2 class="slide-title"><span class="q">02</span>정답과 근거</h2>
     <div class="body-area">
       <div class="ans-banner">
@@ -526,7 +534,7 @@
   </section>
 
   <!-- 11 2번 오답 정리 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.28">
     <h2 class="slide-title"><span class="q">02</span>선택지별 확인</h2>
     <div class="body-area">
       <table class="otable">
@@ -541,12 +549,12 @@
   </section>
 
   <!-- 12 3번 문제 -->
-  <section class="slide q-slide">
+  <section class="slide q-slide" style="--fs:0.91">
     <h2 class="slide-title"><span class="q">03</span>&lt;보기&gt; 반응으로 적절하지 <u>않은</u> 것은? [3점]</h2>
     <div class="body-area">
       <div class="bogi" style="margin-bottom:1.5cqw;">
         <span class="tag">보기</span>
-        <div style="font-size:1.95cqw; color:var(--ink-soft); margin-bottom:0.9cqw;">
+        <div style="font-size: calc(1.95cqw * var(--fs)); color:var(--ink-soft); margin-bottom:0.9cqw;">
           ○ 글의 맥락: 개인 블로그의 게시글 &nbsp;/&nbsp; ○ 글의 내용
         </div>
         <div style="font-weight:700; text-align:center; margin-bottom:0.7cqw;">피로한 당신에게 꼭 필요한 정보</div>
@@ -565,7 +573,7 @@
   </section>
 
   <!-- 13 3번 해설 -->
-  <section class="slide">
+  <section class="slide" style="--fs:0.96">
     <h2 class="slide-title"><span class="q">03</span>정답과 근거</h2>
     <div class="body-area">
       <div class="ans-banner">
