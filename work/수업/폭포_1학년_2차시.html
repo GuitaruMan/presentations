@@ -13,10 +13,8 @@
     --ink: #14232a;
     --ink-soft: #4c6673;
     --ink-faint: #89a5b2;
-    --fall: #0d6a82;          /* 물빛 청록 — 제목·라벨 등 화면의 구조 */
+    --fall: #0d6a82;          /* 물빛 청록 — 폭포 강조색 */
     --fall-soft: #4e9db3;
-    --mark: #a8500a;          /* 호박빛 — 원문 강조와 활동의 답
-                                 (배경도 글자도 청록이면 강조가 묻힌다) */
     --rule: #c0d6e0;
     --card: #f8fcfd;
   }
@@ -122,7 +120,11 @@
     font-size: clamp(1.05rem, 2.75cqw, 3.3rem);
     line-height: 1.86; letter-spacing: 0.005em;
   }
-  .verse .hl { color: var(--mark); font-weight: 700; }
+  /* 700이 이 글꼴의 가장 굵은 단계라 획을 아주 조금 더 두껍게 해 강조를 살린다 */
+  .verse .hl {
+    color: var(--fall); font-weight: 700;
+    -webkit-text-stroke: 0.022em currentColor;
+  }
   .verse p + p { margin-top: 1.1cqw; }
   .cols .verse { font-size: clamp(0.92rem, 2.2cqw, 2.64rem); line-height: 1.82; }
   .verse.quote { font-size: clamp(0.8rem, 1.86cqw, 2.23rem); line-height: 1.6; }
@@ -242,7 +244,7 @@
     font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 2.15cqw, 2.58rem);
     margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule);
   }
-  .c3 .word { color: var(--mark); font-weight: 700; }
+  .c3 .word { color: var(--fall); }
   .c3 p { font-size: clamp(0.8rem, 1.85cqw, 2.22rem); line-height: 1.68; color: var(--ink-soft); }
   .c3 p + p { margin-top: 0.45rem; }
 
@@ -289,7 +291,7 @@
     font-size: clamp(0.88rem, 1.98cqw, 2.38rem); line-height: 1.66;
   }
   .fill-row .arrow { color: var(--fall); margin: 0 0.5em; }
-  .fill-row .res { color: var(--mark); font-weight: 700; }
+  .fill-row .res { color: var(--fall); font-weight: 700; }
 
   .qa { display: flex; flex-direction: column; gap: 1.1cqw; }
   .body-area > .qa:last-child { margin-bottom: 3.6cqw; }
@@ -424,7 +426,7 @@
       </div>
       <div class="def-box">
         <div class="dt">2차시에 할 일</div>
-        <p>창작 당시의 사회·문화적 맥락으로 &lt;폭포&gt;를 한 번 읽고, 이어서 <strong style="color:var(--mark);">자신의 경험과 상황</strong>으로 다시 읽는다. 자연물을 소재로 한 다른 작품과도 견주어 본다</p>
+        <p>창작 당시의 사회·문화적 맥락으로 &lt;폭포&gt;를 한 번 읽고, 이어서 <strong style="color:var(--fall);">자신의 경험과 상황</strong>으로 다시 읽는다. 자연물을 소재로 한 다른 작품과도 견주어 본다</p>
       </div>
     </div>
     <div class="page-num">2 / 22</div>
