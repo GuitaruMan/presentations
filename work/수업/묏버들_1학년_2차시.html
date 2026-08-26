@@ -9,6 +9,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
 
   :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
     --paper: #f2f2e6;
     --paper-edge: #e0e2cf;
     --ink: #1f2420;
@@ -42,7 +43,10 @@
 
   .stage {
     container-type: inline-size;
-    width: 100%; max-width: 1180px; aspect-ratio: 16 / 9;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
     background: var(--paper);
     /* 한지 바탕 + 밤비(사선)와 버들잎 그림자를 옅게 깐 배경 */
     background-image:
@@ -55,7 +59,7 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.45);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: 4.2% 5.4%;
+    padding: calc(var(--stage-w) * 0.042) calc(var(--stage-w) * 0.054);
   }
   /* 우측 상단에 드리운 실버들 가지 */
   .stage::before {
@@ -75,7 +79,7 @@
   }
   h2.slide-title {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.35rem, 3.15cqw, 3.68rem);
+    font-size: clamp(1.45rem, 3.85cqw, 4.62rem);
     padding-bottom: 0.7cqw; margin-bottom: 2.15cqw;
     border-bottom: 0.17cqw solid var(--ink); display: inline-block;
   }
@@ -84,7 +88,7 @@
     font-size: clamp(0.8rem, 1.63cqw, 1.60rem); letter-spacing: 0.32em;
     margin-bottom: 1.9cqw;
   }
-  .lead { font-size: clamp(0.95rem, 1.96cqw, 2.08rem); color: var(--ink-soft); line-height: 1.75; }
+  .lead { font-size: clamp(0.95rem, calc(1.96cqw * var(--fs)), calc(2.08rem * var(--fs))); color: var(--ink-soft); line-height: 1.75; }
 
   /* 표지 */
   .cover { justify-content: center; align-items: flex-start; }
@@ -102,7 +106,7 @@
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2%; flex: 1; min-height: 0; }
   .col-head {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.9rem, 1.79cqw, 1.89rem);
+    font-size: clamp(0.9rem, calc(1.79cqw * var(--fs)), calc(1.89rem * var(--fs)));
     color: var(--willow); margin-bottom: 1.2cqw;
     padding-bottom: 0.55cqw; border-bottom: 0.09cqw solid var(--rule);
   }
@@ -110,19 +114,19 @@
   /* 원문 — 옛한글(아래아 등) 표기를 위해 함초롬바탕 계열 우선 지정 */
   .verse {
     font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
-    font-size: clamp(1.05rem, 2.55cqw, 2.75rem);
+    font-size: clamp(1.05rem, calc(2.55cqw * var(--fs)), calc(2.75rem * var(--fs)));
     line-height: 2.05; letter-spacing: 0.01em;
   }
   .verse .jang { color: var(--willow); }
   .cols.wide-left { grid-template-columns: 1.3fr 1fr; }
   /* 전문 제시 — 한 장이 한 줄에 들어가도록 크기를 조금 낮춤 */
-  .verse-full { line-height: 2.4; font-size: clamp(0.85rem, 2.10cqw, 2.26rem); }
+  .verse-full { line-height: 2.4; font-size: clamp(0.85rem, calc(2.10cqw * var(--fs)), calc(2.26rem * var(--fs))); }
   .verse-full .jang-label {
     font-family: "Noto Sans KR", sans-serif; color: var(--willow);
     font-size: 0.52em; letter-spacing: 0.16em; margin-right: 0.9em;
   }
   .modern {
-    font-size: clamp(0.98rem, 2.17cqw, 2.27rem);
+    font-size: clamp(0.98rem, calc(2.17cqw * var(--fs)), calc(2.27rem * var(--fs)));
     line-height: 2.0; color: var(--ink);
   }
 
@@ -134,12 +138,12 @@
   }
   .emotion .etag {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.92rem, 1.85cqw, 1.92rem); color: var(--willow);
+    font-size: clamp(0.92rem, calc(1.85cqw * var(--fs)), calc(1.92rem * var(--fs))); color: var(--willow);
     margin-bottom: 0.5rem;
   }
   .emotion ul { list-style: none; }
   .emotion li {
-    font-size: clamp(0.82rem, 1.63cqw, 1.68rem); line-height: 1.7;
+    font-size: clamp(0.82rem, calc(1.63cqw * var(--fs)), calc(1.68rem * var(--fs))); line-height: 1.7;
     color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
   }
   .emotion li + li { margin-top: 0.28rem; }
@@ -152,7 +156,7 @@
   .info-table th, .info-table td {
     text-align: left; vertical-align: top;
     padding: 1.15cqw 0.95cqw; border-bottom: 1px solid var(--rule);
-    font-size: clamp(0.85rem, 1.68cqw, 1.73rem); line-height: 1.65;
+    font-size: clamp(0.85rem, calc(1.68cqw * var(--fs)), calc(1.73rem * var(--fs))); line-height: 1.65;
   }
   .info-table th {
     width: 5.2em; font-family: "Gowun Batang", serif; font-weight: 700;
@@ -164,11 +168,11 @@
   .cmp-table th, .cmp-table td {
     text-align: left; vertical-align: top;
     padding: 0.95cqw 0.85cqw; border-bottom: 1px solid var(--rule);
-    font-size: clamp(0.66rem, 1.36cqw, 1.42rem); line-height: 1.6;
+    font-size: clamp(0.66rem, calc(1.36cqw * var(--fs)), calc(1.42rem * var(--fs))); line-height: 1.6;
   }
   .cmp-table thead th {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--willow);
-    border-bottom: 0.17cqw solid var(--willow); font-size: clamp(0.72rem, 1.52cqw, 1.58rem);
+    border-bottom: 0.17cqw solid var(--willow); font-size: clamp(0.72rem, calc(1.52cqw * var(--fs)), calc(1.58rem * var(--fs)));
   }
   .cmp-table tbody th {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink);
@@ -179,7 +183,7 @@
 
   .num-list { list-style: none; }
   .num-list li {
-    font-size: clamp(0.85rem, 1.74cqw, 1.76rem); line-height: 1.7;
+    font-size: clamp(0.85rem, calc(1.74cqw * var(--fs)), calc(1.76rem * var(--fs))); line-height: 1.7;
     padding-left: 2.85cqw; position: relative; margin-bottom: 1.55cqw;
   }
   .num-list li .n {
@@ -195,19 +199,19 @@
   }
   .def-box .dt {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--willow);
-    font-size: clamp(0.95rem, 1.90cqw, 1.95rem); margin-bottom: 0.6rem;
+    font-size: clamp(0.95rem, calc(1.90cqw * var(--fs)), calc(1.95rem * var(--fs))); margin-bottom: 0.6rem;
   }
-  .def-box p { font-size: clamp(0.85rem, 1.74cqw, 1.76rem); line-height: 1.85; color: var(--ink-soft); }
+  .def-box p { font-size: clamp(0.85rem, calc(1.74cqw * var(--fs)), calc(1.76rem * var(--fs))); line-height: 1.85; color: var(--ink-soft); }
   .meter {
     display: flex; align-items: flex-start; justify-content: center;
     gap: clamp(0.5rem, 1.63cqw, 2.16rem);
     margin: 2.4cqw 0; padding: 1.2cqw 0;
     font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
-    font-size: clamp(1.0rem, 2.72cqw, 3.05rem);
+    font-size: clamp(1.0rem, calc(2.72cqw * var(--fs)), calc(3.05rem * var(--fs)));
   }
   .meter .beat { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
   .meter .beat .lbl {
-    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.58rem, 1.14cqw, 1.22rem);
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.58rem, calc(1.14cqw * var(--fs)), calc(1.22rem * var(--fs)));
     color: var(--ink-faint); letter-spacing: 0.06em; white-space: nowrap;
   }
   .meter .beat.fix .lbl { color: var(--willow); }
@@ -221,48 +225,48 @@
   }
   .flow-step .stage-label {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.85rem, 1.68cqw, 1.76rem); margin-bottom: 0.15rem;
+    font-size: clamp(0.85rem, calc(1.68cqw * var(--fs)), calc(1.76rem * var(--fs))); margin-bottom: 0.15rem;
   }
   .flow-step .emo {
     font-family: "Gowun Batang", serif; color: var(--willow);
-    font-size: clamp(1.05rem, 2.28cqw, 2.40rem); margin-bottom: 0.75rem;
+    font-size: clamp(1.05rem, calc(2.28cqw * var(--fs)), calc(2.40rem * var(--fs))); margin-bottom: 0.75rem;
   }
   .flow-step .quote {
     font-family: "Gowun Batang", serif;
-    font-size: clamp(0.78rem, 1.52cqw, 1.60rem); line-height: 1.6;
+    font-size: clamp(0.78rem, calc(1.52cqw * var(--fs)), calc(1.60rem * var(--fs))); line-height: 1.6;
     color: var(--ink); padding-bottom: 0.6rem; margin-bottom: 0.6rem;
     border-bottom: 1px solid var(--rule);
   }
   .flow-step .desc {
-    font-size: clamp(0.72rem, 1.41cqw, 1.47rem); line-height: 1.6; color: var(--ink-soft);
+    font-size: clamp(0.72rem, calc(1.41cqw * var(--fs)), calc(1.47rem * var(--fs))); line-height: 1.6; color: var(--ink-soft);
   }
   .flow-arrow {
     display: flex; align-items: center; color: var(--willow);
-    font-size: clamp(0.9rem, 1.96cqw, 2.24rem);
+    font-size: clamp(0.9rem, calc(1.96cqw * var(--fs)), calc(2.24rem * var(--fs)));
   }
 
   /* 3단 카드 */
   .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.9cqw; min-height: 0; }
   .c3 { background: var(--card); border-top: 0.26cqw solid var(--willow); padding: 1.75cqw 1.55cqw; }
   .c3 h3 {
-    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 1.96cqw, 2.00rem);
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(1.96cqw * var(--fs)), calc(2.00rem * var(--fs)));
     margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule);
   }
   .c3 .word {
     font-family: "함초롬바탕", "HCR Batang", "HANBatang", "Malgun Gothic", "Noto Serif KR", serif;
     color: var(--willow);
   }
-  .c3 p { font-size: clamp(0.78rem, 1.52cqw, 1.60rem); line-height: 1.75; color: var(--ink-soft); }
+  .c3 p { font-size: clamp(0.78rem, calc(1.52cqw * var(--fs)), calc(1.60rem * var(--fs))); line-height: 1.75; color: var(--ink-soft); }
 
   /* 질문 강조 */
   .question-hero {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.3rem, 3.70cqw, 4.16rem); line-height: 1.5;
+    font-size: clamp(1.3rem, calc(3.70cqw * var(--fs)), calc(4.16rem * var(--fs))); line-height: 1.5;
     margin-bottom: 1.1rem;
   }
   .question-hero em { font-style: normal; color: var(--willow); }
   .refrain-note {
-    font-family: "Gowun Batang", serif; font-size: clamp(0.88rem, 1.85cqw, 1.89rem);
+    font-family: "Gowun Batang", serif; font-size: clamp(0.88rem, calc(1.85cqw * var(--fs)), calc(1.89rem * var(--fs)));
     color: var(--ink-soft); margin-bottom: 2rem;
   }
 
@@ -271,23 +275,23 @@
   .step { display: flex; gap: 1.3rem; align-items: flex-start; }
   .step .sn {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.1rem, 2.50cqw, 2.80rem); color: var(--willow);
+    font-size: clamp(1.1rem, calc(2.50cqw * var(--fs)), calc(2.80rem * var(--fs))); color: var(--willow);
     width: 1.9em; flex-shrink: 0; padding-top: 0.05em;
   }
   .step .sbody { flex: 1; padding-bottom: 1.1rem; border-bottom: 1px solid var(--rule); }
   .step:last-child .sbody { border-bottom: none; }
   .step h3 {
-    font-family: "Gowun Batang", serif; font-size: clamp(0.98rem, 2.07cqw, 2.08rem);
+    font-family: "Gowun Batang", serif; font-size: clamp(0.98rem, calc(2.07cqw * var(--fs)), calc(2.08rem * var(--fs)));
     margin-bottom: 0.35rem;
   }
-  .step p { font-size: clamp(0.8rem, 1.58cqw, 1.65rem); line-height: 1.75; color: var(--ink-soft); }
+  .step p { font-size: clamp(0.8rem, calc(1.58cqw * var(--fs)), calc(1.65rem * var(--fs))); line-height: 1.75; color: var(--ink-soft); }
 
   /* 퀴즈 */
   .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-  .quiz-guide { font-size: clamp(0.88rem, 1.85cqw, 1.92rem); color: var(--ink-soft); margin-bottom: 1.8rem; }
+  .quiz-guide { font-size: clamp(0.88rem, calc(1.85cqw * var(--fs)), calc(1.92rem * var(--fs))); color: var(--ink-soft); margin-bottom: 1.8rem; }
   .quiz-q {
     font-family: "Gowun Batang", serif;
-    font-size: clamp(1.05rem, 2.61cqw, 2.88rem); line-height: 1.75;
+    font-size: clamp(1.05rem, calc(2.61cqw * var(--fs)), calc(2.88rem * var(--fs))); line-height: 1.75;
     padding: 2.3cqw 2.55cqw; background: var(--card); border: 1px solid var(--rule);
   }
   .blank {
@@ -297,16 +301,16 @@
   .ox-row {
     display: flex; gap: clamp(2rem, 8.70cqw, 9.60rem); justify-content: center;
     margin-top: 2rem;
-    font-family: "Gowun Batang", serif; font-size: clamp(2rem, 6.52cqw, 7.20rem);
+    font-family: "Gowun Batang", serif; font-size: clamp(2rem, calc(6.52cqw * var(--fs)), calc(7.20rem * var(--fs)));
     color: var(--ink-faint);
   }
   .answer-badge {
     display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.4rem, 3.80cqw, 4.30rem); color: var(--paper);
+    font-size: clamp(1.4rem, calc(3.80cqw * var(--fs)), calc(4.30rem * var(--fs))); color: var(--paper);
     background: var(--willow); padding: 0.55rem 2rem; margin-bottom: 2.15cqw;
   }
   .answer-desc {
-    font-size: clamp(0.88rem, 1.85cqw, 1.92rem); line-height: 1.95; color: var(--ink-soft);
+    font-size: clamp(0.88rem, calc(1.85cqw * var(--fs)), calc(1.92rem * var(--fs))); line-height: 1.95; color: var(--ink-soft);
     max-width: 46em;
   }
 
@@ -315,10 +319,10 @@
   .srow { display: flex; gap: 2.15cqw; align-items: baseline; }
   .srow .skey {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--willow);
-    font-size: clamp(0.92rem, 1.96cqw, 2.00rem); width: 6.2em; flex-shrink: 0;
+    font-size: clamp(0.92rem, calc(1.96cqw * var(--fs)), calc(2.00rem * var(--fs))); width: 6.2em; flex-shrink: 0;
     text-align: right;
   }
-  .srow .sval { flex: 1; font-size: clamp(0.85rem, 1.74cqw, 1.79rem); line-height: 1.85; }
+  .srow .sval { flex: 1; font-size: clamp(0.85rem, calc(1.74cqw * var(--fs)), calc(1.79rem * var(--fs))); line-height: 1.85; }
   .srow .sval ul { list-style: none; margin-top: 0.5rem; }
   .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
   .srow .sval li + li { margin-top: 0.3rem; }
@@ -349,7 +353,8 @@
   body:fullscreen .controls { display: none; }
   body:fullscreen .stage {
     max-width: none; aspect-ratio: 16 / 9;
-    width: min(100vw, calc(100vh * 16 / 9));
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w);
     height: min(100vh, calc(100vw * 9 / 16));
     border: none; box-shadow: none;
   }
@@ -389,7 +394,7 @@
   </section>
 
   <!-- 2 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">학습 목표</h2>
     <div class="body-area">
       <p class="lead" style="margin-bottom:1.6rem;">
@@ -414,7 +419,7 @@
   </section>
 
   <!-- 3 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">전시 학습 복습 &middot; &lt;가시리&gt;</h2>
     <div class="body-area">
       <div class="cols">
@@ -444,7 +449,7 @@
   </section>
 
   <!-- 4 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.31;">
     <h2 class="slide-title">작품의 기본 골격</h2>
     <div class="body-area">
       <div class="cols">
@@ -471,7 +476,7 @@
   </section>
 
   <!-- 5 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.22;">
     <h2 class="slide-title">창작 배경 &middot; 홍랑과 최경창</h2>
     <div class="body-area">
       <div class="steps">
@@ -502,7 +507,7 @@
   </section>
 
   <!-- 6 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.24;">
     <h2 class="slide-title">원문과 현대어 풀이</h2>
     <div class="body-area">
       <div class="cols wide-left">
@@ -534,7 +539,7 @@
   </section>
 
   <!-- 7 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">텍스트 정밀 분석 &middot; 초장</h2>
     <div class="body-area">
       <div class="cols">
@@ -565,7 +570,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">텍스트 정밀 분석 &middot; 중장</h2>
     <div class="body-area">
       <div class="cols">
@@ -596,7 +601,7 @@
   </section>
 
   <!-- 9 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.39;">
     <h2 class="slide-title">텍스트 정밀 분석 &middot; 종장</h2>
     <div class="body-area">
       <div class="cols">
@@ -627,7 +632,7 @@
   </section>
 
   <!-- 10 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">핵심 시어 풀이</h2>
     <div class="body-area">
       <div class="cards3">
@@ -649,7 +654,7 @@
   </section>
 
   <!-- 11 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">시조의 정형성 &middot; 4음보</h2>
     <div class="body-area">
       <div class="def-box">
@@ -674,7 +679,7 @@
   </section>
 
   <!-- 12 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">시조의 정형성 &middot; 종장의 규칙</h2>
     <div class="body-area">
       <div class="meter">
@@ -698,7 +703,7 @@
   </section>
 
   <!-- 13 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">3장 구조의 전개</h2>
     <div class="body-area">
       <div class="flow">
@@ -728,7 +733,7 @@
   </section>
 
   <!-- 14 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.14;">
     <h2 class="slide-title">문학사적 확장 &middot; 김소월 &lt;개여울&gt;</h2>
     <div class="body-area">
       <div class="cols">
@@ -759,7 +764,7 @@
   </section>
 
   <!-- 15 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.41;">
     <h2 class="slide-title">종합 비교 &middot; 이별 정서와 율격의 변모</h2>
     <div class="body-area">
       <table class="cmp-table">
@@ -807,7 +812,7 @@
   </section>
 
   <!-- 16 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">확인 퀴즈 1</h2>
     <div class="body-area quiz-wrap">
       <div class="quiz-guide">다음 빈칸에 들어갈 알맞은 말을 생각해 봅시다.</div>
@@ -820,7 +825,7 @@
   </section>
 
   <!-- 17 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.45;">
     <h2 class="slide-title">확인 퀴즈 1 &middot; 정답</h2>
     <div class="body-area quiz-wrap">
       <div><span class="answer-badge">묏버들</span></div>
@@ -832,7 +837,7 @@
   </section>
 
   <!-- 18 -->
-  <section class="slide">
+  <section class="slide" style="--fs:1.22;">
     <h2 class="slide-title">&lt;묏버들 갈&#4370;&#4513; 것거&gt; 핵심 정리</h2>
     <div class="body-area">
       <div class="summary-list">
