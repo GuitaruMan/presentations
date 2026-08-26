@@ -298,6 +298,39 @@
   }
   .qa-item .a { font-size: clamp(0.8rem, 1.82cqw, 2.18rem); line-height: 1.66; color: var(--ink-soft); }
 
+  /* 단계 공개 — 스페이스/클릭으로 문항과 정답을 하나씩 띄운다.
+     opacity로만 숨겨 자리를 미리 잡아 두므로 화면이 튀지 않는다. */
+  .reveal { opacity: 0; transition: opacity .25s ease; }
+  .reveal.shown { opacity: 1; }
+
+  /* 한 장에 두 문항만 두므로 자리가 넉넉하다. 슬라이드마다 style="--qfs:…"로
+     남는 공간을 다 쓰도록 글자를 키운다(값은 Playwright 실측으로 정함). */
+  .quiz-list {
+    --qfs: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(3.0cqw * var(--qfs)); flex: 1;
+  }
+  .body-area > .quiz-list { margin-bottom: 3.2cqw; }
+  .qq {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: max(1rem, calc(2.9cqw * var(--qfs))); line-height: 1.55;
+    padding-left: calc(3.6cqw * var(--qfs)); position: relative;
+  }
+  .qq .qn {
+    position: absolute; left: 0; top: 0;
+    color: var(--fall); font-size: 1.05em;
+  }
+  .qans {
+    margin: calc(1.2cqw * var(--qfs)) 0 0 calc(3.6cqw * var(--qfs));
+    background: var(--card); border-left: 0.34cqw solid var(--fall);
+    padding: calc(1.25cqw * var(--qfs)) calc(1.7cqw * var(--qfs));
+    font-size: max(0.88rem, calc(2.45cqw * var(--qfs))); line-height: 1.62; color: var(--ink-soft);
+  }
+  .qans .tag {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--fall);
+    margin-right: 0.6em;
+  }
+
   .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5cqw; }
   .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
   .srow .skey {
@@ -744,38 +777,34 @@
 
   <!-- 20 -->
   <section class="slide">
-    <h2 class="slide-title">확인 문제</h2>
+    <h2 class="slide-title">확인 문제 &middot; 1~2번</h2>
     <div class="body-area">
-      <ul class="num-list">
-        <li><span class="n">1</span>&lt;폭포&gt;가 창작된 1950년대 후반의 사회 현실은 어떠했는가?</li>
-        <li><span class="n">2</span>&lsquo;주체적인 해석&rsquo;이란 무엇이며, &lsquo;색다른 해석&rsquo;과는 어떻게 다른가?</li>
-        <li><span class="n">3</span>&lt;이탈한 자가 문득&gt;의 별똥별과 &lt;폭포&gt;의 폭포는 어떤 점에서 닮았고 어떤 점에서 다른가?</li>
-        <li><span class="n">4</span>문학을 생활화하는 방법을 두 가지 이상 들어 보자</li>
-      </ul>
+      <div class="quiz-list" style="--qfs:1.04;">
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">1</span>&lt;폭포&gt;가 창작된 1950년대 후반의 사회 현실은 어떠했는가?</div>
+          <div class="qans reveal"><span class="tag">답</span>4&middot;19 혁명이 일어나기 이전, 언론의 자유와 민주주의가 크게 위축되던 암울하고 부조리한 시기였다</div>
+        </div>
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">2</span>&lsquo;주체적인 해석&rsquo;이란 무엇이며, &lsquo;색다른 해석&rsquo;과는 어떻게 다른가?</div>
+          <div class="qans reveal"><span class="tag">답</span>자신의 경험이나 상황과 연결 지어 작품에 접근하는 것. 남과 다르게 읽는 것이 아니라 타당한 근거를 들어 자신의 관점을 세우는 것이며, 깊이 공감하는 것도 여기에 해당한다</div>
+        </div>
+      </div>
     </div>
     <div class="page-num">20 / 22</div>
   </section>
 
   <!-- 21 -->
   <section class="slide">
-    <h2 class="slide-title">확인 문제 &middot; 정답</h2>
+    <h2 class="slide-title">확인 문제 &middot; 3~4번</h2>
     <div class="body-area">
-      <div class="qa">
-        <div class="qa-item">
-          <div class="q">1. 창작 당시의 사회 현실</div>
-          <div class="a">4·19 혁명이 일어나기 이전, 언론의 자유와 민주주의가 크게 위축되던 암울하고 부조리한 시기였다</div>
+      <div class="quiz-list" style="--qfs:1.03;">
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">3</span>&lt;이탈한 자가 문득&gt;의 별똥별과 &lt;폭포&gt;의 폭포는 어떤 점에서 닮았고 어떤 점에서 다른가?</div>
+          <div class="qans reveal"><span class="tag">답</span>둘 다 어둠 속에서 스스로 움직이며 안주를 거부한다. 다만 폭포는 쉬지 않고 되풀이해 떨어지고, 별똥별은 단 한 번 획을 긋는다</div>
         </div>
-        <div class="qa-item">
-          <div class="q">2. 주체적인 해석</div>
-          <div class="a">자신의 경험이나 상황과 연결 지어 작품에 접근하는 것. 남과 다르게 읽는 것이 아니라 타당한 근거를 들어 자신의 관점을 세우는 것이며, 깊이 공감하는 것도 여기에 해당한다</div>
-        </div>
-        <div class="qa-item">
-          <div class="q">3. 별똥별과 폭포</div>
-          <div class="a">둘 다 어둠 속에서 스스로 움직이며 안주를 거부한다. 다만 폭포는 쉬지 않고 되풀이해 떨어지고, 별똥별은 단 한 번 획을 긋는다</div>
-        </div>
-        <div class="qa-item">
-          <div class="q">4. 문학을 생활화하는 방법</div>
-          <div class="a">찾아 읽고 낭송하기, 작가·출판사와 소통하기, 창작하거나 재창작하기, 자신의 해석을 매체로 공유하기 등</div>
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">4</span>문학을 생활화하는 방법을 두 가지 이상 들어 보자</div>
+          <div class="qans reveal"><span class="tag">답</span>찾아 읽고 낭송하기, 작가&middot;출판사와 소통하기, 창작하거나 재창작하기, 자신의 해석을 매체로 공유하기 등</div>
         </div>
       </div>
     </div>
@@ -824,7 +853,7 @@
   <span id="counter">1 / 1</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
-  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
 </div>
 
 <script>
@@ -836,24 +865,46 @@
 
   let syncingHash = false;
 
-  function show(n) {
+  // 슬라이드 안에서 하나씩 띄울 요소들 (문항 → 정답 → 다음 문항 → 정답 …)
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  // showAllSteps: 뒤로 돌아갈 때는 그 슬라이드의 단계가 모두 드러난 상태로 들어간다
+  function show(n, showAllSteps) {
     idx = Math.max(0, Math.min(slides.length - 1, n));
     slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
     counter.textContent = (idx + 1) + ' / ' + slides.length;
-    prevBtn.disabled = idx === 0;
-    nextBtn.disabled = idx === slides.length - 1;
+    updateButtons();
     if (location.hash !== '#' + (idx + 1)) {
       syncingHash = true;
       location.hash = idx + 1;
     }
   }
 
-  prevBtn.addEventListener('click', () => show(idx - 1));
-  nextBtn.addEventListener('click', () => show(idx + 1));
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
 
   document.getElementById('stage').addEventListener('click', (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
   });
 
   const fsBtn = document.getElementById('fs');
@@ -871,10 +922,12 @@
   });
 
   document.addEventListener('keydown', (e) => {
-    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
-    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
     else if (e.key === 'Home') show(0);
-    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'End') show(slides.length - 1, true);
     else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
   });
 
