@@ -365,6 +365,65 @@
     .flow-arrow { justify-content: center; transform: rotate(90deg); }
     .stage { aspect-ratio: auto; min-height: 78vh; }
   }
+
+  /* ── 내용 사이 경계 ────────────────────────────────────────────
+     여백을 em으로 잡아 글자 크기를 따라가게 하고, 상자의 머리말과
+     본문을 선으로 가른다. 글자만 키우면 서로 붙어 읽기 어려워진다. */
+  .def-box .dt,
+  .emotion .etag {
+    margin-bottom: 0.62em;
+    padding-bottom: 0.42em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .c3 h3 { margin-bottom: 0.62em; padding-bottom: 0.42em; }
+
+  .emotion li + li { margin-top: 0.55em; }
+  .c3 p + p { margin-top: 0.72em; }
+  .word-note { margin-top: 0.9em; padding-top: 0.8em; }
+  .word-note .w { margin-bottom: 0.42em; }
+  .gl { padding-bottom: 0.62em; }
+  .num-list li { margin-bottom: 0.75em; }
+  .info-table th, .info-table td { padding: 0.62em 0.5em; }
+  .cmp-table th, .cmp-table td { padding: 0.55em 0.45em; }
+  .step .sbody { padding-bottom: 0.85em; }
+  .step h3 { margin-bottom: 0.35em; }
+  .qa-item .q { margin-bottom: 0.4em; }
+  .srow .sval ul { margin-top: 0.5em; }
+  .srow .sval li + li { margin-top: 0.4em; }
+  .flow-step .emo { margin-bottom: 0.5em; }
+
+  /* 작품의 말을 옮겨 적은 줄 — 해설과 갈라 보이게 한다 */
+  .c3 p.cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    background: rgba(0,0,0,0.04);
+    border-left: 0.28em solid var(--rule);
+    padding: 0.5em 0.72em;
+    margin-bottom: 0.8em;
+    color: var(--ink);
+  }
+  .c3 p.cite + p { margin-top: 0; }
+
+  /* 내용이 많아 자리가 빠듯한 슬라이드 — 여백만 줄이고 글자는 지킨다
+     (머리말과 본문을 가르는 선은 그대로 둔다) */
+  .slide.tight .def-box .dt,
+  .slide.tight .emotion .etag { margin-bottom: 0.4em; padding-bottom: 0.28em; }
+  .slide.tight .c3 h3 { margin-bottom: 0.4em; padding-bottom: 0.3em; }
+  .slide.tight .emotion li + li { margin-top: 0.34em; }
+  .slide.tight .c3 p + p { margin-top: 0.5em; }
+  .slide.tight .word-note { margin-top: 0.6em; padding-top: 0.5em; }
+  .slide.tight .word-note .w { margin-bottom: 0.3em; }
+  .slide.tight .gl { padding-bottom: 0.45em; }
+  .slide.tight .num-list li { margin-bottom: 0.5em; }
+  .slide.tight .info-table th,
+  .slide.tight .info-table td { padding: 0.45em 0.45em; }
+  .slide.tight .cmp-table th,
+  .slide.tight .cmp-table td { padding: 0.4em 0.4em; }
+  .slide.tight .step .sbody { padding-bottom: 0.6em; }
+
+  /* 쪽번호는 본문칸 밖(무대 여백)에 둔다. 안쪽에 두면 본문이 아래까지
+     찼을 때 글자를 덮어서, 상자마다 아래 여백을 따로 둬야 했다. */
+  .page-num { right: 0; bottom: -3.1cqw; }
+  .cover .page-num { display: none; }
 </style>
 </head>
 <body>
@@ -394,7 +453,7 @@
   </section>
 
   <!-- 2 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">학습 목표</h2>
     <div class="body-area">
       <p class="lead" style="margin-bottom:1.6rem;">
@@ -419,7 +478,7 @@
   </section>
 
   <!-- 3 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">전시 학습 복습 &middot; &lt;가시리&gt;</h2>
     <div class="body-area">
       <div class="cols">
@@ -449,7 +508,7 @@
   </section>
 
   <!-- 4 -->
-  <section class="slide" style="--fs:1.31;">
+  <section class="slide" style="--fs:1.26;">
     <h2 class="slide-title">작품의 기본 골격</h2>
     <div class="body-area">
       <div class="cols">
@@ -476,7 +535,7 @@
   </section>
 
   <!-- 5 -->
-  <section class="slide" style="--fs:1.22;">
+  <section class="slide" style="--fs:1.2;">
     <h2 class="slide-title">창작 배경 &middot; 홍랑과 최경창</h2>
     <div class="body-area">
       <div class="steps">
@@ -507,7 +566,7 @@
   </section>
 
   <!-- 6 -->
-  <section class="slide" style="--fs:1.24;">
+  <section class="slide" style="--fs:1.23;">
     <h2 class="slide-title">원문과 현대어 풀이</h2>
     <div class="body-area">
       <div class="cols wide-left">
@@ -539,7 +598,7 @@
   </section>
 
   <!-- 7 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">텍스트 정밀 분석 &middot; 초장</h2>
     <div class="body-area">
       <div class="cols">
@@ -570,7 +629,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">텍스트 정밀 분석 &middot; 중장</h2>
     <div class="body-area">
       <div class="cols">
@@ -601,7 +660,7 @@
   </section>
 
   <!-- 9 -->
-  <section class="slide" style="--fs:1.39;">
+  <section class="slide" style="--fs:1.28;">
     <h2 class="slide-title">텍스트 정밀 분석 &middot; 종장</h2>
     <div class="body-area">
       <div class="cols">
@@ -632,7 +691,7 @@
   </section>
 
   <!-- 10 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">핵심 시어 풀이</h2>
     <div class="body-area">
       <div class="cards3">
@@ -654,7 +713,7 @@
   </section>
 
   <!-- 11 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">시조의 정형성 &middot; 4음보</h2>
     <div class="body-area">
       <div class="def-box">
@@ -679,7 +738,7 @@
   </section>
 
   <!-- 12 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">시조의 정형성 &middot; 종장의 규칙</h2>
     <div class="body-area">
       <div class="meter">
@@ -703,7 +762,7 @@
   </section>
 
   <!-- 13 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">3장 구조의 전개</h2>
     <div class="body-area">
       <div class="flow">
@@ -733,7 +792,7 @@
   </section>
 
   <!-- 14 -->
-  <section class="slide" style="--fs:1.14;">
+  <section class="slide" style="--fs:1.05;">
     <h2 class="slide-title">문학사적 확장 &middot; 김소월 &lt;개여울&gt;</h2>
     <div class="body-area">
       <div class="cols">
@@ -764,7 +823,7 @@
   </section>
 
   <!-- 15 -->
-  <section class="slide" style="--fs:1.41;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">종합 비교 &middot; 이별 정서와 율격의 변모</h2>
     <div class="body-area">
       <table class="cmp-table">
@@ -812,7 +871,7 @@
   </section>
 
   <!-- 16 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">확인 퀴즈 1</h2>
     <div class="body-area quiz-wrap">
       <div class="quiz-guide">다음 빈칸에 들어갈 알맞은 말을 생각해 봅시다.</div>
@@ -825,7 +884,7 @@
   </section>
 
   <!-- 17 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">확인 퀴즈 1 &middot; 정답</h2>
     <div class="body-area quiz-wrap">
       <div><span class="answer-badge">묏버들</span></div>
@@ -837,7 +896,7 @@
   </section>
 
   <!-- 18 -->
-  <section class="slide" style="--fs:1.22;">
+  <section class="slide" style="--fs:1.17;">
     <h2 class="slide-title">&lt;묏버들 갈&#4370;&#4513; 것거&gt; 핵심 정리</h2>
     <div class="body-area">
       <div class="summary-list">

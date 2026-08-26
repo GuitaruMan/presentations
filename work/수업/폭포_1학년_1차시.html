@@ -383,6 +383,65 @@
     .flow-arrow { justify-content: center; transform: rotate(90deg); }
     .stage { aspect-ratio: auto; min-height: 78vh; }
   }
+
+  /* ── 내용 사이 경계 ────────────────────────────────────────────
+     여백을 em으로 잡아 글자 크기를 따라가게 하고, 상자의 머리말과
+     본문을 선으로 가른다. 글자만 키우면 서로 붙어 읽기 어려워진다. */
+  .def-box .dt,
+  .emotion .etag {
+    margin-bottom: 0.62em;
+    padding-bottom: 0.42em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .c3 h3 { margin-bottom: 0.62em; padding-bottom: 0.42em; }
+
+  .emotion li + li { margin-top: 0.55em; }
+  .c3 p + p { margin-top: 0.72em; }
+  .word-note { margin-top: 0.9em; padding-top: 0.8em; }
+  .word-note .w { margin-bottom: 0.42em; }
+  .gl { padding-bottom: 0.62em; }
+  .num-list li { margin-bottom: 0.75em; }
+  .info-table th, .info-table td { padding: 0.62em 0.5em; }
+  .cmp-table th, .cmp-table td { padding: 0.55em 0.45em; }
+  .step .sbody { padding-bottom: 0.85em; }
+  .step h3 { margin-bottom: 0.35em; }
+  .qa-item .q { margin-bottom: 0.4em; }
+  .srow .sval ul { margin-top: 0.5em; }
+  .srow .sval li + li { margin-top: 0.4em; }
+  .flow-step .emo { margin-bottom: 0.5em; }
+
+  /* 작품의 말을 옮겨 적은 줄 — 해설과 갈라 보이게 한다 */
+  .c3 p.cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    background: rgba(0,0,0,0.04);
+    border-left: 0.28em solid var(--rule);
+    padding: 0.5em 0.72em;
+    margin-bottom: 0.8em;
+    color: var(--ink);
+  }
+  .c3 p.cite + p { margin-top: 0; }
+
+  /* 내용이 많아 자리가 빠듯한 슬라이드 — 여백만 줄이고 글자는 지킨다
+     (머리말과 본문을 가르는 선은 그대로 둔다) */
+  .slide.tight .def-box .dt,
+  .slide.tight .emotion .etag { margin-bottom: 0.4em; padding-bottom: 0.28em; }
+  .slide.tight .c3 h3 { margin-bottom: 0.4em; padding-bottom: 0.3em; }
+  .slide.tight .emotion li + li { margin-top: 0.34em; }
+  .slide.tight .c3 p + p { margin-top: 0.5em; }
+  .slide.tight .word-note { margin-top: 0.6em; padding-top: 0.5em; }
+  .slide.tight .word-note .w { margin-bottom: 0.3em; }
+  .slide.tight .gl { padding-bottom: 0.45em; }
+  .slide.tight .num-list li { margin-bottom: 0.5em; }
+  .slide.tight .info-table th,
+  .slide.tight .info-table td { padding: 0.45em 0.45em; }
+  .slide.tight .cmp-table th,
+  .slide.tight .cmp-table td { padding: 0.4em 0.4em; }
+  .slide.tight .step .sbody { padding-bottom: 0.6em; }
+
+  /* 쪽번호는 본문칸 밖(무대 여백)에 둔다. 안쪽에 두면 본문이 아래까지
+     찼을 때 글자를 덮어서, 상자마다 아래 여백을 따로 둬야 했다. */
+  .page-num { right: 0; bottom: -3.1cqw; }
+  .cover .page-num { display: none; }
 </style>
 </head>
 <body>
@@ -411,7 +470,7 @@
   </section>
 
   <!-- 2 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">학습 목표</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:2cqw;">
@@ -433,7 +492,7 @@
   </section>
 
   <!-- 3 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.32;">
     <h2 class="slide-title">김수영 (1921~1968)</h2>
     <div class="body-area">
       <table class="info-table">
@@ -447,7 +506,7 @@
   </section>
 
   <!-- 4 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.29;">
     <h2 class="slide-title">작품의 기본 골격</h2>
     <div class="body-area">
       <table class="info-table">
@@ -462,7 +521,7 @@
   </section>
 
   <!-- 5 -->
-  <section class="slide" style="--fs:1.39;">
+  <section class="slide" style="--fs:1.35;">
     <h2 class="slide-title">창작 배경</h2>
     <div class="body-area">
       <div class="def-box" style="margin-bottom:2cqw;">
@@ -496,7 +555,7 @@
   </section>
 
   <!-- 7 -->
-  <section class="slide">
+  <section class="slide tight">
     <h2 class="slide-title">원문 &middot; 4~5연</h2>
     <div class="body-area">
       <div class="verse">
@@ -515,7 +574,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide" style="--fs:1.42;">
+  <section class="slide" style="--fs:1.39;">
     <h2 class="slide-title">어휘 풀이</h2>
     <div class="body-area">
       <div class="gloss">
@@ -533,7 +592,7 @@
   </section>
 
   <!-- 9 -->
-  <section class="slide" style="--fs:1.08;">
+  <section class="slide tight">
     <h2 class="slide-title">1연 &middot; 무서운 기색도 없이</h2>
     <div class="body-area">
       <div class="cols wide-left">
@@ -567,7 +626,7 @@
   </section>
 
   <!-- 10 -->
-  <section class="slide" style="--fs:1.08;">
+  <section class="slide tight">
     <h2 class="slide-title">2연 &middot; 고매한 정신처럼</h2>
     <div class="body-area">
       <div class="cols wide-left">
@@ -604,7 +663,7 @@
   </section>
 
   <!-- 11 -->
-  <section class="slide" style="--fs:1.08;">
+  <section class="slide tight">
     <h2 class="slide-title">3연 &middot; 밤이 되면</h2>
     <div class="body-area">
       <div class="cols wide-left">
@@ -639,7 +698,7 @@
   </section>
 
   <!-- 12 -->
-  <section class="slide">
+  <section class="slide tight">
     <h2 class="slide-title">4연 &middot; 곧은 소리는 곧은 소리를 부른다</h2>
     <div class="body-area">
       <div class="cols wide-left">
@@ -667,8 +726,7 @@
         <div class="etag">해설</div>
         <ul>
           <li>첫 행은 같은 말을 되풀이한 듯 보이지만, 곧은 소리라야 소리라 부를 만하다는 단언이다</li>
-          <li>둘째 행에서 &lsquo;곧은&rsquo;과 &lsquo;소리를&rsquo; 사이를 일부러 끊었다. 소리가 다음 행으로 넘어가며 번져 나가는 모습이 행 나눔으로 그려진다</li>
-          <li>먼저 소리를 내어 뒤따르는 소리를 이끈다는 점에서 폭포는 <strong>선구자의 자리</strong>에 선다</li>
+          <li>&lsquo;곧은&rsquo;과 &lsquo;소리를&rsquo; 사이를 일부러 끊어, 소리가 다음 행으로 번져 나가는 모습을 행 나눔으로 그렸다</li>
         </ul>
       </div>
     </div>
@@ -676,7 +734,7 @@
   </section>
 
   <!-- 13 -->
-  <section class="slide">
+  <section class="slide tight">
     <h2 class="slide-title">5연 &middot; 나타와 안정을 뒤집어 놓은 듯이</h2>
     <div class="body-area">
       <div class="cols wide-left">
@@ -694,19 +752,19 @@
           <div class="col-head">핵심 시어</div>
           <div class="word-note top">
             <span class="w">취할 순간</span>
-            부정적인 현실을 직시하고 저항할 수 있는 맑고 곧은 정신을 잃어버리는 순간
+            현실을 직시하고 저항할 수 있는 곧은 정신을 잃어버리는 순간
           </div>
           <div class="word-note">
             <span class="w">나타와 안정</span>
-            현실에 안주하여 안정만을 추구하는 <strong>소시민적 삶의 자세</strong>. 이어지는 &lsquo;높이도 폭도 없이&rsquo;는 크기로 잴 수 없는 절대적인 자유로움을 말한다
+            현실에 안주하여 안정만을 추구하는 <strong>소시민적 삶의 자세</strong>
           </div>
         </div>
       </div>
       <div class="emotion">
         <div class="etag">해설</div>
         <ul>
-          <li>폭포는 잠시 취하는 것조차 스스로에게 허락하지 않는다. 방심하지 않는 태도다</li>
-          <li>마지막 &lsquo;떨어진다&rsquo;를 한 행으로 떼어 놓아, 시가 끝난 뒤에도 낙하가 이어지는 듯한 여운을 남긴다</li>
+          <li>잠시 취하는 것조차 스스로에게 허락하지 않는, 방심하지 않는 태도다</li>
+          <li>마지막 &lsquo;떨어진다&rsquo;를 한 행으로 떼어 놓아, 시가 끝난 뒤에도 낙하가 이어지는 여운을 남긴다</li>
         </ul>
       </div>
     </div>
@@ -714,7 +772,7 @@
   </section>
 
   <!-- 14 -->
-  <section class="slide" style="--fs:1.32;">
+  <section class="slide" style="--fs:1.27;">
     <h2 class="slide-title">시의 구성</h2>
     <div class="body-area">
       <div class="flow">
@@ -753,18 +811,18 @@
   </section>
 
   <!-- 15 -->
-  <section class="slide" style="--fs:1.28;">
+  <section class="slide" style="--fs:1.18;">
     <h2 class="slide-title">화자가 주목한 폭포의 속성</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:2cqw;">
         <div class="c3">
           <h3>떨어지는 모습 &rarr; <span class="word">고매한 정신</span></h3>
-          <p>무서운 기색이 없고, 높이와 폭이 없고, 번개와 같다</p>
+          <p class="cite">무서운 기색이 없고, 높이와 폭이 없고, 번개와 같다</p>
           <p>어디에도 매이지 않는 <strong>절대적 자유에 대한 지향</strong></p>
         </div>
         <div class="c3">
           <h3>내는 소리 &rarr; <span class="word">곧은 소리</span></h3>
-          <p>아무것도 보이지 않는 밤에도 그치지 않는 소리</p>
+          <p class="cite">아무것도 보이지 않는 밤에도 그치지 않는 소리</p>
           <p>타협하지 않는 <strong>양심과 저항의 소리</strong></p>
         </div>
       </div>
@@ -777,23 +835,23 @@
   </section>
 
   <!-- 16 -->
-  <section class="slide" style="--fs:1.44;">
+  <section class="slide" style="--fs:1.33;">
     <h2 class="slide-title">표현 &middot; 비유와 감각</h2>
     <div class="body-area">
       <div class="cards3">
         <div class="c3">
           <h3>직유</h3>
-          <p><span class="word">고매한 정신처럼</span>, <span class="word">번개와 같이</span>, <span class="word">뒤집어 놓은 듯이</span></p>
+          <p class="cite"><span class="word">고매한 정신처럼</span>, <span class="word">번개와 같이</span>, <span class="word">뒤집어 놓은 듯이</span></p>
           <p>눈에 보이지 않는 관념을 폭포의 움직임에 붙여 놓아, 추상적인 태도를 볼 수 있게 만든다</p>
         </div>
         <div class="c3">
           <h3>부정 표현의 연쇄</h3>
-          <p><span class="word">기색도 없이</span>, <span class="word">의미도 없이</span>, <span class="word">가리지 않고</span>, <span class="word">주지 않고</span>, <span class="word">높이도 폭도 없이</span></p>
+          <p class="cite"><span class="word">기색도 없이</span>, <span class="word">의미도 없이</span>, <span class="word">가리지 않고</span>, <span class="word">주지 않고</span>, <span class="word">높이도 폭도 없이</span></p>
           <p>폭포가 무엇을 멀리하는지를 쌓아 올려 무엇을 지향하는지를 드러낸다</p>
         </div>
         <div class="c3">
           <h3>시각에서 청각으로</h3>
-          <p>1~2연은 떨어지는 <span class="word">모습</span>, 3~4연은 떨어지며 내는 <span class="word">소리</span></p>
+          <p class="cite">1~2연은 떨어지는 <span class="word">모습</span>, 3~4연은 떨어지며 내는 <span class="word">소리</span></p>
           <p>보이지 않는 밤에도 남는 것이 소리다. 감각의 이동이 주제의 이동과 나란히 간다</p>
         </div>
       </div>
@@ -802,7 +860,7 @@
   </section>
 
   <!-- 17 -->
-  <section class="slide" style="--fs:1.07;">
+  <section class="slide tight" style="--fs:1.02;">
     <h2 class="slide-title">표현 &middot; 같은 말의 되풀이</h2>
     <div class="body-area">
       <div class="cols wide-left">
@@ -875,7 +933,7 @@
   </section>
 
   <!-- 20 -->
-  <section class="slide">
+  <section class="slide tight">
     <h2 class="slide-title">1차시 핵심 정리</h2>
     <div class="body-area">
       <div class="summary-list">

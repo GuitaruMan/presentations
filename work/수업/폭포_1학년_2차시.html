@@ -383,6 +383,65 @@
     .flow-arrow { justify-content: center; transform: rotate(90deg); }
     .stage { aspect-ratio: auto; min-height: 78vh; }
   }
+
+  /* ── 내용 사이 경계 ────────────────────────────────────────────
+     여백을 em으로 잡아 글자 크기를 따라가게 하고, 상자의 머리말과
+     본문을 선으로 가른다. 글자만 키우면 서로 붙어 읽기 어려워진다. */
+  .def-box .dt,
+  .emotion .etag {
+    margin-bottom: 0.62em;
+    padding-bottom: 0.42em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .c3 h3 { margin-bottom: 0.62em; padding-bottom: 0.42em; }
+
+  .emotion li + li { margin-top: 0.55em; }
+  .c3 p + p { margin-top: 0.72em; }
+  .word-note { margin-top: 0.9em; padding-top: 0.8em; }
+  .word-note .w { margin-bottom: 0.42em; }
+  .gl { padding-bottom: 0.62em; }
+  .num-list li { margin-bottom: 0.75em; }
+  .info-table th, .info-table td { padding: 0.62em 0.5em; }
+  .cmp-table th, .cmp-table td { padding: 0.55em 0.45em; }
+  .step .sbody { padding-bottom: 0.85em; }
+  .step h3 { margin-bottom: 0.35em; }
+  .qa-item .q { margin-bottom: 0.4em; }
+  .srow .sval ul { margin-top: 0.5em; }
+  .srow .sval li + li { margin-top: 0.4em; }
+  .flow-step .emo { margin-bottom: 0.5em; }
+
+  /* 작품의 말을 옮겨 적은 줄 — 해설과 갈라 보이게 한다 */
+  .c3 p.cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    background: rgba(0,0,0,0.04);
+    border-left: 0.28em solid var(--rule);
+    padding: 0.5em 0.72em;
+    margin-bottom: 0.8em;
+    color: var(--ink);
+  }
+  .c3 p.cite + p { margin-top: 0; }
+
+  /* 내용이 많아 자리가 빠듯한 슬라이드 — 여백만 줄이고 글자는 지킨다
+     (머리말과 본문을 가르는 선은 그대로 둔다) */
+  .slide.tight .def-box .dt,
+  .slide.tight .emotion .etag { margin-bottom: 0.4em; padding-bottom: 0.28em; }
+  .slide.tight .c3 h3 { margin-bottom: 0.4em; padding-bottom: 0.3em; }
+  .slide.tight .emotion li + li { margin-top: 0.34em; }
+  .slide.tight .c3 p + p { margin-top: 0.5em; }
+  .slide.tight .word-note { margin-top: 0.6em; padding-top: 0.5em; }
+  .slide.tight .word-note .w { margin-bottom: 0.3em; }
+  .slide.tight .gl { padding-bottom: 0.45em; }
+  .slide.tight .num-list li { margin-bottom: 0.5em; }
+  .slide.tight .info-table th,
+  .slide.tight .info-table td { padding: 0.45em 0.45em; }
+  .slide.tight .cmp-table th,
+  .slide.tight .cmp-table td { padding: 0.4em 0.4em; }
+  .slide.tight .step .sbody { padding-bottom: 0.6em; }
+
+  /* 쪽번호는 본문칸 밖(무대 여백)에 둔다. 안쪽에 두면 본문이 아래까지
+     찼을 때 글자를 덮어서, 상자마다 아래 여백을 따로 둬야 했다. */
+  .page-num { right: 0; bottom: -3.1cqw; }
+  .cover .page-num { display: none; }
 </style>
 </head>
 <body>
@@ -411,7 +470,7 @@
   </section>
 
   <!-- 2 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">학습 목표</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:2cqw;">
@@ -433,7 +492,7 @@
   </section>
 
   <!-- 3 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">전시 학습 복습</h2>
     <div class="body-area">
       <table class="info-table">
@@ -447,7 +506,7 @@
   </section>
 
   <!-- 4 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">학습 활동 1-(1)</h2>
     <div class="body-area">
       <div class="act-badge">활동 1</div>
@@ -461,7 +520,7 @@
   </section>
 
   <!-- 5 -->
-  <section class="slide" style="--fs:1.43;">
+  <section class="slide" style="--fs:1.39;">
     <h2 class="slide-title">학습 활동 1-(1) &middot; 예시 답안 ①</h2>
     <div class="body-area">
       <div class="fill-flow">
@@ -480,7 +539,7 @@
   </section>
 
   <!-- 6 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.39;">
     <h2 class="slide-title">학습 활동 1-(1) &middot; 예시 답안 ②</h2>
     <div class="body-area">
       <div class="fill-flow">
@@ -499,7 +558,7 @@
   </section>
 
   <!-- 7 -->
-  <section class="slide" style="--fs:1.31;">
+  <section class="slide" style="--fs:1.26;">
     <h2 class="slide-title">학습 활동 1-(2) &middot; 사회·문화적 맥락</h2>
     <div class="body-area">
       <div class="act-badge">활동 1</div>
@@ -513,7 +572,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">학습 활동 1-(2) &middot; 예시 답안</h2>
     <div class="body-area">
       <div class="cards2">
@@ -531,7 +590,7 @@
   </section>
 
   <!-- 9 -->
-  <section class="slide" style="--fs:1.19;">
+  <section class="slide" style="--fs:1.11;">
     <h2 class="slide-title">학습 활동 1-(3) &middot; 주제와 창작 의도</h2>
     <div class="body-area">
       <div class="act-q" style="margin-bottom:1.2cqw;">이 작품의 주제는 무엇일지, 시인은 왜 폭포를 소재로 시를 썼을지 이야기해 보자</div>
@@ -550,7 +609,7 @@
   </section>
 
   <!-- 10 -->
-  <section class="slide" style="--fs:1.28;">
+  <section class="slide" style="--fs:1.26;">
     <h2 class="slide-title">밖을 향한 외침인가, 안을 향한 각성인가</h2>
     <div class="body-area">
       <div class="cols">
@@ -578,7 +637,7 @@
   </section>
 
   <!-- 11 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">주체적인 해석과 평가</h2>
     <div class="body-area">
       <div class="def-box" style="margin-bottom:1.6cqw;">
@@ -594,7 +653,7 @@
   </section>
 
   <!-- 12 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">주체적으로 해석하는 방법</h2>
     <div class="body-area">
       <div class="steps">
@@ -625,7 +684,7 @@
   </section>
 
   <!-- 13 -->
-  <section class="slide" style="--fs:1.24;">
+  <section class="slide" style="--fs:1.11;">
     <h2 class="slide-title">학습 활동 2-(1) &middot; 예시 ①</h2>
     <div class="body-area">
       <div class="act-q" style="margin-bottom:1.2cqw;">자신의 상황이나 경험과 관련지어 이 작품을 주체적으로 해석해 보자</div>
@@ -677,7 +736,7 @@
   </section>
 
   <!-- 16 -->
-  <section class="slide" style="--fs:1.45;">
+  <section class="slide" style="--fs:1.35;">
     <h2 class="slide-title">학습 활동 3-(1) &middot; 자연물을 소재로 한 작품</h2>
     <div class="body-area">
       <table class="cmp-table">
@@ -735,7 +794,7 @@
   </section>
 
   <!-- 18 -->
-  <section class="slide" style="--fs:1.23;">
+  <section class="slide" style="--fs:1.07;">
     <h2 class="slide-title">김광규, &lt;나뭇잎 하나&gt;</h2>
     <div class="body-area">
       <div class="def-box" style="margin-bottom:1.6cqw;">
@@ -754,7 +813,7 @@
   </section>
 
   <!-- 19 -->
-  <section class="slide" style="--fs:1.35;">
+  <section class="slide" style="--fs:1.22;">
     <h2 class="slide-title">문학을 생활화하는 방법</h2>
     <div class="body-area">
       <div class="cards3" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -816,7 +875,7 @@
   </section>
 
   <!-- 22 -->
-  <section class="slide" style="--fs:1.2;">
+  <section class="slide" style="--fs:1.17;">
     <h2 class="slide-title">2차시 핵심 정리</h2>
     <div class="body-area">
       <div class="summary-list">
