@@ -13,8 +13,10 @@
     --ink: #14232a;
     --ink-soft: #4c6673;
     --ink-faint: #89a5b2;
-    --fall: #0d6a82;          /* 물빛 청록 — 폭포 강조색 */
+    --fall: #0d6a82;          /* 물빛 청록 — 제목·라벨 등 화면의 구조 */
     --fall-soft: #4e9db3;
+    --mark: #a8500a;          /* 호박빛 — 원문 강조와 활동의 답
+                                 (배경도 글자도 청록이면 강조가 묻힌다) */
     --rule: #c0d6e0;
     --card: #f8fcfd;
   }
@@ -120,7 +122,7 @@
     font-size: clamp(1.05rem, 2.75cqw, 3.3rem);
     line-height: 1.86; letter-spacing: 0.005em;
   }
-  .verse .hl { color: var(--fall); font-weight: 700; }
+  .verse .hl { color: var(--mark); font-weight: 700; }
   .verse p + p { margin-top: 1.1cqw; }
   .cols .verse { font-size: clamp(0.92rem, 2.2cqw, 2.64rem); line-height: 1.82; }
   .verse.quote { font-size: clamp(0.8rem, 1.86cqw, 2.23rem); line-height: 1.6; }
@@ -240,7 +242,7 @@
     font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 2.15cqw, 2.58rem);
     margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule);
   }
-  .c3 .word { color: var(--fall); }
+  .c3 .word { color: var(--mark); font-weight: 700; }
   .c3 p { font-size: clamp(0.8rem, 1.85cqw, 2.22rem); line-height: 1.68; color: var(--ink-soft); }
   .c3 p + p { margin-top: 0.45rem; }
 
@@ -287,7 +289,7 @@
     font-size: clamp(0.88rem, 1.98cqw, 2.38rem); line-height: 1.66;
   }
   .fill-row .arrow { color: var(--fall); margin: 0 0.5em; }
-  .fill-row .res { color: var(--fall); font-weight: 700; }
+  .fill-row .res { color: var(--mark); font-weight: 700; }
 
   .qa { display: flex; flex-direction: column; gap: 1.1cqw; }
   .body-area > .qa:last-child { margin-bottom: 3.6cqw; }
@@ -422,7 +424,7 @@
       </div>
       <div class="def-box">
         <div class="dt">1차시에 할 일</div>
-        <p>&lt;폭포&gt;를 소리 내어 읽고, 연마다 폭포가 <strong style="color:var(--fall);">어떤 모습으로 그려지는지</strong> 짚으며 시어의 상징적 의미를 파악한다</p>
+        <p>&lt;폭포&gt;를 소리 내어 읽고, 연마다 폭포가 <strong style="color:var(--mark);">어떤 모습으로 그려지는지</strong> 짚으며 시어의 상징적 의미를 파악한다</p>
       </div>
     </div>
     <div class="page-num">2 / 20</div>
@@ -467,7 +469,7 @@
       </div>
       <ul class="num-list">
         <li><span class="n">①</span>언론의 자유와 민주주의가 크게 위축되던 때였다</li>
-        <li><span class="n">②</span>김수영은 현실을 냉철하게 인식하면서, 사회 문제에 관심을 두지 않고 경제적 안정만을 좇는 <strong style="color:var(--fall);">소시민적 삶</strong>을 질책하고 현실에 단호하게 저항할 것을 주장하였다</li>
+        <li><span class="n">②</span>김수영은 현실을 냉철하게 인식하면서, 사회 문제에 관심을 두지 않고 경제적 안정만을 좇는 <strong style="color:var(--mark);">소시민적 삶</strong>을 질책하고 현실에 단호하게 저항할 것을 주장하였다</li>
         <li><span class="n">③</span>다만 그 현실을 직접 말하지 않는다. 시에는 시대를 가리키는 말이 한마디도 나오지 않고, 대신 폭포가 떨어지는 모습만 되풀이해 그려진다</li>
       </ul>
     </div>
