@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>폭포 (1학년-2차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --paper: #eef4f7;
+    --paper-edge: #cfdfe7;
+    --ink: #14232a;
+    --ink-soft: #4c6673;
+    --ink-faint: #89a5b2;
+    --fall: #0d6a82;          /* 물빛 청록 — 폭포 강조색 */
+    --fall-soft: #4e9db3;
+    --rule: #c0d6e0;
+    --card: #f8fcfd;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #0e1e26;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.015em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(14,30,38,0.92); z-index: 50;
+  }
+  .nav-top a { color: #a8c2cd; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #dcecf2; }
+  .nav-meta { color: #7593a0; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 18% 6%, rgba(255,255,255,0.85) 0%, transparent 58%),
+      radial-gradient(ellipse at 84% 96%, rgba(13,106,130,0.18) 0%, transparent 62%),
+      repeating-linear-gradient(90deg,
+        rgba(13,106,130,0.05) 0px, rgba(13,106,130,0.05) 1px,
+        transparent 1px, transparent 21px),
+      repeating-linear-gradient(180deg,
+        rgba(13,106,130,0.028) 0px, rgba(13,106,130,0.028) 1px,
+        transparent 1px, transparent 46px);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.042) calc(var(--stage-w) * 0.05);
+  }
+  /* 우측 상단 — 절벽에서 떨어지는 물줄기와 아래쪽 물보라 */
+  .stage::before {
+    content: ""; position: absolute; top: 9%; right: -1%;
+    width: 30%; height: 88%; pointer-events: none; opacity: 0.13;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 320'><g fill='none' stroke='%230d6a82' stroke-width='2.6' stroke-linecap='round'><path d='M6 46 L64 46 L86 56 L150 56 L172 48 L236 48'/><path d='M30 62 C27 128 34 196 24 262'/><path d='M54 60 C51 134 58 204 48 272'/><path d='M78 68 C75 138 82 200 72 264'/><path d='M102 66 C99 140 106 208 96 276'/><path d='M126 70 C123 136 130 202 120 268'/><path d='M150 66 C147 142 154 206 144 274'/><path d='M174 60 C171 130 178 198 168 262'/><path d='M198 62 C195 136 202 200 192 268'/><path d='M222 66 C219 132 226 196 216 260'/></g><g fill='none' stroke='%230d6a82' stroke-width='2' stroke-linecap='round' opacity='0.8'><path d='M8 282 C56 266 92 300 140 284'/><path d='M40 300 C88 286 124 314 172 300'/><path d='M96 314 C138 304 176 326 220 312'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(2.2rem, 6.2cqw, 7.44rem); line-height: 1.16; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.45rem, 3.85cqw, 4.62rem); line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.0cqw;
+    border-bottom: 0.2cqw solid var(--ink); display: inline-block;
+    flex-shrink: 0;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--fall);
+    font-size: clamp(0.85rem, 1.95cqw, 2.34rem); letter-spacing: 0.3em;
+    margin-bottom: 1.8cqw;
+  }
+  .lead { font-size: clamp(1rem, 2.15cqw, 2.58rem); color: var(--ink-soft); line-height: 1.75; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 7cqw; height: 0.3cqw; background: var(--fall); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1.1rem, 2.9cqw, 3.48rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.5cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.75rem, 1.6cqw, 1.92rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.4%; flex: 1; min-height: 0; }
+  .cols.wide-left { grid-template-columns: 1.35fr 1fr; }
+  .cols.wide-right { grid-template-columns: 1fr 1.35fr; }
+  .col-head {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, 2.05cqw, 2.46rem);
+    color: var(--fall); margin-bottom: 1.1cqw;
+    padding-bottom: 0.5cqw; border-bottom: 0.1cqw solid var(--rule);
+  }
+
+  .verse {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1.05rem, 2.75cqw, 3.3rem);
+    line-height: 1.86; letter-spacing: 0.005em;
+  }
+  .verse .hl { color: var(--fall); font-weight: 700; }
+  .verse p + p { margin-top: 1.1cqw; }
+  .cols .verse { font-size: clamp(0.92rem, 2.2cqw, 2.64rem); line-height: 1.82; }
+  .verse.quote { font-size: clamp(0.8rem, 1.86cqw, 2.23rem); line-height: 1.6; }
+  .src {
+    display: block; margin-top: 0.9cqw;
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.68rem, 1.42cqw, 1.7rem);
+    color: var(--ink-faint); letter-spacing: 0.04em;
+  }
+
+  .word-note {
+    margin-top: 0.95cqw; padding-top: 0.8cqw;
+    border-top: 1px solid var(--rule);
+    font-size: clamp(0.78rem, 1.72cqw, 2.06rem); line-height: 1.66; color: var(--ink-soft);
+  }
+  .word-note.top { margin-top: 0; padding-top: 0; border-top: none; }
+  .word-note .w {
+    display: block; margin-bottom: 0.25em;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--fall);
+    font-size: clamp(0.88rem, 1.98cqw, 2.38rem);
+  }
+
+  .emotion {
+    margin-top: auto; background: var(--card);
+    border-left: 0.36cqw solid var(--fall);
+    padding: 1.3cqw 1.7cqw;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, 2.1cqw, 2.52rem); color: var(--fall);
+    margin-bottom: 0.45rem;
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.82rem, 1.82cqw, 2.18rem); line-height: 1.66;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+  }
+  .emotion li + li { margin-top: 0.3rem; }
+  .emotion li::before { content: "\2014"; position: absolute; left: 0; color: var(--ink-faint); }
+  .body-area > .emotion { margin-bottom: 3.6cqw; }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 1.0cqw 0.95cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.85rem, 1.95cqw, 2.34rem); line-height: 1.6;
+  }
+  .info-table th {
+    width: 4.8em; font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--fall); white-space: nowrap;
+  }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.95cqw 0.9cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.76rem, 1.78cqw, 2.14rem); line-height: 1.6;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--fall);
+    border-bottom: 0.18cqw solid var(--fall); font-size: clamp(0.8rem, 1.88cqw, 2.26rem);
+  }
+  .cmp-table tbody th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink);
+    white-space: nowrap; width: 9em; background: var(--card);
+  }
+  .cmp-table tr:last-child td { border-bottom: none; }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.88rem, 2.05cqw, 2.46rem); line-height: 1.68;
+    padding-left: 3.0cqw; position: relative; margin-bottom: 1.3cqw;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n {
+    position: absolute; left: 0; top: 0.05em;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--fall); font-size: 1.05em;
+  }
+
+  .def-box {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.5cqw 1.8cqw;
+  }
+  .def-box + .def-box { margin-top: 1.2cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--fall);
+    font-size: clamp(0.95rem, 2.1cqw, 2.52rem); margin-bottom: 0.45rem;
+  }
+  .def-box p { font-size: clamp(0.86rem, 1.98cqw, 2.38rem); line-height: 1.72; color: var(--ink-soft); }
+
+  .flow { display: flex; align-items: stretch; gap: 0.8cqw; min-height: 0; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.28cqw solid var(--fall);
+    padding: 1.5cqw 1.25cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .stage-label {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.85rem, 1.85cqw, 2.22rem); margin-bottom: 0.15rem;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; color: var(--fall);
+    font-size: clamp(1.05rem, 2.45cqw, 2.94rem); margin-bottom: 0.6rem;
+  }
+  .flow-step .desc {
+    font-size: clamp(0.74rem, 1.68cqw, 2.02rem); line-height: 1.6; color: var(--ink-soft);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; color: var(--fall);
+    font-size: clamp(0.95rem, 2.05cqw, 2.46rem);
+  }
+
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.28cqw solid var(--fall); padding: 1.6cqw 1.5cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 2.15cqw, 2.58rem);
+    margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--fall); }
+  .c3 p { font-size: clamp(0.8rem, 1.85cqw, 2.22rem); line-height: 1.68; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.45rem; }
+
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 1.0cqw 2.6cqw; }
+  .gl { display: flex; gap: 0.9cqw; align-items: baseline; padding-bottom: 0.8cqw; border-bottom: 1px solid var(--rule); }
+  .gl .gw {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--fall);
+    font-size: clamp(0.86rem, 2.05cqw, 2.46rem); width: 5.6em; flex-shrink: 0;
+  }
+  .gl .gd { font-size: clamp(0.76rem, 1.8cqw, 2.16rem); line-height: 1.6; color: var(--ink-soft); }
+
+  .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.05rem, 2.45cqw, 2.94rem); color: var(--fall);
+    width: 2.2em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 1cqw; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, 2.15cqw, 2.58rem);
+    margin-bottom: 0.25rem;
+  }
+  .step p { font-size: clamp(0.8rem, 1.82cqw, 2.18rem); line-height: 1.68; color: var(--ink-soft); }
+
+  .act-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    background: var(--fall); color: var(--paper);
+    font-size: clamp(0.74rem, 1.6cqw, 1.92rem); letter-spacing: 0.06em;
+    padding: 0.3em 1.1em; margin-bottom: 1.0cqw;
+  }
+  .act-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, 2.15cqw, 2.58rem); line-height: 1.66;
+    color: var(--ink); margin-bottom: 1.4cqw;
+  }
+  .fill-flow { display: flex; flex-direction: column; gap: 1.1cqw; }
+  .body-area > .fill-flow:last-child { margin-bottom: 3.6cqw; }
+  .fill-row {
+    background: var(--card); border: 1px solid var(--rule);
+    border-left: 0.32cqw solid var(--fall);
+    padding: 1.05cqw 1.5cqw;
+    font-size: clamp(0.88rem, 1.98cqw, 2.38rem); line-height: 1.66;
+  }
+  .fill-row .arrow { color: var(--fall); margin: 0 0.5em; }
+  .fill-row .res { color: var(--fall); font-weight: 700; }
+
+  .qa { display: flex; flex-direction: column; gap: 1.1cqw; }
+  .body-area > .qa:last-child { margin-bottom: 3.6cqw; }
+  .qa-item { background: var(--card); border-left: 0.32cqw solid var(--fall); padding: 1.1cqw 1.5cqw; }
+  .qa-item .q {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--fall);
+    font-size: clamp(0.85rem, 1.9cqw, 2.28rem); margin-bottom: 0.3rem;
+  }
+  .qa-item .a { font-size: clamp(0.8rem, 1.82cqw, 2.18rem); line-height: 1.66; color: var(--ink-soft); }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5cqw; }
+  .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--fall);
+    font-size: clamp(0.92rem, 2.25cqw, 2.7rem); width: 5.6em; flex-shrink: 0;
+    text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.84rem, 1.98cqw, 2.38rem); line-height: 1.72; }
+  .srow .sval ul { list-style: none; margin-top: 0.4rem; }
+  .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
+  .srow .sval li + li { margin-top: 0.25rem; }
+  .srow .sval li::before { content: "\00B7"; position: absolute; left: 0.2rem; color: var(--fall); }
+
+  .page-num {
+    position: absolute; right: 3.2%; bottom: 2.4%;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.35cqw, 1.62rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #a8c2cd; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #1d3b46; color: #dcecf2; border: 1px solid #35606f;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #274d5c; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #6f8d9a; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w);
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cols, .cards3, .cards2, .gloss { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_1학년.html">&larr; 1학년</a>
+    <a href="../../work.html">업무용</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">폭포 · 1학년 2차시 · 업데이트 2026. 8. 26.</div>
+</div>
+
+<div class="stage" id="stage">
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">현 대 시 　 자 유 시 　 참 여 시</div>
+    <h1 class="title-main">폭포</h1>
+    <div class="rule"></div>
+    <div class="sub">주체적으로 해석하고, 문학을 생활화하기</div>
+    <div class="foot">
+      <span>김수영</span>
+      <span>1학년 · 2차시</span>
+    </div>
+    <div class="page-num">1 / 22</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 목표</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:2cqw;">
+        <div class="c3">
+          <h3>하나</h3>
+          <p>주체적인 관점에서 작품을 해석하고 평가한다</p>
+        </div>
+        <div class="c3">
+          <h3>둘</h3>
+          <p>문학을 생활화하는 태도를 지닌다</p>
+        </div>
+      </div>
+      <div class="def-box">
+        <div class="dt">2차시에 할 일</div>
+        <p>창작 당시의 사회·문화적 맥락으로 &lt;폭포&gt;를 한 번 읽고, 이어서 <strong style="color:var(--fall);">자신의 경험과 상황</strong>으로 다시 읽는다. 자연물을 소재로 한 다른 작품과도 견주어 본다</p>
+      </div>
+    </div>
+    <div class="page-num">2 / 22</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <h2 class="slide-title">전시 학습 복습</h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>주제</th><td>부조리한 현실에 타협하지 않는 의지적 삶</td></tr>
+        <tr><th>구성</th><td>용감함(1연) &rarr; 한결같음(2연) &rarr; 곧은 소리(3~4연) &rarr; 각성의 촉구(5연)</td></tr>
+        <tr><th>두 속성</th><td>떨어지는 모습 &rarr; 고매한 정신, 절대적 자유에 대한 지향<br>내는 소리 &rarr; 곧은 소리, 양심과 저항의 소리</td></tr>
+        <tr><th>표현</th><td>&lsquo;떨어진다&rsquo;·&lsquo;곧은 소리&rsquo;의 반복, 직유, 부정 표현의 연쇄</td></tr>
+      </table>
+    </div>
+    <div class="page-num">3 / 22</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 1-(1)</h2>
+    <div class="body-area">
+      <div class="act-badge">활동 1</div>
+      <div class="act-q">폭포가 떨어지는 행위와 관련하여 화자가 생각하는 폭포의 속성을 정리해 보자</div>
+      <div class="def-box">
+        <div class="dt">이렇게 찾는다</div>
+        <p>&lsquo;떨어진다&rsquo; 앞에 붙은 <strong>수식어</strong>에 주목한다. 특히 &lsquo;~도 없이&rsquo;, &lsquo;~지 않고&rsquo; 같은 <strong>부정 표현</strong>이 자주 나오는데, 폭포가 무엇을 멀리하고 무엇을 지향하는지가 거기에 담겨 있다</p>
+      </div>
+    </div>
+    <div class="page-num">4 / 22</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 1-(1) &middot; 예시 답안 ①</h2>
+    <div class="body-area">
+      <div class="fill-flow">
+        <div class="fill-row">무서운 기색도 없이<span class="arrow">&rarr;</span><span class="res">용감함</span></div>
+        <div class="fill-row">무엇을 향하여 떨어진다는 의미도 없이<span class="arrow">&rarr;</span><span class="res">자유로움, 얽매이지 않음</span></div>
+        <div class="fill-row">계절과 주야를 가리지 않고 …… 쉴 사이 없이<span class="arrow">&rarr;</span><span class="res">한결같음, 타협·안주를 거부함</span></div>
+      </div>
+      <div class="emotion">
+        <div class="etag">눈여겨볼 점</div>
+        <ul>
+          <li>세 구절 모두 폭포가 <strong>무엇을 하지 않는지</strong>를 말한다. 하지 않는 것이 쌓여서 폭포의 성격이 된다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 22</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 1-(1) &middot; 예시 답안 ②</h2>
+    <div class="body-area">
+      <div class="fill-flow">
+        <div class="fill-row">번개와 같이<span class="arrow">&rarr;</span><span class="res">매우 빠르고 강렬함</span></div>
+        <div class="fill-row">취할 순간조차 마음에 주지 않고<span class="arrow">&rarr;</span><span class="res">방심하지 않음, 타협·안주를 거부함</span></div>
+        <div class="fill-row">높이도 폭도 없이<span class="arrow">&rarr;</span><span class="res">절대적인 자유로움</span></div>
+      </div>
+      <div class="emotion">
+        <div class="etag">눈여겨볼 점</div>
+        <ul>
+          <li>폭포에는 높이와 폭이 있는 것이 당연한데도 &lsquo;없다&rsquo;고 했다. 실제 크기를 말하는 것이 아니라 <strong>크기로 잴 수 없는 자유</strong>를 말한 것이다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">6 / 22</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 1-(2) &middot; 사회·문화적 맥락</h2>
+    <div class="body-area">
+      <div class="act-badge">활동 1</div>
+      <div class="act-q">이 작품이 창작될 당시의 사회·문화적 맥락을 참고하여 다음 시구의 의미를 파악해 보자</div>
+      <div class="def-box">
+        <div class="dt">교과서가 준 맥락</div>
+        <p>&lt;폭포&gt;는 4·19 혁명이 일어나기 이전 1950년대 후반의 암울하고 부조리한 사회 현실을 배경으로 하여 쓰인 작품이다. 언론의 자유와 민주주의가 크게 위축되던 때, 김수영은 현실에 대한 냉철한 인식을 바탕으로 소시민적 삶을 살아가려는 우리들의 모습을 질책하고 현실에 단호하게 저항할 것을 주장하였다</p>
+      </div>
+    </div>
+    <div class="page-num">7 / 22</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 1-(2) &middot; 예시 답안</h2>
+    <div class="body-area">
+      <div class="cards2">
+        <div class="c3">
+          <h3><span class="word">밤이 되면 / 폭포는<br>곧은 소리를 내며 떨어진다</span></h3>
+          <p>언론 자유와 민주주의의 위축으로 사회 현실은 &lsquo;밤&rsquo;과 같이 암울하지만, 폭포는 냉철한 현실 인식과 굳센 저항을 지향하는 양심과 진실의 소리를 내고 있음</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">나타(懶惰)와 안정을<br>뒤집어 놓은 듯이</span></h3>
+          <p>폭포는 현실에 안주하여 소시민적 삶을 살아가려는 우리에게 부조리한 현실을 냉철히 바라보고 이에 저항할 것을 요구하고 있음</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">8 / 22</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 1-(3) &middot; 주제와 창작 의도</h2>
+    <div class="body-area">
+      <div class="act-q" style="margin-bottom:1.2cqw;">이 작품의 주제는 무엇일지, 시인은 왜 폭포를 소재로 시를 썼을지 이야기해 보자</div>
+      <div class="def-box">
+        <div class="dt">예시 답안</div>
+        <p>이 시는 어떤 것에도 얽매이지 않는 절대적인 자유로움을 지향하는 폭포의 모습을 그리고 있다. 시인은 부조리한 사회 현실과 타협하는 소시민적 삶을 거부하고 현실에 굳세게 저항할 것을 주장하기 위해, &ldquo;계절과 주야를 가리지 않고&rdquo; &ldquo;곧은 소리를 내며 떨어&rdquo;지는 폭포를 소재로 삼았다</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">한 걸음 더</div>
+        <ul>
+          <li>왜 하필 폭포인가. 물은 원래 낮은 곳으로 흐르는 순한 것인데, 절벽을 만나면 가장 세차게 떨어진다. <strong>순함이 아니라 부딪힘</strong>이 폭포의 자리다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">9 / 22</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <h2 class="slide-title">밖을 향한 외침인가, 안을 향한 각성인가</h2>
+    <div class="body-area">
+      <div class="cols">
+        <div>
+          <div class="col-head">밖을 향한 읽기</div>
+          <div class="word-note top">
+            &lsquo;밤&rsquo;을 1950년대 후반의 억압적 현실로, &lsquo;곧은 소리&rsquo;를 그 현실에 맞서는 저항의 목소리로 읽는다. 교과서가 제시한 사회·문화적 맥락에 따른 해석이다
+          </div>
+        </div>
+        <div>
+          <div class="col-head">안을 향한 읽기</div>
+          <div class="word-note top">
+            이 시에는 <strong>부정할 대상이 뚜렷하게 지목되어 있지 않다</strong>. 폭포가 뒤집으려는 &lsquo;나타와 안정&rsquo;은 남이 아니라 시인 자신을 포함한 우리의 태도다
+          </div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">참고</div>
+        <ul>
+          <li>&ldquo;&lt;폭포&gt;는 불의에 대한 저항과 사회에 대한 각성을 불러일으킨다는 점에서 충분히 외부를 향한 주장으로 읽히지만, 부정의 대상이 명료하지 않고 <strong>자아 성찰과 스스로에 대한 각성을 요구하는 의미가 상대적으로 더 두드러진다</strong>.&rdquo; <span style="color:var(--ink-faint);">이승규, 〈김수영 시에서의 대극적 구조와 긴장의 구현 양상〉</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">10 / 22</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide">
+    <h2 class="slide-title">주체적인 해석과 평가</h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.6cqw;">
+        <div class="dt">주체적인 해석이란</div>
+        <p>자신의 경험이나 상황과 연결 지어 작품에 접근하는 것</p>
+      </div>
+      <div class="def-box">
+        <div class="dt">색다른 해석과는 다르다</div>
+        <p>남과 다르게 읽어야 주체적인 것이 아니다. 자신의 삶과 관련지어 해석하거나 시의 내용에 깊이 공감하는 것도 모두 주체적인 해석에 해당한다. 다만 <strong>타당한 근거</strong>를 들어 자신의 관점을 세운 뒤에 해석하고 평가해야 한다</p>
+      </div>
+    </div>
+    <div class="page-num">11 / 22</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <h2 class="slide-title">주체적으로 해석하는 방법</h2>
+    <div class="body-area">
+      <div class="steps">
+        <div class="step">
+          <div class="sn">①</div>
+          <div class="sbody">
+            <h3>내 경험과 이어 보기</h3>
+            <p>작품 속 상황과 인물의 심리를 자신의 경험과 관련지어 생각해 본다</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">②</div>
+          <div class="sbody">
+            <h3>다른 작품과 견주기</h3>
+            <p>비슷한 제재나 주제를 다룬 다른 작품과 비교해 본다</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">③</div>
+          <div class="sbody">
+            <h3>남의 해석과 견주기</h3>
+            <p>작품에 대한 다른 사람의 해석과 평가를 듣고, 자신의 것과 비교해 본다. 누구의 해석이 더 나은지를 가리기보다, 어떤 경험을 작품과 이었는지에 주목한다</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">12 / 22</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 2-(1) &middot; 예시 ①</h2>
+    <div class="body-area">
+      <div class="act-q" style="margin-bottom:1.2cqw;">자신의 상황이나 경험과 관련지어 이 작품을 주체적으로 해석해 보자</div>
+      <div class="def-box">
+        <div class="dt">3연에 주목한 해석</div>
+        <p>나에게 &lsquo;금잔화도 인가도 보이지 않는 밤&rsquo;은 앞으로 무엇을 해야 할지, 무엇을 할 수 있을지 몰라서 불안한 내 마음이다. 나는 그럴 때마다 스스로 &ldquo;걱정하지 마. 지금처럼 열심히 걷다 보면 조금씩 길이 보일 거야.&rdquo;라고 말해 주는데, 그 말이 이 시의 &lsquo;곧은 소리&rsquo;와 비슷한 것 같다</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">이 해석이 성립하는 근거</div>
+        <ul>
+          <li>&lsquo;밤&rsquo;을 시대가 아니라 <strong>내 안의 막막함</strong>으로 옮겨 읽었다. 억압적 현실이라는 뜻과 어긋나지 않으면서 자신의 상황에 맞게 옮긴 자리다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">13 / 22</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 2-(1) &middot; 예시 ②</h2>
+    <div class="body-area">
+      <div class="cards2">
+        <div class="c3">
+          <h3>공감하며 읽기</h3>
+          <p>&lsquo;나타와 안정&rsquo;이 지금 내 마음을 가리키는 것 같아 뜨끔했다. 하루하루를 정해진 대로 별생각 없이 살고 있는데, 이런 내 삶이 폭포와는 정반대되는 고여 있는 물 같다</p>
+          <p>&lsquo;계절과 주야를 가리지 않고&rsquo; 떨어지는 폭포처럼 매 순간 치열하게 고민해야 앞으로 나아갈 수 있다고 생각한다</p>
+        </div>
+        <div class="c3">
+          <h3>달리 보며 읽기</h3>
+          <p>시인은 &lsquo;규정할 수 없는 물결&rsquo;, 곧 자유로운 모습을 긍정적으로 보았지만 나는 조금 다르게 생각했다. 나를 규제하는 것이 없으면 삶의 방향을 잃고 정체성도 흐려질 수 있다</p>
+          <p>중학교 때 부모님 말을 듣지 않고 내 마음대로 지낸 적이 있는데, 어느 순간 무엇을 향해 살고 있는지 몰라 불안했다</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">14 / 22</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 2-(3) &middot; 평가 쓰기</h2>
+    <div class="body-area">
+      <div class="act-q" style="margin-bottom:1.2cqw;">앞의 활동을 바탕으로 하여 이 작품에 대한 자신의 생각과 평가를 적어 보자</div>
+      <div class="def-box">
+        <div class="dt">예시 답안</div>
+        <p>이 작품이 1950년대 사회 현실을 다룬 딱딱한 시라고만 생각했는데, 친구들이 자신의 삶과 연결해 해석한 것을 듣고 나니 살면서 꼭 생각해 봐야 할 삶의 자세를 보여 주는 작품이기도 하다는 생각이 들었다. 이 작품의 &lsquo;폭포&rsquo;는 사람으로 치면 자기 안의 중심이 굳건한 사람, 그래서 외부 환경에 쉽게 흔들리지 않고 자기 길을 꿋꿋이 걸어가는 사람이 아닐까 싶다. &lsquo;계절&rsquo;과 &lsquo;주야&rsquo;가 바뀌듯 우리를 둘러싼 환경은 계속 변하고 우리는 그 변화에 쉽게 영향을 받는다. 그 속에서도 자신의 중심을 지키며 굳건히 살아가는 것이 이 작품이 말하는 &lsquo;폭포&rsquo;의 길인 듯하다</p>
+      </div>
+    </div>
+    <div class="page-num">15 / 22</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide">
+    <h2 class="slide-title">학습 활동 3-(1) &middot; 자연물을 소재로 한 작품</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead>
+          <tr><th>제목</th><th style="width:5em;">작가</th><th style="width:6em;">자연물</th><th>내용 및 주제</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>&lt;이탈한 자가 문득&gt;</th><td>김중식</td><td>별똥별</td><td>궤도를 이탈한 삶의 자유로움과 이를 향한 소망</td></tr>
+          <tr><th>&lt;나뭇잎 하나&gt;</th><td>김광규</td><td>나뭇잎</td><td>생성과 소멸을 거치는 인간사에 대한 깨달음</td></tr>
+          <tr><th>&lt;봄꽃&gt;</th><td>함민복</td><td>봄꽃</td><td>상처를 어루만지는 봄의 힘과 생명력</td></tr>
+          <tr><th>&lt;우리가 눈발이라면&gt;</th><td>안도현</td><td>눈</td><td>소외된 이에게 위로가 되고자 하는 소망</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">16 / 22</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide">
+    <h2 class="slide-title">김중식, &lt;이탈한 자가 문득&gt;</h2>
+    <div class="body-area">
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">원문</div>
+          <div class="verse quote">
+            우리는 어디로 갔다가 어디서 돌아왔느냐<br>
+            자기의 꼬리를 물고 뱅뱅 돌았을 뿐이다<br>
+            대낮보다 찬란한 태양도 궤도를 이탈하지 못한다<br>
+            태양보다 냉철한 뭇별들도 궤도를 이탈하지 못하므로<br>
+            가는 곳만 가고 아는 것만 알 뿐이다<br>
+            집도 절도 죽도 밥도 다 떨어져<br>
+            빈 몸으로 돌아왔을 때 나는 보았다<br>
+            단 한 번 궤도를 이탈함으로써 두 번 다시<br>
+            궤도에 진입하지 못할지라도<br>
+            캄캄한 하늘에 획을 긋는 별, 그 똥, 짧지만,<br>
+            그래도 획을 그을 수 있는,<br>
+            포기한 자<br>
+            그래서 이탈한 자가 문득 자유롭다는 것을
+          </div>
+        </div>
+        <div>
+          <div class="col-head">&lt;폭포&gt;와 견주면</div>
+          <div class="word-note top">
+            <span class="w">닮은 점</span>
+            둘 다 <strong>어둠 속에서 스스로 움직이는 자연물</strong>을 통해 안주를 거부하는 삶을 말한다. &lsquo;캄캄한 하늘&rsquo;은 &lsquo;금잔화도 인가도 보이지 않는 밤&rsquo;과 겹친다
+          </div>
+          <div class="word-note">
+            <span class="w">다른 점</span>
+            폭포는 <strong>쉬지 않고 되풀이해</strong> 떨어지지만, 별똥별은 <strong>단 한 번</strong> 획을 긋고 만다. 한결같음의 자유와 단 한 번의 자유가 갈라지는 자리다
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">17 / 22</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide">
+    <h2 class="slide-title">김광규, &lt;나뭇잎 하나&gt;</h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.6cqw;">
+        <div class="dt">친구에게 소개한다면</div>
+        <p>겨울이 되어 나뭇잎이 모두 떨어진 모습을 보고, 나뭇잎들이 모여 큰 숲을 이루고 있을 때에는 알지 못했던 <strong>삶의 유한함</strong>을 깨달았다는 내용의 시다. 특히 나뭇잎들이 떨어질 때 &lsquo;혼자서&rsquo;, &lsquo;저마다 한 개씩&rsquo; 떨어진다고 말하면서 삶의 허무하고 쓸쓸한 면을 보여 준다. &lsquo;나뭇잎&rsquo;이라는 평범한 소재로 삶에 대한 깨달음을 표현한 점이 인상 깊다</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">&lt;폭포&gt;와 견주면</div>
+        <ul>
+          <li>두 작품 모두 떨어지는 것을 본다. 다만 폭포의 낙하는 <strong>의지</strong>이고, 나뭇잎의 낙하는 <strong>운명</strong>이다</li>
+          <li>작품을 소개할 때는 줄거리만 말하지 말고, <strong>왜 그 작품을 골랐는지</strong>를 자신의 해석과 함께 말한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">18 / 22</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide">
+    <h2 class="slide-title">문학을 생활화하는 방법</h2>
+    <div class="body-area">
+      <div class="cards3" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3>읽고 낭송하기</h3>
+          <p>좋은 작품을 널리 찾아 읽고 소리 내어 읽는다. 마음에 드는 구절을 손 글씨로 적어 보는 것도 좋다</p>
+        </div>
+        <div class="c3">
+          <h3>소통하기</h3>
+          <p>사회 관계망 서비스로 작가나 출판사와 소통하고, 블로그에 자신의 생각과 느낌을 적는다</p>
+        </div>
+        <div class="c3">
+          <h3>참여하고 만들기</h3>
+          <p>작품을 창작하거나 기존 작품을 재창작·각색한다. 문학관 방문, 도서전·북 토크 참여, 문학 모임 활동도 해당한다</p>
+        </div>
+      </div>
+      <div class="def-box">
+        <div class="dt">의의</div>
+        <p>문학을 주체적으로 즐기고 생활화함으로써 삶을 더욱 풍성하게 가꿀 수 있다</p>
+      </div>
+    </div>
+    <div class="page-num">19 / 22</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 문제</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>&lt;폭포&gt;가 창작된 1950년대 후반의 사회 현실은 어떠했는가?</li>
+        <li><span class="n">2</span>&lsquo;주체적인 해석&rsquo;이란 무엇이며, &lsquo;색다른 해석&rsquo;과는 어떻게 다른가?</li>
+        <li><span class="n">3</span>&lt;이탈한 자가 문득&gt;의 별똥별과 &lt;폭포&gt;의 폭포는 어떤 점에서 닮았고 어떤 점에서 다른가?</li>
+        <li><span class="n">4</span>문학을 생활화하는 방법을 두 가지 이상 들어 보자</li>
+      </ul>
+    </div>
+    <div class="page-num">20 / 22</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide">
+    <h2 class="slide-title">확인 문제 &middot; 정답</h2>
+    <div class="body-area">
+      <div class="qa">
+        <div class="qa-item">
+          <div class="q">1. 창작 당시의 사회 현실</div>
+          <div class="a">4·19 혁명이 일어나기 이전, 언론의 자유와 민주주의가 크게 위축되던 암울하고 부조리한 시기였다</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">2. 주체적인 해석</div>
+          <div class="a">자신의 경험이나 상황과 연결 지어 작품에 접근하는 것. 남과 다르게 읽는 것이 아니라 타당한 근거를 들어 자신의 관점을 세우는 것이며, 깊이 공감하는 것도 여기에 해당한다</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">3. 별똥별과 폭포</div>
+          <div class="a">둘 다 어둠 속에서 스스로 움직이며 안주를 거부한다. 다만 폭포는 쉬지 않고 되풀이해 떨어지고, 별똥별은 단 한 번 획을 긋는다</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">4. 문학을 생활화하는 방법</div>
+          <div class="a">찾아 읽고 낭송하기, 작가·출판사와 소통하기, 창작하거나 재창작하기, 자신의 해석을 매체로 공유하기 등</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">21 / 22</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide">
+    <h2 class="slide-title">2차시 핵심 정리</h2>
+    <div class="body-area">
+      <div class="summary-list">
+        <div class="srow">
+          <div class="skey">맥락</div>
+          <div class="sval">4·19 이전 1950년대 후반 &mdash; &lsquo;밤&rsquo;은 억압적 현실, &lsquo;곧은 소리&rsquo;는 양심과 진실의 소리, &lsquo;나타와 안정&rsquo;은 거부해야 할 소시민적 자세</div>
+        </div>
+        <div class="srow">
+          <div class="skey">두 겹의 읽기</div>
+          <div class="sval">부조리한 현실에 대한 저항(밖) / 안주하려는 자신에 대한 각성(안)</div>
+        </div>
+        <div class="srow">
+          <div class="skey">주체적 해석</div>
+          <div class="sval">자신의 경험이나 상황과 연결 지어 작품에 접근하기
+            <ul>
+              <li>내 경험과 잇기 · 다른 작품과 견주기 · 남의 해석과 견주기</li>
+              <li>타당한 근거를 들어 자신의 관점을 세운 뒤 해석하고 평가한다</li>
+            </ul>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="skey">견준 작품</div>
+          <div class="sval">김중식 &lt;이탈한 자가 문득&gt;(별똥별) / 김광규 &lt;나뭇잎 하나&gt;(나뭇잎)</div>
+        </div>
+        <div class="srow">
+          <div class="skey">생활화</div>
+          <div class="sval">읽고 낭송하기, 작가·출판사와 소통하기, 창작하고 재창작하기, 해석을 매체로 공유하기</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">22 / 22</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 1</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  prevBtn.addEventListener('click', () => show(idx - 1));
+  nextBtn.addEventListener('click', () => show(idx + 1));
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    show(e.clientX - rect.left < rect.width / 2 ? idx - 1 : idx + 1);
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
