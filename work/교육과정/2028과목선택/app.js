@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828e';
+var VERSION = '20260828f';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -368,7 +368,7 @@ function emptyBlock() {
   var noHum = (D.rec.meta.인문계열_미제시 || []);
   var hit = pick.filter(function (u) { return noHum.indexOf(u) !== -1; });
   var humanities = state.track.has('인문') || state.track.has('사회') ||
-                   state.track.has('상경') || state.track.has('교육');
+                   state.track.has('상경') || state.track.has('사범');
 
   if (hit.length && humanities) {
     return '<div class="empty"><h3>대학이 발표하지 않았습니다</h3>' +

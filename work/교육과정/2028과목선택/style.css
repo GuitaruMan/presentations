@@ -189,7 +189,7 @@ body{
 .chip[data-tone="인문"][aria-pressed="true"],
 .chip[data-tone="사회"][aria-pressed="true"]{background:var(--lavender-wash);border-color:var(--lavender);color:#514A6B}
 .chip[data-tone="상경"][aria-pressed="true"],
-.chip[data-tone="교육"][aria-pressed="true"]{background:var(--moss-wash);border-color:var(--moss);color:#4E5A2C}
+.chip[data-tone="사범"][aria-pressed="true"]{background:var(--moss-wash);border-color:var(--moss);color:#4E5A2C}
 
 /* 칩 안의 개수 */
 .chip-n{
@@ -256,7 +256,7 @@ body{
 }
 .card[data-track="의약"]::before,.card[data-track="예체능"]::before{background:var(--apricot)}
 .card[data-track="인문"]::before,.card[data-track="사회"]::before{background:var(--lavender)}
-.card[data-track="상경"]::before,.card[data-track="교육"]::before{background:var(--moss)}
+.card[data-track="상경"]::before,.card[data-track="사범"]::before{background:var(--moss)}
 
 .card-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:3px}
 .card-unit{font-family:var(--serif);font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em}
