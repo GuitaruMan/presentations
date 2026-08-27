@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828c';
+var VERSION = '20260828d';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -207,12 +207,21 @@ function setView(v) {
   });
   $$('.view').forEach(function (s) { s.hidden = true; });
   $('#view-' + v).hidden = false;
-  if (location.hash.slice(2).split('/')[0] !== v) location.hash = '#/' + v;
+
+  if (location.hash.slice(2).split('/')[0] !== v) {
+    // location.hash 에 직접 넣으면 브라우저가 앵커를 찾아 스크롤을 옮긴다.
+    // 모바일에서 탭을 누를 때 화면이 맨 아래에서 시작하던 원인이라
+    // 주소만 바꾸고 스크롤은 아래에서 직접 맞춘다.
+    history.replaceState(null, '', location.pathname + location.search + '#/' + v);
+  }
+  window.scrollTo(0, 0);
 }
 
 /* ── 1. 대학으로 찾기 ─────────────────────────────── */
 function buildFilters() {
   var uw = $('#f-univ');
+  // 학년을 바꾸면 이 함수가 다시 불린다. 비우지 않으면 대학 칩이 두 벌 쌓인다.
+  uw.innerHTML = '';
   D.rec.대학.forEach(function (u) {
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'chip'; b.textContent = u.대학;
@@ -650,8 +659,10 @@ function renderPick() {
       ? '<span><i class="l-pre"></i>선수과목</span>' : '') +
     '<span><i class="l-off"></i>해당 없음</span></div>';
 
-  ['선택군1', '선택군2', '선택군3'].forEach(function (g) {
-    h += slotHTML(g, want);
+  // 학기 단위로 나눈다. 선택군으로만 묶으면 어느 과목이 몇 학기에
+  // 열리는지 보이지 않아, 정작 편성표를 보는 목적에 닿지 않는다.
+  SLOTS.forEach(function (s) {
+    h += slotHTML(s, want);
   });
 
   body.innerHTML = h;
@@ -781,27 +792,27 @@ function summaryHTML(t, want) {
 }
 
 function slotHTML(slot, want) {
-  var rows = D.school.개설.filter(function (c) { return c.선택군 === slot; });
+  // slot 은 '내 과목 담기'와 같은 학기 단위 슬롯이다.
+  var rows = D.school.개설.filter(function (c) { return offeredIn(c, slot); });
   if (!rows.length) return '';
 
-  var meta = D.school.meta.선택슬롯[slot] || {};
-  var sl = meta.학년 ? meta.학년 + '학년' : '';
-  if (meta['1학기']) sl += ' · 1학기 택' + meta['1학기'];
-  if (meta['2학기']) sl += ' · 2학기 택' + meta['2학기'];
-
-  var h = '<section class="group"><div class="group-head"><h3>' + esc(slot) + '</h3>' +
-    '<span class="slot">' + esc(sl) + '</span></div>';
+  var h = '<section class="group' + (slot.sub ? ' my-sub' : '') + '">' +
+    '<div class="group-head">' +
+    (slot.sub ? '<h4>' + esc(slot.이름) + '</h4>' : '<h3>' + esc(slot.이름) + '</h3>') +
+    '<span class="slot">택' + slot.정원 + '</span></div>';
 
   var groups = [];
   rows.forEach(function (c) { if (groups.indexOf(c.교과군) === -1) groups.push(c.교과군); });
 
   groups.forEach(function (g) {
     h += '<div class="sect"><p class="sect-key">' + esc(g) + '</p><div class="pick-grid">';
-    h += rows.filter(function (c) { return c.교과군 === g; }).map(function (c) {
+    h += rows.filter(function (c) { return c.교과군 === g; }).sort(byType).map(function (c) {
       var kind = want[c.과목];
       var cls = kind === 'core' ? 'pill-core' : kind === 'rec' ? 'pill-hit'
               : kind === 'cond' ? 'pill-cond' : kind === 'pre' ? 'pill-pre' : '';
-      var tag = kind === 'pre' ? '선수' : c.유형;
+      // 선수과목은 점선 테두리(pill-pre)로 이미 구분된다.
+      // 라벨 자리에는 과목 유형(일반/진로/융합)을 그대로 둔다.
+      var tag = c.유형;
       // 눌러서 '과목으로 찾기'와 같은 상세 창을 연다
       // 이 탭에서는 수능 출제과목만 표시한다. 편성표를 훑는 자리라
       // 다른 평가 유형까지 붙이면 표가 어수선해진다.
@@ -821,11 +832,14 @@ function slotHTML(slot, want) {
 
 /* ── 3. 과목으로 찾기 ─────────────────────────────── */
 function renderSubjects() {
-  // 편성표에 적힌 순서를 그대로 따른다. 학생이 종이 편성표와 나란히 놓고 찾는다.
+  // 편성표 순서를 따르되, 교과군 안에서는 일반 → 진로 → 융합으로 본다.
   // (막대그래프를 뺐으므로 빈도순으로 늘어놓으면 순서의 근거가 보이지 않는다.)
   var 편성순 = {};
   D.school.개설.forEach(function (c, i) {
-    if (편성순[c.과목] === undefined) 편성순[c.과목] = i;
+    // 유형을 앞자리에 둬 교과군 안에서 일반 → 진로 → 융합이 되게 한다.
+    // 뒷자리는 편성표에 적힌 차례.
+    var rank = (TYPE_ORDER[c.유형] === undefined ? 9 : TYPE_ORDER[c.유형]) * 10000 + i;
+    if (편성순[c.과목] === undefined || rank < 편성순[c.과목]) 편성순[c.과목] = rank;
   });
 
   var all = Object.keys(INDEX).filter(function (n) {
@@ -890,6 +904,17 @@ function offeredIn(c, slot) {
 /* 그 슬롯에서 열리는 레코드를 찾는다.
    같은 과목이 2·3학년에 모두 열리는 경우(세포와 물질대사 등)가 있어
    과목 이름만으로 찾으면 한쪽(뒤에 읽힌 3학년)만 잡힌다. */
+/* 같은 교과군 안에서는 일반 → 진로 → 융합 순으로 본다.
+   편성표 원본은 이 순서가 섞여 있어 그대로 두면 읽기 어렵다. */
+var TYPE_ORDER = { 공통: 0, 일반: 1, 진로: 2, 융합: 3 };
+
+function byType(a, b) {
+  var ta = TYPE_ORDER[a.유형], tb = TYPE_ORDER[b.유형];
+  if (ta === undefined) ta = 9;
+  if (tb === undefined) tb = 9;
+  return ta - tb;
+}
+
 function courseIn(name, slot) {
   var rows = D.school.개설;
   for (var i = 0; i < rows.length; i++) {
@@ -1249,7 +1274,7 @@ function renderMy() {
     rows.forEach(function (c) { if (groups.indexOf(c.교과군) === -1) groups.push(c.교과군); });
     groups.forEach(function (g) {
       h += '<div class="sect"><p class="sect-key">' + esc(g) + '</p><div class="pick-grid">';
-      h += rows.filter(function (c) { return c.교과군 === g; }).map(function (c) {
+      h += rows.filter(function (c) { return c.교과군 === g; }).sort(byType).map(function (c) {
         var on = picked.indexOf(c.과목) !== -1;
         var kind = want[c.과목];
         var cls = 'pill my-pill' + (on ? ' on' : '') +
@@ -1413,7 +1438,7 @@ function openCurriculum() {
     rows.forEach(function (c) { if (groups.indexOf(c.교과군) === -1) groups.push(c.교과군); });
     groups.forEach(function (g) {
       h += '<div class="cur-row"><span class="cur-g">' + esc(g) + '</span><span class="cur-s">';
-      h += rows.filter(function (c) { return c.교과군 === g; }).map(function (c) {
+      h += rows.filter(function (c) { return c.교과군 === g; }).sort(byType).map(function (c) {
         return '<span class="pill">' + esc(c.과목) +
           '<span class="pill-type">' + esc(c.유형) + '</span></span>';
       }).join('');
