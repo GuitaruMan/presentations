@@ -220,6 +220,16 @@ body{
 }
 .unit-btn:hover{background:var(--teal-wash)}
 .unit-btn.on{background:var(--teal);color:#fff;font-weight:600}
+.unit-univ{
+  display:block;font-size:11px;color:var(--ink-faint);margin-top:1px;
+}
+.unit-btn.on .unit-univ{color:rgba(255,255,255,.75)}
+
+/* 학과별 권장과목 카드 — 교과군 조건의 우리 학교 과목 */
+.cond-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.cond-short{
+  margin:6px 0 0;font-size:12.5px;color:#A03325;font-weight:600;
+}
 
 /* 체크박스 */
 .check{display:flex;align-items:center;gap:7px;font-size:13px;
@@ -487,6 +497,9 @@ button.pill:active{transform:translate(0,0);box-shadow:none}
   padding:3px 0;line-height:1.5;
 }
 /* 요구사항을 채울 수 있는 우리 학교 과목 */
+.sum-short{
+  width:100%;margin-top:6px;color:#A03325;font-weight:600;
+}
 .sum-fold-in{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;width:100%}
 .sum-key{color:var(--ink)}
 

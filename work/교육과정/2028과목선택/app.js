@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828f';
+var VERSION = '20260828g';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -18,6 +18,7 @@ var GROUP_NAME = {};
 var state = {
   view: 'univ',
   univ: new Set(),
+  unit: null,     // 왼쪽에서 고른 학과 (학과별 권장과목 탭)
   track: new Set(),
   q: '',
   target: null,
@@ -228,9 +229,10 @@ function buildFilters() {
     b.setAttribute('aria-pressed', 'false');
     b.onclick = function () {
       pickOne(state.univ, u.대학, uw);
-      // 대학을 바꾸면 계열은 지운다. 앞 대학에서 고른 계열이 남아 있으면
+      // 대학을 바꾸면 계열·학과는 지운다. 앞 대학에서 고른 것이 남아 있으면
       // 새 대학에 없는 조합이 되어 빈 결과가 나온다.
       state.track.clear();
+      state.unit = null;
       renderTrackChips();
       renderUniv();
     };
@@ -306,6 +308,7 @@ function renderTrackChips() {
   $$('.chip', tw).forEach(function (b) {
     b.onclick = function () {
       pickOne(state.track, LOGIC.chipValue(b), tw);
+      state.unit = null;   // 계열이 바뀌면 앞서 고른 학과는 목록에 없을 수 있다
       renderUniv();
     };
   });
@@ -335,6 +338,7 @@ function filterUnits() {
   return UNITS.filter(function (u) {
     if (state.univ.size && !state.univ.has(u.univ)) return false;
     if (state.track.size && !state.track.has(u.track)) return false;
+    if (state.unit && u.key !== state.unit) return false;
     if (q) {
       var hay = LOGIC.squash(u.unit + u.univ + u.college + u.track);
       if (hay.indexOf(q) === -1) return false;
@@ -343,7 +347,40 @@ function filterUnits() {
   });
 }
 
+/* 왼쪽 학과 목록 — 검색만으로는 무엇이 있는지 몰라 고르기 어렵다.
+   대학이나 계열을 좁히면 그 안의 학과를 늘어놓아 눌러서 고르게 한다. */
+function renderUnitList() {
+  var box = $('#f-unit-box'), w = $('#f-unit');
+  var 좁혀짐 = state.univ.size || state.track.size;
+  if (!좁혀짐) { box.hidden = true; w.innerHTML = ''; state.unit = null; return; }
+
+  var list = UNITS.filter(function (u) {
+    if (state.univ.size && !state.univ.has(u.univ)) return false;
+    if (state.track.size && !state.track.has(u.track)) return false;
+    return true;
+  });
+  box.hidden = false;
+
+  w.innerHTML = list.map(function (u) {
+    return '<button type="button" class="unit-btn' +
+      (state.unit === u.key ? ' on' : '') + '" data-key="' + esc(u.key) + '">' +
+      esc(u.unit) + '<span class="unit-univ">' + esc(u.univ) + '</span></button>';
+  }).join('');
+
+  $$('.unit-btn', w).forEach(function (b) {
+    b.onclick = function () {
+      state.unit = state.unit === b.dataset.key ? null : b.dataset.key;
+      // 목록은 그대로 두고 눌린 표시만 바꾼다 (renderUniv 가 다시 부르면 재귀가 된다)
+      $$('.unit-btn', w).forEach(function (x) {
+        x.classList.toggle('on', x.dataset.key === state.unit);
+      });
+      renderUniv();
+    };
+  });
+}
+
 function renderUniv() {
+  renderUnitList();
   var list = filterUnits();
   var box = $('#list-univ');
 
@@ -458,9 +495,22 @@ function condHTML(c) {
     h += '<br>반드시 포함: ' + esc(c.필수포함.join(', '));
   }
   if (c.유형 === '교과군') {
-    h += '<br><button type="button" class="cond-open" data-group="' + esc(c.교과군) +
-         '" data-type="' + esc(c.과목유형 || '') + '">우리 학교 ' + esc(c.교과군) +
-         (c.과목유형 ? ' ' + esc(c.과목유형) + '선택' : '') + ' 과목 펼쳐보기</button>';
+    // 눌러야 보이면 정작 무엇을 고를지 모른 채 지나친다.
+    // '편성표에 표시' 탭처럼 우리 학교 과목을 바로 펼쳐 보여 준다.
+    var list = schoolInGroup(c.교과군, c.과목유형);
+    if (list.length) {
+      h += '<div class="cond-list">' +
+        list.map(function (s) {
+          return '<button type="button" class="sum-pill sum-cond" data-subject="' +
+            esc(s) + '">' + esc(s) + '</button>';
+        }).join('') + '</div>';
+      if (c.최소 && list.length < c.최소) {
+        h += '<p class="cond-short">우리 학교에는 ' + list.length +
+          '과목만 열립니다. 공동교육과정 등 다른 방법을 담임 선생님과 상의해 보세요.</p>';
+      }
+    } else {
+      h += '<p class="cond-short">우리 학교에 해당 교과군 과목이 없습니다.</p>';
+    }
   }
   return h + '</div>';
 }
@@ -758,14 +808,17 @@ function summaryHTML(t, want) {
     if (c.유형 === '교과군') {
       // 과목이 특정되지 않았으니 우리 학교의 해당 과목을 바로 펼쳐 보여 준다
       var list = schoolInGroup(c.교과군, c.과목유형);
-      // 대학이 과목을 특정하지 않고 교과군으로만 제시한 경우.
-      // 대학의 조건과, 그것을 채울 수 있는 우리 학교 과목은 서로 다른 것이므로 줄을 나눈다.
-      // 대학이 과목을 특정하지 않고 교과군으로만 말한 경우.
       // 요구사항을 굵게 앞세우고, 그것을 채울 수 있는 우리 학교 과목을 바로 아래 편다.
+      // 대학이 요구한 수보다 우리 학교 과목이 적으면 그 사실을 알려 준다.
+      var 모자람 = c.최소 && list.length && list.length < c.최소;
       h += '<div class="sum-row"><span class="sum-key">조건</span>' +
         '<div class="sum-pills"><span class="sum-need">' + esc(c.설명 || '') + '</span>' +
         (list.length
-          ? '<div class="sum-fold-in">' + chips(list, 'sum-cond') + '</div>'
+          ? '<div class="sum-fold-in">' + chips(list, 'sum-cond') + '</div>' +
+            (모자람
+              ? '<span class="sum-note sum-short">우리 학교에는 ' + list.length +
+                '과목만 열립니다. 공동교육과정 등 다른 방법을 담임 선생님과 상의해 보세요.</span>'
+              : '')
           : '<span class="sum-note">우리 학교에 해당 과목이 없습니다.</span>') +
         '</div></div>';
       return;
@@ -1535,7 +1588,7 @@ function bind() {
   };
 
   $('#reset-univ').onclick = function () {
-    state.univ.clear(); state.track.clear(); state.q = '';
+    state.univ.clear(); state.track.clear(); state.q = ''; state.unit = null;
     $('#q-univ').value = '';
     $$('#f-univ .chip').forEach(function (c) {
       c.setAttribute('aria-pressed', 'false');
