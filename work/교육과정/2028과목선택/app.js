@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828g';
+var VERSION = '20260828h';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -922,14 +922,17 @@ function renderSubjects() {
   // 교과군을 안 골랐으면 교과군별로 묶어 소제목을 단다
   var html = '';
   if (state.group) {
-    html = names.map(function (n) { return subjRow(n); }).join('');
+    html = '<div class="pick-grid">' +
+      names.map(function (n) { return subjRow(n); }).join('') + '</div>';
   } else {
     LOGIC.groupByGroup(names, SUBJ).forEach(function (g) {
       html += '<div class="subj-group"><h3 class="subj-h">' + esc(g.name) +
         '<span class="subj-h-n">' + g.items.length + '</span></h3>' +
-        g.items.map(function (n) { return subjRow(n); }).join('') + '</div>';
+        '<div class="pick-grid">' +
+        g.items.map(function (n) { return subjRow(n); }).join('') + '</div></div>';
     });
   }
+  html = evalLegend() + html;
   body.innerHTML = html;
 
   $$('[data-subject]', body).forEach(function (b) {
@@ -937,12 +940,18 @@ function renderSubjects() {
   });
 }
 
+/* 과목 하나를 버튼으로. 누르면 어느 대학이 권장하는지 상세 창이 열린다.
+   권장 대학 수는 그 창에서 알려 주므로 목록에는 적지 않는다. */
 function subjRow(n) {
-  var arr = INDEX[n], m = SUBJ[n];
-  return '<button type="button" class="subj-row" data-subject="' + esc(n) + '">' +
-    '<span class="subj-name">' + esc(n) + '</span>' +
-    (m ? '<span class="subj-tag">' + esc(m.유형) + '</span>' : '') +
-    '<span class="subj-n">' + arr.length + '곳</span></button>';
+  var c = SCHOOL[n], m = SUBJ[n];
+  var 평가 = c && EVAL_MARK[c.평가] && !EVAL_MARK[c.평가].bare
+    ? '<span class="pill-eval ev-' + c.평가 + '" title="' + esc(EVAL_MARK[c.평가].설명) +
+      '">' + EVAL_ICON[c.평가] + ' ' + esc(EVAL_MARK[c.평가].약칭) + '</span>'
+    : '';
+  return '<button type="button" class="pill" data-subject="' + esc(n) + '">' +
+    esc(n) +
+    (m ? '<span class="pill-type">' + esc(m.유형) + '</span>' : '') +
+    평가 + '</button>';
 }
 
 /* ── 4. 내 과목 담기 ──────────────────────────────── */

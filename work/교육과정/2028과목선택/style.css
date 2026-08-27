@@ -670,27 +670,6 @@ button.my-pill.on::after{content:'✓';margin-left:6px;font-size:11px}
 }
 .subj-h-n{font-size:12px;color:var(--ink-faint);font-family:var(--sans);font-weight:400}
 
-/* 한 줄에 모두 담아 조밀하게 — 55과목이 스크롤 지옥이 되지 않도록 */
-.subj-row{
-  width:100%;display:flex;align-items:center;gap:9px;
-  background:none;border:0;border-bottom:1px solid var(--rule);
-  padding:7px 4px;cursor:pointer;font-family:inherit;text-align:left;
-}
-.subj-row:hover{background:var(--paper-card)}
-.subj-name{
-  font-size:14.5px;color:var(--ink);font-weight:600;
-  flex:0 0 auto;max-width:11em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.subj-tag{font-size:11px;color:var(--ink-faint);flex:0 0 auto}
-.subj-off{
-  font-size:10.5px;color:var(--ink-faint);border:1px dashed var(--ink-faint);
-  border-radius:6px;padding:0 5px;flex:0 0 auto;
-}
-.subj-n{
-  flex:1 1 auto;text-align:right;font-size:13px;color:var(--teal);
-  font-weight:700;font-family:var(--serif);
-}
-
 /* 권장 대학·학과 — 대학별로 접어 둔다 */
 /* 권장 대학 전체를 감싸는 접기 — 처음에는 문장 한 줄만 보인다 */
 .subj-univs{margin-top:12px}
