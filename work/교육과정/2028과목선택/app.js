@@ -741,7 +741,7 @@ function summaryHTML(t, want) {
       // 대학의 조건과, 그것을 채울 수 있는 우리 학교 과목은 서로 다른 것이므로 줄을 나눈다.
       // 대학이 과목을 특정하지 않고 교과군으로만 말한 경우.
       // 요구사항을 굵게 앞세우고, 그것을 채울 수 있는 우리 학교 과목을 바로 아래 편다.
-      h += '<div class="sum-row"><span class="sum-key">' + esc(c.교과군) + '</span>' +
+      h += '<div class="sum-row"><span class="sum-key">조건</span>' +
         '<div class="sum-pills"><span class="sum-need">' + esc(c.설명 || '') + '</span>' +
         (list.length
           ? '<div class="sum-fold-in">' + chips(list, 'sum-cond') + '</div>'
@@ -752,22 +752,12 @@ function summaryHTML(t, want) {
     var cand = (c.후보 || []).filter(function (s) { return !GROUP_NAME[s]; });
     if (!cand.length) return;
 
-    // 후보가 위 권장과목에 이미 다 나와 있으면 목록을 되풀이하지 않는다.
-    // 같은 과목이 두 번 나오면 다른 과목인 줄 알고 읽게 된다.
-    var 위에있음 = cand.every(function (s) {
-      return core.indexOf(s) !== -1 || rec.indexOf(s) !== -1;
-    });
-    if (위에있음) {
-      h += '<div class="sum-row"><span class="sum-key">몇 과목</span>' +
-        '<div class="sum-pills"><span class="sum-note sum-note-b">' +
-        '위 ' + cand.length + '과목 가운데 <b>' + c.최소 + '과목 이상</b>을 들으면 됩니다.' +
-        '</span></div></div>';
-      return;
-    }
-
-    h += '<div class="sum-row"><span class="sum-key">이 중에서</span><div class="sum-pills">' +
-      chips(cand, 'sum-cond') +
-      '<span class="sum-note">' + esc(c.설명 || '') + '</span></div></div>';
+    // 어떤 과목 가운데 몇 과목인지가 핵심이다. 후보를 반드시 함께 보여 준다.
+    // (위 권장과목과 겹친다고 목록을 생략하면 '위 8과목 중 3과목'처럼
+    //  무엇을 고르라는 것인지 알 수 없게 된다.)
+    h += '<div class="sum-row"><span class="sum-key">조건</span><div class="sum-pills">' +
+      '<span class="sum-need">' + esc(c.설명 || (cand.length + '과목 중 ' + c.최소 + '과목 이상')) +
+      '</span><div class="sum-fold-in">' + chips(cand, 'sum-cond') + '</div></div></div>';
   });
   h += '</div>';
 
