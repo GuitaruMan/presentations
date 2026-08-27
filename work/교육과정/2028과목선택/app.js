@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828i';
+var VERSION = '20260828n';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -233,8 +233,8 @@ function buildFilters() {
     b.setAttribute('aria-pressed', 'false');
     b.onclick = function () {
       pickOne(state.univ, u.대학, uw);
-      // 대학을 바꾸면 계열·학과는 지운다. 앞 대학에서 고른 것이 남아 있으면
-      // 새 대학에 없는 조합이 되어 빈 결과가 나온다.
+      // 대학을 바꾸면 계열·학과는 지운다. 앞 대학에 없는 계열이 남아 있으면
+      // 고를 수도 없고 해제할 수도 없는 상태가 된다.
       state.track.clear();
       state.unit = null;
       renderTrackChips();
@@ -352,7 +352,6 @@ function renderUniv() {
 
   if (!list.length) {
     box.innerHTML = emptyBlock();
-    bindEmpty(box);
     return;
   }
 
@@ -363,19 +362,10 @@ function renderUniv() {
   bindCard(box);
 }
 
+/* 결과가 없을 때. 대학을 고르면 그 대학이 낸 계열만 칩으로 나오므로
+   '이 대학은 그 계열을 안 냈다'는 조합 자체가 만들어지지 않는다.
+   여기서는 검색어를 좁혔을 때만 빈 화면이 된다. */
 function emptyBlock() {
-  var pick = Array.from(state.univ);
-  var noHum = (D.rec.meta.인문계열_미제시 || []);
-  var hit = pick.filter(function (u) { return noHum.indexOf(u) !== -1; });
-  var humanities = state.track.has('인문') || state.track.has('사회') ||
-                   state.track.has('상경') || state.track.has('사범');
-
-  if (hit.length && humanities) {
-    return '<div class="empty"><h3>대학이 발표하지 않았습니다</h3>' +
-      '<p>' + esc(hit.join(', ')) + '는 자연계열 권장과목만 발표했습니다.<br>' +
-      '권장과목이 없다는 뜻이 아니라, <b>알려주지 않았다</b>는 뜻입니다.</p>' +
-      '<button type="button" class="why" data-help="empty">두 경우의 차이 보기</button></div>';
-  }
   return '<div class="empty"><h3>해당하는 모집단위가 없습니다</h3>' +
     '<p>검색어를 줄이거나 조건을 지워 보세요.</p></div>';
 }
@@ -513,12 +503,6 @@ function openOff(list) {
   h += '</div><p class="pane-note">들을 수 없는 과목이므로 신경 쓰지 않아도 됩니다. ' +
     '남은 권장과목을 챙기는 편이 낫습니다.</p></div>';
   openModal('우리 학교에 없는 과목', h);
-}
-
-function bindEmpty(box) {
-  $$('[data-help]', box).forEach(function (b) {
-    b.onclick = function () { openHelp(b.dataset.help); };
-  });
 }
 
 /* ── 2. 과목 고르기 ───────────────────────────────── */
@@ -1590,6 +1574,9 @@ function dropClosedFromCart() {
 }
 
 function stampFoot() {
+  // 대학 수는 자료에서 읽는다. 대학이 늘어도 문구를 고칠 일이 없다.
+  if ($('#univ-count')) $('#univ-count').textContent = D.rec.meta.대학수;
+
   var t = '자료 기준일 ' + D.rec.meta.갱신일 + ' · ' + D.rec.meta.대학수 + '개 대학 ' +
           D.rec.meta.모집단위수 + '개 모집단위';
   if (CLOSED && CLOSED.meta && CLOSED.meta.갱신일) {
