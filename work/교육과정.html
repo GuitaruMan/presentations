@@ -44,7 +44,7 @@
     <a class="card" href="교육과정/2028과목선택/index.html">
       <div class="icon2">🧭</div>
       <div class="label">2028 과목 선택 안내</div>
-      <div class="updated">업데이트: 2026. 8. 24.</div>
+      <div class="updated" data-date="./work/교육과정/2028과목선택/index.html"></div>
     </a>
   </div>
 
@@ -53,8 +53,26 @@
     <a class="card admin" href="교육과정/2028과목선택/admin.html">
       <div class="icon2">⚙️</div>
       <div class="label">개설 현황 관리</div>
-      <div class="updated">업데이트: 2026. 8. 24.</div>
+      <div class="updated" data-date="./work/교육과정/2028과목선택/admin.html"></div>
     </a>
   </div>
+
+<script>
+/* 업데이트 날짜 — dates.json 은 GitHub Actions 가 각 파일의
+   마지막 커밋일로 자동 생성한다. 손으로 적으면 고치는 걸 잊는다. */
+fetch('../dates.json?v=' + Date.now())
+  .then(function (r) { return r.json(); })
+  .then(function (d) {
+    document.querySelectorAll('[data-date]').forEach(function (el) {
+      var v = d[el.dataset.date];
+      if (!v) { el.remove(); return; }
+      var p = v.split('-');
+      el.textContent = '업데이트: ' + p[0] + '. ' + Number(p[1]) + '. ' + Number(p[2]) + '.';
+    });
+  })
+  .catch(function () {
+    document.querySelectorAll('[data-date]').forEach(function (el) { el.remove(); });
+  });
+</script>
 </body>
 </html>

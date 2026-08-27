@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828d';
+var VERSION = '20260828e';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -1655,6 +1655,24 @@ function stampFoot() {
   }
   $('#stamp').textContent = t + ' · 출처: 각 대학 발표 원문';
 }
+
+/* 상단 업데이트 날짜 — dates.json 은 GitHub Actions 가 각 파일의
+   마지막 커밋일로 자동 생성한다. 손으로 적으면 고치는 걸 잊는다. */
+function stampUpdated() {
+  var el = $('#site-updated');
+  if (!el) return;
+  fetch('../../../dates.json?v=' + Date.now())
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var v = d['./work/교육과정/2028과목선택/index.html'];
+      if (!v) return;
+      var p = v.split('-');
+      el.textContent = '업데이트: ' + p[0] + '. ' + Number(p[1]) + '. ' + Number(p[2]) + '.';
+    })
+    .catch(function () { /* 못 읽으면 표시하지 않는다 */ });
+}
+
+stampUpdated();
 
 loadCommon().then(function () {
   bind();
