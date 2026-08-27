@@ -673,20 +673,32 @@ button.my-pill.on::after{content:'✓';margin-left:6px;font-size:11px}
   font-size:10.5px;color:var(--ink-faint);border:1px dashed var(--ink-faint);
   border-radius:6px;padding:0 5px;flex:0 0 auto;
 }
-.subj-bar{
-  flex:1 1 auto;min-width:36px;height:5px;border-radius:3px;
-  background:var(--paper-deep);overflow:hidden;
-}
-.subj-bar i{
-  display:block;height:100%;border-radius:3px;
-  background:linear-gradient(90deg,rgba(91,140,137,.5),var(--teal));
-}
 .subj-n{
-  flex:0 0 2.6em;text-align:right;font-size:13px;color:var(--teal);
+  flex:1 1 auto;text-align:right;font-size:13px;color:var(--teal);
   font-weight:700;font-family:var(--serif);
 }
 
 /* 권장 대학·학과 — 대학별로 접어 둔다 */
+/* 권장 대학 전체를 감싸는 접기 — 처음에는 문장 한 줄만 보인다 */
+.subj-univs{margin-top:12px}
+.subj-univs > .su-head{
+  display:flex;align-items:center;gap:10px;justify-content:space-between;
+  cursor:pointer;padding:9px 12px;border-radius:8px;
+  background:var(--paper-deep);list-style:none;
+}
+.subj-univs > .su-head::-webkit-details-marker{display:none}
+.subj-univs > .su-head:hover{background:var(--rule)}
+.su-more{
+  flex-shrink:0;font-size:12.5px;font-weight:700;color:var(--teal);
+  display:flex;align-items:center;gap:4px;
+}
+.su-more::after{content:'▾';font-size:11px;transition:transform .15s ease}
+.subj-univs[open] > .su-head .su-more::after{transform:rotate(180deg)}
+.subj-univs[open] > .su-head .su-more{color:var(--ink-soft)}
+.su-close{display:none}
+.subj-univs[open] > .su-head .su-open{display:none}
+.subj-univs[open] > .su-head .su-close{display:inline}
+
 .subj-detail{margin-top:13px}
 .du{border-top:1px solid var(--rule)}
 .du:last-child{border-bottom:1px solid var(--rule)}

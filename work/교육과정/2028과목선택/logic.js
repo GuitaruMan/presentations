@@ -55,7 +55,9 @@
   function filterSubjects(names, f, master, school) {
     return names.filter(function (n) {
       var m = master[n];
-      if (!f.showOff && !school[n]) return false;
+      // 우리 학교에 열리지 않는 과목은 이 탭에서 다루지 않는다.
+      // 고를 수 없는 과목의 수요를 알려 줘 봐야 학생에게 쓸모가 없다.
+      if (!school[n]) return false;
       if (f.group) {
         if (!m) return false;
         if (groupOf(m.교과군) !== f.group) return false;

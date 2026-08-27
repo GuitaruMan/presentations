@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260825b';
+var VERSION = '20260828c';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -26,7 +26,6 @@ var state = {
   qSubject: '',
   group: null,      // 과목으로 찾기 — 고른 교과군 (null이면 전체)
   type: null,       // 과목으로 찾기 — 일반/진로
-  showOff: false,   // 학교 미개설 과목도 볼지
   course: '일반',   // 내 과목 담기 — 일반 / 과학중점
   cart: {}          // 내 과목 담기 — 슬롯키 → [과목명]
 };
@@ -722,13 +721,24 @@ function summaryHTML(t, want) {
   var core = t.core.filter(function (s) { return !GROUP_NAME[s]; });
   var rec = t.rec.filter(function (s) { return !GROUP_NAME[s] && core.indexOf(s) === -1; });
 
+  // 권장과목이 아래 조건의 후보로 남김없이 다시 나오면(부산대처럼 조건이 곧 권장인 경우)
+  // 위에 한 번 더 늘어놓지 않는다. 같은 과목이 두 줄에 걸쳐 나오면 읽기만 어렵다.
+  var 후보전부 = [];
+  t.cond.forEach(function (c) {
+    (c.후보 || []).forEach(function (s) {
+      if (!GROUP_NAME[s] && 후보전부.indexOf(s) === -1) 후보전부.push(s);
+    });
+  });
+  var 조건이덮음 = 후보전부.length > 0 &&
+    core.concat(rec).every(function (s) { return 후보전부.indexOf(s) !== -1; });
+
   h += '<div class="sum-list">';
-  if (core.length) {
+  if (core.length && !조건이덮음) {
     h += '<div class="sum-row"><span class="sum-key">' +
       (t.split && core.length ? '핵심과목' : '권장과목') + '</span><div class="sum-pills">' +
       chips(core, 'sum-core') + '</div></div>';
   }
-  if (rec.length) {
+  if (rec.length && !조건이덮음) {
     h += '<div class="sum-row"><span class="sum-key">' +
       '권장과목' + '</span><div class="sum-pills">' +
       chips(rec, 'sum-rec') + '</div></div>';
@@ -793,9 +803,15 @@ function slotHTML(slot, want) {
               : kind === 'cond' ? 'pill-cond' : kind === 'pre' ? 'pill-pre' : '';
       var tag = kind === 'pre' ? '선수' : c.유형;
       // 눌러서 '과목으로 찾기'와 같은 상세 창을 연다
+      // 이 탭에서는 수능 출제과목만 표시한다. 편성표를 훑는 자리라
+      // 다른 평가 유형까지 붙이면 표가 어수선해진다.
+      var 수능 = c.평가 === '수능'
+        ? '<span class="pill-eval ev-수능" title="' + esc(EVAL_MARK.수능.설명) + '">' +
+          EVAL_ICON.수능 + ' 수능</span>'
+        : '';
       return '<button type="button" class="pill ' + cls + '" data-subject="' + esc(c.과목) +
         '" title="' + esc(c.과목) + ' 자세히 보기">' + esc(c.과목) +
-        '<span class="pill-type">' + esc(tag) + '</span></button>';
+        '<span class="pill-type">' + esc(tag) + '</span>' + 수능 + '</button>';
     }).join('');
     h += '</div></div>';
   });
@@ -805,15 +821,23 @@ function slotHTML(slot, want) {
 
 /* ── 3. 과목으로 찾기 ─────────────────────────────── */
 function renderSubjects() {
+  // 편성표에 적힌 순서를 그대로 따른다. 학생이 종이 편성표와 나란히 놓고 찾는다.
+  // (막대그래프를 뺐으므로 빈도순으로 늘어놓으면 순서의 근거가 보이지 않는다.)
+  var 편성순 = {};
+  D.school.개설.forEach(function (c, i) {
+    if (편성순[c.과목] === undefined) 편성순[c.과목] = i;
+  });
+
   var all = Object.keys(INDEX).filter(function (n) {
     return !GROUP_NAME[n];           // 교과군 이름은 과목이 아니다
-  }).sort(function (a, b) { return INDEX[b].length - INDEX[a].length; });
+  }).sort(function (a, b) {
+    return (편성순[a] || 0) - (편성순[b] || 0);
+  });
 
   var names = LOGIC.filterSubjects(all, {
     group: state.group,
     type: state.type,
-    q: state.qSubject.trim(),
-    showOff: state.showOff
+    q: state.qSubject.trim()
   }, SUBJ, SCHOOL);
 
   $('#count-subject').innerHTML = names.length
@@ -828,18 +852,15 @@ function renderSubjects() {
     return;
   }
 
-  // 막대 기준은 전체 최댓값으로 고정한다. 걸러도 길이가 들쭉날쭉해지지 않는다.
-  var max = INDEX[all[0]].length;
-
   // 교과군을 안 골랐으면 교과군별로 묶어 소제목을 단다
   var html = '';
   if (state.group) {
-    html = names.map(function (n) { return subjRow(n, max); }).join('');
+    html = names.map(function (n) { return subjRow(n); }).join('');
   } else {
     LOGIC.groupByGroup(names, SUBJ).forEach(function (g) {
       html += '<div class="subj-group"><h3 class="subj-h">' + esc(g.name) +
         '<span class="subj-h-n">' + g.items.length + '</span></h3>' +
-        g.items.map(function (n) { return subjRow(n, max); }).join('') + '</div>';
+        g.items.map(function (n) { return subjRow(n); }).join('') + '</div>';
     });
   }
   body.innerHTML = html;
@@ -849,15 +870,12 @@ function renderSubjects() {
   });
 }
 
-function subjRow(n, max) {
+function subjRow(n) {
   var arr = INDEX[n], m = SUBJ[n];
-  var pct = Math.round(arr.length / max * 100);
   return '<button type="button" class="subj-row" data-subject="' + esc(n) + '">' +
     '<span class="subj-name">' + esc(n) + '</span>' +
     (m ? '<span class="subj-tag">' + esc(m.유형) + '</span>' : '') +
-    (SCHOOL[n] ? '' : '<span class="subj-off">미개설</span>') +
-    '<span class="subj-bar"><i style="width:' + pct + '%"></i></span>' +
-    '<span class="subj-n">' + arr.length + '</span></button>';
+    '<span class="subj-n">' + arr.length + '곳</span></button>';
 }
 
 /* ── 4. 내 과목 담기 ──────────────────────────────── */
@@ -1323,10 +1341,14 @@ function openSubject(name) {
   arr.forEach(function (u) { (byUniv[u.univ] || (byUniv[u.univ] = [])).push(u); });
   var univs = Object.keys(byUniv);
 
-  h += '<p>이 과목을 권장하는 곳은 <b>' + arr.length + '개 모집단위</b>입니다. ' +
-    '<span class="sub-quiet">(' + univs.length + '개 대학)</span></p>';
+  // 대학 목록은 접어 둔다. 과목 설명을 보러 온 학생에게
+  // 대학 이름이 먼저 쏟아지면 정작 과목 이야기가 묻힌다.
+  h += '<details class="subj-univs"><summary class="su-head">' +
+    '<span>이 과목을 권장하는 곳은 <b>' + arr.length + '개 모집단위</b>입니다. ' +
+    '<span class="sub-quiet">(' + univs.length + '개 대학)</span></span>' +
+    '<span class="su-more"><span class="su-open">대학 보기</span>' +
+    '<span class="su-close">접기</span></span></summary>';
 
-  // 240곳까지 나오는 경우가 있어 대학별로 접어 둔다. 궁금한 대학만 펼쳐 본다.
   h += '<div class="subj-detail">';
   univs.forEach(function (uv) {
     var list = byUniv[uv];
@@ -1337,7 +1359,7 @@ function openSubject(name) {
       esc(list.map(function (x) { return x.unit; }).join(', ')) +
       '</p></details>';
   });
-  h += '</div>';
+  h += '</div></details>';
 
   openModal(name, h + '</div>');
 }
@@ -1480,14 +1502,9 @@ function bind() {
     state.qSubject = e.target.value; renderSubjects();
   }, 200);
 
-  $('#show-off').onchange = function (e) {
-    state.showOff = e.target.checked; renderSubjects();
-  };
-
   $('#reset-subject').onclick = function () {
-    state.group = null; state.type = null; state.qSubject = ''; state.showOff = false;
+    state.group = null; state.type = null; state.qSubject = '';
     $('#q-subject').value = '';
-    $('#show-off').checked = false;
     markChips('#f-group', null); markChips('#f-type', null);
     renderSubjects();
   };
