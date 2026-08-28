@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828p';
+var VERSION = '20260828r';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -442,10 +442,6 @@ function cardHTML(u) {
   if (rec.length) {
     h += subRow(u.split && core.length ? '권장' : '권장과목', rec, false);
   }
-  if (!u.core.length && !u.rec.length && !u.cond.length) {
-    h += '<p class="note">권장과목을 따로 두지 않았습니다. 진로와 적성에 따라 선택하세요.</p>';
-  }
-
   u.cond.forEach(function (c) { h += condHTML(c); });
 
   if (off.length) {
