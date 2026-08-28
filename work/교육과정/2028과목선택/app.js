@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260829b';
+var VERSION = '20260829c';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -1247,7 +1247,7 @@ function toggleCart(name, key) {
     if (lack.length) {
       flash('‘' + name + '’을(를) 들으려면 ' +
             lack.map(function (x) { return '‘' + x + '’'; }).join('와 ') +
-            ' 과목의 이수가 필수적으로 요구됩니다.', true);
+            ' 과목을 먼저 듣기를 강력히 권장합니다.', true);
     }
   }
 }
@@ -1359,11 +1359,13 @@ function renderMy() {
 
   var lack = preCheck();
   if (lack.length) {
-    st += '<div class="warn warn-sm warn-pre"><h4>⚠ 먼저 이수해야 하는 과목이 있습니다</h4><ul>';
+    // 물리학→역학과 에너지처럼 위계가 있는 과목은 순서를 지키는 편이 좋지만
+    // 학교가 막는 것은 아니라, 담는 화면에서는 '강력 권장'으로 적는다.
+    st += '<div class="warn warn-sm warn-pre"><h4>⚠ 먼저 듣기를 권하는 과목이 있습니다</h4><ul>';
     lack.forEach(function (x) {
       st += '<li>‘' + esc(x.과목) + '’(' + esc(x.슬롯) + ')을(를) 들으려면 ' +
         '<b>' + x.필요.map(function (p) { return '‘' + esc(p) + '’'; }).join('와 ') +
-        '</b>을(를) 먼저 이수해야 합니다.</li>';
+        '</b>을(를) 먼저 듣기를 <b>강력히 권장</b>합니다.</li>';
     });
     st += '</ul></div>';
   }
