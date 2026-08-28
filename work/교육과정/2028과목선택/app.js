@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260829c';
+var VERSION = '20260829d';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -45,7 +45,9 @@ function buildSlots() {
     [1, 2].forEach(function (sem) {
       var cap = m[sem + '학기'];
       if (!cap) return;
-      // 교양(선택군3)은 같은 학기의 본 슬롯에 딸린 자리로 본다
+      /* 교양은 같은 학기 본 슬롯에 딸린 자리로 본다(예: 3학년 1학기 택5 + 교양 택1).
+         편성표에서 교양만 이렇게 쓰이므로 슬롯 이름으로 판별한다.
+         교양 슬롯 번호가 바뀌면 이 줄과 아래 '이름'을 함께 고쳐야 한다. */
       var sub = g === '선택군3';
       out.push({
         key: 'g' + m.학년 + 's' + sem + (sub ? 'e' : ''),
@@ -130,7 +132,7 @@ function applyClosed() {
     D.school.개설.forEach(function (c) {
       if (c.과목 !== x.과목) return;
       if (x.선택군 && c.선택군 !== x.선택군) return;
-      var 과정들 = x.과정 && x.과정.length ? x.과정 : ['일반', '과학중점'];
+      var 과정들 = x.과정 && x.과정.length ? x.과정 : courses();
       var 학기들 = x.학기 && x.학기.length ? x.학기 : [1, 2];
       과정들.forEach(function (g) {
         if (!c.학기 || !c.학기[g]) return;
@@ -143,8 +145,14 @@ function applyClosed() {
   // 어느 과정에서도 열리지 않게 된 과목은 목록에서 뺀다
   D.school.개설 = D.school.개설.filter(function (c) {
     if (c.선택군 === '지정' || !c.학기) return true;
-    return (c.학기['일반'] || []).length || (c.학기['과학중점'] || []).length;
+    return courses().some(function (g) { return (c.학기[g] || []).length; });
   });
+}
+
+/* 이 학년도의 과정 목록. 학교가 과정을 늘리거나 이름을 바꿔도
+   편성표(meta.과정구분)만 고치면 화면이 따라온다. */
+function courses() {
+  return (D.school.meta && D.school.meta.과정구분) || ['일반'];
 }
 
 function prepare() {
@@ -1144,6 +1152,8 @@ function checkRules() {
     });
   }
 
+  // '과학중점'은 이수규칙 안의 키 이름이기도 하다(meta.이수규칙.과학중점).
+  // 과정 이름이 바뀌면 편성표의 그 키도 함께 바꿔야 한다.
   if (state.course !== '과학중점' || !R.과학중점) return out;
   var S = R.과학중점;
 
@@ -1171,6 +1181,8 @@ function checkRules() {
   }
 
   if (S.심화최소) {
+    /* '심화'는 과학 진로선택·융합선택을 뜻한다 — 2022 개정 교육과정의
+       과목 유형 이름이라 학년도가 바뀌어도 그대로다. */
     var 심화 = byGroup('과학').filter(function (p) {
       return p.유형 === '진로' || p.유형 === '융합';
     });
@@ -1298,7 +1310,10 @@ function readCart() {
       var i = t.indexOf(':');
       if (i > 0) (k[t.slice(0, i)] || (k[t.slice(0, i)] = [])).push(t.slice(i + 1));
     });
-    return { id: p.get('y') || '', c: p.get('course') === '과학중점' ? '과학중점' : '일반', k: k };
+    // 주소에 실린 과정이 이 학년도에 없는 이름이면 첫 과정으로 돌린다
+    var cs = courses();
+    var c = p.get('course');
+    return { id: p.get('y') || '', c: cs.indexOf(c) !== -1 ? c : cs[0], k: k };
   }
   try {
     var raw = localStorage.getItem('cart2028');
@@ -1310,7 +1325,7 @@ function renderMy() {
   // 과정 칩
   var cw = $('#my-course');
   if (!cw.childNodes.length) {
-    ['일반', '과학중점'].forEach(function (t) {
+    courses().forEach(function (t) {
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'chip'; b.textContent = t + '과정';
       b.onclick = function () {
@@ -1537,7 +1552,11 @@ function openGroup(group, type) {
 function openCurriculum() {
   var h = '<div class="doc"><p>' + esc(D.school.meta.출처) + '</p>';
 
-  ['지정', '선택군1', '선택군2', '선택군3'].forEach(function (slot) {
+  // 선택군이 늘거나 이름이 바뀌어도 편성표를 따라간다.
+  // '지정'은 선택슬롯에 없는 학교 지정 과목이라 앞에 따로 붙인다.
+  var slots = ['지정'].concat(Object.keys(D.school.meta.선택슬롯 || {}));
+
+  slots.forEach(function (slot) {
     var rows = D.school.개설.filter(function (c) { return c.선택군 === slot; });
     if (!rows.length) return;
 
