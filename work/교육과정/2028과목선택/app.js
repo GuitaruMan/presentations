@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828n';
+var VERSION = '20260828p';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -17,11 +17,13 @@ var GROUP_NAME = {};
 
 var state = {
   view: 'univ',
+  region: new Set(),   // 권역
   univ: new Set(),
   unit: null,     // 왼쪽에서 고른 학과 (학과별 권장과목 탭)
   track: new Set(),
   q: '',
   target: null,
+  pRegion: null,    // 과목 고르기 — 고른 권역
   pUniv: null,      // 과목 고르기 — 고른 대학
   pTrack: null,     // 과목 고르기 — 고른 계열
   course: '일반',   // 내 과목 담기 — 일반 / 과학중점
@@ -170,6 +172,8 @@ function prepare() {
         pubDate: u.발표일,
         source: u.출처,
         notes: u.안내 || [],
+        region: m.권역 || '',
+        area: m.지역 || '',
         track: m.계열,
         college: m.단과대학,
         unit: m.모집단위,
@@ -223,16 +227,60 @@ function setView(v) {
 }
 
 /* ── 1. 대학으로 찾기 ─────────────────────────────── */
+/* 왼쪽 필터 — 권역 → 대학 → 계열 → 학과 순으로 좁힌다.
+   대학이 47곳이라 권역부터 고르지 않으면 칩이 화면을 덮는다. */
 function buildFilters() {
-  var uw = $('#f-univ');
-  // 학년을 바꾸면 이 함수가 다시 불린다. 비우지 않으면 대학 칩이 두 벌 쌓인다.
-  uw.innerHTML = '';
-  D.rec.대학.forEach(function (u) {
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'chip'; b.textContent = u.대학;
-    b.setAttribute('aria-pressed', 'false');
+  renderRegionChips();
+  renderUnivChips();
+  renderTrackChips();
+}
+
+function renderRegionChips() {
+  var rw = $('#f-region');
+  var regions = [];
+  UNITS.forEach(function (u) {
+    if (u.region && regions.indexOf(u.region) === -1) regions.push(u.region);
+  });
+
+  rw.innerHTML = regions.map(function (g) {
+    var n = UNITS.filter(function (u) { return u.region === g; }).length;
+    return '<button type="button" class="chip" data-val="' + esc(g) +
+      '" aria-pressed="' + state.region.has(g) + '">' + esc(g) +
+      '<span class="chip-n">' + n + '</span></button>';
+  }).join('');
+
+  $$('.chip', rw).forEach(function (b) {
     b.onclick = function () {
-      pickOne(state.univ, u.대학, uw);
+      pickOne(state.region, LOGIC.chipValue(b), rw);
+      // 권역이 바뀌면 그 아래 고른 것들은 의미가 없어진다
+      state.univ.clear();
+      state.track.clear();
+      state.unit = null;
+      renderUnivChips();
+      renderTrackChips();
+      renderUniv();
+    };
+  });
+}
+
+function renderUnivChips() {
+  var uw = $('#f-univ');
+  // 고른 권역의 대학만 보여 준다. 권역을 안 골랐으면 전부.
+  var list = D.rec.대학.filter(function (u) {
+    if (!state.region.size) return true;
+    return u.모집단위.some(function (m) { return state.region.has(m.권역); });
+  });
+
+  uw.innerHTML = list.map(function (u) {
+    var n = UNITS.filter(function (x) { return x.univ === u.대학; }).length;
+    return '<button type="button" class="chip" data-val="' + esc(u.대학) +
+      '" aria-pressed="' + state.univ.has(u.대학) + '">' + esc(u.대학) +
+      '<span class="chip-n">' + n + '</span></button>';
+  }).join('');
+
+  $$('.chip', uw).forEach(function (b) {
+    b.onclick = function () {
+      pickOne(state.univ, LOGIC.chipValue(b), uw);
       // 대학을 바꾸면 계열·학과는 지운다. 앞 대학에 없는 계열이 남아 있으면
       // 고를 수도 없고 해제할 수도 없는 상태가 된다.
       state.track.clear();
@@ -240,29 +288,26 @@ function buildFilters() {
       renderTrackChips();
       renderUniv();
     };
-    uw.appendChild(b);
   });
-
-  renderTrackChips();
-
 }
 
 /* 계열 칩. 대학을 골랐으면 그 대학이 제시한 계열만 보여준다.
    없는 조합을 고를 수 있게 두면 빈 결과만 나온다. */
 function renderTrackChips() {
   var tw = $('#f-track');
-  var 고른대학 = Array.from(state.univ)[0];
+  // 위에서 좁힌 범위(권역·대학) 안에 실제로 있는 계열만 보여 준다
+  var 범위 = function (u) {
+    if (state.region.size && !state.region.has(u.region)) return false;
+    if (state.univ.size && !state.univ.has(u.univ)) return false;
+    return true;
+  };
 
   var tracks = D.rec.meta.계열분류.filter(function (t) {
-    return UNITS.some(function (u) {
-      return u.track === t && (!고른대학 || u.univ === 고른대학);
-    });
+    return UNITS.some(function (u) { return u.track === t && 범위(u); });
   });
 
   tw.innerHTML = tracks.map(function (t) {
-    var n = UNITS.filter(function (u) {
-      return u.track === t && (!고른대학 || u.univ === 고른대학);
-    }).length;
+    var n = UNITS.filter(function (u) { return u.track === t && 범위(u); }).length;
     return '<button type="button" class="chip" data-tone="' + esc(t) +
       '" data-val="' + esc(t) + '" aria-pressed="' + state.track.has(t) + '">' +
       esc(t) + '<span class="chip-n">' + n + '</span></button>';
@@ -299,6 +344,7 @@ function filterUnits() {
   // 띄어쓰기·로마숫자 차이를 무시하고 찾는다 ('전기전자' 로도 '전기·전자공학부'가 나오도록)
   var q = LOGIC.squash(state.q);
   return UNITS.filter(function (u) {
+    if (state.region.size && !state.region.has(u.region)) return false;
     if (state.univ.size && !state.univ.has(u.univ)) return false;
     if (state.track.size && !state.track.has(u.track)) return false;
     if (state.unit && u.key !== state.unit) return false;
@@ -314,10 +360,12 @@ function filterUnits() {
    대학이나 계열을 좁히면 그 안의 학과를 늘어놓아 눌러서 고르게 한다. */
 function renderUnitList() {
   var box = $('#f-unit-box'), w = $('#f-unit');
+  // 권역만으로는 학과가 수백 개라 목록이 쓸모없다. 대학이나 계열까지 좁혀야 보여 준다.
   var 좁혀짐 = state.univ.size || state.track.size;
   if (!좁혀짐) { box.hidden = true; w.innerHTML = ''; state.unit = null; return; }
 
   var list = UNITS.filter(function (u) {
+    if (state.region.size && !state.region.has(u.region)) return false;
     if (state.univ.size && !state.univ.has(u.univ)) return false;
     if (state.track.size && !state.track.has(u.track)) return false;
     return true;
@@ -509,30 +557,58 @@ function openOff(list) {
 /* 대학 → 계열 → 학과 순으로 좁혀 고른다.
    353개 학과 이름을 외워서 칠 수는 없으므로 목록에서 고르게 한다. */
 function renderPicker() {
-  var uw = $('#p-univ');
-
-  if (!uw.childNodes.length) {
-    uw.innerHTML = D.rec.대학.map(function (u) {
-      var n = UNITS.filter(function (x) { return x.univ === u.대학; }).length;
-      return '<button type="button" class="chip" data-val="' + esc(u.대학) +
-        '" aria-pressed="false">' + esc(u.대학) +
-        '<span class="chip-n">' + n + '</span></button>';
-    }).join('');
-    $$('.chip', uw).forEach(function (b) {
-      b.onclick = function () {
-        var v = LOGIC.chipValue(b);
-        state.pUniv = state.pUniv === v ? null : v;
-        state.pTrack = null;
-        state.target = null;
-        renderPicker(); renderPick();
-      };
-    });
-  }
-  $$('.chip', uw).forEach(function (b) {
-    b.setAttribute('aria-pressed', String(LOGIC.chipValue(b) === state.pUniv));
+  // 1단계 — 권역
+  var rw = $('#p-region');
+  var regions = [];
+  UNITS.forEach(function (u) {
+    if (u.region && regions.indexOf(u.region) === -1) regions.push(u.region);
+  });
+  rw.innerHTML = regions.map(function (g) {
+    var n = UNITS.filter(function (u) { return u.region === g; }).length;
+    return '<button type="button" class="chip" data-val="' + esc(g) +
+      '" aria-pressed="' + (state.pRegion === g) + '">' + esc(g) +
+      '<span class="chip-n">' + n + '</span></button>';
+  }).join('');
+  $$('.chip', rw).forEach(function (b) {
+    b.onclick = function () {
+      var v = LOGIC.chipValue(b);
+      state.pRegion = state.pRegion === v ? null : v;
+      state.pUniv = null; state.pTrack = null; state.target = null;
+      renderPicker(); renderPick();
+    };
   });
 
-  // 2단계 — 고른 대학이 제시한 계열만
+  // 2단계 — 그 권역의 대학
+  var uStepBox = $('#step-univ'), uw = $('#p-univ');
+  if (!state.pRegion) {
+    uStepBox.hidden = true;
+    $('#step-track').hidden = true;
+    $('#step-unit').hidden = true;
+    return;
+  }
+  uStepBox.hidden = false;
+
+  var univs = [];
+  UNITS.forEach(function (u) {
+    if (u.region === state.pRegion && univs.indexOf(u.univ) === -1) univs.push(u.univ);
+  });
+  uw.innerHTML = univs.map(function (name) {
+    var n = UNITS.filter(function (x) { return x.univ === name; }).length;
+    return '<button type="button" class="chip" data-val="' + esc(name) +
+      '" aria-pressed="' + (state.pUniv === name) + '">' + esc(name) +
+      '<span class="chip-n">' + n + '</span></button>';
+  }).join('');
+  $$('.chip', uw).forEach(function (b) {
+    b.onclick = function () {
+      var v = LOGIC.chipValue(b);
+      state.pUniv = state.pUniv === v ? null : v;
+      state.pTrack = null;
+      state.target = null;
+      renderPicker(); renderPick();
+    };
+  });
+
+  // 3단계 — 고른 대학이 제시한 계열만
   var tStep = $('#step-track'), tw = $('#p-track');
   if (!state.pUniv) {
     tStep.hidden = true;
@@ -563,7 +639,7 @@ function renderPicker() {
     });
   }
 
-  // 3단계 — 학과 목록
+  // 4단계 — 학과 목록
   var uStep = $('#step-unit'), ul = $('#p-unit');
   if (!state.pUniv || !state.pTrack) {
     uStep.hidden = true;
@@ -1463,11 +1539,11 @@ function bind() {
   }, 200);
 
   $('#reset-univ').onclick = function () {
-    state.univ.clear(); state.track.clear(); state.q = ''; state.unit = null;
+    state.region.clear(); state.univ.clear(); state.track.clear();
+    state.q = ''; state.unit = null;
     $('#q-univ').value = '';
-    $$('#f-univ .chip').forEach(function (c) {
-      c.setAttribute('aria-pressed', 'false');
-    });
+    renderRegionChips();
+    renderUnivChips();
     renderTrackChips();
     renderUniv();
   };

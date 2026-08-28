@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>2028 과목 선택 안내</title>
 <meta name="description" content="2028학년도 대학별 권장과목과 우리 학교 편성표를 함께 보는 과목 선택 안내">
-<link rel="stylesheet" href="style.css?v=20260828n">
+<link rel="stylesheet" href="style.css?v=20260828p">
 </head>
 <body>
 
@@ -55,14 +55,14 @@
     <button role="tab" class="tab" data-view="pick" aria-selected="false">
       <em>편성표에 표시</em><span>그 과목이 우리 학교 어디에 있나</span>
     </button>
-    <!-- 과목별 수요 — 학생이 다수 선택에 휩쓸릴 우려가 있어 화면에서 내렸다.
-         되살리려면 이 주석을 풀고 app.js 의 HIDDEN_VIEWS 에서 'subject' 를 빼면 된다. -->
-    <!--
-    <!-- 과목별 수요 — 화면에서 내림. 코드는 _archive_subject_tab.js 참고
-    <button role="tab" class="tab" data-view="subject" aria-selected="false">
-      <em>과목별 수요</em><span>이 과목을 권장하는 곳은 어디</span>
-    </button>
-    -->
+    <!-- 과목별 수요 탭 — 화면에서 내렸다.
+         되살리려면 app.js 의 HIDDEN_VIEWS 에서 'subject' 를 빼고
+         _archive_subject_tab.js 의 함수를 app.js 로 옮긴 뒤
+         아래 탭 버튼과 view-subject 섹션을 되살린다.
+
+         <button role="tab" class="tab" data-view="subject" aria-selected="false">
+           <em>과목별 수요</em><span>이 과목을 권장하는 곳은 어디</span>
+         </button>
     -->
     <button role="tab" class="tab tab-my" data-view="my" aria-selected="false">
       <em>내 과목 담기</em><span>학년·학기별로 직접 골라보기</span>
@@ -80,6 +80,11 @@
           <label for="q-univ">학과 · 대학 검색</label>
           <input type="search" id="q-univ" placeholder="예: 신소재공학부, 고려대" autocomplete="off">
         </div>
+
+        <fieldset class="field">
+          <legend>권역</legend>
+          <div class="chips" id="f-region"></div>
+        </fieldset>
 
         <fieldset class="field">
           <legend>대학</legend>
@@ -112,18 +117,23 @@
       <aside class="pane-filter">
         <div id="target-box" class="target-box" hidden></div>
 
-        <fieldset class="field" id="step-univ">
-          <legend><span class="step-n">1</span>대학</legend>
+        <fieldset class="field" id="step-region">
+          <legend><span class="step-n">1</span>권역</legend>
+          <div class="chips" id="p-region"></div>
+        </fieldset>
+
+        <fieldset class="field" id="step-univ" hidden>
+          <legend><span class="step-n">2</span>대학</legend>
           <div class="chips" id="p-univ"></div>
         </fieldset>
 
         <fieldset class="field" id="step-track" hidden>
-          <legend><span class="step-n">2</span>계열</legend>
+          <legend><span class="step-n">3</span>계열</legend>
           <div class="chips" id="p-track"></div>
         </fieldset>
 
         <fieldset class="field" id="step-unit" hidden>
-          <legend><span class="step-n">3</span>학과</legend>
+          <legend><span class="step-n">4</span>학과</legend>
           <div class="unit-list" id="p-unit"></div>
         </fieldset>
 
@@ -136,38 +146,7 @@
     </div>
   </section>
 
-  <!-- ── 3. 과목으로 찾기 — 화면에서 내림 (코드 보관용)
-  <!— ── 3. 과목으로 찾기 ───────────────────────────── —>
-  <!— 화면에서 내림 (위 주석 참고) — 코드는 되살리기 위해 남겨 둔다
-  <section class="view" id="view-subject" hidden aria-label="과목으로 찾기">
-    <div class="panes">
-      <aside class="pane-filter">
-        <fieldset class="field">
-          <legend>교과군</legend>
-          <div class="chips" id="f-group"></div>
-        </fieldset>
-
-        <fieldset class="field">
-          <legend>과목 유형</legend>
-          <div class="chips" id="f-type"></div>
-        </fieldset>
-
-        <div class="field">
-          <label for="q-subject">과목 이름으로 찾기</label>
-          <input type="search" id="q-subject" placeholder="예: 미적분" autocomplete="off">
-        </div>
-
-        <button type="button" class="reset" id="reset-subject">조건 지우기</button>
-      </aside>
-      <div class="pane-result">
-        <p class="count" id="count-subject" role="status"></p>
-        <div id="subject-body"></div>
-      </div>
-    </div>
-  </section>
-  —>
-
-  -->
+  <!-- ── 3. 과목으로 찾기 — 화면에서 내렸다. 마크업은 위 탭 주석 참고 -->
 
   <!-- ── 4. 내 과목 담기 ────────────────────────────── -->
   <section class="view" id="view-my" hidden aria-label="내 과목 담기">
@@ -214,7 +193,7 @@
 
 <div class="loading" id="loading">자료를 불러오는 중입니다…</div>
 
-<script src="logic.js?v=20260828n"></script>
-<script src="app.js?v=20260828n"></script>
+<script src="logic.js?v=20260828p"></script>
+<script src="app.js?v=20260828p"></script>
 </body>
 </html>
