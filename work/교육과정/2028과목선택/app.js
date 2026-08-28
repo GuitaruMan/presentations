@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260828r';
+var VERSION = '20260829b';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -227,12 +227,77 @@ function setView(v) {
 }
 
 /* ── 1. 대학으로 찾기 ─────────────────────────────── */
+/* ── 단계 접기 ─────────────────────────────────────
+   모바일에서 네 단계를 다 펼쳐 두면 필터만으로 화면이 꽉 찬다(측정 872px).
+   고른 단계는 "권역  수도권" 한 줄로 접고, 지금 고를 차례만 펼친다. */
+
+/* 한 단계의 상태를 정한다.
+   pane  — 그 단계들이 들어 있는 영역 ('#view-univ' 또는 '#view-pick')
+   상태  — { region: '수도권', univ: '', … } 고른 값. 빈 문자열이면 아직 안 고름
+   열단계 — 펼쳐 둘 단계 이름 */
+function paintSteps(pane, 상태, 열단계) {
+  $$('.step', $(pane)).forEach(function (box) {
+    var name = box.dataset.step;
+    var 고름 = 상태[name] || '';
+    var 열림 = (name === 열단계);
+
+    box.dataset.open = String(열림);
+    $('.step-body', box).hidden = !열림;
+
+    var pick = $('.step-pick', box);
+    pick.textContent = 열림 ? '' : (고름 || '전체');
+    pick.className = 'step-pick' + (고름 ? '' : ' step-pick-none');
+  });
+}
+
+/* 접힌 줄을 누르면 그 단계를 편다. 고른 값은 건드리지 않는다. */
+function bindStepHeads(pane, onOpen) {
+  $$('.step-head', $(pane)).forEach(function (b) {
+    b.onclick = function () { onOpen(b.parentNode.dataset.step); };
+  });
+}
+
+/* 고른 것을 짧게 적는다. 여럿이면 '수도권 외 2' */
+function pickLabel(set) {
+  var a = Array.from(set || []);
+  if (!a.length) return '';
+  return a.length === 1 ? a[0] : a[0] + ' 외 ' + (a.length - 1);
+}
+
 /* 왼쪽 필터 — 권역 → 대학 → 계열 → 학과 순으로 좁힌다.
    대학이 47곳이라 권역부터 고르지 않으면 칩이 화면을 덮는다. */
+/* 지금 펼쳐 둘 단계. 사용자가 손으로 연 것이 있으면 그것을 우선한다. */
+var openStepUniv = null;
+
 function buildFilters() {
   renderRegionChips();
   renderUnivChips();
   renderTrackChips();
+  paintUnivSteps();
+  bindStepHeads('#view-univ', function (name) {
+    openStepUniv = name;
+    paintUnivSteps();
+  });
+}
+
+/* 아직 안 고른 것 중 가장 앞선 단계를 편다.
+   다 골랐으면 마지막(학과)을 편 채로 둔다. */
+function paintUnivSteps() {
+  var 상태 = {
+    region: pickLabel(state.region),
+    univ: pickLabel(state.univ),
+    track: pickLabel(state.track),
+    unit: state.unit ? (UNITS.filter(function (u) { return u.key === state.unit; })[0] || {}).unit || '' : ''
+  };
+  var 순서 = ['region', 'univ', 'track', 'unit'];
+  var 열단계 = openStepUniv;
+  if (!열단계) {
+    // 다 골랐으면 아무것도 펼치지 않는다 — 이제 오른쪽 결과를 볼 차례다
+    열단계 = 순서.filter(function (n) { return !상태[n]; })[0] || null;
+    // 학과 목록은 대학이나 계열을 좁혀야 나온다
+    if (열단계 === 'unit' && $('#f-unit-box').hidden) 열단계 = 'track';
+  }
+  paintSteps('#view-univ', 상태, 열단계);
 }
 
 function renderRegionChips() {
@@ -252,6 +317,7 @@ function renderRegionChips() {
   $$('.chip', rw).forEach(function (b) {
     b.onclick = function () {
       pickOne(state.region, LOGIC.chipValue(b), rw);
+      openStepUniv = null;   // 고르면 다음 단계로 넘어간다
       // 권역이 바뀌면 그 아래 고른 것들은 의미가 없어진다
       state.univ.clear();
       state.track.clear();
@@ -281,6 +347,7 @@ function renderUnivChips() {
   $$('.chip', uw).forEach(function (b) {
     b.onclick = function () {
       pickOne(state.univ, LOGIC.chipValue(b), uw);
+      openStepUniv = null;
       // 대학을 바꾸면 계열·학과는 지운다. 앞 대학에 없는 계열이 남아 있으면
       // 고를 수도 없고 해제할 수도 없는 상태가 된다.
       state.track.clear();
@@ -316,6 +383,7 @@ function renderTrackChips() {
   $$('.chip', tw).forEach(function (b) {
     b.onclick = function () {
       pickOne(state.track, LOGIC.chipValue(b), tw);
+      openStepUniv = null;
       state.unit = null;   // 계열이 바뀌면 앞서 고른 학과는 목록에 없을 수 있다
       renderUniv();
     };
@@ -381,6 +449,7 @@ function renderUnitList() {
   $$('.unit-btn', w).forEach(function (b) {
     b.onclick = function () {
       state.unit = state.unit === b.dataset.key ? null : b.dataset.key;
+      openStepUniv = null;
       // 목록은 그대로 두고 눌린 표시만 바꾼다 (renderUniv 가 다시 부르면 재귀가 된다)
       $$('.unit-btn', w).forEach(function (x) {
         x.classList.toggle('on', x.dataset.key === state.unit);
@@ -392,6 +461,7 @@ function renderUnitList() {
 
 function renderUniv() {
   renderUnitList();
+  if ($('#view-univ .step')) paintUnivSteps();
   var list = filterUnits();
   var box = $('#list-univ');
 
@@ -569,6 +639,7 @@ function renderPicker() {
     b.onclick = function () {
       var v = LOGIC.chipValue(b);
       state.pRegion = state.pRegion === v ? null : v;
+      openStepPick = null;
       state.pUniv = null; state.pTrack = null; state.target = null;
       renderPicker(); renderPick();
     };
@@ -580,6 +651,7 @@ function renderPicker() {
     uStepBox.hidden = true;
     $('#step-track').hidden = true;
     $('#step-unit').hidden = true;
+    paintPickSteps();
     return;
   }
   uStepBox.hidden = false;
@@ -600,6 +672,7 @@ function renderPicker() {
       state.pUniv = state.pUniv === v ? null : v;
       state.pTrack = null;
       state.target = null;
+      openStepPick = null;
       renderPicker(); renderPick();
     };
   });
@@ -608,6 +681,8 @@ function renderPicker() {
   var tStep = $('#step-track'), tw = $('#p-track');
   if (!state.pUniv) {
     tStep.hidden = true;
+    $('#step-unit').hidden = true;
+    paintPickSteps();
   } else {
     tStep.hidden = false;
     var tracks = [];
@@ -630,6 +705,7 @@ function renderPicker() {
         var v = LOGIC.chipValue(b);
         state.pTrack = state.pTrack === v ? null : v;
         state.target = null;
+        openStepPick = null;
         renderPicker(); renderPick();
       };
     });
@@ -639,6 +715,7 @@ function renderPicker() {
   var uStep = $('#step-unit'), ul = $('#p-unit');
   if (!state.pUniv || !state.pTrack) {
     uStep.hidden = true;
+    paintPickSteps();
     return;
   }
   uStep.hidden = false;
@@ -666,8 +743,35 @@ function renderPicker() {
   $$('.unit-btn', ul).forEach(function (b) {
     b.onclick = function () {
       state.target = UNITS.filter(function (u) { return u.key === b.dataset.key; })[0];
+      openStepPick = null;
       renderPicker(); renderPick();
     };
+  });
+
+  paintPickSteps();
+}
+
+/* 지금 펼쳐 둘 단계. 손으로 연 것이 있으면 그것을 우선한다. */
+var openStepPick = null;
+
+function paintPickSteps() {
+  var 상태 = {
+    region: state.pRegion || '',
+    univ: state.pUniv || '',
+    track: state.pTrack || '',
+    unit: state.target ? state.target.unit : ''
+  };
+  var 순서 = ['region', 'univ', 'track', 'unit'];
+  // 다 골랐으면 아무것도 펼치지 않는다 — 이제 오른쪽 편성표를 볼 차례다
+  var 열단계 = openStepPick ||
+    (순서.filter(function (n) { return !상태[n]; })[0] || null);
+  paintSteps('#view-pick', 상태, 열단계);
+
+  bindStepHeads('#view-pick', function (name) {
+    // 아직 열 수 없는 단계(앞 단계 미선택)는 무시한다
+    if ($('#step-' + name).hidden) return;
+    openStepPick = name;
+    paintPickSteps();
   });
 }
 
@@ -1536,7 +1640,7 @@ function bind() {
 
   $('#reset-univ').onclick = function () {
     state.region.clear(); state.univ.clear(); state.track.clear();
-    state.q = ''; state.unit = null;
+    state.q = ''; state.unit = null; openStepUniv = null;
     $('#q-univ').value = '';
     renderRegionChips();
     renderUnivChips();

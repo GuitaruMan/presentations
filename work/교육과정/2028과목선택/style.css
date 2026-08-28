@@ -170,6 +170,40 @@ body{
 .field input::placeholder{color:var(--ink-faint)}
 .field input:focus{outline:0;border-bottom-color:var(--teal);border-bottom-width:2.5px}
 
+/* ── 단계 접기 ─────────────────────────────────────
+   고른 단계는 한 줄로 접고, 지금 고를 차례만 편다.
+   모바일에서 필터가 화면을 다 덮지 않게 하기 위한 것. */
+.step{margin:0 0 10px}
+.step-head{
+  width:100%;display:flex;align-items:center;gap:8px;
+  background:none;border:0;border-bottom:1.5px solid var(--rule);
+  padding:7px 2px;cursor:pointer;font-family:inherit;text-align:left;
+}
+.step-head:hover{border-bottom-color:var(--ink-soft)}
+.step[data-open="true"] .step-head{border-bottom-color:var(--ink)}
+
+.step-label{
+  font-size:11.5px;font-weight:700;letter-spacing:.13em;
+  color:var(--ink-soft);text-transform:uppercase;flex:0 0 auto;
+}
+.step[data-open="true"] .step-label{color:var(--ink)}
+
+/* 접혔을 때 오른쪽에 고른 값 */
+.step-pick{
+  flex:1 1 auto;text-align:right;font-size:13.5px;font-weight:600;
+  color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.step-pick-none{color:var(--ink-faint);font-weight:400}
+.step-pick:not(:empty)::after{
+  content:'바꾸기';margin-left:8px;font-size:11px;font-weight:600;
+  color:var(--teal);letter-spacing:0;
+}
+
+.step-body{padding:10px 0 2px}
+
+/* 단계 번호 — 편성표 탭에서만 쓴다 */
+.step-head .step-n{margin-right:0}
+
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{
   font-family:inherit;font-size:13px;color:var(--ink-soft);

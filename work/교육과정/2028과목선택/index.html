@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>2028 과목 선택 안내</title>
 <meta name="description" content="2028학년도 대학별 권장과목과 우리 학교 편성표를 함께 보는 과목 선택 안내">
-<link rel="stylesheet" href="style.css?v=20260828r">
+<link rel="stylesheet" href="style.css?v=20260829b">
 </head>
 <body>
 
@@ -81,25 +81,25 @@
           <input type="search" id="q-univ" placeholder="예: 신소재공학부, 고려대" autocomplete="off">
         </div>
 
-        <fieldset class="field">
-          <legend>권역</legend>
-          <div class="chips" id="f-region"></div>
-        </fieldset>
+        <section class="step" data-step="region">
+          <button type="button" class="step-head"><span class="step-label">권역</span><span class="step-pick"></span></button>
+          <div class="step-body"><div class="chips" id="f-region"></div></div>
+        </section>
 
-        <fieldset class="field">
-          <legend>대학</legend>
-          <div class="chips" id="f-univ"></div>
-        </fieldset>
+        <section class="step" data-step="univ">
+          <button type="button" class="step-head"><span class="step-label">대학</span><span class="step-pick"></span></button>
+          <div class="step-body"><div class="chips" id="f-univ"></div></div>
+        </section>
 
-        <fieldset class="field">
-          <legend>계열</legend>
-          <div class="chips" id="f-track"></div>
-        </fieldset>
+        <section class="step" data-step="track">
+          <button type="button" class="step-head"><span class="step-label">계열</span><span class="step-pick"></span></button>
+          <div class="step-body"><div class="chips" id="f-track"></div></div>
+        </section>
 
-        <fieldset class="field" id="f-unit-box" hidden>
-          <legend>학과</legend>
-          <div class="unit-list" id="f-unit"></div>
-        </fieldset>
+        <section class="step" data-step="unit" id="f-unit-box" hidden>
+          <button type="button" class="step-head"><span class="step-label">학과</span><span class="step-pick"></span></button>
+          <div class="step-body"><div class="unit-list" id="f-unit"></div></div>
+        </section>
 
         <button type="button" class="reset" id="reset-univ">조건 지우기</button>
       </aside>
@@ -117,25 +117,25 @@
       <aside class="pane-filter">
         <div id="target-box" class="target-box" hidden></div>
 
-        <fieldset class="field" id="step-region">
-          <legend><span class="step-n">1</span>권역</legend>
-          <div class="chips" id="p-region"></div>
-        </fieldset>
+        <section class="step" id="step-region" data-step="region">
+          <button type="button" class="step-head"><span class="step-n">1</span><span class="step-label">권역</span><span class="step-pick"></span></button>
+          <div class="step-body"><div class="chips" id="p-region"></div></div>
+        </section>
 
-        <fieldset class="field" id="step-univ" hidden>
-          <legend><span class="step-n">2</span>대학</legend>
-          <div class="chips" id="p-univ"></div>
-        </fieldset>
+        <section class="step" id="step-univ" data-step="univ" hidden>
+          <button type="button" class="step-head"><span class="step-n">2</span><span class="step-label">대학</span><span class="step-pick"></span></button>
+          <div class="step-body"><div class="chips" id="p-univ"></div></div>
+        </section>
 
-        <fieldset class="field" id="step-track" hidden>
-          <legend><span class="step-n">3</span>계열</legend>
-          <div class="chips" id="p-track"></div>
-        </fieldset>
+        <section class="step" id="step-track" data-step="track" hidden>
+          <button type="button" class="step-head"><span class="step-n">3</span><span class="step-label">계열</span><span class="step-pick"></span></button>
+          <div class="step-body"><div class="chips" id="p-track"></div></div>
+        </section>
 
-        <fieldset class="field" id="step-unit" hidden>
-          <legend><span class="step-n">4</span>학과</legend>
-          <div class="unit-list" id="p-unit"></div>
-        </fieldset>
+        <section class="step" id="step-unit" data-step="unit" hidden>
+          <button type="button" class="step-head"><span class="step-n">4</span><span class="step-label">학과</span><span class="step-pick"></span></button>
+          <div class="step-body"><div class="unit-list" id="p-unit"></div></div>
+        </section>
 
         <p class="pane-note">학과를 고르면 권장과목이 편성표 위에 표시됩니다. 학교에 없는 과목은 빼고 보여줍니다.</p>
       </aside>
@@ -193,7 +193,7 @@
 
 <div class="loading" id="loading">자료를 불러오는 중입니다…</div>
 
-<script src="logic.js?v=20260828r"></script>
-<script src="app.js?v=20260828r"></script>
+<script src="logic.js?v=20260829b"></script>
+<script src="app.js?v=20260829b"></script>
 </body>
 </html>
