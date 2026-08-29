@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260829e';
+var VERSION = '20260829f';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
