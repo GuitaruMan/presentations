@@ -2,13 +2,46 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260829g';
+var VERSION = '20260829i';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
 var SUBJ = {};           // 과목명 → 마스터
 var SCHOOL = {};         // 학교 개설 과목명 → 정보
 var INDEX = {};          // 과목명 → 모집단위 목록 (런타임 생성)
+
+/* '학과별 권장과목' 탭에서 지금 고른 조건에 맞는 모집단위인가.
+   칩 개수 세기·학과 목록·결과 목록이 모두 같은 기준을 써야 하므로 한곳에 둔다.
+   단계를 인자로 받아 어디까지 볼지 정한다(계열 칩은 자기 앞 단계까지만 본다). */
+function 조건에맞나(u, 계열까지) {
+  if (state.region.size && !state.region.has(u.region)) return false;
+  if (state.univ.size && !state.univ.has(u.univ)) return false;
+  if (계열까지 && state.track.size && !state.track.has(u.track)) return false;
+  return true;
+}
+
+/* 권역 칩 — 두 탭이 같은 목록과 같은 모양을 쓰고,
+   고른 상태를 어떻게 판정하는지만 다르다(대학 찾기는 여러 개, 편성표는 하나).
+   그래서 판정만 함수로 받는다. */
+function 권역칩HTML(선택됨) {
+  var regions = [];
+  UNITS.forEach(function (u) {
+    if (u.region && regions.indexOf(u.region) === -1) regions.push(u.region);
+  });
+  return regions.map(function (g) {
+    var n = UNITS.filter(function (u) { return u.region === g; }).length;
+    return '<button type="button" class="chip" data-val="' + esc(g) +
+      '" aria-pressed="' + 선택됨(g) + '">' + esc(g) +
+      '<span class="chip-n">' + n + '</span></button>';
+  }).join('');
+}
+
+/* 대학이 권장한 과목 수보다 학교에 열린 것이 적을 때의 안내.
+   '학과별 권장과목'과 '편성표에 표시' 두 탭이 같은 말을 해야 하므로 한곳에 둔다. */
+function 부족안내(n) {
+  return '우리 학교에는 ' + n + '과목만 열립니다. ' +
+    '공동교육과정 등 다른 방법을 담임 선생님과 상의해 보세요.';
+}
 
 /* 대학이 과목이 아니라 교과군 이름을 적어둔 경우.
    '미개설'로 표시하면 오해를 부른다 — 그 교과군에 우리 학교 과목이 있다.
@@ -177,11 +210,11 @@ function prepare() {
         grade: u.제시강도,
         gradeWhy: u.강도근거,
         split: u.핵심권장구분,
-        pubDate: u.발표일,
+        // 대학이 자료에 붙인 안내문·출처. 지금 화면에는 안 쓰지만
+        // 자료에는 11개 대학 모두 들어 있다(설명서 '자료 출처'와 짝).
         source: u.출처,
         notes: u.안내 || [],
         region: m.권역 || '',
-        area: m.지역 || '',
         track: m.계열,
         college: m.단과대학,
         unit: m.모집단위,
@@ -273,7 +306,8 @@ function pickLabel(set) {
 }
 
 /* 왼쪽 필터 — 권역 → 대학 → 계열 → 학과 순으로 좁힌다.
-   대학이 47곳이라 권역부터 고르지 않으면 칩이 화면을 덮는다. */
+   대학이 많으면 권역부터 고르지 않고는 칩이 화면을 덮는다.
+   특히 모바일에서 필터가 화면을 다 차지해 버린다. */
 /* 지금 펼쳐 둘 단계. 사용자가 손으로 연 것이 있으면 그것을 우선한다. */
 var openStepUniv = null;
 
@@ -310,17 +344,7 @@ function paintUnivSteps() {
 
 function renderRegionChips() {
   var rw = $('#f-region');
-  var regions = [];
-  UNITS.forEach(function (u) {
-    if (u.region && regions.indexOf(u.region) === -1) regions.push(u.region);
-  });
-
-  rw.innerHTML = regions.map(function (g) {
-    var n = UNITS.filter(function (u) { return u.region === g; }).length;
-    return '<button type="button" class="chip" data-val="' + esc(g) +
-      '" aria-pressed="' + state.region.has(g) + '">' + esc(g) +
-      '<span class="chip-n">' + n + '</span></button>';
-  }).join('');
+  rw.innerHTML = 권역칩HTML(function (g) { return state.region.has(g); });
 
   $$('.chip', rw).forEach(function (b) {
     b.onclick = function () {
@@ -371,11 +395,7 @@ function renderUnivChips() {
 function renderTrackChips() {
   var tw = $('#f-track');
   // 위에서 좁힌 범위(권역·대학) 안에 실제로 있는 계열만 보여 준다
-  var 범위 = function (u) {
-    if (state.region.size && !state.region.has(u.region)) return false;
-    if (state.univ.size && !state.univ.has(u.univ)) return false;
-    return true;
-  };
+  var 범위 = function (u) { return 조건에맞나(u, false); };
 
   var tracks = D.rec.meta.계열분류.filter(function (t) {
     return UNITS.some(function (u) { return u.track === t && 범위(u); });
@@ -414,9 +434,7 @@ function filterUnits() {
   // 띄어쓰기·로마숫자 차이를 무시하고 찾는다 ('전기전자' 로도 '전기·전자공학부'가 나오도록)
   var q = LOGIC.squash(state.q);
   return UNITS.filter(function (u) {
-    if (state.region.size && !state.region.has(u.region)) return false;
-    if (state.univ.size && !state.univ.has(u.univ)) return false;
-    if (state.track.size && !state.track.has(u.track)) return false;
+    if (!조건에맞나(u, true)) return false;
     if (state.unit && u.key !== state.unit) return false;
     if (q) {
       var hay = LOGIC.squash(u.unit + u.univ + u.college + u.track);
@@ -434,12 +452,7 @@ function renderUnitList() {
   var 좁혀짐 = state.univ.size || state.track.size;
   if (!좁혀짐) { box.hidden = true; w.innerHTML = ''; state.unit = null; return; }
 
-  var list = UNITS.filter(function (u) {
-    if (state.region.size && !state.region.has(u.region)) return false;
-    if (state.univ.size && !state.univ.has(u.univ)) return false;
-    if (state.track.size && !state.track.has(u.track)) return false;
-    return true;
-  });
+  var list = UNITS.filter(function (u) { return 조건에맞나(u, true); });
   box.hidden = false;
 
   w.innerHTML = list.map(function (u) {
@@ -560,6 +573,8 @@ function subRow(key, arr, core) {
 function condHTML(c) {
   var h = '<div class="cond">';
   h += '<b>조건</b> ' + esc(c.설명 || '');
+  // 지금 자료에는 없지만, 대학이 '화학 포함 3과목'처럼 특정 과목을 못박는
+  // 경우가 있어 자리를 남겨 둔다. 빌더가 이 필드를 채우면 바로 표시된다.
   if (c.필수포함 && c.필수포함.length) {
     h += '<br>반드시 포함: ' + esc(c.필수포함.join(', '));
   }
@@ -574,8 +589,7 @@ function condHTML(c) {
             esc(s) + '">' + esc(s) + '</button>';
         }).join('') + '</div>';
       if (c.최소 && list.length < c.최소) {
-        h += '<p class="cond-short">우리 학교에는 ' + list.length +
-          '과목만 열립니다. 공동교육과정 등 다른 방법을 담임 선생님과 상의해 보세요.</p>';
+        h += '<p class="cond-short">' + 부족안내(list.length) + '</p>';
       }
     } else {
       h += '<p class="cond-short">우리 학교에 해당 교과군 과목이 없습니다.</p>';
@@ -623,20 +637,11 @@ function openOff(list) {
 
 /* ── 2. 과목 고르기 ───────────────────────────────── */
 /* 대학 → 계열 → 학과 순으로 좁혀 고른다.
-   353개 학과 이름을 외워서 칠 수는 없으므로 목록에서 고르게 한다. */
+   학과가 수백 개라 이름을 외워서 칠 수는 없으므로 목록에서 고르게 한다. */
 function renderPicker() {
   // 1단계 — 권역
   var rw = $('#p-region');
-  var regions = [];
-  UNITS.forEach(function (u) {
-    if (u.region && regions.indexOf(u.region) === -1) regions.push(u.region);
-  });
-  rw.innerHTML = regions.map(function (g) {
-    var n = UNITS.filter(function (u) { return u.region === g; }).length;
-    return '<button type="button" class="chip" data-val="' + esc(g) +
-      '" aria-pressed="' + (state.pRegion === g) + '">' + esc(g) +
-      '<span class="chip-n">' + n + '</span></button>';
-  }).join('');
+  rw.innerHTML = 권역칩HTML(function (g) { return state.pRegion === g; });
   $$('.chip', rw).forEach(function (b) {
     b.onclick = function () {
       var v = LOGIC.chipValue(b);
@@ -853,7 +858,7 @@ function renderPick() {
 }
 
 /* 교과군 조건(예: '제2외국어/한문 1과목 이상')에 해당하는 우리 학교 과목.
-   LOGIC.groupOf 는 소수 교과군을 '기타'로 묶으므로 여기서는 쓰지 않는다. */
+   교과군 이름을 편성표에 적힌 그대로 맞춰 본다 — 묶거나 줄이지 않는다. */
 function schoolInGroup(group, type) {
   return D.school.개설.filter(function (c) {
     if (c.선택군 === '지정') return false;
@@ -941,8 +946,7 @@ function summaryHTML(t, want) {
         (list.length
           ? '<div class="sum-fold-in">' + chips(list, 'sum-cond') + '</div>' +
             (모자람
-              ? '<span class="sum-note sum-short">우리 학교에는 ' + list.length +
-                '과목만 열립니다. 공동교육과정 등 다른 방법을 담임 선생님과 상의해 보세요.</span>'
+              ? '<span class="sum-note sum-short">' + 부족안내(list.length) + '</span>'
               : '')
           : '<span class="sum-note">우리 학교에 해당 과목이 없습니다.</span>') +
         '</div></div>';
@@ -1339,8 +1343,6 @@ function renderMy() {
     b.setAttribute('aria-pressed', String(b.textContent === state.course + '과정'));
   });
 
-  var want = {};   // 이 탭에서는 지망 학과를 따로 띄우지 않는다 ('편성표에 표시' 탭과 역할 분리)
-
   // 슬롯별 현황
   var st = '<ul class="my-count">';
   SLOTS.forEach(function (s) {
@@ -1401,10 +1403,10 @@ function renderMy() {
     groups.forEach(function (g) {
       h += '<div class="sect"><p class="sect-key">' + esc(g) + '</p><div class="pick-grid">';
       h += rows.filter(function (c) { return c.교과군 === g; }).sort(byType).map(function (c) {
+        // 이 탭은 지망 학과를 띄우지 않는다('편성표에 표시' 탭과 역할 분리).
+        // 그래서 권장/핵심 강조 없이 담았는지(on)만 표시한다.
         var on = picked.indexOf(c.과목) !== -1;
-        var kind = want[c.과목];
-        var cls = 'pill my-pill' + (on ? ' on' : '') +
-          (kind === 'core' ? ' pill-core' : kind ? ' pill-hit' : '');
+        var cls = 'pill my-pill' + (on ? ' on' : '');
         return '<button type="button" class="' + cls + '" data-add="' + esc(c.과목) +
           '" data-slot="' + s.key + '" aria-pressed="' + on + '">' +
           esc(c.과목) + '<span class="pill-type">' + esc(c.유형) + '</span>' +
