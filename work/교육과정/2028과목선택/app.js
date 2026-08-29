@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260829d';
+var VERSION = '20260829e';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -1771,11 +1771,18 @@ function dropClosedFromCart() {
 }
 
 function stampFoot() {
-  // 대학 수는 자료에서 읽는다. 대학이 늘어도 문구를 고칠 일이 없다.
-  if ($('#univ-count')) $('#univ-count').textContent = D.rec.meta.대학수;
+  /* 대학 수·모집단위 수는 목록에서 직접 센다.
+     meta 에도 같은 값이 적혀 있지만, 대학을 넣고 뺄 때 그 숫자를 함께
+     고치는 것을 잊으면 화면과 자료가 어긋난다. 세는 편이 틀릴 일이 없다. */
+  var 대학수 = D.rec.대학.length;
+  var 모집단위수 = D.rec.대학.reduce(function (n, u) {
+    return n + ((u.모집단위 || []).length);
+  }, 0);
 
-  var t = '자료 기준일 ' + D.rec.meta.갱신일 + ' · ' + D.rec.meta.대학수 + '개 대학 ' +
-          D.rec.meta.모집단위수 + '개 모집단위';
+  if ($('#univ-count')) $('#univ-count').textContent = 대학수;
+
+  var t = '자료 기준일 ' + D.rec.meta.갱신일 + ' · ' + 대학수 + '개 대학 ' +
+          모집단위수 + '개 모집단위';
   if (CLOSED && CLOSED.meta && CLOSED.meta.갱신일) {
     t += ' · 개설 현황 ' + CLOSED.meta.갱신일 +
          (CLOSED.meta.단계 ? ' (' + CLOSED.meta.단계 + ')' : '');
