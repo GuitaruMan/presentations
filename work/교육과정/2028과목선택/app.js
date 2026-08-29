@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260829f';
+var VERSION = '20260829g';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -395,12 +395,6 @@ function renderTrackChips() {
       state.unit = null;   // 계열이 바뀌면 앞서 고른 학과는 목록에 없을 수 있다
       renderUniv();
     };
-  });
-}
-
-function markChips(sel, val) {
-  $$(sel + ' .chip').forEach(function (c) {
-    c.setAttribute('aria-pressed', String(LOGIC.chipValue(c) === val));
   });
 }
 
@@ -1824,5 +1818,3 @@ loadCommon().then(function () {
     '자료를 불러오지 못했습니다. 새로고침해 보세요. (' + err.message + ')';
   console.error(err);
 });
-
-

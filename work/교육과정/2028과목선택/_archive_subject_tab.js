@@ -193,3 +193,15 @@ function buildSubjectChips() {
     });
   }
 
+
+/* ── style.css 에 있던 이 탭 전용 스타일 ──
+   되살릴 때 style.css 로 되돌린다.
+
+.subj-group{margin-bottom:26px}
+.subj-h{
+  font-family:var(--serif);font-size:15px;margin:0 0 6px;
+  padding-bottom:5px;border-bottom:1.5px solid var(--ink);
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.subj-h-n{font-size:12px;color:var(--ink-faint);font-family:var(--sans);font-weight:400}
+*/
