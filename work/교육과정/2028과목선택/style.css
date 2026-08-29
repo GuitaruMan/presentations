@@ -317,6 +317,21 @@ body{
 }
 .off-see:hover{color:var(--ink);border-bottom-style:solid}
 
+/* 대학이 함께 밝힌 전제 — 접어 둔다. 학과마다 같은 내용이라 펼치기 전엔 한 줄. */
+.card-notes{margin:10px 0 0;font-size:12px}
+.card-notes summary{
+  color:var(--ink-faint);cursor:pointer;list-style:none;
+  border-bottom:1px dashed var(--ink-faint);display:inline-block;padding:0 0 1px;
+}
+.card-notes summary::-webkit-details-marker{display:none}
+.card-notes summary::before{content:'＋ ';font-size:11px}
+.card-notes[open] summary::before{content:'－ '}
+.card-notes summary:hover{color:var(--ink-soft);border-bottom-style:solid}
+.card-notes ul{
+  margin:9px 0 0;padding-left:16px;color:var(--ink-soft);line-height:1.65;
+}
+.card-notes li{margin-bottom:3px}
+
 .grade{
   display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;
   padding:2px 8px;border-radius:9px 7px 10px 6px;margin-left:6px;vertical-align:1px;

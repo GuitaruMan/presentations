@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260829i';
+var VERSION = '20260829l';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -522,10 +522,10 @@ function cardHTML(u) {
   var off = u.all.filter(function (s) { return !inSchool(s); });
 
   if (u.split && core.length) {
-    h += subRow('핵심', core, true);
+    h += subRows('핵심', core, true);
   }
   if (rec.length) {
-    h += subRow(u.split && core.length ? '권장' : '권장과목', rec, false);
+    h += subRows(u.split && core.length ? '권장' : '권장과목', rec, false);
   }
   u.cond.forEach(function (c) { h += condHTML(c); });
 
@@ -533,6 +533,15 @@ function cardHTML(u) {
     h += '<p class="card-off">권장 ' + u.all.length + '과목 가운데 ' + off.length +
       '과목은 우리 학교에 없어 뺐습니다 <button type="button" class="off-see" ' +
       'data-off="' + esc(off.join('|')) + '">어떤 과목인가요</button></p>';
+  }
+
+  /* 대학이 자료 첫머리에 붙인 전제 — '지원자격은 아니다' 같은 말이다.
+     학과마다 같은 내용이라 접어 둔다. 펼치기 전에는 한 줄만 보인다. */
+  if (u.notes && u.notes.length) {
+    h += '<details class="card-notes"><summary>' + esc(u.univ) +
+      '가 함께 밝힌 것 ' + u.notes.length + '가지</summary><ul>' +
+      u.notes.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') +
+      '</ul></details>';
   }
 
   return h + '</article>';
@@ -550,6 +559,29 @@ function subChip(s, core) {
   }
   return '<button type="button" class="sub sub-has' + (core ? ' sub-core' : '') +
     '" data-subject="' + esc(s) + '">' + esc(s) + '</button>';
+}
+
+/* 대학이 수학 칸과 과학 칸을 나눠 제시했으면 화면도 나눠서 보여 준다.
+   '미적분Ⅱ, 역학과 에너지, 전자기와 양자'가 한 줄에 뭉쳐 있으면
+   무엇이 수학이고 무엇이 과학인지 학생이 읽어낼 수 없다.
+   교과가 하나뿐이면 굳이 나누지 않는다(경북대처럼 일괄 제시한 경우). */
+function subRows(key, arr, core) {
+  var 순서 = [];
+  var 묶음 = {};
+  arr.forEach(function (s) {
+    // 교과군 지정('과학 교과' 같은 것)은 교과를 알 수 없으니 따로 둔다
+    var g = (SUBJ[s] && SUBJ[s].교과군) || '';
+    if (!묶음[g]) { 묶음[g] = []; 순서.push(g); }
+    묶음[g].push(s);
+  });
+
+  if (순서.length < 2) return subRow(key, arr, core);
+
+  // 나눌 때는 모든 줄에 교과 이름을 단다. 첫 줄만 '권장과목'이면
+  // 그 줄이 어느 교과인지 알 수 없어 오히려 헷갈린다.
+  return 순서.map(function (g) {
+    return subRow(g || '그 밖', 묶음[g], core);
+  }).join('');
 }
 
 function subRow(key, arr, core) {
