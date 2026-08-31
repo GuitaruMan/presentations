@@ -454,6 +454,16 @@
   .verse.mk p + p { margin-top: 0.55em; }
   /* 원문 줄이 길어 두 줄로 깨지지 않도록 이 장만 조금 촘촘히 */
   .cmp-table .mk, .qans .mk, .fill-row .mk, .c3 .mk { letter-spacing: 0; }
+
+  /* 제목 밑줄은 두지 않는다. 본문 첫 상자의 윗선과 거의 같은 높이에서 만나
+     짧은 밑줄이 긴 윗선에 어긋나 붙은 것처럼 보였다. 제목은 글자 크기만으로
+     충분히 구분되므로 선을 없애고 아래 여백만 조금 늘렸다. */
+  h2.slide-title {
+    display: block;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 2.3cqw;
+  }
 </style>
 </head>
 <body>
@@ -504,7 +514,7 @@
   </section>
 
   <!-- 3 -->
-  <section class="slide tight" style="--fs:1.28;">
+  <section class="slide tight" style="--fs:1.25;">
     <h2 class="slide-title">전시 학습 &middot; 1차시에 확인한 것</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -530,7 +540,7 @@
   </section>
 
   <!-- 4 -->
-  <section class="slide tight" style="--fs:1.32;">
+  <section class="slide tight" style="--fs:1.11;">
     <h2 class="slide-title">학습활동 1 &middot; (2) 표기상 특징</h2>
     <div class="body-area">
       <div class="act-q">중세 국어와 현대 국어를 비교해 보고, 중세 국어의 표기상 특징을 탐구해 보자.</div>
@@ -554,7 +564,7 @@
   </section>
 
   <!-- 5 -->
-  <section class="slide tight" style="--fs:1.39;">
+  <section class="slide tight" style="--fs:1.24;">
     <h2 class="slide-title">이어 적기와 끊어 적기</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:1.5cqw;">
@@ -578,13 +588,10 @@
   </section>
 
   <!-- 6 -->
-  <section class="slide tight" style="--fs:1.09;">
+  <section class="slide tight" style="--fs:1.03;">
     <h2 class="slide-title">방점과 성조</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.4cqw;">
-        <div class="dt">성조</div>
-        <p>단어의 뜻을 구분해 주던 소리의 높낮이. 글자 <strong>왼쪽</strong>에 점을 찍어 표시했고, 이 점을 방점이라 한다</p>
-      </div>
+      <div class="act-q">성조는 단어의 뜻을 구분해 주던 소리의 높낮이다. 글자 <strong style="color:var(--key);">왼쪽</strong>에 점을 찍어 나타냈고, 이 점을 방점이라 한다.</div>
       <table class="cmp-table">
         <thead><tr><th style="width:6em;">방점</th><th style="width:5em;">이름</th><th>소리</th><th style="width:9em;">서문의 예</th></tr></thead>
         <tbody>
@@ -623,7 +630,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide tight" style="--fs:1.25;">
+  <section class="slide tight" style="--fs:1.15;">
     <h2 class="slide-title">학습활동 1 &middot; (4) 그 밖의 표기 방식</h2>
     <div class="body-area">
       <div class="act-q">현대 국어와 다른 중세 국어의 표기 방식을 더 찾아 정리해 보자.</div>
@@ -661,7 +668,7 @@
   </section>
 
   <!-- 10 -->
-  <section class="slide tight" style="--fs:1.42;">
+  <section class="slide tight" style="--fs:1.32;">
     <h2 class="slide-title">학습활동 2 &middot; 풀이</h2>
     <div class="body-area">
       <table class="cmp-table">
@@ -683,7 +690,7 @@
   </section>
 
   <!-- 11 -->
-  <section class="slide tight" style="--fs:1.36;">
+  <section class="slide tight" style="--fs:1.32;">
     <h2 class="slide-title">주격 조사 &lsquo;이 / ㅣ / &Oslash;&rsquo;</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.4cqw;">
@@ -705,7 +712,7 @@
   </section>
 
   <!-- 12 -->
-  <section class="slide tight" style="--fs:1.4;">
+  <section class="slide tight" style="--fs:1.21;">
     <h2 class="slide-title">관형격 조사 &lsquo;ㅅ&rsquo;과 &lsquo;&#4363;&#4513; / 의&rsquo;</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -783,7 +790,7 @@
   </section>
 
   <!-- 16 -->
-  <section class="slide tight" style="--fs:1.2;">
+  <section class="slide tight" style="--fs:1.06;">
     <h2 class="slide-title">의미 변화의 세 갈래</h2>
     <div class="body-area">
       <div class="cards3" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -815,7 +822,7 @@
   </section>
 
   <!-- 17 -->
-  <section class="slide tight" style="--fs:1.28;">
+  <section class="slide tight" style="--fs:1.08;">
     <h2 class="slide-title">의미 변화는 지금도 일어난다</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -841,7 +848,7 @@
   </section>
 
   <!-- 18 -->
-  <section class="slide " style="--fs:1.17;">
+  <section class="slide " style="--fs:1.03;">
     <h2 class="slide-title">확인 문제 &middot; 1~2번</h2>
     <div class="body-area">
       <div class="quiz-list">
@@ -859,7 +866,7 @@
   </section>
 
   <!-- 19 -->
-  <section class="slide " style="--fs:1.19;">
+  <section class="slide " style="--fs:1.12;">
     <h2 class="slide-title">확인 문제 &middot; 3~4번</h2>
     <div class="body-area">
       <div class="quiz-list">

@@ -454,6 +454,16 @@
   .verse.mk p + p { margin-top: 0.55em; }
   /* 원문 줄이 길어 두 줄로 깨지지 않도록 이 장만 조금 촘촘히 */
   .cmp-table .mk, .qans .mk, .fill-row .mk, .c3 .mk { letter-spacing: 0; }
+
+  /* 제목 밑줄은 두지 않는다. 본문 첫 상자의 윗선과 거의 같은 높이에서 만나
+     짧은 밑줄이 긴 윗선에 어긋나 붙은 것처럼 보였다. 제목은 글자 크기만으로
+     충분히 구분되므로 선을 없애고 아래 여백만 조금 늘렸다. */
+  h2.slide-title {
+    display: block;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 2.3cqw;
+  }
 </style>
 </head>
 <body>
@@ -540,7 +550,7 @@
   </section>
 
   <!-- 5 -->
-  <section class="slide tight" style="--fs:1.44;">
+  <section class="slide tight" style="--fs:1.33;">
     <h2 class="slide-title">국어의 시대 구분</h2>
     <div class="body-area">
       <div class="flow" style="flex:0 0 auto;margin-bottom:2cqw;">
@@ -577,7 +587,7 @@
   </section>
 
   <!-- 6 -->
-  <section class="slide " style="--fs:1.29;">
+  <section class="slide " style="--fs:1.3;">
     <h2 class="slide-title">《훈민정음 해례본》과 &lt;세종어제훈민정음&gt;</h2>
     <div class="body-area">
       <div class="def-box" style="margin-bottom:1.4cqw;">
@@ -612,7 +622,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide " style="--fs:1.17;">
+  <section class="slide " style="--fs:1.07;">
     <h2 class="slide-title">현대어 풀이</h2>
     <div class="body-area">
       <div class="verse">
@@ -629,7 +639,7 @@
   </section>
 
   <!-- 9 -->
-  <section class="slide tight" style="--fs:1.23;">
+  <section class="slide tight" style="--fs:1.1;">
     <h2 class="slide-title">먼저 눈으로 찾아보기</h2>
     <div class="body-area">
       <div class="act-q">지금 우리가 쓰는 국어의 옛 모습을 알고 있나요? 앞의 원문에서 오늘날과 다른 점을 먼저 눈으로 찾아보자.</div>
@@ -668,7 +678,7 @@
   </section>
 
   <!-- 11 -->
-  <section class="slide tight" style="--fs:1.04;">
+  <section class="slide tight" style="--fs:1.05;">
     <h2 class="slide-title">서문에 담긴 한글 창제 정신</h2>
     <div class="body-area">
       <div class="cards2" style="margin-bottom:1.6cqw;">
@@ -700,7 +710,7 @@
   </section>
 
   <!-- 12 -->
-  <section class="slide tight" style="--fs:1.45;">
+  <section class="slide tight" style="--fs:1.35;">
     <h2 class="slide-title">훈민정음 스물여덟 자</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.4cqw;">
@@ -722,7 +732,7 @@
   </section>
 
   <!-- 13 -->
-  <section class="slide tight" style="--fs:1.3;">
+  <section class="slide tight" style="--fs:1.1;">
     <h2 class="slide-title">초성 &mdash; 상형과 가획</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.3cqw;">
@@ -789,7 +799,7 @@
   </section>
 
   <!-- 16 -->
-  <section class="slide tight" style="--fs:1.28;">
+  <section class="slide tight" style="--fs:1.09;">
     <h2 class="slide-title">학습활동 1 &middot; (1) 풀이</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -816,7 +826,7 @@
   </section>
 
   <!-- 17 -->
-  <section class="slide tight" style="--fs:1.19;">
+  <section class="slide tight" style="--fs:1.05;">
     <h2 class="slide-title">순경음 비읍 &mdash; 어떻게 만든 글자인가</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:1.5cqw;">
@@ -841,7 +851,7 @@
   </section>
 
   <!-- 18 -->
-  <section class="slide tight" style="--fs:1.16;">
+  <section class="slide tight" style="--fs:0.92;">
     <h2 class="slide-title">순경음 비읍 &mdash; 어떻게 사라졌는가</h2>
     <div class="body-area">
       <div class="fill-flow">
@@ -862,13 +872,10 @@
   </section>
 
   <!-- 19 -->
-  <section class="slide tight" style="--fs:1.07;">
+  <section class="slide tight" style="--fs:1.03;">
     <h2 class="slide-title">반치음 &mdash; 어떻게 사라졌는가</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.2cqw;">
-        <div class="dt">어떤 소리였나</div>
-        <p>&lsquo;ㅅ&rsquo;이 울림소리 사이에서 약해진 [z]로 짐작한다. 순경음 비읍과 마찬가지로 <strong style="color:var(--key);">울림소리 사이</strong>에서만 나타났다</p>
-      </div>
+      <div class="act-q">&lsquo;ㅅ&rsquo;이 울림소리 사이에서 약해진 [z]로 짐작한다. 순경음 비읍과 마찬가지로 <strong style="color:var(--key);">울림소리 사이</strong>에서만 나타났다.</div>
       <div class="fill-flow">
         <div class="fill-row"><span class="mk">&#4358;&#4510;&#4416;&#4510;&#4535;</span> <span class="arrow">&rarr;</span> <span class="mk">&#4358;&#4510;음</span> <span class="arrow">&rarr;</span> <span class="res">마음</span></div>
         <div class="fill-row"><span class="mk">&#4352;&#4510;&#4416;&#4510;&#4527;</span> <span class="arrow">&rarr;</span> <span class="mk">&#4352;&#4510;을</span> <span class="arrow">&rarr;</span> <span class="res">가을</span></div>
@@ -886,7 +893,7 @@
   </section>
 
   <!-- 20 -->
-  <section class="slide tight" style="--fs:1.22;">
+  <section class="slide tight" style="--fs:1.04;">
     <h2 class="slide-title">오늘날의 불규칙 활용에 남은 자취</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.3cqw;">
@@ -910,7 +917,7 @@
   </section>
 
   <!-- 21 -->
-  <section class="slide tight" style="--fs:1.45;">
+  <section class="slide tight" style="--fs:1.2;">
     <h2 class="slide-title">아래아 &mdash; 두 번에 걸쳐 사라졌다</h2>
     <div class="body-area">
       <div class="steps" style="flex:0 0 auto;margin-bottom:1.4cqw;">
@@ -941,7 +948,7 @@
   </section>
 
   <!-- 22 -->
-  <section class="slide " style="--fs:1.19;">
+  <section class="slide " style="--fs:1.1;">
     <h2 class="slide-title">확인 문제 &middot; 1~2번</h2>
     <div class="body-area">
       <div class="quiz-list">
@@ -959,7 +966,7 @@
   </section>
 
   <!-- 23 -->
-  <section class="slide " style="--fs:1.19;">
+  <section class="slide " style="--fs:1.07;">
     <h2 class="slide-title">확인 문제 &middot; 3~4번</h2>
     <div class="body-area">
       <div class="quiz-list">
@@ -977,7 +984,7 @@
   </section>
 
   <!-- 24 -->
-  <section class="slide tight" style="--fs:1.06;">
+  <section class="slide tight" style="--fs:1.08;">
     <h2 class="slide-title">1차시 핵심 정리</h2>
     <div class="body-area">
       <div class="summary-list">

@@ -454,6 +454,16 @@
   .verse.mk p + p { margin-top: 0.55em; }
   /* 원문 줄이 길어 두 줄로 깨지지 않도록 이 장만 조금 촘촘히 */
   .cmp-table .mk, .qans .mk, .fill-row .mk, .c3 .mk { letter-spacing: 0; }
+
+  /* 제목 밑줄은 두지 않는다. 본문 첫 상자의 윗선과 거의 같은 높이에서 만나
+     짧은 밑줄이 긴 윗선에 어긋나 붙은 것처럼 보였다. 제목은 글자 크기만으로
+     충분히 구분되므로 선을 없애고 아래 여백만 조금 늘렸다. */
+  h2.slide-title {
+    display: block;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 2.3cqw;
+  }
 </style>
 </head>
 <body>
@@ -504,7 +514,7 @@
   </section>
 
   <!-- 3 -->
-  <section class="slide tight" style="--fs:1.45;">
+  <section class="slide tight" style="--fs:1.37;">
     <h2 class="slide-title">전시 학습 &middot; 두 차시 동안 확인한 것</h2>
     <div class="body-area">
       <div class="cards3" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -546,7 +556,7 @@
   </section>
 
   <!-- 5 -->
-  <section class="slide tight" style="--fs:1.06;">
+  <section class="slide tight" style="--fs:0.95;">
     <h2 class="slide-title">덧나는 소리에는 역사적인 까닭이 있다</h2>
     <div class="body-area">
       <div class="def-box" style="margin-bottom:1.3cqw;">
@@ -582,7 +592,7 @@
   </section>
 
   <!-- 7 -->
-  <section class="slide tight" style="--fs:0.92;">
+  <section class="slide tight" style="--fs:0.99;">
     <h2 class="slide-title">옛 국어의 흔적이 남은 말</h2>
     <div class="body-area">
       <div class="act-q">&lsquo;ㅂ&rsquo;과 &lsquo;ㅎ&rsquo;의 흔적이 남은 말은 이 밖에도 많다.</div>
@@ -591,12 +601,11 @@
         <div class="fill-row"><span class="res">살코기</span> <span class="arrow">&larr;</span> <span class="mk">살ㅎ + 고기</span></div>
         <div class="fill-row"><span class="res">햅쌀</span> <span class="arrow">&larr;</span> <span class="mk">해 + &#4385;&#4510;&#4527;</span></div>
         <div class="fill-row"><span class="res">볍씨</span> <span class="arrow">&larr;</span> <span class="mk">벼 + &#4385;&#4469;</span></div>
-        <div class="fill-row"><span class="res">입때 &middot; 접때</span> <span class="arrow">&larr;</span> <span class="mk">이 &middot; 저 + &#4387;&#4450;</span></div>
       </div>
       <div class="emotion" style="margin-top:1.4cqw;">
         <div class="etag">여기서 볼 것</div>
         <ul>
-          <li>오늘날 쓰는 말 속에 옛 국어의 모습이 화석처럼 남아 있다. 국어의 변화는 과거에 끝난 일이 아니라 지금 쓰는 말에 자취를 남기고 있다</li>
+          <li>오늘날 쓰는 말 속에 옛 국어의 모습이 화석처럼 남아 있다</li>
         </ul>
       </div>
     </div>
@@ -604,7 +613,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide tight" style="--fs:1.39;">
+  <section class="slide tight" style="--fs:1.4;">
     <h2 class="slide-title">학습활동 1 &middot; (2) 자료 <span style="color:var(--key);">가</span></h2>
     <div class="body-area">
       <div class="act-q">가와 나에 나타난 국어의 변화 양상을 파악하고, 오늘날 이러한 변화가 나타난 까닭이 무엇일지 이야기해 보자.</div>
@@ -631,7 +640,7 @@
   </section>
 
   <!-- 10 -->
-  <section class="slide tight" style="--fs:1.25;">
+  <section class="slide tight" style="--fs:1.06;">
     <h2 class="slide-title">학습활동 1 &middot; (2) 풀이</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.3cqw;">
@@ -693,7 +702,7 @@
   </section>
 
   <!-- 13 -->
-  <section class="slide tight" style="--fs:1.32;">
+  <section class="slide tight" style="--fs:1.2;">
     <h2 class="slide-title">오늘날 새로 얻는 뜻</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -732,7 +741,7 @@
   </section>
 
   <!-- 15 -->
-  <section class="slide " style="--fs:1.19;">
+  <section class="slide " style="--fs:1.04;">
     <h2 class="slide-title">확인 문제 &middot; 1~2번</h2>
     <div class="body-area">
       <div class="quiz-list">
@@ -750,13 +759,13 @@
   </section>
 
   <!-- 16 -->
-  <section class="slide " style="--fs:0.98;">
+  <section class="slide " style="--fs:0.93;">
     <h2 class="slide-title">확인 문제 &middot; 3~4번</h2>
     <div class="body-area">
       <div class="quiz-list">
         <div class="qitem">
           <div class="qq reveal"><span class="qn">3</span>&lsquo;급발진&rsquo;이나 [바래]처럼 의미와 발음이 달라진 말을 볼 때, 자신의 언어생활에서 무엇에 유의해야 하는가?</div>
-          <div class="qans reveal"><span class="tag">답</span>언중이 널리 쓰는 말이 사전에 등재될 수 있다. 곧 우리의 국어 생활이 어문 규범을 비롯한 국어의 모습을 바꿀 수 있으므로, 국어를 파괴하지 않고 더 풍부하게 할 수 있도록 단어의 의미와 발음에 유의해야 한다</div>
+          <div class="qans reveal"><span class="tag">답</span>언중이 널리 쓰는 말이 사전에 오를 수 있다. 우리의 국어 생활이 국어의 모습을 바꿀 수 있으므로, 단어의 의미와 발음에 유의해야 한다</div>
         </div>
         <div class="qitem">
           <div class="qq reveal"><span class="qn">4</span>중세 국어의 <span class="mk">어&middot;린</span>이 &lsquo;나이가 적은&rsquo;으로 바뀐 것과, 오늘날 &lsquo;급발진&rsquo;이 다른 뜻으로 쓰이는 것은 어떤 점에서 같은가?</div>
@@ -794,7 +803,7 @@
   </section>
 
   <!-- 18 -->
-  <section class="slide tight" style="--fs:1.28;">
+  <section class="slide tight" style="--fs:1.09;">
     <h2 class="slide-title">소단원 마무리 &middot; 국어의 변화 양상</h2>
     <div class="body-area">
       <table class="cmp-table">
