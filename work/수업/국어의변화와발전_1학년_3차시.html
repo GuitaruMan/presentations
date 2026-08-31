@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>국어의 변화와 발전 (1학년-3차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f7f1e6;
+    --paper-edge: #ddd0ba;
+    --ink: #2a2119;
+    --ink-soft: #5f5245;
+    --ink-faint: #9c8d7c;
+    --key: #8a4b2a;          /* 옛 문헌의 적갈색 */
+    --key-soft: #b47a55;
+    --rule: #ddd0ba;
+    --card: #fdf9f2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #2b2118;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.015em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(43,33,24,0.94); z-index: 50;
+  }
+  .nav-top a { color: #cbb9a2; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #f2e8d8; }
+  .nav-meta { color: #a3907a; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 18% 6%, rgba(255,255,255,0.85) 0%, transparent 58%),
+      radial-gradient(ellipse at 84% 96%, rgba(138,75,42,0.18) 0%, transparent 62%),
+      repeating-linear-gradient(90deg,
+        rgba(138,75,42,0.05) 0px, rgba(138,75,42,0.05) 1px,
+        transparent 1px, transparent 21px),
+      repeating-linear-gradient(180deg,
+        rgba(138,75,42,0.028) 0px, rgba(138,75,42,0.028) 1px,
+        transparent 1px, transparent 46px);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.042) calc(var(--stage-w) * 0.05);
+  }
+  /* 우측 상단 — 옛 목판본의 광곽(匡郭)과 세로 계선 */
+  .stage::before {
+    content: ""; position: absolute; top: 8%; right: -2%;
+    width: 23%; height: 80%; pointer-events: none; opacity: 0.09;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><g fill='none' stroke='%238a4b2a'><rect x='6' y='6' width='188' height='288' stroke-width='3.4'/><rect x='13' y='13' width='174' height='274' stroke-width='1.4'/><path stroke-width='1.2' d='M35 13 V287 M57 13 V287 M79 13 V287 M101 13 V287 M123 13 V287 M145 13 V287 M167 13 V287'/><path stroke-width='2.6' d='M13 96 H187 M13 204 H187'/><circle cx='100' cy='150' r='13' stroke-width='2.2'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(2.2rem, 6.2cqw, 7.44rem); line-height: 1.16; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.45rem, 3.85cqw, 4.62rem); line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.0cqw;
+    border-bottom: 0.2cqw solid var(--ink); display: inline-block;
+    flex-shrink: 0;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.85rem, 1.95cqw, 2.34rem); letter-spacing: 0.3em;
+    margin-bottom: 1.8cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); color: var(--ink-soft); line-height: 1.75; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 7cqw; height: 0.3cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1.1rem, 2.9cqw, 3.48rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.5cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.75rem, 1.6cqw, 1.92rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.4%; flex: 1; min-height: 0; }
+  .cols.wide-left { grid-template-columns: 1.35fr 1fr; }
+  .cols.wide-right { grid-template-columns: 1fr 1.35fr; }
+  .col-head {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs)));
+    color: var(--key); margin-bottom: 1.1cqw;
+    padding-bottom: 0.5cqw; border-bottom: 0.1cqw solid var(--rule);
+  }
+
+  .verse {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1.05rem, calc(2.75cqw * var(--fs)), calc(3.3rem * var(--fs)));
+    line-height: 1.86; letter-spacing: 0.005em;
+  }
+  /* 700이 이 글꼴의 가장 굵은 단계라 획을 아주 조금 더 두껍게 해 강조를 살린다 */
+  .verse .hl {
+    color: var(--key); font-weight: 700;
+    -webkit-text-stroke: 0.022em currentColor;
+  }
+  .verse p + p { margin-top: 1.1cqw; }
+  .cols .verse { font-size: clamp(0.92rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.82; }
+  .verse.quote { font-size: clamp(0.8rem, calc(1.86cqw * var(--fs)), calc(2.23rem * var(--fs))); line-height: 1.6; }
+  .src {
+    display: block; margin-top: 0.9cqw;
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.68rem, calc(1.42cqw * var(--fs)), calc(1.7rem * var(--fs)));
+    color: var(--ink-faint); letter-spacing: 0.04em;
+  }
+
+  .word-note {
+    margin-top: 0.95cqw; padding-top: 0.8cqw;
+    border-top: 1px solid var(--rule);
+    font-size: clamp(0.78rem, calc(1.72cqw * var(--fs)), calc(2.06rem * var(--fs))); line-height: 1.66; color: var(--ink-soft);
+  }
+  .word-note.top { margin-top: 0; padding-top: 0; border-top: none; }
+  .word-note .w {
+    display: block; margin-bottom: 0.25em;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.88rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs)));
+  }
+
+  .emotion {
+    margin-top: auto; background: var(--card);
+    border-left: 0.36cqw solid var(--key);
+    padding: 1.3cqw 1.7cqw;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.45rem;
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.82rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+  }
+  .emotion li + li { margin-top: 0.3rem; }
+  .emotion li::before { content: "\2014"; position: absolute; left: 0; color: var(--ink-faint); }
+  .body-area > .emotion { margin-bottom: 3.6cqw; }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 1.0cqw 0.95cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.6;
+  }
+  .info-table th {
+    width: 4.8em; font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--key); white-space: nowrap;
+  }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.95cqw 0.9cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.76rem, calc(1.78cqw * var(--fs)), calc(2.14rem * var(--fs))); line-height: 1.6;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.18cqw solid var(--key); font-size: clamp(0.8rem, calc(1.88cqw * var(--fs)), calc(2.26rem * var(--fs)));
+  }
+  .cmp-table tbody th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink);
+    white-space: nowrap; width: 9em; background: var(--card);
+  }
+  .cmp-table tr:last-child td { border-bottom: none; }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.88rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); line-height: 1.68;
+    padding-left: 3.0cqw; position: relative; margin-bottom: 1.3cqw;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n {
+    position: absolute; left: 0; top: 0.05em;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--key); font-size: 1.05em;
+  }
+
+  .def-box {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.5cqw 1.8cqw;
+  }
+  .def-box + .def-box { margin-top: 1.2cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); margin-bottom: 0.45rem;
+  }
+  .def-box p { font-size: clamp(0.86rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; color: var(--ink-soft); }
+
+  .flow { display: flex; align-items: stretch; gap: 0.8cqw; min-height: 0; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.28cqw solid var(--key);
+    padding: 1.5cqw 1.25cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .stage-label {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.85rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); margin-bottom: 0.15rem;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); margin-bottom: 0.6rem;
+  }
+  .flow-step .desc {
+    font-size: clamp(0.74rem, calc(1.68cqw * var(--fs)), calc(2.02rem * var(--fs))); line-height: 1.6; color: var(--ink-soft);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs)));
+  }
+
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.28cqw solid var(--key); padding: 1.6cqw 1.5cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
+    margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.8rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.45rem; }
+
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 1.0cqw 2.6cqw; }
+  .gl { display: flex; gap: 0.9cqw; align-items: baseline; padding-bottom: 0.8cqw; border-bottom: 1px solid var(--rule); }
+  .gl .gw {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.86rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); width: 5.6em; flex-shrink: 0;
+  }
+  .gl .gd { font-size: clamp(0.76rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs))); line-height: 1.6; color: var(--ink-soft); }
+
+  .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); color: var(--key);
+    width: 2.2em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 1cqw; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
+    margin-bottom: 0.25rem;
+  }
+  .step p { font-size: clamp(0.8rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+
+  .act-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    background: var(--key); color: var(--paper);
+    font-size: clamp(0.74rem, calc(1.6cqw * var(--fs)), calc(1.92rem * var(--fs))); letter-spacing: 0.06em;
+    padding: 0.3em 1.1em; margin-bottom: 1.0cqw;
+  }
+  .act-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); line-height: 1.66;
+    color: var(--ink); margin-bottom: 1.4cqw;
+  }
+  .fill-flow { display: flex; flex-direction: column; gap: 1.1cqw; }
+  .body-area > .fill-flow:last-child { margin-bottom: 3.6cqw; }
+  .fill-row {
+    background: var(--card); border: 1px solid var(--rule);
+    border-left: 0.32cqw solid var(--key);
+    padding: 1.05cqw 1.5cqw;
+    font-size: clamp(0.88rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.66;
+  }
+  .fill-row .arrow { color: var(--key); margin: 0 0.5em; }
+  .fill-row .res { color: var(--key); font-weight: 700; }
+
+  .qa { display: flex; flex-direction: column; gap: 1.1cqw; }
+  .body-area > .qa:last-child { margin-bottom: 3.6cqw; }
+  .qa-item { background: var(--card); border-left: 0.32cqw solid var(--key); padding: 1.1cqw 1.5cqw; }
+  .qa-item .q {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.85rem, calc(1.9cqw * var(--fs)), calc(2.28rem * var(--fs))); margin-bottom: 0.3rem;
+  }
+  .qa-item .a { font-size: clamp(0.8rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66; color: var(--ink-soft); }
+
+  /* 단계 공개 — 스페이스/클릭으로 문항과 정답을 하나씩 띄운다.
+     opacity로만 숨겨 자리를 미리 잡아 두므로 화면이 튀지 않는다. */
+  .reveal { opacity: 0; transition: opacity .25s ease; }
+  .reveal.shown { opacity: 1; }
+
+  /* 한 장에 두 문항만 두므로 자리가 넉넉하다. 슬라이드마다 style="--qfs:…"로
+     남는 공간을 다 쓰도록 글자를 키운다(값은 Playwright 실측으로 정함). */
+  .quiz-list {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(3.0cqw * var(--fs)); flex: 1;
+  }
+  .body-area > .quiz-list { margin-bottom: 3.2cqw; }
+  .qq {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: max(1rem, calc(2.9cqw * var(--fs))); line-height: 1.55;
+    padding-left: calc(3.6cqw * var(--fs)); position: relative;
+  }
+  .qq .qn {
+    position: absolute; left: 0; top: 0;
+    color: var(--key); font-size: 1.05em;
+  }
+  .qans {
+    margin: calc(1.2cqw * var(--fs)) 0 0 calc(3.6cqw * var(--fs));
+    background: var(--card); border-left: 0.34cqw solid var(--key);
+    padding: calc(1.25cqw * var(--fs)) calc(1.7cqw * var(--fs));
+    font-size: max(0.88rem, calc(2.45cqw * var(--fs))); line-height: 1.62; color: var(--ink-soft);
+  }
+  .qans .tag {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    margin-right: 0.6em;
+  }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5cqw; }
+  .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.25cqw * var(--fs)), calc(2.7rem * var(--fs))); width: 5.6em; flex-shrink: 0;
+    text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.84rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; }
+  .srow .sval ul { list-style: none; margin-top: 0.4rem; }
+  .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
+  .srow .sval li + li { margin-top: 0.25rem; }
+  .srow .sval li::before { content: "\00B7"; position: absolute; left: 0.2rem; color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 3.2%; bottom: 2.4%;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.35cqw, 1.62rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #cbb9a2; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #4a382a; color: #f2e8d8; border: 1px solid #6d5540;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #5c4633; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #9c8770; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w);
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cols, .cards3, .cards2, .gloss { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* ── 내용 사이 경계 ────────────────────────────────────────────
+     여백을 em으로 잡아 글자 크기를 따라가게 하고, 상자의 머리말과
+     본문을 선으로 가른다. 글자만 키우면 서로 붙어 읽기 어려워진다. */
+  .def-box .dt,
+  .emotion .etag {
+    margin-bottom: 0.62em;
+    padding-bottom: 0.42em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .c3 h3 { margin-bottom: 0.62em; padding-bottom: 0.42em; }
+
+  .emotion li + li { margin-top: 0.55em; }
+  .c3 p + p { margin-top: 0.72em; }
+  .word-note { margin-top: 0.9em; padding-top: 0.8em; }
+  .word-note .w { margin-bottom: 0.42em; }
+  .gl { padding-bottom: 0.62em; }
+  .num-list li { margin-bottom: 0.75em; }
+  .info-table th, .info-table td { padding: 0.62em 0.5em; }
+  .cmp-table th, .cmp-table td { padding: 0.55em 0.45em; }
+  .step .sbody { padding-bottom: 0.85em; }
+  .step h3 { margin-bottom: 0.35em; }
+  .qa-item .q { margin-bottom: 0.4em; }
+  .srow .sval ul { margin-top: 0.5em; }
+  .srow .sval li + li { margin-top: 0.4em; }
+  .flow-step .emo { margin-bottom: 0.5em; }
+
+  /* 작품의 말을 옮겨 적은 줄 — 해설과 갈라 보이게 한다 */
+  .c3 p.cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    background: rgba(0,0,0,0.04);
+    border-left: 0.28em solid var(--rule);
+    padding: 0.5em 0.72em;
+    margin-bottom: 0.8em;
+    color: var(--ink);
+  }
+  .c3 p.cite + p { margin-top: 0; }
+
+  /* 내용이 많아 자리가 빠듯한 슬라이드 — 여백만 줄이고 글자는 지킨다
+     (머리말과 본문을 가르는 선은 그대로 둔다) */
+  .slide.tight .def-box .dt,
+  .slide.tight .emotion .etag { margin-bottom: 0.4em; padding-bottom: 0.28em; }
+  .slide.tight .c3 h3 { margin-bottom: 0.4em; padding-bottom: 0.3em; }
+  .slide.tight .emotion li + li { margin-top: 0.34em; }
+  .slide.tight .c3 p + p { margin-top: 0.5em; }
+  .slide.tight .word-note { margin-top: 0.6em; padding-top: 0.5em; }
+  .slide.tight .word-note .w { margin-bottom: 0.3em; }
+  .slide.tight .gl { padding-bottom: 0.45em; }
+  .slide.tight .num-list li { margin-bottom: 0.5em; }
+  .slide.tight .info-table th,
+  .slide.tight .info-table td { padding: 0.45em 0.45em; }
+  .slide.tight .cmp-table th,
+  .slide.tight .cmp-table td { padding: 0.4em 0.4em; }
+  .slide.tight .step .sbody { padding-bottom: 0.6em; }
+
+  /* 쪽번호는 본문칸 밖(무대 여백)에 둔다. 안쪽에 두면 본문이 아래까지
+     찼을 때 글자를 덮어서, 상자마다 아래 여백을 따로 둬야 했다. */
+  .page-num { right: 0; bottom: -3.1cqw; }
+  .cover .page-num { display: none; }
+
+  /* 중세 국어 표기 — 옛한글 글립이 있는 글꼴을 먼저 찾는다.
+     첫가끝 조합형이라 이 글꼴이 없는 PC에서는 근사하게 표시된다. */
+  .mk {
+    font-family: "함초롬바탕", "HCR Batang", "HANBatang", "New Gulim",
+                 "바탕", "Batang", "Gowun Batang", serif;
+    letter-spacing: 0;
+  }
+  .verse.mk { line-height: 2.0; }
+  .verse.mk p + p { margin-top: 0.55em; }
+  /* 원문 줄이 길어 두 줄로 깨지지 않도록 이 장만 조금 촘촘히 */
+  .cmp-table .mk, .qans .mk, .fill-row .mk, .c3 .mk { letter-spacing: 0; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_1학년.html">&larr; 1학년</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">국어의 변화와 발전 &middot; 1학년 3차시 &middot; 업데이트 2026. 8. 31.</div>
+</div>
+
+<div class="stage" id="stage">
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">문 법 　 국 어 　 문 화</div>
+    <h1 class="title-main">국어의 변화와 발전</h1>
+    <div class="rule"></div>
+    <div class="sub">오늘의 말이 내일의 사전이 된다</div>
+    <div class="foot">
+      <span>공통국어2 &middot; 4. 삶과 함께하는 국어 (1)</span>
+      <span>1학년 &middot; 3차시</span>
+    </div>
+    <div class="page-num">1 / 22</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide " style="--fs:1.45;">
+    <h2 class="slide-title">학습 목표</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:2cqw;">
+        <div class="c3">
+          <h3>하나</h3>
+          <p>과거와 현재의 국어 생활에 나타나는 국어의 변화를 이해한다</p>
+        </div>
+        <div class="c3">
+          <h3>둘</h3>
+          <p>국어 문화 발전에 참여한다</p>
+        </div>
+      </div>
+      <div class="def-box">
+        <div class="dt">3차시에 할 일</div>
+        <p>오늘날까지 이어지는 국어의 변화를 살펴보고, <strong style="color:var(--key);">순화어를 만들어</strong> 국어 문화 발전에 직접 참여한다</p>
+      </div>
+    </div>
+    <div class="page-num">2 / 22</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide tight" style="--fs:1.45;">
+    <h2 class="slide-title">전시 학습 &middot; 두 차시 동안 확인한 것</h2>
+    <div class="body-area">
+      <div class="cards3" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">음운과 표기</span></h3>
+          <p>&#12685; &#12664; &#12671; &#12678; &#12673;이 쓰였고, 이어 적기와 방점이 있었다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">문법</span></h3>
+          <p>주격 조사 &lsquo;이 / ㅣ / &Oslash;&rsquo;, 관형격 조사 &lsquo;ㅅ&rsquo;과 &lsquo;&#4363;&#4513; / 의&rsquo;가 쓰였다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">어휘</span></h3>
+          <p><span class="mk">어&middot;린</span>, <span class="mk">&middot;놈</span>처럼 시간이 흐르며 단어의 뜻이 달라졌다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">오늘 볼 것</div>
+        <ul>
+          <li>국어의 변화는 옛날에 끝난 일이 아니다. 오늘 쓰는 말에도 옛 국어의 흔적이 남아 있고, 지금 이 순간에도 발음과 단어가 바뀌고 있다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">3 / 22</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide tight" style="--fs:1.45;">
+    <h2 class="slide-title">학습활동 1 &middot; (1) &lsquo;ㅂ&rsquo;과 &lsquo;ㅎ&rsquo;이 덧나는 말</h2>
+    <div class="body-area">
+      <div class="act-badge">활동 2 &middot; 국어 문화 발전에 참여하기</div>
+      <div class="act-q">보기를 참고하여 아래 각 단어가 어떻게 형성되었는지 분석해 보자.</div>
+      <div class="verse quote">
+        단어가 형성될 때 &lsquo;ㅂ&rsquo;이나 &lsquo;ㅎ&rsquo; 소리가 덧나는 것은 소리 나는 대로 적는다. 예를 들어 &lsquo;벼&rsquo;와 &lsquo;씨&rsquo;가 결합하면 [벼씨]가 아니라 [볍씨]가 된다. 이런 경우에 소리 나는 대로 &lsquo;볍씨&rsquo;로 적는다. 또한 &lsquo;살&rsquo;과 &lsquo;고기&rsquo;가 결합할 때 [살고기]가 아니라 [살코기]가 되는데 이때도 소리 나는 대로 &lsquo;살코기&rsquo;로 적는다.
+        <span class="src">&mdash; &lt;한글 맞춤법&gt; 제31항 해설에서</span>
+      </div>
+    </div>
+    <div class="page-num">4 / 22</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide tight" style="--fs:1.06;">
+    <h2 class="slide-title">덧나는 소리에는 역사적인 까닭이 있다</h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.3cqw;">
+        <div class="dt">&lsquo;ㅂ&rsquo;이 덧나는 말</div>
+        <p>&lsquo;싸리, 쌀, 씨, 때&rsquo;는 옛말에서 <span class="mk">&#4385;&#4510;리, &#4385;&#4510;&#4527;, &#4385;&#4469;, &#4387;&#4450;</span>와 같이 단어 첫머리에 &lsquo;ㅂ&rsquo;을 지니고 있었다. 뒤에 단일어에서는 &lsquo;ㅂ&rsquo;이 모두 떨어졌지만 합성어에서는 떨어지지 않고 남았다</p>
+      </div>
+      <div class="def-box">
+        <div class="dt">&lsquo;ㅎ&rsquo;이 덧나는 말</div>
+        <p>&lsquo;살&rsquo;, &lsquo;수&rsquo; 등은 본래 &lsquo;살ㅎ&rsquo;, &lsquo;수ㅎ&rsquo;처럼 &lsquo;ㅎ&rsquo;을 지닌 말이었다. 이 &lsquo;ㅎ&rsquo;이 단일어에서는 탈락했지만 복합어에서는 일부 남았다</p>
+      </div>
+      <div class="emotion" style="margin-top:1.3cqw;">
+        <div class="etag">그러므로</div>
+        <ul>
+          <li>&lsquo;볍씨&rsquo;는 오늘날 &lsquo;벼+씨&rsquo;로 만들어진 말이 아니라, &lsquo;씨&rsquo;가 &lsquo;ㅂ&rsquo;을 지니고 있던 <strong>그 시기에 만들어진 합성어</strong>가 지금까지 이어진 것이다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 22</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide " style="--fs:1.45;">
+    <h2 class="slide-title">학습활동 1 &middot; (1) 풀이</h2>
+    <div class="body-area">
+      <div class="fill-flow">
+        <div class="fill-row"><span class="res">좁쌀</span> <span class="arrow">&larr;</span> <span class="mk">조 + &#4385;&#4510;&#4527;</span></div>
+        <div class="fill-row"><span class="res">휩쓸다</span> <span class="arrow">&larr;</span> <span class="mk">휘 + &#4385;&#4467;&#4527;다</span></div>
+        <div class="fill-row"><span class="res">암탉</span> <span class="arrow">&larr;</span> <span class="mk">암ㅎ + 닭</span></div>
+        <div class="fill-row"><span class="res">안팎</span> <span class="arrow">&larr;</span> <span class="mk">안ㅎ + 밖</span></div>
+      </div>
+    </div>
+    <div class="page-num">6 / 22</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide tight" style="--fs:1.39;">
+    <h2 class="slide-title">학습활동 1 &middot; (2) 자료 <span style="color:var(--key);">가</span></h2>
+    <div class="body-area">
+      <div class="act-q">가와 나에 나타난 국어의 변화 양상을 파악하고, 오늘날 이러한 변화가 나타난 까닭이 무엇일지 이야기해 보자.</div>
+      <div class="verse quote">
+        그동안 &lsquo;효과[효ː과]&rsquo; 발음이 일반인의 언어생활과 동떨어진 것이어서 불만이 적지 않았다. 다행히 국립국어원은 최근 이 발음을 [효ː꽈]로도 할 수 있다고 표준 발음을 추가했다. 그러니까 이제 억지로 [효ː과]로 발음하지 않아도 된다.<br><br>
+        &lsquo;관건&rsquo;과 &lsquo;교과&rsquo;도 마찬가지다. 이 역시 사전에는 [관건]과 [교ː과]로 발음한다고 되어 있었기 때문에 억지로 이렇게 발음하는 것을 들을 때마다 거북하였다. 국립국어원은 &lsquo;효과&rsquo;와 함께 이들 단어의 발음도 된소리를 인정해 사전에 추가했다.
+        <span class="src">&mdash; 《중앙일보》(2017. 12. 26.)에서</span>
+      </div>
+    </div>
+    <div class="page-num">7 / 22</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide tight" style="--fs:1.45;">
+    <h2 class="slide-title">학습활동 1 &middot; (2) 자료 <span style="color:var(--key);">나</span></h2>
+    <div class="body-area">
+      <div class="verse quote">
+        한동안 &lsquo;애완견&rsquo;이라는 단어를 사용했었습니다. &lsquo;애완견&rsquo;은 국립국어원 《표준국어대사전》에 &ldquo;좋아하여 가까이 두고 귀여워하며 기르는 개. 주로 실내에서 기르는데 스피츠, 테리어, 치와와 따위가 있다.&rdquo;라는 뜻으로 등재되어 있습니다.<br><br>
+        하지만 최근에는 개를 단순히 귀여워하는 대상이 아닌 가족으로 여기며 함께 살아가는 문화가 생기면서 &lsquo;애완견&rsquo;보다 &lsquo;반려견&rsquo;이라는 표현이 일반화되고 있었습니다. 그러다 2023년 10월 24일 자로 《표준국어대사전》에 &lsquo;반려견&rsquo;이 추가되면서 표준어의 지위를 얻게 되었습니다.
+        <span class="src">&mdash; 《케이비에스(KBS) 뉴스》(2023. 10. 24.)에서</span>
+      </div>
+    </div>
+    <div class="page-num">8 / 22</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide tight" style="--fs:1.25;">
+    <h2 class="slide-title">학습활동 1 &middot; (2) 풀이</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.3cqw;">
+        <thead><tr><th style="width:4em;">자료</th><th style="width:15em;">변화 양상</th><th>어떤 변화인가</th></tr></thead>
+        <tbody>
+          <tr><th>가</th><td>[효ː과] &rarr; [효ː과 / 효ː꽈]<br>[관건] &rarr; [관건 / 관껀]<br>[교ː과] &rarr; [교ː과 / 교ː꽈]</td><td>일반적으로 많이 쓰이는 현실 발음이 표준 발음으로 추가되었다</td></tr>
+          <tr><th>나</th><td>&lsquo;애완견&rsquo;만 표준어였다가 &lsquo;반려견&rsquo;도 표준어가 됨</td><td>사회 &middot; 문화적 상황이나 사람들의 인식이 달라져 새로운 단어가 만들어지고, 이것이 일반화되면서 표준어로 인정되었다</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">변화가 나타난 까닭</div>
+        <ul>
+          <li>실제의 발음, 사회 &middot; 문화적 상황의 변화로 인한 새로운 단어의 등장 등 <strong>언중의 현실 언어생활을 반영하기 위해서</strong>이다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">9 / 22</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide tight" style="--fs:1.45;">
+    <h2 class="slide-title">학습활동 1 &middot; (3) 달라진 말 찾기</h2>
+    <div class="body-area">
+      <div class="act-q">다음과 같이 일상생활에서 의미나 발음이 달라진 말이 있는지 더 생각해 보자.</div>
+      <div class="cards2">
+        <div class="c3">
+          <h3><span class="word">의미</span></h3>
+          <p class="cite">이 가게는 가격이 착해서 좋다.</p>
+          <p>가격이 착하다고? &lsquo;착하다&rsquo;는 사람에게 어울리는 말 아닌가?</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">발음</span></h3>
+          <p class="cite">난 항상 [니] 생각뿐이야.</p>
+          <p>[니] 생각? [네] 생각이라고 발음해야 되지 않나?</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">10 / 22</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide tight" style="--fs:1.17;">
+    <h2 class="slide-title">학습활동 1 &middot; (3) 풀이</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">의미가 달라진 말</span></h3>
+          <p class="cite">급발진</p>
+          <p>원래 자동차를 비롯한 탈것에 어울리는 말이지만, 상황에 맞지 않는 극단적 행동이나 갑자기 화를 내는 상황을 나타내는 말로 쓰이기도 한다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">발음이 달라진 말</span></h3>
+          <p class="cite">잘 지내길 [바래].</p>
+          <p>&lsquo;바라다&rsquo;의 활용형인 &lsquo;바라[바라]&rsquo;를 [바래]라고 발음하는 경우가 많다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">활동 1 &middot; (4) 그렇다면 무엇에 유의해야 할까</div>
+        <ul>
+          <li>언중이 널리 쓰는 말이 사전에 등재될 수 있다는 것은, 우리의 국어 생활이 어문 규범을 비롯한 국어의 모습을 <strong>변화시킬 수 있다</strong>는 뜻이다</li>
+          <li>국어를 파괴하지 않고 더 풍부하게 할 수 있도록 단어를 쓸 때 의미나 발음에 유의해야겠다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">11 / 22</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide tight" style="--fs:1.33;">
+    <h2 class="slide-title">학습활동 2 &middot; 만화가 보여 주는 상황</h2>
+    <div class="body-area">
+      <div class="act-badge">활동 2 &middot; 순화어 만들기</div>
+      <div class="act-q">다음 만화를 보고 순화어를 만들어 국어 문화 발전에 참여해 보자.</div>
+      <div class="steps">
+        <div class="step">
+          <div class="sn">1</div>
+          <div class="sbody">
+            <h3>인터넷에서 옷을 사려고 하는데, 화면에 온통 외래어나 외국어뿐이야</h3>
+            <p>그러게. 무엇을 눌러야 할지 모르겠어</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">2</div>
+          <div class="sbody">
+            <h3>요즘에는 꼭 필요하지 않을 때도 외래어나 외국어를 너무 남용하는 것 같아</h3>
+            <p>우리가 직접 그런 단어를 찾아서 우리말로 바꾸어 보면 어때?</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">3</div>
+          <div class="sbody">
+            <h3>좋아! 그럼 우리 주변에서 순화할 수 있는 외래어나 외국어를 찾자</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">12 / 22</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide " style="--fs:1.45;">
+    <h2 class="slide-title">외래어와 외국어</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:12em;">구분</th><th>외래어</th><th>외국어</th></tr></thead>
+        <tbody>
+          <tr><th>사전적 정의</th><td>외국에서 들어온 말로 국어에서 널리 쓰이는 단어</td><td>외국에서 들어온 말로 아직 국어로 정착되지 않은 단어</td></tr>
+          <tr><th>&lsquo;한국어&rsquo;에 포함되는가</th><td>포함된다</td><td>포함되지 않는다</td></tr>
+          <tr><th>예</th><td>버스, 컴퓨터, 피아노</td><td>무비, 밀크</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">13 / 22</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide " style="--fs:1.45;">
+    <h2 class="slide-title">학습활동 2 &middot; (1) 풀이</h2>
+    <div class="body-area">
+      <div class="act-q">위 만화와 비슷한 경험을 떠올려 보고, 지나친 외래어나 외국어 사용으로 생기는 문제를 생각해 보자.</div>
+      <div class="def-box">
+        <div class="dt">예시 답안</div>
+        <p>음식점에서 영어로만 표기된 차림표를 보고 당황한 적이 있다. 영어가 익숙하지 않은 사람이라면 주문하기 어려울 것 같았다. 이렇듯 지나친 외래어나 외국어 사용은 <strong style="color:var(--key);">의사소통에 장애가 되고 일상생활을 불편하게</strong> 할 수 있다</p>
+      </div>
+    </div>
+    <div class="page-num">14 / 22</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide " style="--fs:1.13;">
+    <h2 class="slide-title">학습활동 2 &middot; (2) 순화어 만들기</h2>
+    <div class="body-area">
+      <div class="act-q">주변에서 외래어나 외국어가 남용되는 사례를 더 찾아, 순화어를 만들어 보자.</div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:12em;">외래어 &middot; 외국어</th><th>내가 만든 순화어</th></tr></thead>
+        <tbody>
+          <tr><th>플러팅</th><td>추파</td></tr>
+          <tr><th>오마카세</th><td>주방장 특선</td></tr>
+          <tr><th>리클라이너</th><td>각도 조절 의자</td></tr>
+          <tr><th>리유저블 컵</th><td>다회용 컵</td></tr>
+          <tr><th>퍼스널 컬러</th><td>맞춤 색상</td></tr>
+          <tr><th>파인 다이닝</th><td>고급 정찬</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">15 / 22</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide tight" style="--fs:1.31;">
+    <h2 class="slide-title">학습활동 2 &middot; (3) 좋은 순화어의 조건</h2>
+    <div class="body-area">
+      <div class="verse quote">
+        &lsquo;동아리(서클), 나들목(인터체인지), 새내기(신입생), 댓글(리플), 미끼 상품(로스 리더), 둔치(고수부지), 갓길(노견), 덮밥(돈부리), 틈새시장(니치 마켓)&hellip;&hellip;.&rsquo; 이들은 성공한 순화어로 꼽을 만한 대표적인 말이다. 여기에는 공통점이 있다. 형태가 짧고, 의미도 딱 맞아떨어진다는 점이다. 무엇보다 자연스러워 입에 착 감겨야 한다. 모국어 화자라면 그것을 직관적으로 느낄 수 있다.
+        <span class="src">&mdash; 《한국경제》(2020. 5. 11.)에서</span>
+      </div>
+      <div class="emotion" style="margin-top:1.4cqw;">
+        <div class="etag">서로 평가해 보기 &middot; 예시</div>
+        <ul>
+          <li>나는 &lsquo;플러팅&rsquo;을 &lsquo;추파&rsquo;로 바꾸었는데 친구는 &lsquo;호감 표시&rsquo;로 바꾸었다. &lsquo;추파&rsquo;가 더 간결하지만, 의미가 더 잘 맞는 것은 &lsquo;호감 표시&rsquo;인 것 같다</li>
+          <li>&lsquo;오마카세&rsquo;를 나와 친구 모두 &lsquo;주방장 특선&rsquo;으로 바꾸었다. 바꾼 말이 억지스럽지 않고 의미를 이해하기 쉬워서, 이 말이 정착되면 좋겠다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">16 / 22</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide tight" style="--fs:1.42;">
+    <h2 class="slide-title">학습활동 2 &middot; (4) 국어 문화를 지키려는 노력</h2>
+    <div class="body-area">
+      <div class="act-q">국어 문화를 지키고 발전시키기 위해 어떤 노력이 이루어지고 있는지 찾아보자.</div>
+      <div class="cards3">
+        <div class="c3">
+          <h3><span class="word">제주어 지키기</span></h3>
+          <p>제주도는 고어가 많이 남아 있는 제주어를 지키고 보급하기 위해 제주어 전시관을 건립하고 《제주어사전》을 개발하고 있다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">국어 문화 학교</span></h3>
+          <p>국립국어원은 쉽고 바른 국어 생활을 돕는 &lsquo;국어 문화 학교&rsquo;를 운영한다. 국어 생활과 관련된 온라인 강좌가 개설되어 있다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">우리말 다듬기 공모전</span></h3>
+          <p>국어문화원은 시민을 대상으로 일상에서 자주 쓰이는 외래어나 한자어를 순화하는 공모전을 연다</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">17 / 22</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide tight" style="--fs:1.28;">
+    <h2 class="slide-title">국어 문화 발전에 기여하는 태도</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">&#9312;</span>잘못 쓰는 우리말을 바로잡는다</li>
+        <li><span class="n">&#9313;</span>외래어나 외국어를 남용하지 않는다. 다만 필요에 따라 쓸 수는 있으며, <strong style="color:var(--key);">순화할 수 있는 표현은 뜻이 잘 통하는 고유어</strong>로 바꾸어 쓴다</li>
+        <li><span class="n">&#9314;</span>사라져 가는 우리말을 찾아내어 살려 쓴다</li>
+      </ul>
+      <div class="emotion" style="margin-top:1.6cqw;">
+        <div class="etag">개인이 할 수 있는 일</div>
+        <ul>
+          <li>국립국어원은 어휘 &middot; 문법 &middot; 담화 &middot; 음운의 국어 사용 실태를 조사해 국어의 변화 방향을 파악하고 국어 정책을 세운다</li>
+          <li>오늘날의 국어 사용에 따라 미래의 국어 모습이 달라진다는 점을 알고, 자신의 국어 생활을 꾸준히 돌아보는 태도가 필요하다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">18 / 22</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide " style="--fs:1.19;">
+    <h2 class="slide-title">확인 문제 &middot; 1~2번</h2>
+    <div class="body-area">
+      <div class="quiz-list">
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">1</span>&lsquo;좁쌀&rsquo;과 &lsquo;안팎&rsquo;에 &lsquo;ㅂ&rsquo;과 &lsquo;ㅍ&rsquo; 소리가 덧나는 까닭은 무엇인가?</div>
+          <div class="qans reveal"><span class="tag">답</span>&lsquo;쌀&rsquo;과 &lsquo;안&rsquo;이 각각 <span class="mk">&#4385;&#4510;&#4527;</span>, &lsquo;안ㅎ&rsquo;처럼 &lsquo;ㅂ&rsquo;과 &lsquo;ㅎ&rsquo;을 지니고 있던 시기에 만들어진 합성어가 오늘날까지 이어졌기 때문이다</div>
+        </div>
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">2</span>&lsquo;효과&rsquo;의 발음에 [효ː꽈]가, 사전에 &lsquo;반려견&rsquo;이 추가된 일은 각각 무엇을 보여 주는가?</div>
+          <div class="qans reveal"><span class="tag">답</span>언중이 실제로 쓰는 발음, 그리고 사회 &middot; 문화적 상황과 사람들의 인식 변화가 표준 발음과 표준어에 반영된다는 것을 보여 준다</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">19 / 22</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide " style="--fs:1.21;">
+    <h2 class="slide-title">확인 문제 &middot; 3~4번</h2>
+    <div class="body-area">
+      <div class="quiz-list">
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">3</span>외래어와 외국어는 어떻게 구분되는가?</div>
+          <div class="qans reveal"><span class="tag">답</span>둘 다 외국에서 들어온 말이지만, 국어에서 널리 쓰여 한국어에 포함되는 말이 외래어이고 아직 국어로 정착하지 않은 말이 외국어다. &lsquo;버스&rsquo;는 외래어, &lsquo;무비&rsquo;는 외국어다</div>
+        </div>
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">4</span>성공한 순화어에는 어떤 공통점이 있는가?</div>
+          <div class="qans reveal"><span class="tag">답</span>형태가 짧고 의미가 딱 맞아떨어지며, 무엇보다 자연스러워 입에 붙는다. &lsquo;동아리&rsquo;, &lsquo;나들목&rsquo;, &lsquo;새내기&rsquo;, &lsquo;댓글&rsquo;이 그런 예다</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">20 / 22</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide tight" style="--fs:1.45;">
+    <h2 class="slide-title">3차시 핵심 정리</h2>
+    <div class="body-area">
+      <div class="summary-list">
+        <div class="srow">
+          <div class="skey">옛 국어의 흔적</div>
+          <div class="sval">좁쌀 &middot; 휩쓸다 &middot; 암탉 &middot; 안팎처럼 &lsquo;ㅂ&rsquo;과 &lsquo;ㅎ&rsquo;이 덧나는 말에 옛말의 자취가 남아 있다</div>
+        </div>
+        <div class="srow">
+          <div class="skey">오늘의 변화</div>
+          <div class="sval">현실 발음이 표준 발음으로 추가되고([효ː꽈] &middot; [관껀] &middot; [교ː꽈]), 인식의 변화가 새 표준어를 만든다(반려견)</div>
+        </div>
+        <div class="srow">
+          <div class="skey">변화의 까닭</div>
+          <div class="sval">언중의 현실 언어생활을 반영하기 위해서다. 우리가 쓰는 말이 어문 규범을 바꿀 수 있다</div>
+        </div>
+        <div class="srow">
+          <div class="skey">참여하는 방법</div>
+          <div class="sval">잘못 쓰는 우리말 바로잡기 / 외래어 &middot; 외국어 남용하지 않고 순화어 쓰기 / 사라져 가는 우리말 살려 쓰기</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">21 / 22</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide tight" style="--fs:1.28;">
+    <h2 class="slide-title">소단원 마무리 &middot; 국어의 변화 양상</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:8em;">갈래</th><th>중세 국어에서 확인한 것</th></tr></thead>
+        <tbody>
+          <tr><th>표기와 음운</th><td>이어 적기를 함 / 오늘날 쓰이지 않는 &#12664; &#12671; &#12685;이 쓰임 / 어두 자음군이 있었음(<span class="mk">&middot;&#4384;&#4467;&middot;들</span>, <span class="mk">&middot;&#4385;&#4462;&middot;메</span>) / 모음 조화가 비교적 잘 지켜짐</td></tr>
+          <tr><th>문법</th><td>주격 조사로 &lsquo;이 / ㅣ / &Oslash;&rsquo;가 쓰임(<span class="mk">:말&#4362;&#4510;&middot;미</span>, <span class="mk">&middot;배</span>) / 관형격 조사로 &lsquo;ㅅ&rsquo;, &lsquo;&#4363;&#4513; / 의&rsquo;가 쓰임(<span class="mk">나&middot;랏:말&#4362;&#4510;&middot;미</span>)</td></tr>
+          <tr><th>어휘</th><td>시간이 흐르면서 단어의 의미가 변화하기도 함(<span class="mk">어&middot;린</span> : 어리석은 &rarr; 나이가 적은)</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.3cqw;">
+        <div class="etag">이 단원에서 얻을 것</div>
+        <ul>
+          <li>국어가 변화하는 실체라는 점을 이해하면, 오늘날의 국어에서 과거 국어의 모습을 발견할 수 있고 국어가 변화하는 과정을 알 수 있다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">22 / 22</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 1</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  // 슬라이드 안에서 하나씩 띄울 요소들 (문항 → 정답 → 다음 문항 → 정답 …)
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  // showAllSteps: 뒤로 돌아갈 때는 그 슬라이드의 단계가 모두 드러난 상태로 들어간다
+  function show(n, showAllSteps) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>

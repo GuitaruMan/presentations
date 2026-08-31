@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>국어의 변화와 발전 (1학년-1차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f7f1e6;
+    --paper-edge: #ddd0ba;
+    --ink: #2a2119;
+    --ink-soft: #5f5245;
+    --ink-faint: #9c8d7c;
+    --key: #8a4b2a;          /* 옛 문헌의 적갈색 */
+    --key-soft: #b47a55;
+    --rule: #ddd0ba;
+    --card: #fdf9f2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #2b2118;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.015em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(43,33,24,0.94); z-index: 50;
+  }
+  .nav-top a { color: #cbb9a2; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #f2e8d8; }
+  .nav-meta { color: #a3907a; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 18% 6%, rgba(255,255,255,0.85) 0%, transparent 58%),
+      radial-gradient(ellipse at 84% 96%, rgba(138,75,42,0.18) 0%, transparent 62%),
+      repeating-linear-gradient(90deg,
+        rgba(138,75,42,0.05) 0px, rgba(138,75,42,0.05) 1px,
+        transparent 1px, transparent 21px),
+      repeating-linear-gradient(180deg,
+        rgba(138,75,42,0.028) 0px, rgba(138,75,42,0.028) 1px,
+        transparent 1px, transparent 46px);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.042) calc(var(--stage-w) * 0.05);
+  }
+  /* 우측 상단 — 옛 목판본의 광곽(匡郭)과 세로 계선 */
+  .stage::before {
+    content: ""; position: absolute; top: 8%; right: -2%;
+    width: 23%; height: 80%; pointer-events: none; opacity: 0.09;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><g fill='none' stroke='%238a4b2a'><rect x='6' y='6' width='188' height='288' stroke-width='3.4'/><rect x='13' y='13' width='174' height='274' stroke-width='1.4'/><path stroke-width='1.2' d='M35 13 V287 M57 13 V287 M79 13 V287 M101 13 V287 M123 13 V287 M145 13 V287 M167 13 V287'/><path stroke-width='2.6' d='M13 96 H187 M13 204 H187'/><circle cx='100' cy='150' r='13' stroke-width='2.2'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(2.2rem, 6.2cqw, 7.44rem); line-height: 1.16; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.45rem, 3.85cqw, 4.62rem); line-height: 1.2;
+    padding-bottom: 0.7cqw; margin-bottom: 2.0cqw;
+    border-bottom: 0.2cqw solid var(--ink); display: inline-block;
+    flex-shrink: 0;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.85rem, 1.95cqw, 2.34rem); letter-spacing: 0.3em;
+    margin-bottom: 1.8cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); color: var(--ink-soft); line-height: 1.75; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 7cqw; height: 0.3cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1.1rem, 2.9cqw, 3.48rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.5cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.75rem, 1.6cqw, 1.92rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.4%; flex: 1; min-height: 0; }
+  .cols.wide-left { grid-template-columns: 1.35fr 1fr; }
+  .cols.wide-right { grid-template-columns: 1fr 1.35fr; }
+  .col-head {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs)));
+    color: var(--key); margin-bottom: 1.1cqw;
+    padding-bottom: 0.5cqw; border-bottom: 0.1cqw solid var(--rule);
+  }
+
+  .verse {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1.05rem, calc(2.75cqw * var(--fs)), calc(3.3rem * var(--fs)));
+    line-height: 1.86; letter-spacing: 0.005em;
+  }
+  /* 700이 이 글꼴의 가장 굵은 단계라 획을 아주 조금 더 두껍게 해 강조를 살린다 */
+  .verse .hl {
+    color: var(--key); font-weight: 700;
+    -webkit-text-stroke: 0.022em currentColor;
+  }
+  .verse p + p { margin-top: 1.1cqw; }
+  .cols .verse { font-size: clamp(0.92rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.82; }
+  .verse.quote { font-size: clamp(0.8rem, calc(1.86cqw * var(--fs)), calc(2.23rem * var(--fs))); line-height: 1.6; }
+  .src {
+    display: block; margin-top: 0.9cqw;
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.68rem, calc(1.42cqw * var(--fs)), calc(1.7rem * var(--fs)));
+    color: var(--ink-faint); letter-spacing: 0.04em;
+  }
+
+  .word-note {
+    margin-top: 0.95cqw; padding-top: 0.8cqw;
+    border-top: 1px solid var(--rule);
+    font-size: clamp(0.78rem, calc(1.72cqw * var(--fs)), calc(2.06rem * var(--fs))); line-height: 1.66; color: var(--ink-soft);
+  }
+  .word-note.top { margin-top: 0; padding-top: 0; border-top: none; }
+  .word-note .w {
+    display: block; margin-bottom: 0.25em;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.88rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs)));
+  }
+
+  .emotion {
+    margin-top: auto; background: var(--card);
+    border-left: 0.36cqw solid var(--key);
+    padding: 1.3cqw 1.7cqw;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.45rem;
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.82rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+  }
+  .emotion li + li { margin-top: 0.3rem; }
+  .emotion li::before { content: "\2014"; position: absolute; left: 0; color: var(--ink-faint); }
+  .body-area > .emotion { margin-bottom: 3.6cqw; }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 1.0cqw 0.95cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.6;
+  }
+  .info-table th {
+    width: 4.8em; font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--key); white-space: nowrap;
+  }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.95cqw 0.9cqw; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.76rem, calc(1.78cqw * var(--fs)), calc(2.14rem * var(--fs))); line-height: 1.6;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.18cqw solid var(--key); font-size: clamp(0.8rem, calc(1.88cqw * var(--fs)), calc(2.26rem * var(--fs)));
+  }
+  .cmp-table tbody th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink);
+    white-space: nowrap; width: 9em; background: var(--card);
+  }
+  .cmp-table tr:last-child td { border-bottom: none; }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.88rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); line-height: 1.68;
+    padding-left: 3.0cqw; position: relative; margin-bottom: 1.3cqw;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n {
+    position: absolute; left: 0; top: 0.05em;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--key); font-size: 1.05em;
+  }
+
+  .def-box {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.5cqw 1.8cqw;
+  }
+  .def-box + .def-box { margin-top: 1.2cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); margin-bottom: 0.45rem;
+  }
+  .def-box p { font-size: clamp(0.86rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; color: var(--ink-soft); }
+
+  .flow { display: flex; align-items: stretch; gap: 0.8cqw; min-height: 0; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.28cqw solid var(--key);
+    padding: 1.5cqw 1.25cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .stage-label {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.85rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); margin-bottom: 0.15rem;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); margin-bottom: 0.6rem;
+  }
+  .flow-step .desc {
+    font-size: clamp(0.74rem, calc(1.68cqw * var(--fs)), calc(2.02rem * var(--fs))); line-height: 1.6; color: var(--ink-soft);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs)));
+  }
+
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.28cqw solid var(--key); padding: 1.6cqw 1.5cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
+    margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.8rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.45rem; }
+
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 1.0cqw 2.6cqw; }
+  .gl { display: flex; gap: 0.9cqw; align-items: baseline; padding-bottom: 0.8cqw; border-bottom: 1px solid var(--rule); }
+  .gl .gw {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.86rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); width: 5.6em; flex-shrink: 0;
+  }
+  .gl .gd { font-size: clamp(0.76rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs))); line-height: 1.6; color: var(--ink-soft); }
+
+  .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); color: var(--key);
+    width: 2.2em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 1cqw; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
+    margin-bottom: 0.25rem;
+  }
+  .step p { font-size: clamp(0.8rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+
+  .act-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    background: var(--key); color: var(--paper);
+    font-size: clamp(0.74rem, calc(1.6cqw * var(--fs)), calc(1.92rem * var(--fs))); letter-spacing: 0.06em;
+    padding: 0.3em 1.1em; margin-bottom: 1.0cqw;
+  }
+  .act-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); line-height: 1.66;
+    color: var(--ink); margin-bottom: 1.4cqw;
+  }
+  .fill-flow { display: flex; flex-direction: column; gap: 1.1cqw; }
+  .body-area > .fill-flow:last-child { margin-bottom: 3.6cqw; }
+  .fill-row {
+    background: var(--card); border: 1px solid var(--rule);
+    border-left: 0.32cqw solid var(--key);
+    padding: 1.05cqw 1.5cqw;
+    font-size: clamp(0.88rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.66;
+  }
+  .fill-row .arrow { color: var(--key); margin: 0 0.5em; }
+  .fill-row .res { color: var(--key); font-weight: 700; }
+
+  .qa { display: flex; flex-direction: column; gap: 1.1cqw; }
+  .body-area > .qa:last-child { margin-bottom: 3.6cqw; }
+  .qa-item { background: var(--card); border-left: 0.32cqw solid var(--key); padding: 1.1cqw 1.5cqw; }
+  .qa-item .q {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.85rem, calc(1.9cqw * var(--fs)), calc(2.28rem * var(--fs))); margin-bottom: 0.3rem;
+  }
+  .qa-item .a { font-size: clamp(0.8rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66; color: var(--ink-soft); }
+
+  /* 단계 공개 — 스페이스/클릭으로 문항과 정답을 하나씩 띄운다.
+     opacity로만 숨겨 자리를 미리 잡아 두므로 화면이 튀지 않는다. */
+  .reveal { opacity: 0; transition: opacity .25s ease; }
+  .reveal.shown { opacity: 1; }
+
+  /* 한 장에 두 문항만 두므로 자리가 넉넉하다. 슬라이드마다 style="--qfs:…"로
+     남는 공간을 다 쓰도록 글자를 키운다(값은 Playwright 실측으로 정함). */
+  .quiz-list {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(3.0cqw * var(--fs)); flex: 1;
+  }
+  .body-area > .quiz-list { margin-bottom: 3.2cqw; }
+  .qq {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: max(1rem, calc(2.9cqw * var(--fs))); line-height: 1.55;
+    padding-left: calc(3.6cqw * var(--fs)); position: relative;
+  }
+  .qq .qn {
+    position: absolute; left: 0; top: 0;
+    color: var(--key); font-size: 1.05em;
+  }
+  .qans {
+    margin: calc(1.2cqw * var(--fs)) 0 0 calc(3.6cqw * var(--fs));
+    background: var(--card); border-left: 0.34cqw solid var(--key);
+    padding: calc(1.25cqw * var(--fs)) calc(1.7cqw * var(--fs));
+    font-size: max(0.88rem, calc(2.45cqw * var(--fs))); line-height: 1.62; color: var(--ink-soft);
+  }
+  .qans .tag {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    margin-right: 0.6em;
+  }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5cqw; }
+  .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.25cqw * var(--fs)), calc(2.7rem * var(--fs))); width: 5.6em; flex-shrink: 0;
+    text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.84rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; }
+  .srow .sval ul { list-style: none; margin-top: 0.4rem; }
+  .srow .sval li { padding-left: 1rem; position: relative; color: var(--ink-soft); }
+  .srow .sval li + li { margin-top: 0.25rem; }
+  .srow .sval li::before { content: "\00B7"; position: absolute; left: 0.2rem; color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 3.2%; bottom: 2.4%;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.35cqw, 1.62rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #cbb9a2; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #4a382a; color: #f2e8d8; border: 1px solid #6d5540;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #5c4633; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #9c8770; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w);
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cols, .cards3, .cards2, .gloss { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* ── 내용 사이 경계 ────────────────────────────────────────────
+     여백을 em으로 잡아 글자 크기를 따라가게 하고, 상자의 머리말과
+     본문을 선으로 가른다. 글자만 키우면 서로 붙어 읽기 어려워진다. */
+  .def-box .dt,
+  .emotion .etag {
+    margin-bottom: 0.62em;
+    padding-bottom: 0.42em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .c3 h3 { margin-bottom: 0.62em; padding-bottom: 0.42em; }
+
+  .emotion li + li { margin-top: 0.55em; }
+  .c3 p + p { margin-top: 0.72em; }
+  .word-note { margin-top: 0.9em; padding-top: 0.8em; }
+  .word-note .w { margin-bottom: 0.42em; }
+  .gl { padding-bottom: 0.62em; }
+  .num-list li { margin-bottom: 0.75em; }
+  .info-table th, .info-table td { padding: 0.62em 0.5em; }
+  .cmp-table th, .cmp-table td { padding: 0.55em 0.45em; }
+  .step .sbody { padding-bottom: 0.85em; }
+  .step h3 { margin-bottom: 0.35em; }
+  .qa-item .q { margin-bottom: 0.4em; }
+  .srow .sval ul { margin-top: 0.5em; }
+  .srow .sval li + li { margin-top: 0.4em; }
+  .flow-step .emo { margin-bottom: 0.5em; }
+
+  /* 작품의 말을 옮겨 적은 줄 — 해설과 갈라 보이게 한다 */
+  .c3 p.cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    background: rgba(0,0,0,0.04);
+    border-left: 0.28em solid var(--rule);
+    padding: 0.5em 0.72em;
+    margin-bottom: 0.8em;
+    color: var(--ink);
+  }
+  .c3 p.cite + p { margin-top: 0; }
+
+  /* 내용이 많아 자리가 빠듯한 슬라이드 — 여백만 줄이고 글자는 지킨다
+     (머리말과 본문을 가르는 선은 그대로 둔다) */
+  .slide.tight .def-box .dt,
+  .slide.tight .emotion .etag { margin-bottom: 0.4em; padding-bottom: 0.28em; }
+  .slide.tight .c3 h3 { margin-bottom: 0.4em; padding-bottom: 0.3em; }
+  .slide.tight .emotion li + li { margin-top: 0.34em; }
+  .slide.tight .c3 p + p { margin-top: 0.5em; }
+  .slide.tight .word-note { margin-top: 0.6em; padding-top: 0.5em; }
+  .slide.tight .word-note .w { margin-bottom: 0.3em; }
+  .slide.tight .gl { padding-bottom: 0.45em; }
+  .slide.tight .num-list li { margin-bottom: 0.5em; }
+  .slide.tight .info-table th,
+  .slide.tight .info-table td { padding: 0.45em 0.45em; }
+  .slide.tight .cmp-table th,
+  .slide.tight .cmp-table td { padding: 0.4em 0.4em; }
+  .slide.tight .step .sbody { padding-bottom: 0.6em; }
+
+  /* 쪽번호는 본문칸 밖(무대 여백)에 둔다. 안쪽에 두면 본문이 아래까지
+     찼을 때 글자를 덮어서, 상자마다 아래 여백을 따로 둬야 했다. */
+  .page-num { right: 0; bottom: -3.1cqw; }
+  .cover .page-num { display: none; }
+
+  /* 중세 국어 표기 — 옛한글 글립이 있는 글꼴을 먼저 찾는다.
+     첫가끝 조합형이라 이 글꼴이 없는 PC에서는 근사하게 표시된다. */
+  .mk {
+    font-family: "함초롬바탕", "HCR Batang", "HANBatang", "New Gulim",
+                 "바탕", "Batang", "Gowun Batang", serif;
+    letter-spacing: 0;
+  }
+  .verse.mk { line-height: 2.0; }
+  .verse.mk p + p { margin-top: 0.55em; }
+  /* 원문 줄이 길어 두 줄로 깨지지 않도록 이 장만 조금 촘촘히 */
+  .cmp-table .mk, .qans .mk, .fill-row .mk, .c3 .mk { letter-spacing: 0; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_1학년.html">&larr; 1학년</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">국어의 변화와 발전 &middot; 1학년 1차시 &middot; 업데이트 2026. 8. 31.</div>
+</div>
+
+<div class="stage" id="stage">
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">문 법 　 국 어 의 　 역 사</div>
+    <h1 class="title-main">국어의 변화와 발전</h1>
+    <div class="rule"></div>
+    <div class="sub">&lt;세종어제훈민정음&gt;으로 읽는 중세 국어</div>
+    <div class="foot">
+      <span>공통국어2 &middot; 4. 삶과 함께하는 국어 (1)</span>
+      <span>1학년 &middot; 1차시</span>
+    </div>
+    <div class="page-num">1 / 19</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide " style="--fs:1.45;">
+    <h2 class="slide-title">학습 목표</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:2cqw;">
+        <div class="c3">
+          <h3>하나</h3>
+          <p>과거와 현재의 국어 생활에 나타나는 국어의 변화를 이해한다</p>
+        </div>
+        <div class="c3">
+          <h3>둘</h3>
+          <p>국어 문화 발전에 참여한다</p>
+        </div>
+      </div>
+      <div class="def-box">
+        <div class="dt">1차시에 할 일</div>
+        <p>&lt;세종어제훈민정음&gt; 서문을 읽고, <strong style="color:var(--key);">음운과 표기</strong>의 두 갈래에서 중세 국어가 오늘날의 국어와 어떻게 다른지 확인한다</p>
+      </div>
+    </div>
+    <div class="page-num">2 / 19</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide " style="--fs:1.45;">
+    <h2 class="slide-title">기초 개념 짚고 가기</h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>중세 국어</th><td>고려가 건립된 10세기 초부터 임진왜란이 발생한 16세기 말까지의 국어</td></tr>
+        <tr><th>훈민정음<br>「1」</th><td>백성을 가르치는 바른 소리라는 뜻으로, 1443년에 세종이 창제한 우리나라 글자를 이르는 말</td></tr>
+        <tr><th>훈민정음<br>「2」</th><td>조선 세종 28년(1446)에 훈민정음 28자를 세상에 반포할 때에 찍어 낸 판각 원본</td></tr>
+      </table>
+    </div>
+    <div class="page-num">3 / 19</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide tight" style="--fs:1.31;">
+    <h2 class="slide-title">국어의 시대 구분</h2>
+    <div class="body-area">
+      <div class="flow" style="flex:0 0 auto;margin-bottom:2cqw;">
+        <div class="flow-step">
+          <div class="emo" style="font-size:2.05cqw;">고대 국어</div>
+          <div class="desc">삼국 시대부터 통일 신라까지</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo" style="font-size:2.05cqw;">전기 중세 국어</div>
+          <div class="desc">고려 건국(10세기 초)부터</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo" style="font-size:2.05cqw;">후기 중세 국어</div>
+          <div class="desc">조선 건국과 훈민정음 창제(15세기)부터</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo" style="font-size:2.05cqw;">근대 국어</div>
+          <div class="desc">임진왜란(16세기 말)부터</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo" style="font-size:2.05cqw;">현대 국어</div>
+          <div class="desc">갑오개혁과 개화기(19세기 말)부터</div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">오늘 읽을 자료의 자리</div>
+        <ul>
+          <li>&lt;세종어제훈민정음&gt;은 훈민정음이 창제된 직후에 나온 글이므로 <strong>후기 중세 국어</strong>의 자료다</li>
+          <li>중세 국어는 훈민정음 창제를 경계로 앞뒤가 갈린다. 창제 이전의 우리말은 한자를 빌려 적은 자료로만 짐작할 수 있었다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">4 / 19</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide " style="--fs:1.29;">
+    <h2 class="slide-title">《훈민정음 해례본》과 &lt;세종어제훈민정음&gt;</h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">《훈민정음 해례본》 &middot; 1446년</div>
+        <p>1443년에 세종이 만든 문자 &lsquo;훈민정음&rsquo;을 한문으로 풀이한 해설서다. 세종의 서문과 새 문자 28자를 소개한 &lsquo;예의(例義)&rsquo;, 집현전 학사들이 문자의 원리를 설명한 &lsquo;해례(解例)&rsquo;, 정인지의 서문이 실려 있다</p>
+      </div>
+      <div class="def-box">
+        <div class="dt">&lt;세종어제훈민정음&gt;</div>
+        <p>《훈민정음 해례본》의 서문과 예의를 <strong style="color:var(--key);">우리말로 풀어 쓴</strong> 글이다. 《월인석보》 권 1에 실려 전해 오며, 중세 국어의 특징이 잘 드러나 있는 국어 자료다</p>
+      </div>
+    </div>
+    <div class="page-num">5 / 19</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide tight" style="--fs:0.99;">
+    <h2 class="slide-title">원문 &middot; &lt;세종어제훈민정음&gt; 서문</h2>
+    <div class="body-area">
+      <div class="verse mk" style="text-align:center;flex:0 0 auto;">
+        <p style="font-weight:700;">世&middot;솅宗종御&middot;엉製&middot;졩訓&middot;훈民민正&middot;졍音흠</p>
+      </div>
+      <div class="verse mk" style="margin-top:1.6cqw;">
+        <p>나&middot;랏:말&#4362;&#4510;&middot;미 中듕國&middot;귁&middot;에 달&middot;아 文문字&middot;&#4365;&#4510;&middot;와&middot;로 서르 &#4361;&#4510;&#4358;&#4510;&#4538;&middot;디 아&middot;니&#4370;&#4510;&#4527;&middot;&#4362;&#4513;</p>
+        <p>&middot;이런 젼&middot;&#4366;&#4510;&middot;로 어&middot;린 百&middot;&#4359;&#4513;&#4520;姓&middot;셩&middot;이 니르&middot;고&middot;져 &middot;&#4370;&#4457;&#4569; &middot;배 이&middot;셔&middot;도</p>
+        <p>&#4358;&#4510;&middot;&#4366;&#4510;&#4535;:내 제 &middot;&#4384;&#4467;&middot;들 시&middot;러 펴&middot;디 :몯&#4370;&#4510;&#4569; &middot;노&middot;미 하&middot;니&middot;라</p>
+        <p>&middot;내 &middot;이&middot;&#4357;&#4510;&#4527; 爲&middot;윙&middot;&#4370;&#4510;&middot;야 :어엿&middot;비 너&middot;겨 &middot;새&middot;로 &middot;스&middot;믈 여&middot;듧 字&middot;&#4365;&#4510;&middot;&#4357;&#4510;&#4527; &#4358;&#4513;&#4592;&middot;&#4352;&#4510;&middot;노&middot;니</p>
+        <p>:사&#4357;&#4510;&#4535;:마&middot;다 :&#4370;&#4513;&middot;&#4423;&#4455; :수&middot;&#4395;&#4469; 니&middot;겨 &middot;날&middot;로 &middot;&#4385;&#4462;&middot;메 便뼌安한&middot;킈 &#4370;&#4510;&middot;고&middot;져 &#4370;&#4510;&#4569; &#4399;&#4510;&#4357;&#4510;&middot;미니&middot;라</p>
+        <span class="src">&mdash; 《월인석보》 권 1에서</span>
+      </div>
+    </div>
+    <div class="page-num">6 / 19</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide " style="--fs:1.17;">
+    <h2 class="slide-title">현대어 풀이</h2>
+    <div class="body-area">
+      <div class="verse">
+        <p>우리나라의 말이 중국과 달라 한자와는 서로 통하지 아니하여서, 이런 까닭으로 어리석은 백성이 말하고자 하는 바가 있어도 마침내 제 뜻을 능히 펴지 못하는 사람이 많다. 내가 이를 불쌍히 여겨 새로 스물여덟 글자를 만드니, 모든 사람으로 하여금 쉽게 익혀서 날마다 씀에 편안하게 하고자 할 따름이다.</p>
+      </div>
+      <div class="emotion" style="margin-top:2cqw;">
+        <div class="etag">읽는 방법</div>
+        <ul>
+          <li>중세 국어 표기는 오늘날의 소리로 그대로 읽히지 않는다. 글자 하나하나를 발음하려 애쓰기보다 현대어 풀이와 <strong>나란히 놓고 견주는</strong> 데 초점을 둔다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">7 / 19</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide tight" style="--fs:1.04;">
+    <h2 class="slide-title">서문에 담긴 한글 창제 정신</h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">자주 정신</span></h3>
+          <p class="cite mk">나&middot;랏:말&#4362;&#4510;&middot;미 中듕國&middot;귁&middot;에 달&middot;아</p>
+          <p>우리나라의 말이 중국과 달라 &mdash; 중국의 문자와 구별되는 우리말의 독자성을 먼저 밝혔다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">애민 정신</span></h3>
+          <p class="cite mk">어&middot;린 百&middot;&#4359;&#4513;&#4520;姓&middot;셩&middot;이 &hellip; :어엿&middot;비 너&middot;겨</p>
+          <p>어리석은 백성이 &hellip; 불쌍히 여겨 &mdash; 글자를 만든 까닭이 백성에게 있음을 말했다</p>
+        </div>
+      </div>
+      <div class="cards2">
+        <div class="c3">
+          <h3><span class="word">창조 정신</span></h3>
+          <p class="cite mk">&middot;새&middot;로 &middot;스&middot;믈 여&middot;듧 字&middot;&#4365;&#4510;&middot;&#4357;&#4510;&#4527; &#4358;&#4513;&#4592;&middot;&#4352;&#4510;&middot;노&middot;니</p>
+          <p>새로 스물여덟 글자를 만드니 &mdash; 빌려 온 문자가 아니라 새로 만든 문자임을 밝혔다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">실용 정신</span></h3>
+          <p class="cite mk">:수&middot;&#4395;&#4469; 니&middot;겨 &middot;날&middot;로 &middot;&#4385;&#4462;&middot;메 便뼌安한&middot;킈</p>
+          <p>쉽게 익혀서 날마다 씀에 편안하게 &mdash; 누구나 쉽게 익혀 쓰는 것을 목표로 삼았다</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">8 / 19</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide " style="--fs:1.45;">
+    <h2 class="slide-title">학습활동 1 &middot; (1) 사라진 음운 찾기</h2>
+    <div class="body-area">
+      <div class="act-badge">활동 1 &middot; 국어 자료 탐구하기</div>
+      <div class="act-q">다음 단어에 쓰인 자음과 모음 중 오늘날에는 쓰이지 않는 것들을 찾아보자.</div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:7em;">갈래</th><th>단어</th><th>오늘날 쓰이지 않는 음운</th></tr></thead>
+        <tbody>
+          <tr><th>자음</th><td class="mk">:수&middot;&#4395;&#4469;</td><td style="color:var(--ink-faint);">?</td></tr>
+          <tr><th>모음</th><td class="mk">&#4370;&#4510;&middot;고&middot;져</td><td style="color:var(--ink-faint);">?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">9 / 19</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide tight" style="--fs:1.42;">
+    <h2 class="slide-title">학습활동 1 &middot; (1) 풀이</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">&#12664;</span> 순경음 비읍</h3>
+          <p class="cite mk">:수&middot;&#4395;&#4469; &rarr; 쉽게</p>
+          <p>&lsquo;ㅂ&rsquo; 아래에 &lsquo;ㅇ&rsquo;을 붙여 만든 글자다. 오늘날에도 ㅂ과 ㅇ은 쓰지만 이 글자가 나타내던 소리는 사라졌다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">&#12685;</span> 아래아</h3>
+          <p class="cite mk">&#4370;&#4510;&middot;고&middot;져 &rarr; 하고자</p>
+          <p>&lsquo;ㅏ&rsquo;와 &lsquo;ㅗ&rsquo;의 중간쯤 되는 소리로 짐작한다. 소리는 사라졌지만 글자는 20세기 초까지 표기에 남아 있었다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">그 밖에 오늘날 쓰이지 않는 음운</div>
+        <ul>
+          <li><strong>&#12671;</strong>(반치음) &middot; <strong>&#12678;</strong>(여린히읗) &middot; <strong>&#12673;</strong>(옛이응). 서문에서도 <span class="mk">:몯&#4370;&#4510;&#4569;</span>의 종성 자리에 &#12678;이 쓰였다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">10 / 19</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide " style="--fs:1.38;">
+    <h2 class="slide-title">음운이 사라진 뒤에 일어난 일</h2>
+    <div class="body-area">
+      <div class="fill-flow">
+        <div class="fill-row"><span class="mk">곱- + -아</span> <span class="arrow">&rarr;</span> <span class="mk">고&#4395;&#4449;</span> <span class="arrow">&rarr;</span> <span class="res">고와</span></div>
+        <div class="fill-row"><span class="mk">:수&middot;&#4395;&#4469;</span> <span class="arrow">&rarr;</span> <span class="res">쉬이</span></div>
+        <div class="fill-row"><span class="mk">&#4370;&#4510;&#4528;</span> <span class="arrow">&rarr;</span> <span class="res">흙</span></div>
+      </div>
+      <div class="emotion" style="margin-top:1.8cqw;">
+        <div class="etag">빈자리를 다른 소리가 메웠다</div>
+        <ul>
+          <li>&#12664;이 사라지자 그 자리를 반모음 &lsquo;ㅗ/ㅜ&rsquo;가 대신했다. <span class="mk">고&#4395;&#4449;</span>가 &lsquo;고와&rsquo;가 된 것이 그런 경우다</li>
+          <li>&#12685;가 사라지자 첫 음절에서는 주로 &lsquo;ㅏ&rsquo;로, 둘째 음절 이하에서는 주로 &lsquo;ㅡ&rsquo;로 바뀌었다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">11 / 19</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide tight" style="--fs:1.32;">
+    <h2 class="slide-title">학습활동 1 &middot; (2) 표기상 특징</h2>
+    <div class="body-area">
+      <div class="act-q">중세 국어와 현대 국어를 비교해 보고, 중세 국어의 표기상 특징을 탐구해 보자.</div>
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <thead><tr><th style="width:11em;">중세 국어</th><th>현대 국어</th></tr></thead>
+        <tbody>
+          <tr><th class="mk">:말&#4362;&#4510;&middot;미</th><td>말씀이</td></tr>
+          <tr><th class="mk">&middot;노&middot;미</th><td>놈이</td></tr>
+          <tr><th class="mk">&#4399;&#4510;&#4357;&#4510;&middot;미니&middot;라</th><td>따름이다</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">답</div>
+        <ul>
+          <li>소리 나는 대로 앞 음절의 종성을 뒤 음절의 초성으로 옮겨 적었다</li>
+          <li>방점을 표기하여 성조를 나타냈다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">12 / 19</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide tight" style="--fs:1.39;">
+    <h2 class="slide-title">이어 적기와 끊어 적기</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:1.5cqw;">
+        <div class="c3">
+          <h3><span class="word">이어 적기</span></h3>
+          <p>여러 형태소가 연결될 때 앞 음절의 종성을 뒤 음절의 초성으로 옮겨서 쓰는 것</p>
+          <p class="cite mk">구르믈 버서난</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">끊어 적기</span></h3>
+          <p>여러 형태소가 연결될 때 각각을 음절이나 성분 단위로 밝혀 적는 것</p>
+          <p class="cite">구름을 벗어난</p>
+        </div>
+      </div>
+      <div class="fill-flow">
+        <div class="fill-row"><span class="mk">말&#4362;&#4510;&#4535;</span> + <span class="mk">이</span> <span class="arrow">&rarr;</span> <span class="res mk">:말&#4362;&#4510;&middot;미</span></div>
+        <div class="fill-row"><span class="mk">놈</span> + <span class="mk">이</span> <span class="arrow">&rarr;</span> <span class="res mk">&middot;노&middot;미</span></div>
+      </div>
+    </div>
+    <div class="page-num">13 / 19</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide tight" style="--fs:1.09;">
+    <h2 class="slide-title">방점과 성조</h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">성조</div>
+        <p>단어의 뜻을 구분해 주던 소리의 높낮이. 글자 <strong>왼쪽</strong>에 점을 찍어 표시했고, 이 점을 방점이라 한다</p>
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:6em;">방점</th><th style="width:5em;">이름</th><th>소리</th><th style="width:9em;">서문의 예</th></tr></thead>
+        <tbody>
+          <tr><th>없음</th><td>평성</td><td>낮은 소리</td><td class="mk">나&middot;랏의 &lsquo;나&rsquo;</td></tr>
+          <tr><th>&middot; 하나</th><td>거성</td><td>높은 소리</td><td class="mk">&middot;노&middot;미</td></tr>
+          <tr><th>: 둘</th><td>상성</td><td>처음이 낮고 나중이 높은 소리</td><td class="mk">:말&#4362;&#4510;&middot;미</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.4cqw;">
+        <div class="etag">오늘날에는</div>
+        <ul>
+          <li>중부 지방에서는 성조가 사라졌고 경상도를 중심으로 일부 지역에만 남아 있다. 다만 중세 국어의 상성은 중부 지방에서 대체로 <strong>긴소리</strong>로 실현된다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">14 / 19</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide tight" style="--fs:1.45;">
+    <h2 class="slide-title">학습활동 1 &middot; (3) 어두 자음군과 모음 조화</h2>
+    <div class="body-area">
+      <div class="act-q">다음과 같은 중세 국어의 특징이 나타난 단어를 찾아 써 보자.</div>
+      <div class="qa">
+        <div class="qa-item">
+          <div class="q">어두에 두 개 이상의 자음이 나타나는 어두 자음군이 있었다</div>
+          <div class="a"><strong class="mk">&middot;&#4384;&#4467;&middot;들</strong>, <strong class="mk">&middot;&#4385;&#4462;&middot;메</strong> &mdash; 첫머리의 &#12659;, &#12612;이 모두 발음되었다. 오늘날에는 각각 &lsquo;뜻&rsquo;, &lsquo;씀&rsquo;처럼 된소리로 바뀌었다</div>
+        </div>
+        <div class="qa-item">
+          <div class="q">같은 성질을 공유하는 모음끼리 어울려 나타나는 모음 조화 현상이 두드러졌다</div>
+          <div class="a"><strong class="mk">&#4384;&#4467;&#4526; + 을</strong>, <strong class="mk">字&middot;&#4365;&#4510; + &#4357;&#4510;&#4527;</strong> &mdash; 음성 모음 &lsquo;ㅡ&rsquo; 뒤에는 &lsquo;을&rsquo;이, 양성 모음 &lsquo;&#12685;&rsquo; 뒤에는 &lsquo;&#4357;&#4510;&#4527;&rsquo;이 붙었다</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">15 / 19</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide tight" style="--fs:1.25;">
+    <h2 class="slide-title">학습활동 1 &middot; (4) 그 밖의 표기 방식</h2>
+    <div class="body-area">
+      <div class="act-q">현대 국어와 다른 중세 국어의 표기 방식을 더 찾아 정리해 보자.</div>
+      <ul class="num-list">
+        <li><span class="n">&#9312;</span>띄어쓰기를 하지 않았고, 글을 세로로 썼다</li>
+        <li><span class="n">&#9313;</span>대체로 <strong style="color:var(--key);">&lsquo;ㄱ, ㄴ, ㄷ, ㄹ, ㅁ, ㅂ, ㅅ, &#12673;&rsquo;</strong>의 8개 자음을 종성에 표기했다</li>
+        <li><span class="n">&#9314;</span>한자 아래에 동국정운식 한자음을 나란히 적었다. <span class="mk">中듕國&middot;귁</span>처럼 종성 자리에 놓인 &lsquo;ㅇ&rsquo;은 음가가 없다</li>
+      </ul>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">팔종성법</div>
+        <ul>
+          <li>종성에서 발음되는 자음의 종류가 8가지였다는 것은 당시의 종성 표기에서도 확인할 수 있다. 《훈민정음》에 이 규정이 명확히 나오기 때문에 팔종성법이라 부른다 <span class="src" style="display:inline;">&mdash; 구본관 외, 《한국어 문법 총론》</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">16 / 19</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide " style="--fs:1.17;">
+    <h2 class="slide-title">확인 문제 &middot; 1~2번</h2>
+    <div class="body-area">
+      <div class="quiz-list">
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">1</span><span class="mk">:말&#4362;&#4510;&middot;미</span>, <span class="mk">&middot;노&middot;미</span>처럼 앞 음절의 종성을 뒤 음절의 초성으로 옮겨 적는 표기 방식을 무엇이라 하는가?</div>
+          <div class="qans reveal"><span class="tag">답</span>이어 적기. 오늘날에는 형태를 밝혀 적는 끊어 적기를 쓴다</div>
+        </div>
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">2</span>글자 왼쪽에 찍힌 점을 무엇이라 하며, 점 두 개(:)는 어떤 소리를 나타내는가?</div>
+          <div class="qans reveal"><span class="tag">답</span>방점이라 한다. 점 두 개는 상성으로, 처음이 낮고 나중이 높은 소리다. 점 하나(&middot;)는 거성, 점이 없으면 평성이다</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">17 / 19</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide " style="--fs:1.19;">
+    <h2 class="slide-title">확인 문제 &middot; 3~4번</h2>
+    <div class="body-area">
+      <div class="quiz-list">
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">3</span><span class="mk">:수&middot;&#4395;&#4469;</span>와 <span class="mk">&#4370;&#4510;&middot;고&middot;져</span>에 쓰인, 오늘날에는 쓰이지 않는 음운을 각각 찾아보자.</div>
+          <div class="qans reveal"><span class="tag">답</span>순경음 비읍 &lsquo;&#12664;&rsquo;과 아래아 &lsquo;&#12685;&rsquo;. 그 밖에 &#12671;, &#12678;, &#12673;도 오늘날에는 쓰이지 않는다</div>
+        </div>
+        <div class="qitem">
+          <div class="qq reveal"><span class="qn">4</span>중세 국어에서는 종성에 어떤 자음들을 표기했는가?</div>
+          <div class="qans reveal"><span class="tag">답</span>대체로 &lsquo;ㄱ, ㄴ, ㄷ, ㄹ, ㅁ, ㅂ, ㅅ, &#12673;&rsquo;의 8개 자음만 표기했다. 이를 팔종성법이라 한다</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">18 / 19</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide tight" style="--fs:1.36;">
+    <h2 class="slide-title">1차시 핵심 정리</h2>
+    <div class="body-area">
+      <div class="summary-list">
+        <div class="srow">
+          <div class="skey">자료</div>
+          <div class="sval">&lt;세종어제훈민정음&gt; &mdash; 《훈민정음 해례본》의 서문과 예의를 우리말로 풀어 쓴 글. 《월인석보》 권 1에 실려 있는 후기 중세 국어 자료</div>
+        </div>
+        <div class="srow">
+          <div class="skey">음운</div>
+          <div class="sval">오늘날 쓰이지 않는 &#12685; &#12664; &#12671; &#12678; &#12673;이 쓰였고, 어두 자음군이 있었으며, 모음 조화가 비교적 잘 지켜졌다</div>
+        </div>
+        <div class="srow">
+          <div class="skey">표기</div>
+          <div class="sval">이어 적기 / 방점으로 성조 표시 / 띄어쓰기 없이 세로쓰기 / 종성에 8개 자음만 표기</div>
+        </div>
+        <div class="srow">
+          <div class="skey">다음 시간</div>
+          <div class="sval">같은 서문에서 중세 국어의 조사와 단어의 뜻이 오늘날과 어떻게 다른지 살펴봅니다</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">19 / 19</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 1</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  // 슬라이드 안에서 하나씩 띄울 요소들 (문항 → 정답 → 다음 문항 → 정답 …)
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  // showAllSteps: 뒤로 돌아갈 때는 그 슬라이드의 단계가 모두 드러난 상태로 들어간다
+  function show(n, showAllSteps) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
