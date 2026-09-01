@@ -524,6 +524,7 @@ function pushNow(){
       var payload = closedList.map(function(x){
         return {
           cohort_id: cohortDbId, 과목: x.과목, 학기: x.학기 || [],
+          선택군: x.선택군 || null, 과정: x.과정 || [],
           사유: x.사유 || '', 갱신일: $('#date').value || new Date().toISOString().slice(0,10)
         };
       });
