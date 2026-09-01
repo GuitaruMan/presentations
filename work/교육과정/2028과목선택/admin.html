@@ -617,7 +617,9 @@ function renderOfferings(){
 }
 
 function offSelectOptions(list, val){
-  return list.map(function(o){
+  var opts = list.slice();
+  if (val != null && val !== '' && opts.indexOf(val) === -1) opts.push(val);
+  return opts.map(function(o){
     return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>';
   }).join('');
 }
