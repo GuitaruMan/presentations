@@ -2,7 +2,9 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260901b';
+var VERSION = '20260901c';
+
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -127,27 +129,97 @@ function getJSON(name) {
   });
 }
 
+/* recommendations.json 과 같은 모양 — {meta:{...}, 대학:[{모집단위:[...]}]} — 로 조립한다.
+   app.js 의 렌더링 코드는 이 모양을 그대로 기대하므로 여기서만 맞춰준다.
+   meta(계열분류·교과군지정 등 전역 값)는 대학·모집단위별 값이 아니라 DB 스키마에
+   컬럼이 없어 옮기지 못했다 — data/rec_meta.json(정적, 원본 meta 그대로)에서 따로 읽는다.
+   대학의 핵심권장구분(u.split) 필드도 같은 이유로 DB에 없어 이번엔 채우지 못한다
+   (경희대·동국대 카드에서 '핵심'/'권장' 두 줄로 안 나뉘고 '권장과목' 한 줄로만 보인다 — 표시만
+   달라질 뿐 과목 목록 자체는 정확하다). */
+function buildRecommendations(universities, units, meta) {
+  var byUni = {};
+  universities.forEach(function (u) {
+    byUni[u.id] = {
+      대학: u.이름, 출처: u.출처, 발표일: u.발표일, 제시범위: u.제시범위,
+      제시강도: u.제시강도, 강도근거: u.강도근거, 안내: u.안내, 모집단위: []
+    };
+  });
+  units.forEach(function (m) {
+    var u = byUni[m.university_id];
+    if (!u) return;
+    u.모집단위.push({
+      계열: m.계열, 단과대학: m.단과대학, 모집단위: m.이름,
+      핵심: m.핵심, 권장: m.권장, 조건: m.조건, 비고: m.비고,
+      권역: m.권역, 지역: m.지역
+    });
+  });
+  return { meta: meta, 대학: Object.keys(byUni).map(function (k) { return byUni[k]; }) };
+}
+
+/* cohorts.json 과 같은 모양 — {목록:[{id, 편성표, 폐강, ...}]} — 으로 조립한다. */
+function buildCohorts(rows) {
+  return {
+    meta: {},
+    목록: rows.map(function (c) {
+      return {
+        id: c.코호트id, 입학연도: c.입학연도, 대상: c.대상, 제목: c.제목,
+        설명: c.설명, 선택군: c.선택군, 노출: c.노출,
+        _db_id: c.id   // loadCohort 에서 school_offerings/rules 를 이어 조회할 때 쓴다
+      };
+    })
+  };
+}
+
 /* 공통 자료 — 코호트와 무관하게 한 번만 읽는다 */
 function loadCommon() {
   return Promise.all([
-    getJSON('cohorts.json'),
-    getJSON('recommendations.json'),
-    getJSON('subject_master.json'),
-    getJSON('help_content.json')
+    sb.from('school_cohorts').select('*'),
+    sb.from('universities').select('*'),
+    sb.from('admission_units').select('*'),
+    sb.from('subjects').select('*'),
+    getJSON('help_content.json'),
+    getJSON('rec_meta.json')
   ]).then(function (res) {
-    D.cohorts = res[0]; D.rec = res[1]; D.master = res[2]; D.help = res[3];
+    res.slice(0, 4).forEach(function (r, i) { if (r && r.error) throw new Error('supabase[' + i + '] ' + r.error.message); });
+    D.cohorts = buildCohorts(res[0].data);
+    D.rec = buildRecommendations(res[1].data, res[2].data, res[5]);
+    D.master = res[3].data.map(function (s) {
+      return { name: s.name, 교과군: s.교과군, 유형: s.유형, 별칭: s.별칭, 설명: s.설명, 출처쪽: s.출처쪽 };
+    });
+    D.help = res[4];
   });
 }
 
-/* 코호트별 자료 — 편성표와 폐강 목록. 학년을 바꾸면 이 둘만 다시 읽는다. */
+/* 코호트별 자료 — 개설과목·이수규칙·폐강목록. 학년을 바꾸면 이 셋만 다시 읽는다. */
 function loadCohort(c) {
   COHORT = c;
   return Promise.all([
-    getJSON(c.편성표),
-    getJSON(c.폐강).catch(function () { return { 폐강: [] }; })   // 없으면 폐강 없음
+    sb.from('school_offerings').select('*').eq('cohort_id', c._db_id),
+    sb.from('school_rules').select('*').eq('cohort_id', c._db_id).single(),
+    sb.from('closed_subjects').select('*').eq('cohort_id', c._db_id)
   ]).then(function (res) {
-    D.school = res[0];
-    CLOSED = res[1];
+    if (res[0].error) throw new Error('school_offerings ' + res[0].error.message);
+    if (res[1].error) throw new Error('school_rules ' + res[1].error.message);
+    if (res[2].error) throw new Error('closed_subjects ' + res[2].error.message);
+
+    D.school = {
+      meta: {
+        이수규칙: res[1].data.이수규칙, 선수과목: res[1].data.선수과목,
+        선택슬롯: res[1].data.선택슬롯, 유의사항: res[1].data.유의사항,
+        과정구분: res[1].data.과정구분
+      },
+      개설: res[0].data.map(function (r) {
+        return {
+          과목: r.과목, 교과군: r.교과군, 유형: r.유형, 운영학점: r.운영학점,
+          선택군: r.선택군, 학년: r.학년, 학기: r.학기, 평가: r.평가
+        };
+      })
+    };
+    CLOSED = {
+      폐강: res[2].data.map(function (x) {
+        return { 과목: x.과목, 학기: x.학기, 사유: x.사유, 갱신일: x.갱신일 };
+      })
+    };
     applyClosed();
     buildSlots();
     prepare();
