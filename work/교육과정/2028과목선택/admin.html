@@ -96,14 +96,9 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 .gback{font-size:12px;color:var(--faint);text-decoration:none;margin-top:4px}
 .gback:hover{color:var(--teal);text-decoration:underline}
 
-/* 깃헙 반영 */
+/* 반영 */
 .pub{border-top:1.5px solid var(--teal)}
 .pubrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-#tok{
-  flex:1 1 300px;min-width:220px;font-family:ui-monospace,Menlo,Consolas,monospace;
-  font-size:12.5px;padding:7px 10px;border:1.5px solid var(--rule);border-radius:8px;
-}
-.chk{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--soft)}
 .st{font-size:12.5px;color:var(--soft);margin:10px 0 0}
 .st.good{color:var(--teal);font-weight:600}
 .st.bad{color:var(--red);font-weight:600}
@@ -138,7 +133,6 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 .mbody code{background:var(--card);border:1px solid var(--rule);border-radius:5px;padding:1px 5px;font-size:12px}
 .mbody b{color:var(--ink)}
 .mbody .sem{font-size:10.5px;color:var(--faint);border:1px solid var(--rule);border-radius:5px;padding:1px 5px}
-.mbody .warn{background:var(--red-w);border:1.5px solid var(--red);border-radius:10px;padding:10px 12px;color:var(--red);font-size:12.5px;margin:12px 0 0}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase/2.45.4/supabase.min.js"></script>
 <script src="supabase-config.js"></script>
@@ -194,22 +188,20 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
     <div id="body"></div>
 
     <div class="out pub">
-      <h2>학생 화면에 반영하기 <span class="q" id="help3">토큰이 뭔가요</span></h2>
+      <h2>학생 화면에 반영하기</h2>
       <div class="pubrow">
-        <input type="password" id="tok" placeholder="깃헙 토큰 (github_pat_… 또는 ghp_…)" autocomplete="off">
-        <label class="chk"><input type="checkbox" id="save"> 이 기기에 저장</label>
         <button type="button" class="btn" id="push">지금 반영하기</button>
         <button type="button" class="btn ghost" id="dl">JSON 내려받기</button>
       </div>
-      <p class="st" id="st">토큰을 한 번 넣어 두면 버튼 하나로 커밋됩니다.</p>
+      <p class="st" id="st">버튼을 누르면 바로 저장되고, 학생 화면을 새로고침하면 반영됩니다.</p>
     </div>
 
     <div class="out">
       <h2>올라갈 내용 <span class="q" id="help2">사용법</span></h2>
       <textarea id="json" readonly></textarea>
       <p class="hint">
-        토큰을 쓰지 않으실 때는 <b>JSON 내려받기</b>로 받아 저장소의 <code>data/</code> 폴더에
-        <code id="fname">closed-2026.json</code> 으로 덮어쓴 뒤 커밋하시면 됩니다.
+        위 내용은 <b>지금 반영하기</b>를 누르면 그대로 저장됩니다.
+        <b>JSON 내려받기</b>는 기록을 남겨 두고 싶을 때 참고용으로만 쓰시면 됩니다.
       </p>
     </div>
 
@@ -257,25 +249,10 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
           과정 이름이 붙습니다. 영어 독해와 작문이 그런 경우입니다.</li>
       </ul>
 
-      <h3>반영하는 법 — 두 가지</h3>
-      <p><b>① 토큰을 넣어 자동 커밋</b><br>
-        토큰을 한 번 넣어 두면 <b>지금 반영하기</b> 버튼만 누르면 됩니다.
-        저장소에 바로 커밋되고, 1분쯤 뒤 학생 화면에 반영됩니다.</p>
-      <p><b>② 내려받아 직접 커밋</b><br>
-        <b>JSON 내려받기</b>로 파일을 받아 저장소의
-        <code>work/교육과정/2028과목선택/data/</code> 폴더에 덮어쓰고 커밋합니다.</p>
-
-      <h3>토큰 만들기</h3>
-      <ol>
-        <li>깃헙 &rarr; Settings &rarr; Developer settings &rarr;
-          <b>Fine-grained personal access tokens</b> &rarr; Generate new token</li>
-        <li>Repository access는 <code>presentations</code> <b>하나만</b> 고릅니다.</li>
-        <li>Permissions에서 <b>Contents: Read and write</b> 만 켭니다.</li>
-        <li>만료일을 정하고 만든 뒤, 나온 토큰을 위 칸에 붙여 넣습니다.</li>
-      </ol>
-      <p class="warn">토큰은 비밀번호와 같습니다. <b>공용 컴퓨터에서는 '이 기기에 저장'을 켜지 마세요.</b>
-        권한을 이 저장소의 파일 쓰기로만 좁혀 두면 새어 나가도 피해가 이 저장소에 그칩니다.
-        의심되면 깃헙에서 즉시 폐기(revoke)하시면 됩니다.</p>
+      <h3>반영하는 법</h3>
+      <p><b>지금 반영하기</b> 버튼만 누르면 됩니다.
+        로그인된 계정으로 바로 저장되고, 학생 화면을 새로고침하면 곧바로 반영됩니다.
+        <b>JSON 내려받기</b>는 저장된 내용을 따로 기록해 두고 싶을 때만 쓰면 됩니다.</p>
 
       <h3>이미 담아둔 학생은</h3>
       <p>폐강된 과목을 담아둔 학생이 페이지를 열면 안내가 뜬 뒤 그 과목이 자동으로 빠집니다.</p>
@@ -327,13 +304,7 @@ sb.auth.getSession().then(function(res){
 });
 
 /* ── 자료 ─────────────────────────────────────── */
-var V = '20260819a';
 var D = {}, CO = null, SCHOOL = [], OFF = {};   // OFF: '과목|선택군|과정|학기' → true
-
-function getJSON(n){
-  return fetch('data/'+n+'?v='+V).then(function(r){
-    if(!r.ok) throw new Error(n+' '+r.status); return r.json(); });
-}
 
 function key(과목,선택군,과정,학기){ return [과목,선택군,과정,학기].join('|'); }
 
@@ -417,7 +388,6 @@ function refresh(){
   var n = countUnits();
   $('#cnt').innerHTML = n ? '폐강 <b>'+n+'</b>과목' : '<span class="ok">폐강 없음</span>';
   $('#json').value = build();
-  $('#fname').textContent = CO.폐강;
 }
 
 function render(){
@@ -482,105 +452,94 @@ function render(){
 
 function pick(id){
   CO = D.cohorts.목록.filter(function(c){return c.id===id})[0];
-  Promise.all([ getJSON(CO.편성표), getJSON(CO.폐강).catch(function(){return {폐강:[]}}) ])
-  .then(function(res){
-    D.school = res[0];
+  Promise.all([
+    sb.from('school_offerings').select('*').eq('cohort_id', CO._db_id),
+    sb.from('school_rules').select('*').eq('cohort_id', CO._db_id).single(),
+    sb.from('closed_subjects').select('*').eq('cohort_id', CO._db_id)
+  ]).then(function(res){
+    if(res[0].error){ $('#body').innerHTML = '<p class="st bad">개설과목 로드 실패: '+esc(res[0].error.message)+'</p>'; return; }
+    if(res[1].error){ $('#body').innerHTML = '<p class="st bad">이수규칙 로드 실패: '+esc(res[1].error.message)+'</p>'; return; }
+    if(res[2].error){ $('#body').innerHTML = '<p class="st bad">폐강 목록 로드 실패: '+esc(res[2].error.message)+'</p>'; return; }
+
+    D.school = {
+      meta: { 선택슬롯: res[1].data.선택슬롯 },
+      개설: res[0].data.map(function(r){
+        return {
+          과목:r.과목, 교과군:r.교과군, 유형:r.유형, 운영학점:r.운영학점,
+          선택군:r.선택군, 학년:r.학년, 학기:r.학기, 평가:r.평가
+        };
+      })
+    };
     // 이 코호트가 다루는 선택군만 본다
     var 대상 = CO.선택군 || [];
     SCHOOL = D.school.개설.filter(function(c){
       return c.선택군!=='지정' && c.학기 && (!대상.length || 대상.indexOf(c.선택군)!==-1);
     });
-    var cl = res[1];
-    var st = (cl.meta&&cl.meta.단계) || '신청 전';
-    var opt = Array.prototype.map.call($('#stage').options, function(o){return o.value});
-    $('#stage').value = opt.indexOf(st)!==-1 ? st : '신청 전';
-    $('#date').value  = (cl.meta&&cl.meta.갱신일) || new Date().toISOString().slice(0,10);
-    spread(cl);
+    var closed = res[2].data.map(function(x){
+      return { 과목:x.과목, 학기:x.학기, 사유:x.사유, 선택군:x.선택군, 과정:x.과정 };
+    });
+    var latest = closed.reduce(function(a,x){ return (x.갱신일||'') > a ? x.갱신일 : a; }, '');
+    $('#date').value = latest || new Date().toISOString().slice(0,10);
+    spread({ 폐강: closed });
     render();
   });
 }
 
 function boot(){
-  getJSON('cohorts.json').then(function(c){
-    D.cohorts = c;
-    var list = c.목록;   // 관리자는 숨긴 코호트도 손볼 수 있어야 한다
+  sb.from('school_cohorts').select('*').then(function(res){
+    if(res.error){ $('#body').innerHTML = '<p class="st bad">코호트 목록 로드 실패: '+esc(res.error.message)+'</p>'; return; }
+    var list = res.data.map(function(c){
+      return {
+        id: c.코호트id, 입학연도: c.입학연도, 대상: c.대상, 제목: c.제목,
+        설명: c.설명, 선택군: c.선택군, 노출: c.노출, _db_id: c.id
+      };
+    });   // 관리자는 숨긴 코호트도 손볼 수 있어야 한다
+    D.cohorts = { 목록: list };
     $('#co').innerHTML = list.map(function(x){
       return '<option value="'+esc(x.id)+'">'+esc(x.제목)+(x.노출?'':' (숨김)')+'</option>';
     }).join('');
     $('#co').onchange = function(){ pick(this.value); };
     pick(list[0].id);
-  }).catch(function(e){
-    $('#body').innerHTML = '<p class="st bad">자료를 불러오지 못했습니다. ('+esc(e.message)+')</p>';
   });
 }
 
-/* ── 깃헙에 바로 반영 ─────────────────────────────
-   깃헙 페이지는 정적 호스팅이라 서버가 없다. 그래서 브라우저에서
-   깃헙 Contents API 로 파일을 직접 커밋한다.
-   토큰은 이 기기 밖으로 나가지 않으며 api.github.com 으로만 보내진다. */
-var REPO = { owner:'GuitaruMan', repo:'presentations', branch:'main' };
-var BASE = 'work/교육과정/2028과목선택/data/';
-
-function tokenOf(){ return $('#tok').value.trim(); }
-
+/* ── Supabase에 바로 반영 ─────────────────────────
+   로그인된 세션의 sb 클라이언트로 closed_subjects 테이블을 직접 쓴다.
+   RLS 정책(auth.role() = 'authenticated')이 로그인 여부로 쓰기를 허용한다. */
 function say(msg, kind){
   $('#st').textContent = msg;
   $('#st').className = 'st' + (kind ? ' ' + kind : '');
 }
 
-function b64(str){
-  var bytes = new TextEncoder().encode(str), bin = '';
-  for(var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
-  return btoa(bin);
-}
-
-function api(path, opt){
-  opt = opt || {};
-  opt.headers = Object.assign({
-    'Authorization':'Bearer ' + tokenOf(),
-    'Accept':'application/vnd.github+json',
-    'X-GitHub-Api-Version':'2022-11-28'
-  }, opt.headers || {});
-  return fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.repo+path, opt);
-}
-
 function pushNow(){
-  if(!tokenOf()){ say('토큰을 먼저 넣어 주세요.', 'bad'); return; }
+  var cohortDbId = CO._db_id;
+  var closedList = collect();
 
-  var file = BASE + CO.폐강;
-  var url = '/contents/' + file.split('/').map(encodeURIComponent).join('/');
-  var msg = '개설 현황 갱신 — ' + CO.제목 + ' / ' + $('#stage').value +
-            ' / 폐강 ' + countUnits() + '과목';
-
-  say('올리는 중…');
+  say('저장하는 중…');
   $('#push').disabled = true;
 
-  api(url + '?ref=' + REPO.branch).then(function(r){
-    if(r.status===401 || r.status===403)
-      throw new Error('토큰이 거부되었습니다. 권한(Contents: Read and write)과 만료일을 확인해 주세요.');
-    return r.status===404 ? null : r.json();
-  }).then(function(cur){
-    return api(url, {
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        message: msg,
-        content: b64(build()),
-        branch: REPO.branch,
-        sha: cur && cur.sha ? cur.sha : undefined
-      })
+  sb.from('closed_subjects').delete().eq('cohort_id', cohortDbId)
+    .then(function(del){
+      if(del.error) throw new Error(del.error.message);
+      var payload = closedList.map(function(x){
+        return {
+          cohort_id: cohortDbId, 과목: x.과목, 학기: x.학기 || [],
+          사유: x.사유 || '', 갱신일: $('#date').value || new Date().toISOString().slice(0,10)
+        };
+      });
+      if(!payload.length) return { error: null };
+      return sb.from('closed_subjects').insert(payload);
+    })
+    .then(function(ins){
+      if(ins.error) throw new Error(ins.error.message);
+      say('저장 완료. 학생 화면을 새로고침하면 바로 반영됩니다.', 'good');
+    })
+    .catch(function(e){
+      say('저장 실패: ' + e.message, 'bad');
+    })
+    .finally(function(){
+      $('#push').disabled = false;
     });
-  }).then(function(r){
-    if(!r.ok) return r.json().then(function(e){ throw new Error(e.message || ('HTTP '+r.status)); });
-    return r.json();
-  }).then(function(){
-    say('올렸습니다. 깃헙 페이지가 다시 만들어지는 데 1분쯤 걸립니다. ' +
-        '그 뒤 학생 화면을 새로고침하면 반영됩니다.', 'good');
-  }).catch(function(e){
-    say('실패: ' + e.message, 'bad');
-  }).then(function(){
-    $('#push').disabled = false;
-  });
 }
 
 /* ── 사용법 모달 ──────────────────────────────── */
@@ -590,7 +549,6 @@ function closeHelp(){ $('#modal').hidden = true; document.body.style.overflow=''
 /* ── 연결 ─────────────────────────────────────── */
 $('#help').onclick = openHelp;
 $('#help2').onclick = openHelp;
-$('#help3').onclick = openHelp;
 Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function(b){ b.onclick = closeHelp; });
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape' && !$('#modal').hidden) closeHelp();
@@ -605,24 +563,10 @@ $('#dl').onclick = function(){
   var blob = new Blob([build()], {type:'application/json;charset=utf-8'});
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = CO.폐강;
+  a.download = 'closed-' + CO.id + '.json';
   a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
 };
-
-$('#save').onchange = function(){
-  try{
-    if(this.checked) localStorage.setItem('ghtok', tokenOf());
-    else localStorage.removeItem('ghtok');
-  }catch(e){}
-};
-$('#tok').oninput = function(){
-  if($('#save').checked){ try{ localStorage.setItem('ghtok', tokenOf()); }catch(e){} }
-};
-try{
-  var saved = localStorage.getItem('ghtok');
-  if(saved){ $('#tok').value = saved; $('#save').checked = true; }
-}catch(e){}
 </script>
 </body>
 </html>
