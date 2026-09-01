@@ -339,6 +339,11 @@ body{
 .grade-강{background:var(--apricot-wash);color:#8C4A31;border:1px solid var(--apricot)}
 .grade-중{background:var(--teal-wash);color:#31534F;border:1px solid var(--teal)}
 .grade-참고{background:var(--paper-deep);color:var(--ink-soft);border:1px solid var(--rule)}
+/* 3개 대학 공동 가이드북 — 입시 반영 과목이 아니라는 뜻을 배지에 그대로 적는다.
+   클래스는 app.js 가 'grade-' + 제시강도 로 만든다. 값에 괄호가 있어
+   클래스 선택자로는 잡히지 않는다(이스케이프해도 파서가 규칙을 버린다).
+   속성 선택자로 적어야 한다. */
+[class~="grade-가이드라인(참고용)"]{background:var(--paper-deep);color:var(--ink-soft);border:1px solid var(--rule);white-space:nowrap}
 
 .row{margin:0 0 11px;display:flex;gap:11px;align-items:baseline}
 .row:last-child{margin-bottom:0}
@@ -456,6 +461,10 @@ body{
 
 /* 담긴 과목은 배경이 짙어지므로 배지도 함께 뒤집는다 */
 button.my-pill.on .pill-eval{background:rgba(255,255,255,.22);color:#fff}
+/* Ⅰ 을 담지 않아 아직 담을 수 없는 Ⅱ 과목. 눌리기는 하되(안내가 뜬다)
+   고를 수 없다는 것이 먼저 보이도록 흐리게 둔다. */
+.my-pill.pill-lock{opacity:.45}
+.my-pill.pill-lock:hover{opacity:.7}
 
 /* 범례 */
 .eval-legend{

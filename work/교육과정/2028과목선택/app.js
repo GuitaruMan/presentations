@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260829m';
+var VERSION = '20260901b';
 
 var D = {};              // 원자료
 var UNITS = [];          // 모집단위 평탄화
@@ -1238,6 +1238,22 @@ function checkRules() {
   return out;
 }
 
+/* 이 과목을 담기 전에 반드시 이수해야 하는 과목 — Ⅰ/Ⅱ 짝만 (LOGIC.mustPrecede).
+   '역학과 에너지 ← 물리학' 같은 권장 위계는 여기 들어오지 않는다. */
+function mustNeed(name) {
+  var pre = (D.school.meta && D.school.meta.선수과목) || {};
+  return (pre[name] || []).filter(function (p) { return LOGIC.mustPrecede(name, p); });
+}
+
+/* 이 과목을 필수 선수로 삼아 이미 담아 둔 과목.
+   Ⅰ 을 빼면 담아 둔 Ⅱ 가 근거를 잃으므로, Ⅱ 부터 빼게 한다. */
+function mustFollow(name) {
+  var pre = (D.school.meta && D.school.meta.선수과목) || {};
+  return Object.keys(pre).filter(function (k) {
+    return LOGIC.mustPrecede(k, name) && pre[k].indexOf(name) !== -1 && cartHas(k);
+  });
+}
+
 /* 선수과목 검사 — school_courses.json 의 meta.선수과목 기준 */
 function preCheck() {
   var pre = (D.school.meta && D.school.meta.선수과목) || {};
@@ -1250,14 +1266,33 @@ function preCheck() {
       // 같은 학기여도 되지만, 뒤 학기에 있으면 순서가 어긋난다
       return !found.some(function (x) { return x.order <= item.order; });
     });
-    if (missing.length) out.push({ 과목: item.name, 슬롯: item.slot.이름, 필요: missing });
+    if (missing.length) {
+      out.push({
+        과목: item.name, 슬롯: item.slot.이름, 필요: missing,
+        // Ⅰ/Ⅱ 짝은 담을 때 막히지만, Ⅰ 을 뒤 학기에 담는 순서 어긋남은 여기서 잡힌다
+        필수: missing.some(function (p) { return LOGIC.mustPrecede(item.name, p); })
+      });
+    }
   });
   return out;
 }
 
+function 따옴표(list) {
+  return list.map(function (x) { return '‘' + x + '’'; }).join('와 ');
+}
+
 function toggleCart(name, key) {
   var arr = cartOf(key), i = arr.indexOf(name);
-  if (i !== -1) { arr.splice(i, 1); saveCart(); renderMy(); return; }
+  if (i !== -1) {
+    // Ⅰ 을 빼면 담아 둔 Ⅱ 가 이수 조건을 잃는다. Ⅱ 부터 빼게 한다.
+    var 딸린 = mustFollow(name);
+    if (딸린.length) {
+      flash(따옴표(딸린) + '을(를) 들으려면 ‘' + name + '’을(를) 먼저 이수해야 합니다. ' +
+            '빼려면 ' + 따옴표(딸린) + '을(를) 먼저 빼 주세요.', true);
+      return;
+    }
+    arr.splice(i, 1); saveCart(); renderMy(); return;
+  }
 
   var slot = SLOTS.filter(function (s) { return s.key === key; })[0];
 
@@ -1272,6 +1307,14 @@ function toggleCart(name, key) {
     return;
   }
 
+  // Ⅰ 을 듣지 않고 Ⅱ 만 들을 수는 없다. 순차 이수가 원칙인 짝은 담기를 막는다.
+  var 없는필수 = mustNeed(name).filter(function (p) { return !cartHas(p); });
+  if (없는필수.length) {
+    flash('‘' + name + '’은(는) ' + 따옴표(없는필수) +
+          ' 과목을 반드시 먼저 이수해야 합니다. 그 과목을 먼저 담아 주세요.', true);
+    return;
+  }
+
   if (arr.length >= slot.정원) {
     flash(slot.이름 + '은(는) ' + slot.정원 + '과목까지만 고를 수 있습니다. ' +
           '하나를 빼고 다시 담아 주세요.');
@@ -1281,14 +1324,16 @@ function toggleCart(name, key) {
   saveCart();
   renderMy();
 
-  // 선수과목 안내는 담은 직후에 알려 주는 편이 잡기 쉽다
+  // 선수과목 안내는 담은 직후에 알려 주는 편이 잡기 쉽다.
+  // 필수(Ⅰ/Ⅱ)는 위에서 이미 막았으므로 여기 남는 것은 권장 위계뿐이다.
   var pre = (D.school.meta && D.school.meta.선수과목) || {};
   var need = pre[name];
   if (need) {
-    var lack = need.filter(function (p) { return !cartHas(p); });
+    var lack = need.filter(function (p) {
+      return !cartHas(p) && !LOGIC.mustPrecede(name, p);
+    });
     if (lack.length) {
-      flash('‘' + name + '’을(를) 들으려면 ' +
-            lack.map(function (x) { return '‘' + x + '’'; }).join('와 ') +
+      flash('‘' + name + '’을(를) 들으려면 ' + 따옴표(lack) +
             ' 과목을 먼저 듣기를 강력히 권장합니다.', true);
     }
   }
@@ -1402,13 +1447,18 @@ function renderMy() {
 
   var lack = preCheck();
   if (lack.length) {
-    // 물리학→역학과 에너지처럼 위계가 있는 과목은 순서를 지키는 편이 좋지만
-    // 학교가 막는 것은 아니라, 담는 화면에서는 '강력 권장'으로 적는다.
-    st += '<div class="warn warn-sm warn-pre"><h4>⚠ 먼저 듣기를 권하는 과목이 있습니다</h4><ul>';
+    // Ⅰ/Ⅱ 짝(미적분Ⅱ←미적분Ⅰ 등)은 순차 이수가 원칙이라 '반드시'로 적는다.
+    // 물리학→역학과 에너지 같은 권장 위계는 학교가 막는 것이 아니라 '강력 권장'으로 둔다.
+    var 필수있음 = lack.some(function (x) { return x.필수; });
+    st += '<div class="warn warn-sm warn-pre"><h4>⚠ ' +
+      (필수있음 ? '먼저 이수해야 하는 과목이 있습니다' : '먼저 듣기를 권하는 과목이 있습니다') +
+      '</h4><ul>';
     lack.forEach(function (x) {
       st += '<li>‘' + esc(x.과목) + '’(' + esc(x.슬롯) + ')을(를) 들으려면 ' +
         '<b>' + x.필요.map(function (p) { return '‘' + esc(p) + '’'; }).join('와 ') +
-        '</b>을(를) 먼저 듣기를 <b>강력히 권장</b>합니다.</li>';
+        '</b>을(를) ' +
+        (x.필수 ? '<b>반드시 먼저 이수해야 합니다</b>' : '먼저 듣기를 <b>강력히 권장</b>합니다') +
+        '.</li>';
     });
     st += '</ul></div>';
   }
@@ -1438,9 +1488,16 @@ function renderMy() {
         // 이 탭은 지망 학과를 띄우지 않는다('편성표에 표시' 탭과 역할 분리).
         // 그래서 권장/핵심 강조 없이 담았는지(on)만 표시한다.
         var on = picked.indexOf(c.과목) !== -1;
-        var cls = 'pill my-pill' + (on ? ' on' : '');
+        // Ⅰ 을 담지 않으면 Ⅱ 는 담을 수 없다. 눌러도 안내만 나오므로 흐리게 보여 준다.
+        var 잠김 = !on && mustNeed(c.과목).filter(function (p) { return !cartHas(p); });
+        var cls = 'pill my-pill' + (on ? ' on' : '') +
+                  (잠김 && 잠김.length ? ' pill-lock' : '');
+        var 도움말 = 잠김 && 잠김.length
+          ? 따옴표(잠김) + '을(를) 먼저 담아야 합니다'
+          : c.과목 + ' 담기';
         return '<button type="button" class="' + cls + '" data-add="' + esc(c.과목) +
-          '" data-slot="' + s.key + '" aria-pressed="' + on + '">' +
+          '" data-slot="' + s.key + '" aria-pressed="' + on + '"' +
+          ' title="' + esc(도움말) + '">' +
           esc(c.과목) + '<span class="pill-type">' + esc(c.유형) + '</span>' +
           evalMark(c) + '</button>';
       }).join('');
@@ -1695,6 +1752,15 @@ function bind() {
     renderUnivChips();
     renderTrackChips();
     renderUniv();
+  };
+
+  /* '편성표에 표시' 탭의 조건 지우기. 이 탭은 상태를 따로 들고 있어
+     (pRegion·pUniv·pTrack·target) 위 버튼과 공유할 수 없다. */
+  $('#reset-pick').onclick = function () {
+    state.pRegion = null; state.pUniv = null; state.pTrack = null;
+    state.target = null; openStepPick = null;
+    renderPicker();
+    renderPick();
   };
 
   $$('[data-open]').forEach(function (b) {

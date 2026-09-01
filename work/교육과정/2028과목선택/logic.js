@@ -25,7 +25,19 @@
       .replace(/[()（）[\]]/g, '');
   }
 
-  var api = { chipValue: chipValue, squash: squash };
+  /* 순차 이수가 원칙인 짝인가 — '미적분Ⅱ ← 미적분Ⅰ', '영어Ⅱ ← 영어Ⅰ'.
+     이름이 Ⅰ/Ⅱ 로만 갈리는 짝은 Ⅰ 을 듣지 않고 Ⅱ 만 들을 수 없다.
+     '역학과 에너지 ← 물리학' 같은 권장 위계와 여기서 갈린다.
+
+     meta.선수과목 에 강도 필드를 만들지 않고 이름으로 판별한다.
+     편성표를 새로 만들 때 표시를 빠뜨릴 일이 없고, 자료에
+     '이건 안 지켜도 된다'는 신호를 남기지도 않는다. */
+  function mustPrecede(name, need) {
+    return String(name).indexOf('Ⅱ') !== -1 &&
+           String(name).split('Ⅱ').join('Ⅰ') === String(need);
+  }
+
+  var api = { chipValue: chipValue, squash: squash, mustPrecede: mustPrecede };
 
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.LOGIC = api;
