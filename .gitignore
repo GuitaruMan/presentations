@@ -4,3 +4,6 @@ work/교육과정/2028과목선택/_preview_*.html
 
 # 빌더가 남기는 백업 (저장소에 둘 필요 없음)
 work/교육과정/2028과목선택/data/*.backup-*.json
+
+.worktrees/
+work/교육과정/2028과목선택/.superpowers/
