@@ -211,7 +211,7 @@ function loadCohort(c) {
       개설: res[0].data.map(function (r) {
         return {
           과목: r.과목, 교과군: r.교과군, 유형: r.유형, 운영학점: r.운영학점,
-          선택군: r.선택군, 학년: r.학년, 학기: r.학기, 평가: r.평가
+          선택군: r.선택군, 학년: r.학년, 학기: r.학기, 평가: r.평가, 수능: r.수능
         };
       })
     };
@@ -1102,10 +1102,7 @@ function slotHTML(slot, want) {
       // 눌러서 '과목으로 찾기'와 같은 상세 창을 연다
       // 이 탭에서는 수능 출제과목만 표시한다. 편성표를 훑는 자리라
       // 다른 평가 유형까지 붙이면 표가 어수선해진다.
-      var 수능 = c.평가 === '수능'
-        ? '<span class="pill-eval ev-수능" title="' + esc(EVAL_MARK.수능.설명) + '">' +
-          EVAL_ICON.수능 + ' 수능</span>'
-        : '';
+      var 수능 = satMark(c);
       return '<button type="button" class="pill ' + cls + '" data-subject="' + esc(c.과목) +
         '" title="' + esc(c.과목) + ' 자세히 보기">' + esc(c.과목) +
         '<span class="pill-type">' + esc(tag) + '</span>' + 수능 + '</button>';
@@ -1148,10 +1145,11 @@ function courseIn(name, slot) {
   return null;
 }
 
-/* 평가 유형 표시 — 편성표의 색상 범례를 그대로 옮긴 것.
-   '상대절대'(가장 흔한 경우)는 표시하지 않는다. 모든 과목에 배지가 붙으면 구분이 안 된다. */
+/* 평가(성적방식) 유형 표시 — 편성표의 색상 범례를 그대로 옮긴 것.
+   '상대절대'(가장 흔한 경우)는 표시하지 않는다. 모든 과목에 배지가 붙으면 구분이 안 된다.
+   수능 출제 여부는 성적방식과 무관한 별개의 축이라 여기 포함하지 않는다(SAT_MARK 참조) —
+   상대절대이면서 수능과목인 경우도 있어, 한 과목에 두 배지가 동시에 붙을 수 있다. */
 var EVAL_MARK = {
-  수능: { 약칭: '수능', 설명: '대학수학능력시험 출제과목' },
   석차미기재: { 약칭: '석차 미기재', 설명: '상대평가 석차 등급을 기재하지 않는 과목' },
   성취3단계: { 약칭: '성취 3단계', 설명: '성취도 3단계(A·B·C)로 평가하는 과목' },
   이수여부: { 약칭: 'P', 설명: '이수 여부만 기재하는 과목' },
@@ -1162,9 +1160,10 @@ var EVAL_MARK = {
 
 /* 과목 설명에 붙는 아이콘 — 글자만으로는 유형이 잘 구분되지 않는다 */
 var EVAL_ICON = {
-  수능: '◎', 석차미기재: '◑', 성취3단계: '△', 이수여부: 'P', 상대절대: '●'
+  석차미기재: '◑', 성취3단계: '△', 이수여부: 'P', 상대절대: '●'
 };
 
+/* 평가(성적방식)가 없는(null) 과목은 배지를 붙이지 않는다(원본에 정보가 없는 경우). */
 function evalMark(c) {
   var m = EVAL_MARK[c.평가];
   if (!m || m.bare) return '';
@@ -1172,23 +1171,39 @@ function evalMark(c) {
     EVAL_ICON[c.평가] + ' ' + esc(m.약칭) + '</span>';
 }
 
+/* 수능 출제 여부 — 성적방식과 독립된 별개의 배지. c.수능(boolean)로 판정한다. */
+var SAT_MARK = { 설명: '대학수학능력시험 출제과목' };
+var SAT_ICON = '◎';
+
+function satMark(c) {
+  if (!c.수능) return '';
+  return '<span class="pill-eval ev-수능" title="' + esc(SAT_MARK.설명) + '">' +
+    SAT_ICON + ' 수능</span>';
+}
+
 /* 범례 — 지금 이 코호트에 실제로 나오는 평가 유형만 보여 준다.
    쓰이지 않는 유형까지 늘어놓으면 학생이 없는 배지를 찾게 된다. */
 function evalLegend() {
   var 있는유형 = {};
+  var 수능있음 = false;
   D.school.개설.forEach(function (c) {
-    if (c.선택군 !== '지정' && EVAL_MARK[c.평가] && !EVAL_MARK[c.평가].bare) {
-      있는유형[c.평가] = true;
-    }
+    if (c.선택군 === '지정') return;
+    if (EVAL_MARK[c.평가] && !EVAL_MARK[c.평가].bare) 있는유형[c.평가] = true;
+    if (c.수능) 수능있음 = true;
   });
   var keys = Object.keys(EVAL_MARK).filter(function (k) { return 있는유형[k]; });
-  if (!keys.length) return '';
+  if (!keys.length && !수능있음) return '';
 
-  return '<div class="eval-legend"><span>표시 안내</span>' +
-    keys.map(function (k) {
-      return '<span><span class="pill-eval ev-' + k + '">' + EVAL_ICON[k] + ' ' +
-        esc(EVAL_MARK[k].약칭) + '</span> ' + esc(EVAL_MARK[k].설명) + '</span>';
-    }).join('') +
+  var items = keys.map(function (k) {
+    return '<span><span class="pill-eval ev-' + k + '">' + EVAL_ICON[k] + ' ' +
+      esc(EVAL_MARK[k].약칭) + '</span> ' + esc(EVAL_MARK[k].설명) + '</span>';
+  });
+  if (수능있음) {
+    items.push('<span><span class="pill-eval ev-수능">' + SAT_ICON + ' 수능</span> ' +
+      esc(SAT_MARK.설명) + '</span>');
+  }
+
+  return '<div class="eval-legend"><span>표시 안내</span>' + items.join('') +
     '<span>' + EVAL_ICON.상대절대 + ' 표시가 없으면 ' +
     esc(EVAL_MARK.상대절대.설명) + '입니다.</span></div>';
 }
@@ -1571,7 +1586,7 @@ function renderMy() {
           '" data-slot="' + s.key + '" aria-pressed="' + on + '"' +
           ' title="' + esc(도움말) + '">' +
           esc(c.과목) + '<span class="pill-type">' + esc(c.유형) + '</span>' +
-          evalMark(c) + '</button>';
+          evalMark(c) + satMark(c) + '</button>';
       }).join('');
       h += '</div></div>';
     });
@@ -1632,11 +1647,18 @@ function openSubject(name) {
     : '<b>우리 학교에는 개설되지 않았습니다.</b>';
   h += '</p>';
 
-  // 평가 방식 — 목록의 배지와 같은 색으로 묶어 한눈에 이어지게 한다
+  // 평가 방식 — 목록의 배지와 같은 색으로 묶어 한눈에 이어지게 한다.
+  // 평가(성적방식)가 null인 과목은 배지를 붙이지 않는다.
   if (sc && EVAL_MARK[sc.평가]) {
     h += '<p class="subj-eval ev-' + sc.평가 + '">' +
       '<span class="subj-eval-icon" aria-hidden="true">' + EVAL_ICON[sc.평가] + '</span>' +
       esc(EVAL_MARK[sc.평가].설명) + '입니다.</p>';
+  }
+  // 수능 출제 여부 — 성적방식과 독립된 배지라 별도로 붙는다(둘 다 붙을 수 있다).
+  if (sc && sc.수능) {
+    h += '<p class="subj-eval ev-수능">' +
+      '<span class="subj-eval-icon" aria-hidden="true">' + SAT_ICON + '</span>' +
+      esc(SAT_MARK.설명) + '입니다.</p>';
   }
 
   // 선수과목 — 먼저 들어야 하는 과목이 있으면 알려 준다

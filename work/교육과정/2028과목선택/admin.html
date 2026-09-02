@@ -227,7 +227,7 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
       <table style="width:100%;border-collapse:collapse;font-size:13px" id="offTable">
         <thead>
           <tr style="text-align:left;border-bottom:2px solid var(--rule)">
-            <th style="padding:6px">과목명</th><th>교과군</th><th>유형</th><th>학점</th><th>학년</th><th>선택군</th><th>평가</th><th>학기(읽기전용)</th><th></th>
+            <th style="padding:6px">과목명</th><th>교과군</th><th>유형</th><th>학점</th><th>학년</th><th>선택군</th><th>성적방식</th><th>수능</th><th>학기</th><th></th>
           </tr>
         </thead>
         <tbody id="offTbody"></tbody>
@@ -529,7 +529,7 @@ function pick(id){
       개설: res[0].data.map(function(r){
         return {
           id:r.id, 과목:r.과목, 교과군:r.교과군, 유형:r.유형, 운영학점:r.운영학점,
-          선택군:r.선택군, 학년:r.학년, 학기:r.학기, 평가:r.평가
+          선택군:r.선택군, 학년:r.학년, 학기:r.학기, 평가:r.평가, 수능:r.수능
         };
       })
     };
@@ -629,24 +629,15 @@ function switchTab(name){
 /* ── 학교 교육과정(개설과목 표) CRUD ─────────────
    D.school.개설: pick()에서 채워지는, 이 코호트의 전체 개설과목 목록(선택군 '지정' 포함,
    SCHOOL과 달리 필터링되지 않음 — 관리자는 전체를 편집할 수 있어야 하므로 이걸 쓴다).
-   편집 가능 필드: 과목/교과군/유형/운영학점/학년/선택군/평가. 학기는 {일반:[..],과학중점:[..]}
-   형태의 JSONB라 표 편집이 복잡해지므로 이번 태스크에서는 읽기 전용으로만 보여준다. */
+   편집 가능 필드: 과목/교과군/유형/운영학점/학년/선택군/평가(성적방식)/수능/학기.
+   학기는 {일반:[..],과학중점:[..]} 형태의 JSONB라 과정×학기 체크박스로 편집한다(RULES.과정구분 기준). */
 var 교과군목록 = ['국어','수학','영어','사회','과학','기술·가정/정보','제2외국어/한문','교양','체육','예술','한국사','한문','정보'];
 var 유형목록 = ['공통','일반','진로','융합'];
-var 평가목록 = ['상대절대','석차미기재','성취3단계','수능'];
+var 평가목록 = ['상대절대','석차미기재','성취3단계'];
 
 function offSay(msg, kind){
   $('#offSt').textContent = msg;
   $('#offSt').className = 'st' + (kind ? ' ' + kind : '');
-}
-
-function 학기표시(학기){
-  if(!학기) return '';
-  var parts = [];
-  ['일반','과학중점'].forEach(function(g){
-    if(학기[g] && 학기[g].length) parts.push(g + ' ' + 학기[g].join(',') + '학기');
-  });
-  return parts.join(' / ');
 }
 
 function renderOfferings(){
@@ -660,8 +651,30 @@ function renderOfferings(){
 function offSelectOptions(list, val){
   var opts = list.slice();
   if (val != null && val !== '' && opts.indexOf(val) === -1) opts.push(val);
-  return opts.map(function(o){
+  // 빈 값(null/미기재)도 고를 수 있어야 한다 — 억지로 첫 옵션이 골라진 것처럼 보이면 안 된다.
+  var html = '<option value=""' + (val == null || val === '' ? ' selected' : '') + '></option>';
+  html += opts.map(function(o){
     return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>';
+  }).join('');
+  return html;
+}
+
+/* 학기 체크박스 — 과정(RULES.과정구분)마다 1학기/2학기를 따로 켤 수 있다.
+   과정마다 학기가 다른 경우가 실제로 있어(과학중점:[], 일반:[1] 등) 과정별로 나눈다.
+   빈 객체({})인 행(선택군 '지정' 등)은 전부 꺼진 상태로 보이면 되고,
+   여기서 억지로 과정 키를 만들어 넣지는 않는다(저장 시점에 실제 체크 상태를 그대로 읽는다). */
+function 학기체크박스HTML(rid, 학기){
+  var courses = (RULES && RULES.과정구분) || [];
+  학기 = 학기 || {};
+  return courses.map(function(g){
+    var sems = 학기[g] || [];
+    var boxes = [1,2].map(function(s){
+      var on = sems.indexOf(s) !== -1;
+      return '<label style="white-space:nowrap;margin-right:6px">'+
+        '<input type="checkbox" class="off-sem-f" data-course="'+esc(g)+'" data-sem="'+s+'"'+
+        (on?' checked':'')+'> '+s+'학기</label>';
+    }).join('');
+    return '<div style="white-space:nowrap">'+esc(g)+' '+boxes+'</div>';
   }).join('');
 }
 
@@ -675,7 +688,8 @@ function offRowHTML(r){
     '<td><input class="off-f" data-k="학년" type="number" value="'+esc(r.학년)+'" style="width:40px"></td>'+
     '<td><input class="off-f" data-k="선택군" value="'+esc(r.선택군)+'" style="width:70px"></td>'+
     '<td><select class="off-f" data-k="평가">'+offSelectOptions(평가목록, r.평가)+'</select></td>'+
-    '<td style="color:var(--faint);font-size:11.5px">'+esc(학기표시(r.학기))+'</td>'+
+    '<td style="text-align:center"><input type="checkbox" class="off-f" data-k="수능"'+(r.수능?' checked':'')+'></td>'+
+    '<td>'+학기체크박스HTML(rid, r.학기)+'</td>'+
     '<td><button type="button" class="btn ghost" data-del="'+esc(String(rid))+'">삭제</button></td>'+
     '</tr>';
 }
@@ -690,13 +704,39 @@ function findOffRow(rid){
 $('#offSearch').addEventListener('input', renderOfferings);
 
 $('#offTbody').addEventListener('change', function(ev){
-  if(!ev.target.classList.contains('off-f')) return;
   var tr = ev.target.closest('tr');
   var row = findOffRow(tr.dataset.id);
   if(!row) return;
+
+  if(ev.target.classList.contains('off-sem-f')){
+    // 체크박스 상태 → {과정: [학기...]} — 반드시 숫자 배열, 정렬된 상태로 만든다
+    var g = ev.target.dataset.course;
+    var s = Number(ev.target.dataset.sem);
+    var 학기 = row.학기 ? Object.assign({}, row.학기) : {};
+    var sems = (학기[g] || []).slice();
+    var i = sems.indexOf(s);
+    if(ev.target.checked){ if(i===-1) sems.push(s); }
+    else { if(i!==-1) sems.splice(i,1); }
+    sems.sort(function(a,b){return a-b;});
+    학기[g] = sems;
+    row.학기 = 학기;
+    saveOffering(row);
+    return;
+  }
+
+  if(!ev.target.classList.contains('off-f')) return;
   var key = ev.target.dataset.k;
+  if(key === '수능'){
+    row.수능 = ev.target.checked;
+    saveOffering(row);
+    return;
+  }
   var val = ev.target.value;
-  row[key] = (key === '운영학점' || key === '학년') ? Number(val) : val;
+  if(key === '평가'){
+    row.평가 = val === '' ? null : val;
+  } else {
+    row[key] = (key === '운영학점' || key === '학년') ? Number(val) : val;
+  }
   saveOffering(row);
 });
 
@@ -709,7 +749,7 @@ function saveOffering(row){
   var payload = {
     cohort_id: CO._db_id, 과목: row.과목, 교과군: row.교과군, 유형: row.유형,
     운영학점: row.운영학점, 선택군: row.선택군, 학년: row.학년,
-    학기: row.학기 || {}, 평가: row.평가
+    학기: row.학기 || {}, 평가: (row.평가 === '' ? null : row.평가), 수능: !!row.수능
   };
   offSay('저장하는 중…');
   var query = row.id
@@ -748,7 +788,7 @@ var offTmpSeq = 0;
 $('#offAddBtn').addEventListener('click', function(){
   D.school.개설.unshift({
     _tmp: ++offTmpSeq, 과목: '새 과목', 교과군: '국어', 유형: '일반',
-    운영학점: 4, 학년: 2, 선택군: '선택군1', 학기: {}, 평가: '상대절대'
+    운영학점: 4, 학년: 2, 선택군: '선택군1', 학기: {}, 평가: '상대절대', 수능: false
   });
   renderOfferings();
 });
