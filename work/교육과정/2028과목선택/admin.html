@@ -263,6 +263,7 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
       <div id="courseTypeBox"></div>
 
       <button type="button" class="btn" id="rulesSaveBtn" style="margin-top:20px">이수규칙 전체 저장</button>
+      <button type="button" class="btn ghost" id="rulesReloadBtn" style="margin-top:20px">다시 불러오기 (저장하지 않은 변경 취소)</button>
       <p class="st" id="rulesMsg"></p>
     </div>
 
@@ -759,9 +760,21 @@ $('#offAddBtn').addEventListener('click', function(){
    없는 부분, 향후 추가될 필드 등)가 있어도 RULES 안에 원본 그대로 남아있으므로
    저장 시 유실되지 않는다. 저장은 항상 RULES 전체를 payload로 보낸다. */
 
+/* 숫자 입력칸 방어: 빈 문자열/공백/문자/음수는 저장하지 않고 원래 값으로 되돌린다.
+   Number('') === 0 이라서 그냥 Number()만 쓰면 관리자가 칸을 지웠다가 탭아웃만 해도
+   조용히 0으로 저장돼버린다(예: 교과군최대.최대 14→0, 심화최소/수학최소도 동일 위험).
+   유효하면 숫자를 콜백에 넘기고, 무효하면 revertRender()만 호출해 화면을 원복한다. */
+function applyNumOrRevert(rawValue, revertRender, apply){
+  var n = Number(rawValue);
+  if(String(rawValue).trim() === '' || isNaN(n) || n < 0){ revertRender(); return; }
+  apply(n);
+}
+
 function renderRules(){
   if(!RULES){ $('#rulesLoadSt').textContent = '이수규칙을 불러오는 중…'; return; }
   $('#rulesLoadSt').textContent = '';
+  $('#rulesMsg').textContent = '';   // 다시 불러오기 등으로 인한 이전 메시지("불러오는 중…")를 지운다
+  $('#rulesMsg').className = 'st';
   renderSlots();
   renderMinRules();
   renderMaxRule();
@@ -795,10 +808,14 @@ $('#slotList').addEventListener('change', function(ev){
   if(!row) return;
   var name = row.dataset.name;
   if(ev.target.classList.contains('slot-f')){
-    RULES.선택슬롯[name][ev.target.dataset.k] = Number(ev.target.value);
+    applyNumOrRevert(ev.target.value, renderSlots, function(n){
+      RULES.선택슬롯[name][ev.target.dataset.k] = n;
+    });
   } else if(ev.target.classList.contains('slot-credit-f')){
-    if(!RULES.선택슬롯[name].학점) RULES.선택슬롯[name].학점 = {};
-    RULES.선택슬롯[name].학점[ev.target.dataset.k] = Number(ev.target.value);
+    applyNumOrRevert(ev.target.value, renderSlots, function(n){
+      if(!RULES.선택슬롯[name].학점) RULES.선택슬롯[name].학점 = {};
+      RULES.선택슬롯[name].학점[ev.target.dataset.k] = n;
+    });
   }
 });
 
@@ -842,7 +859,7 @@ $('#minList').addEventListener('change', function(ev){
   if(k === '교과군'){
     r.교과군 = ev.target.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
   } else if(k === '최소'){
-    r.최소 = Number(ev.target.value);
+    applyNumOrRevert(ev.target.value, renderMinRules, function(n){ r.최소 = n; });
   } else if(k === '이름'){
     r.이름 = ev.target.value;
   }
@@ -877,11 +894,19 @@ function renderMaxRule(){
 }
 
 function updateMaxRule(){
-  var subjects = document.getElementById('maxSubjects').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-  var count = Number(document.getElementById('maxCount').value);
-  var name = document.getElementById('maxName').value;
   if(!RULES.이수규칙) RULES.이수규칙 = {};
-  RULES.이수규칙.교과군최대 = { 교과군: subjects, 최대: count, 이름: name };
+  if(!RULES.이수규칙.교과군최대) RULES.이수규칙.교과군최대 = { 교과군: [], 최대: 0, 이름: '' };
+  var target = RULES.이수규칙.교과군최대;
+  // 최대(숫자)만 비어있거나/음수/문자면 저장하지 않고 이 필드만 원복한다. 교과군/이름은 그대로 반영.
+  applyNumOrRevert(document.getElementById('maxCount').value, renderMaxRule, function(n){
+    // Object.assign으로 실제 in-place 수정 — 새 객체로 교체하면 이 UI가 모르는 하위 키가
+    // 조용히 사라질 수 있으므로(I-3) 기존 객체를 유지한 채 알려진 키만 갱신한다.
+    Object.assign(target, {
+      교과군: document.getElementById('maxSubjects').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
+      이름: document.getElementById('maxName').value,
+      최대: n
+    });
+  });
 }
 
 /* ④ 과학중점 전용 규칙 */
@@ -899,12 +924,22 @@ function renderScienceRule(){
 
 function updateScienceRule(){
   if(!RULES.이수규칙) RULES.이수규칙 = {};
-  RULES.이수규칙.과학중점 = {
+  if(!RULES.이수규칙.과학중점) RULES.이수규칙.과학중점 = {};
+  var target = RULES.이수규칙.과학중점;
+  var deepRaw = document.getElementById('sciDeep').value;
+  var mathRaw = document.getElementById('sciMath').value;
+  var deepN = Number(deepRaw), mathN = Number(mathRaw);
+  var deepOk = String(deepRaw).trim() !== '' && !isNaN(deepN) && deepN >= 0;
+  var mathOk = String(mathRaw).trim() !== '' && !isNaN(mathN) && mathN >= 0;
+  if(!deepOk || !mathOk){ renderScienceRule(); return; }
+  // Object.assign으로 실제 in-place 수정 — 새 객체로 교체하면 이 UI가 모르는 하위 키가
+  // 조용히 사라질 수 있으므로(I-3) 기존 객체를 유지한 채 알려진 키만 갱신한다.
+  Object.assign(target, {
     과제연구: document.getElementById('sciTask').value,
     일반선택필수: document.getElementById('sciGeneral').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
-    심화최소: Number(document.getElementById('sciDeep').value),
-    수학최소: Number(document.getElementById('sciMath').value)
-  };
+    심화최소: deepN,
+    수학최소: mathN
+  });
 }
 
 /* ⑤ 선수과목 관계 */
@@ -978,6 +1013,17 @@ $('#rulesSaveBtn').addEventListener('click', function(){
     msg.textContent = '저장 완료.';
     msg.className = 'st good';
   });
+});
+
+/* 저장 전 되돌리기 — removeSlot/removePrereq/removeMin 등은 RULES를 즉시 변형하는데
+   저장 전에는 취소할 방법이 없었다(I-2). DB에서 다시 조회해 RULES를 원본으로 되돌린다. */
+$('#rulesReloadBtn').addEventListener('click', function(){
+  if(!CO) return;
+  if(!confirm('저장하지 않은 변경 내용을 모두 취소하고 DB에서 다시 불러올까요?')) return;
+  var msg = $('#rulesMsg');
+  msg.textContent = '다시 불러오는 중…';
+  msg.className = 'st';
+  pick(CO.id);
 });
 
 $('#tabClosed').onclick = function(){ switchTab('closed'); };
