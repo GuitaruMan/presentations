@@ -1186,10 +1186,12 @@ function satMark(c) {
 function evalLegend() {
   var 있는유형 = {};
   var 수능있음 = false;
+  var 평가없음있음 = false;   // 평가(성적방식)가 null인 과목이 하나라도 있는지
   D.school.개설.forEach(function (c) {
     if (c.선택군 === '지정') return;
     if (EVAL_MARK[c.평가] && !EVAL_MARK[c.평가].bare) 있는유형[c.평가] = true;
     if (c.수능) 수능있음 = true;
+    if (c.평가 == null) 평가없음있음 = true;
   });
   var keys = Object.keys(EVAL_MARK).filter(function (k) { return 있는유형[k]; });
   if (!keys.length && !수능있음) return '';
@@ -1203,9 +1205,16 @@ function evalLegend() {
       esc(SAT_MARK.설명) + '</span>');
   }
 
+  // '표시가 없으면 상대절대'라고 단정하면 안 된다 — 평가가 null인 과목(성적 산출
+  // 방식이 아직 정리되지 않은 과목)도 배지가 없기는 마찬가지라 학생이 잘못 읽는다.
+  var 안내문 = 평가없음있음
+    ? '<span>' + EVAL_ICON.상대절대 + ' 표시가 없는 과목은 성적 산출 방식이 아직 ' +
+      '정리되지 않았거나, ' + esc(EVAL_MARK.상대절대.설명) + '입니다.</span>'
+    : '<span>' + EVAL_ICON.상대절대 + ' 표시가 없으면 ' +
+      esc(EVAL_MARK.상대절대.설명) + '입니다.</span>';
+
   return '<div class="eval-legend"><span>표시 안내</span>' + items.join('') +
-    '<span>' + EVAL_ICON.상대절대 + ' 표시가 없으면 ' +
-    esc(EVAL_MARK.상대절대.설명) + '입니다.</span></div>';
+    안내문 + '</div>';
 }
 
 function cartOf(key) { return state.cart[key] || (state.cart[key] = []); }

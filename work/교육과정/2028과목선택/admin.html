@@ -648,11 +648,14 @@ function renderOfferings(){
   $('#offTbody').innerHTML = rows.map(offRowHTML).join('');
 }
 
-function offSelectOptions(list, val){
+function offSelectOptions(list, val, emptyLabel){
   var opts = list.slice();
   if (val != null && val !== '' && opts.indexOf(val) === -1) opts.push(val);
   // 빈 값(null/미기재)도 고를 수 있어야 한다 — 억지로 첫 옵션이 골라진 것처럼 보이면 안 된다.
-  var html = '<option value=""' + (val == null || val === '' ? ' selected' : '') + '></option>';
+  // emptyLabel은 성적방식처럼 null이 실제로 존재하는 필드에서만 넘겨준다
+  // (교과군/유형처럼 null 행이 없는 필드는 빈 줄만 보이면 충분하다).
+  var html = '<option value=""' + (val == null || val === '' ? ' selected' : '') + '>' +
+    (emptyLabel ? esc(emptyLabel) : '') + '</option>';
   html += opts.map(function(o){
     return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>';
   }).join('');
@@ -663,7 +666,7 @@ function offSelectOptions(list, val){
    과정마다 학기가 다른 경우가 실제로 있어(과학중점:[], 일반:[1] 등) 과정별로 나눈다.
    빈 객체({})인 행(선택군 '지정' 등)은 전부 꺼진 상태로 보이면 되고,
    여기서 억지로 과정 키를 만들어 넣지는 않는다(저장 시점에 실제 체크 상태를 그대로 읽는다). */
-function 학기체크박스HTML(rid, 학기){
+function 학기체크박스HTML(학기){
   var courses = (RULES && RULES.과정구분) || [];
   학기 = 학기 || {};
   return courses.map(function(g){
@@ -687,9 +690,9 @@ function offRowHTML(r){
     '<td><input class="off-f" data-k="운영학점" type="number" value="'+esc(r.운영학점)+'" style="width:50px"></td>'+
     '<td><input class="off-f" data-k="학년" type="number" value="'+esc(r.학년)+'" style="width:40px"></td>'+
     '<td><input class="off-f" data-k="선택군" value="'+esc(r.선택군)+'" style="width:70px"></td>'+
-    '<td><select class="off-f" data-k="평가">'+offSelectOptions(평가목록, r.평가)+'</select></td>'+
+    '<td><select class="off-f" data-k="평가">'+offSelectOptions(평가목록, r.평가, '(미정)')+'</select></td>'+
     '<td style="text-align:center"><input type="checkbox" class="off-f" data-k="수능"'+(r.수능?' checked':'')+'></td>'+
-    '<td>'+학기체크박스HTML(rid, r.학기)+'</td>'+
+    '<td>'+학기체크박스HTML(r.학기)+'</td>'+
     '<td><button type="button" class="btn ghost" data-del="'+esc(String(rid))+'">삭제</button></td>'+
     '</tr>';
 }
