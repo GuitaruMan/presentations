@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9월 모의고사 풀이 (1학년-1차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f2f5f8;
+    --paper-edge: #c9d4de;
+    --ink: #1b2530;
+    --ink-soft: #4d5b68;
+    --ink-faint: #8d9aa6;
+    --key: #1f5a8f;          /* 시험지의 청람 */
+    --key-soft: #5d8cb5;
+    --rule: #cdd8e2;
+    --card: #fbfcfe;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #12191f;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.015em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(18,25,31,0.94); z-index: 50;
+  }
+  .nav-top a { color: #a8bccd; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #e6eef5; }
+  .nav-meta { color: #8298ab; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 16% 6%, rgba(255,255,255,0.9) 0%, transparent 58%),
+      radial-gradient(ellipse at 86% 96%, rgba(31,90,143,0.16) 0%, transparent 62%),
+      repeating-linear-gradient(180deg,
+        rgba(31,90,143,0.035) 0px, rgba(31,90,143,0.035) 1px,
+        transparent 1px, transparent 44px);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.042) calc(var(--stage-w) * 0.05);
+  }
+  /* 우측 상단 — 답안지의 마킹란 */
+  .stage::before {
+    content: ""; position: absolute; top: 9%; right: -1.5%;
+    width: 20%; height: 78%; pointer-events: none; opacity: 0.08;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><g fill='none' stroke='%231f5a8f'><rect x='6' y='6' width='188' height='288' stroke-width='3'/><path stroke-width='1.1' d='M6 42 H194 M6 78 H194 M6 114 H194 M6 150 H194 M6 186 H194 M6 222 H194 M6 258 H194 M46 6 V294'/><g stroke-width='2'><ellipse cx='72' cy='24' rx='11' ry='7'/><ellipse cx='102' cy='24' rx='11' ry='7'/><ellipse cx='132' cy='24' rx='11' ry='7'/><ellipse cx='162' cy='24' rx='11' ry='7'/><ellipse cx='72' cy='60' rx='11' ry='7'/><ellipse cx='102' cy='60' rx='11' ry='7'/><ellipse cx='132' cy='60' rx='11' ry='7'/><ellipse cx='162' cy='60' rx='11' ry='7'/><ellipse cx='72' cy='96' rx='11' ry='7'/><ellipse cx='102' cy='96' rx='11' ry='7'/><ellipse cx='132' cy='96' rx='11' ry='7'/><ellipse cx='162' cy='96' rx='11' ry='7'/><ellipse cx='72' cy='132' rx='11' ry='7'/><ellipse cx='102' cy='132' rx='11' ry='7'/><ellipse cx='132' cy='132' rx='11' ry='7'/><ellipse cx='162' cy='132' rx='11' ry='7'/><ellipse cx='72' cy='168' rx='11' ry='7'/><ellipse cx='102' cy='168' rx='11' ry='7'/><ellipse cx='132' cy='168' rx='11' ry='7'/><ellipse cx='162' cy='168' rx='11' ry='7'/><ellipse cx='72' cy='204' rx='11' ry='7'/><ellipse cx='102' cy='204' rx='11' ry='7'/><ellipse cx='132' cy='204' rx='11' ry='7'/><ellipse cx='162' cy='204' rx='11' ry='7'/><ellipse cx='72' cy='240' rx='11' ry='7'/><ellipse cx='102' cy='240' rx='11' ry='7'/><ellipse cx='132' cy='240' rx='11' ry='7'/><ellipse cx='162' cy='240' rx='11' ry='7'/><ellipse cx='72' cy='276' rx='11' ry='7'/><ellipse cx='102' cy='276' rx='11' ry='7'/><ellipse cx='132' cy='276' rx='11' ry='7'/><ellipse cx='162' cy='276' rx='11' ry='7'/></g></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(2.2rem, 6.2cqw, 7.44rem); line-height: 1.16; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.45rem, 3.85cqw, 4.62rem); line-height: 1.2;
+    display: block; margin-bottom: 2.3cqw; flex-shrink: 0;
+  }
+  .qhead {
+    display: flex; align-items: center; gap: 1.2cqw;
+    margin-bottom: 2.3cqw; flex-shrink: 0;
+  }
+  .qhead h2.slide-title { margin-bottom: 0; }
+  .ans-chip {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    background: var(--key); color: #fff; white-space: nowrap;
+    font-size: clamp(0.78rem, 1.95cqw, 2.34rem);
+    padding: 0.22em 0.9em; letter-spacing: 0.03em;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.85rem, 1.95cqw, 2.34rem); letter-spacing: 0.3em;
+    margin-bottom: 1.8cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); color: var(--ink-soft); line-height: 1.75; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 7cqw; height: 0.3cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1.1rem, 2.9cqw, 3.48rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.5cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.75rem, 1.6cqw, 1.92rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.4%; flex: 1; min-height: 0; }
+  .cols.wide-left { grid-template-columns: 1.35fr 1fr; }
+  .cols.wide-right { grid-template-columns: 1fr 1.35fr; }
+  .col-head {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs)));
+    color: var(--key); margin-bottom: 1.1cqw;
+    padding-bottom: 0.5cqw; border-bottom: 0.1cqw solid var(--rule);
+  }
+
+  .verse {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1.05rem, calc(2.75cqw * var(--fs)), calc(3.3rem * var(--fs)));
+    line-height: 1.86; letter-spacing: 0.005em;
+  }
+  .verse .hl {
+    color: var(--key); font-weight: 700;
+    -webkit-text-stroke: 0.022em currentColor;
+  }
+  .verse p + p { margin-top: 1.1cqw; }
+  /* 시 원문은 한 행이 한 줄로 읽혀야 하므로 줄바꿈을 막고,
+     대신 슬라이드마다 --fs를 실측해 넘치지 않는 최대 크기로 맞춘다 */
+  .verse.poem { line-height: 1.62; }
+  .verse.poem p { white-space: nowrap; }
+  .verse.poem p + p { margin-top: 0; }
+  .cols .verse { font-size: clamp(0.92rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.82; }
+  .src {
+    display: block; margin-top: 0.9em;
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.68rem, calc(1.42cqw * var(--fs)), calc(1.7rem * var(--fs)));
+    color: var(--ink-faint); letter-spacing: 0.04em;
+  }
+  .note-min {
+    margin-top: 0.7em; font-size: clamp(0.66rem, calc(1.36cqw * var(--fs)), calc(1.63rem * var(--fs)));
+    color: var(--ink-faint); line-height: 1.5;
+  }
+
+  .emotion {
+    margin-top: auto; background: var(--card);
+    border-left: 0.36cqw solid var(--key);
+    padding: 1.3cqw 1.7cqw;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.82rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+  }
+  .emotion li + li { margin-top: 0.55em; }
+  .emotion li::before { content: "\2014"; position: absolute; left: 0; color: var(--ink-faint); }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.62em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.6;
+  }
+  .info-table th {
+    width: 5.2em; font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--key); white-space: nowrap;
+  }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.88rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); line-height: 1.68;
+    padding-left: 3.0cqw; position: relative; margin-bottom: 0.75em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n {
+    position: absolute; left: 0; top: 0.05em;
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    color: var(--key); font-size: 1.05em;
+  }
+
+  .def-box {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.5cqw 1.8cqw;
+  }
+  .def-box + .def-box { margin-top: 1.2cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.86rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; color: var(--ink-soft); }
+  .def-box p + p { margin-top: 0.6em; }
+
+  .flow { display: flex; align-items: stretch; gap: 0.8cqw; min-height: 0; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.28cqw solid var(--key);
+    padding: 1.5cqw 1.25cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .stage-label {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.85rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); margin-bottom: 0.15rem;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); margin-bottom: 0.5em;
+  }
+  .flow-step .desc {
+    font-size: clamp(0.74rem, calc(1.68cqw * var(--fs)), calc(2.02rem * var(--fs))); line-height: 1.6; color: var(--ink-soft);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs)));
+  }
+
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.28cqw solid var(--key); padding: 1.6cqw 1.5cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.8rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.72em; }
+  .c3 p.cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    background: rgba(31,90,143,0.06);
+    border-left: 0.28em solid var(--rule);
+    padding: 0.5em 0.72em; margin-bottom: 0.8em; color: var(--ink);
+  }
+  .c3 p.cite + p { margin-top: 0; }
+
+  .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); color: var(--key);
+    width: 2.2em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 0.85em; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
+    margin-bottom: 0.35em;
+  }
+  .step p { font-size: clamp(0.8rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+
+  /* 선택지 — 정답 줄만 진하게 두고, 색은 번호에만 쓴다 */
+  .opts { list-style: none; }
+  .opts li {
+    font-size: clamp(0.8rem, calc(1.86cqw * var(--fs)), calc(2.23rem * var(--fs))); line-height: 1.62;
+    color: var(--ink-soft); padding-left: 2.6cqw; position: relative;
+  }
+  .opts li + li { margin-top: 0.55em; }
+  .opts li .on { position: absolute; left: 0; color: var(--ink-faint); }
+  .opts li.ok { color: var(--ink); }
+  .opts li.ok .on { color: var(--key); font-weight: 700; }
+
+  /* 온라인 대화 — 3번 <보기> */
+  .chat { display: flex; flex-direction: column; gap: 0.45em; }
+  .chat .day {
+    text-align: center; color: var(--ink-faint); letter-spacing: 0.05em;
+    font-size: clamp(0.68rem, calc(1.5cqw * var(--fs)), calc(1.8rem * var(--fs)));
+    margin: 0.35em 0 0.1em;
+  }
+  .chat .row { display: flex; align-items: flex-end; gap: 0.6em; }
+  .chat .row.right { justify-content: flex-end; }
+  .chat .who {
+    font-size: clamp(0.68rem, calc(1.5cqw * var(--fs)), calc(1.8rem * var(--fs)));
+    color: var(--ink-faint); flex-shrink: 0; padding-bottom: 0.35em;
+  }
+  .chat .bub {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 0.9em;
+    padding: 0.5em 0.9em; max-width: 84%;
+    font-size: clamp(0.78rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.5;
+  }
+  .chat .u { color: var(--key); font-weight: 700; text-decoration: underline; text-underline-offset: 0.22em; }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5cqw; }
+  .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.25cqw * var(--fs)), calc(2.7rem * var(--fs))); width: 5.6em; flex-shrink: 0;
+    text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.84rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -3.1cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.35cqw, 1.62rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+
+  .controls {
+    margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem;
+    color: #a8bccd; font-size: 0.86rem;
+  }
+  .controls button {
+    background: #24333f; color: #e6eef5; border: 1px solid #3d5567;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2f4453; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #7b8fa0; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top,
+  body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w);
+    height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cols, .cards3, .cards2 { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* 내용이 많아 자리가 빠듯한 슬라이드 — 여백만 줄이고 글자는 지킨다 */
+  .slide.tight .def-box .dt,
+  .slide.tight .emotion .etag { margin-bottom: 0.4em; padding-bottom: 0.28em; }
+  .slide.tight .c3 h3 { margin-bottom: 0.4em; padding-bottom: 0.3em; }
+  .slide.tight .emotion li + li { margin-top: 0.34em; }
+  .slide.tight .c3 p + p { margin-top: 0.5em; }
+  .slide.tight .num-list li { margin-bottom: 0.5em; }
+  .slide.tight .opts li + li { margin-top: 0.38em; }
+  .slide.tight .info-table th,
+  .slide.tight .info-table td { padding: 0.45em 0.45em; }
+  .slide.tight .step .sbody { padding-bottom: 0.6em; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_1학년.html">&larr; 1학년</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">9월 모의고사 풀이 &middot; 1학년 1차시 &middot; 업데이트 2026. 9. 2.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">2 0 2 6 　 전 국 연 합 학 력 평 가</div>
+    <h1 class="title-main">9월 모의고사 풀이</h1>
+    <div class="rule"></div>
+    <div class="sub">화법 1~3번 &middot; 독서 11~16번 &middot; 문학 43~45번</div>
+    <div class="foot">
+      <span>2026학년도 9월 고1 전국연합학력평가 국어 영역</span>
+      <span>1학년 &middot; 1차시</span>
+    </div>
+    <div class="page-num">1 / 28</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide " style="--fs:1.26;">
+    <h2 class="slide-title">오늘의 차례</h2>
+    <div class="body-area">
+      <div class="cards3" style="flex:0 0 auto;">
+        <div class="c3">
+          <h3><span class="word">화법</span> 1~3번</h3>
+          <p>온라인 의사소통의 문제점을 다룬 학생 발표</p>
+          <p>발표의 짜임을 확인하고, 마지막 문항에서 띄어쓰기 규정을 적용한다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">독서</span> 11~16번</h3>
+          <p>(가) 독점규제법 &middot; (나) 지식 재산 제도</p>
+          <p>두 제도가 부딪치는 지점과, 부당성을 재는 기준을 따라 읽는다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">문학</span> 43~45번</h3>
+          <p>(가) 이론 &middot; (나) 백석 &middot; (다) 기형도</p>
+          <p>화자가 다른 인물을 어떻게 보는지를 축으로 두 시를 견준다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">읽는 순서</div>
+        <ul>
+          <li>지문의 짜임을 먼저 잡고, 문항마다 답의 근거가 어느 문단 어느 문장인지를 확인한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">2 / 28</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide " style="--fs:1.44;">
+    <h2 class="slide-title">화법 &middot; 발표의 짜임</h2>
+    <div class="body-area">
+      <div class="flow">
+        <div class="flow-step">
+          <div class="stage-label">도입</div>
+          <div class="emo">주제 소개</div>
+          <div class="desc">지난 시간에 배운 현대의 의사소통 양상을 상기시킨 뒤, 오늘 다룰 것이 &lsquo;온라인 의사소통에서 나타나는 문제점&rsquo;임을 밝힌다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="stage-label">전개 1</div>
+          <div class="emo">줄임말</div>
+          <div class="desc">&lsquo;스카 &middot; 자만추 &middot; 갠소&rsquo;의 뜻을 물어 청중의 반응을 살핀 뒤, 사용 양상이 사용자와 언어 공동체에 따라 달라짐을 설명한다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="stage-label">전개 2</div>
+          <div class="emo">띄어쓰기</div>
+          <div class="desc">화면을 손가락으로 가리키며 &lsquo;한두가지&rsquo;와 &lsquo;배우신분&rsquo;을 보이고, 띄어 쓰는 방식에 따라 의미가 달라짐을 설명한다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="stage-label">정리</div>
+          <div class="emo">당부</div>
+          <div class="desc">다룬 내용을 요약하고, 언어 공동체의 구성원으로서 자신의 언어 습관을 돌아보기를 청중에게 당부한다</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">3 / 28</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide " style="--fs:0.96;">
+    <h2 class="slide-title">화법 &middot; 발표가 짚은 두 문제</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">줄임말의 무분별한 사용</span></h3>
+          <p class="cite">&lsquo;스카&rsquo;는 &lsquo;스터디 카페&rsquo;, &lsquo;자만추&rsquo;는 &lsquo;자연스러운 만남 추구&rsquo;, &lsquo;갠소&rsquo;는 &lsquo;개인 소장&rsquo;</p>
+          <p>연령 &middot; 직업 &middot; 인터넷 사용 빈도 같은 사용자의 특성과 언어 공동체의 특성에 따라 사용 양상이 달라진다. 익숙하지 않은 대상에게 쓰면 의사소통의 장애가 되고, 공식적인 말하기에서는 격식에 어긋난다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">띄어쓰기 생략</span></h3>
+          <p class="cite">&lsquo;한두가지&rsquo; &rarr; &lsquo;한 두 가지&rsquo; / &lsquo;한두 가지&rsquo;<br>&lsquo;배우신분&rsquo; &rarr; &lsquo;배우신 분&rsquo; / &lsquo;배우 신분&rsquo;</p>
+          <p>전달 속도는 약간 빨라질 수 있으나, 의도나 전하려는 내용이 제대로 전달되지 않거나 오해를 부른다. 그래서 ㉠<u>띄어쓰기 규정을 고려하여 정확하게 언어를 사용하는 습관</u>을 강조한다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">두 문제의 공통점</div>
+        <ul>
+          <li>둘 다 빠르고 즉각적인 소통을 추구하는 경향에서 나온 문제다. 발표자가 든 대안은 대상과 상황을 고려하는 신중한 언어 사용이다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">4 / 28</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide " style="--fs:1.17;">
+    <div class="qhead">
+      <h2 class="slide-title">1번 &middot; 발표자의 말하기 방식</h2>
+      <span class="ans-chip">정답 &#9312;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">근거</div>
+        <p>&ldquo;여러분, 혹시 &lsquo;스카&rsquo;, &lsquo;자만추&rsquo;, &lsquo;갠소&rsquo;가 무슨 뜻인지 아시나요?&rdquo;, &ldquo;여러분은 이 말들이 무슨 뜻을 가진 것으로 이해되시나요?&rdquo; &mdash; 두 번 모두 청중에게 물은 뒤 반응을 살피고 답을 알려 준다</p>
+      </div>
+      <ul class="opts">
+        <li class="ok"><span class="on">&#9312;</span> 청중에게 질문하는 방식을 통해 관심을 유도하고 있다</li>
+        <li><span class="on">&#9313;</span> 비언어적 표현은 &lsquo;화면을 손가락으로 가리키며&rsquo; 한 번 나오지만, 자료를 가리킨 것이지 발표 순서를 안내한 것이 아니다</li>
+        <li><span class="on">&#9314;</span> 화면에 띄운 것은 &lsquo;한두가지&rsquo;, &lsquo;배우신분&rsquo;이라는 예시일 뿐 발표 내용을 요약한 시각 자료가 아니다</li>
+        <li><span class="on">&#9315;</span> 발표 어디에도 구체적인 수치는 나오지 않는다</li>
+        <li><span class="on">&#9316;</span> 정보의 출처를 밝힌 대목이 없다</li>
+      </ul>
+    </div>
+    <div class="page-num">5 / 28</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide " style="--fs:1.28;">
+    <div class="qhead">
+      <h2 class="slide-title">2번 &middot; 발표 계획과 대조하기</h2>
+      <span class="ans-chip">정답 &#9313;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">근거</div>
+        <p>발표는 줄임말의 사용 양상이 <strong>사용자의 특성과 언어 공동체의 특성</strong>에 따라 달라진다고 했다. 시간이 지남에 따라 줄임말에 담긴 의미가 달라진다는 말은 나오지 않는다</p>
+      </div>
+      <ul class="opts">
+        <li><span class="on">&#9312;</span> 도입에서 현대의 의사소통 양상을 언급하고 주제를 밝혔다</li>
+        <li class="ok"><span class="on">&#9313;</span> 발표에 반영되지 않았다 &mdash; 달라지는 기준은 &lsquo;시간&rsquo;이 아니라 &lsquo;사용자와 언어 공동체&rsquo;다</li>
+        <li><span class="on">&#9314;</span> 사용자 및 언어 공동체의 특성이 사용 양상에 영향을 미친다고 언급했다</li>
+        <li><span class="on">&#9315;</span> &lsquo;한두가지&rsquo;, &lsquo;배우신분&rsquo;이라는 구체적인 예시로 설명했다</li>
+        <li><span class="on">&#9316;</span> 언어 습관을 돌아보기를 바란다는 당부로 마무리했다</li>
+      </ul>
+    </div>
+    <div class="page-num">6 / 28</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide " style="--fs:1.12;">
+    <h2 class="slide-title">3번 &middot; &lt;보기&gt;의 규정과 대화</h2>
+    <div class="body-area">
+      <div class="cols wide-right">
+        <div>
+          <div class="col-head">선생님이 든 한글 맞춤법</div>
+          <ul class="num-list">
+            <li><span class="n">1</span>문장의 각 단어는 띄어 쓴다</li>
+            <li><span class="n">2</span>다만 조사는 독립성이 없어서 그 앞말과 붙여 쓴다</li>
+            <li><span class="n">3</span>의존 명사는 앞말과 띄어 쓴다</li>
+          </ul>
+        </div>
+        <div>
+          <div class="col-head">온라인 대화</div>
+          <div class="chat">
+            <div class="day">2026년 8월 7일 금요일</div>
+            <div class="row"><span class="who">지원</span><span class="bub">정수야, 수지랑 내일 영화 보러 갈 건데 &#9424;<span class="u">너같이갈래</span>?</span></div>
+            <div class="row right"><span class="bub">오, &#9425;<span class="u">내일이라면</span> 좋아.</span></div>
+            <div class="day">2026년 8월 8일 토요일</div>
+            <div class="row right"><span class="bub">어디야? 나 매표소 앞인데 여기 &#9426;<span class="u">나밖에</span> 없네?</span></div>
+            <div class="row"><span class="who">지원</span><span class="bub">우리 곧 &#9427;<span class="u">도착할것같아</span>. 좀 앉아 있어.</span></div>
+            <div class="row right"><span class="bub">여기 &#9428;<span class="u">앉을데</span> 없는데? 표 사고 기다리고 있을게.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">7 / 28</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide " style="--fs:1.00;">
+    <div class="qhead">
+      <h2 class="slide-title">3번 &middot; &#9424;~&#9428; 판정</h2>
+      <span class="ans-chip">정답 &#9314;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">&#9314;가 맞지 않은 이유</div>
+        <p>&#9426;의 &lsquo;밖에&rsquo;는 &lsquo;그것 말고는&rsquo;의 뜻을 더하는 <strong>조사</strong>다. 여기서는 &lsquo;나 말고는 없다&rsquo;는 뜻이므로 앞말에 붙여 쓴 &lsquo;나밖에&rsquo;가 바른 표기다. 띄어 써야 한다는 설명은 성립하지 않는다</p>
+      </div>
+      <ul class="opts">
+        <li><span class="on">&#9312;&middot;&#9315;</span> &#9424;는 &lsquo;너 같이 갈래?&rsquo;다. 여기서 &lsquo;같이&rsquo;는 &lsquo;함께&rsquo;라는 뜻의 부사이므로 앞말과 띄어 쓴다. &lsquo;갈래&rsquo;와 &#9427;의 &lsquo;같아&rsquo;도 각각 독립된 단어다</li>
+        <li><span class="on">&#9313;</span> &#9425;의 &lsquo;이라면&rsquo;은 조사이므로 &lsquo;내일&rsquo;에 붙여 쓴다</li>
+        <li><span class="on">&#9316;</span> &#9427;의 &lsquo;것&rsquo;과 &#9428;의 &lsquo;데&rsquo;는 의존 명사이므로 앞말과 띄어 쓴다</li>
+      </ul>
+      <div class="emotion">
+        <div class="etag">바르게 고치면</div>
+        <ul>
+          <li>너 같이 갈래? / 내일이라면 / 나밖에 / 도착할 것 같아 / 앉을 데 &mdash; &lsquo;같이&rsquo;는 &lsquo;너같이 예쁘다&rsquo;처럼 비교를 나타낼 때는 조사이지만, 여기서는 &lsquo;함께&rsquo;라는 뜻의 부사다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">8 / 28</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide " style="--fs:1.18;">
+    <h2 class="slide-title">독서 &middot; (가)와 (나)의 관계</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">(가) 독점규제법</span></h3>
+          <p>왜 만들어졌는가 &mdash; 초기 자본주의의 폐해를 시정하기 위해 공권력이 개입한 결과다</p>
+          <p>어떻게 작동하는가 &mdash; 우리나라는 공정거래법을 두어 기업 결합을 사전에 심사한다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">(나) 지식 재산 제도</span></h3>
+          <p>특허권자에게 독점적 &middot; 배타적 사용권을 주어 기술 혁신의 유인을 마련한다</p>
+          <p>그 권리 행사가 언제 공정거래법의 적용을 받는가 &mdash; 부당성을 재는 기준을 설명한다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">두 글을 잇는 고리</div>
+        <ul>
+          <li>(가)가 세운 &lsquo;경쟁 제한&rsquo;이라는 잣대가 (나)에서 특허권 행사의 부당성을 재는 기준으로 다시 쓰인다</li>
+          <li>(나)의 마지막 문단은 두 제도가 상충하는 듯 보이지만 &lsquo;혁신 장려&rsquo;라는 공동 목적을 가진다고 묶는다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">9 / 28</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide " style="--fs:1.04;">
+    <h2 class="slide-title">(가) 독점규제법은 왜 생겼나</h2>
+    <div class="body-area">
+      <div class="steps">
+        <div class="step">
+          <div class="sn">1</div>
+          <div class="sbody">
+            <h3>초기 자본주의 &middot; 자유방임</h3>
+            <p>공권력이 국가 경제에 개입하지 않았고, 그 결과 독점 자본이 급격히 성장했다</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">2</div>
+          <div class="sbody">
+            <h3>독점 자본의 폐해</h3>
+            <p>가격을 일방적으로 결정하며 과다한 이윤을 추구했고, 그 폐해는 중소기업과 소비자에게 전가되었다</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">3</div>
+          <div class="sbody">
+            <h3>공권력의 개입</h3>
+            <p>폐해를 적극적으로 시정하고 시장 경제의 위기를 해결하고자 독점규제법이 마련되었다. 자유 경쟁의 정신을 <u>&#9424;회생시키고</u> 기업 간 균형 있는 발전을 도모한다</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">4</div>
+          <div class="sbody">
+            <h3>㉠ 그러나 약자 보호법은 아니다</h3>
+            <p>중소기업과 같은 약소 기업을 직접적으로 보호하는 법은 아니어서, 사회적 약자 보호를 목적으로 하는 법들과는 성격이 다르다</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">10 / 28</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide " style="--fs:1.11;">
+    <h2 class="slide-title">(가) 공정거래법과 기업 결합</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">기업 결합의 두 얼굴</span></h3>
+          <p>둘 이상의 기업이 하나로 합병하는 것 등을 말한다. 비용 절감과 같은 효율성 증대 효과를 얻을 수 있다</p>
+          <p>그러나 <u>&#9425;궁극적으로</u> 경쟁 사업자를 없애는 경쟁 제한 효과가 발생하여 독과점이 형성될 가능성이 크다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">사전 신고와 심사</span></h3>
+          <p>기업 결합을 하려면 사전 신고를 통해 공정거래위원회의 심사를 거쳐야 한다</p>
+          <p>결합으로 시장 점유율의 합계가 해당 거래 분야에서 제1위가 된다면, 그 분야의 경쟁을 실질적으로 제한하는 것으로 간주될 수 있다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">이 제한이 겨냥하는 것</div>
+        <ul>
+          <li>독과점 기업의 등장을 사전에 막는 것이다. 자유롭고 공정한 경쟁이 이루어지면 소비자는 양질의 상품을 저렴하게 살 수 있고, 이것이 소비자 후생의 극대화와 국민 경제의 균형 있는 발전으로 이어진다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">11 / 28</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide " style="--fs:1.08;">
+    <h2 class="slide-title">(나) 특허권 행사와 &lsquo;부당하게&rsquo;</h2>
+    <div class="body-area">
+      <div class="def-box">
+        <div class="dt">특허권은 언제 공정거래법의 적용을 받는가</div>
+        <p>공정거래법은 지식 재산권을 행사하는 자의 행위가 <strong>지식 재산권을 남용하여 새로운 기술 혁신을 부당하게 저해하는 경우</strong>라고 판단되면 적용 대상이 될 수 있음을 규정한다</p>
+      </div>
+      <div class="def-box">
+        <div class="dt">&lsquo;부당하게&rsquo;의 뜻</div>
+        <p>지식 재산권의 행사로 인한 <strong>경쟁 제한 효과가 효율성 증대 효과를 상회하는</strong> 경우를 말한다</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">읽을 때 잡아 둘 것</div>
+        <ul>
+          <li>특허권 행사 자체는 정당하다. 문제가 되는 것은 그 행사가 &lsquo;정당한 권리 범위&rsquo;를 벗어났을 때다. (나)는 그 경계를 두 가지 예로 보여 준다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">12 / 28</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide tight" style="--fs:0.97;">
+    <h2 class="slide-title">(나) 두 가지 예와 결론</h2>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:1.5cqw;">
+        <div class="c3">
+          <h3><span class="word">예 1 &middot; 실시료</span></h3>
+          <p>기술적 성과에 정당한 보상을 줄 필요가 있으므로 실시료 부과 자체는 정당한 권리 행사다</p>
+          <p>그러나 부당하게 거래 상대방에 따라 실시료를 차별적으로 부과하면 정당한 권리 범위를 벗어난 것이다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">예 2 &middot; 조건 부과</span></h3>
+          <p>이용 범위를 한정해 부분적으로 실시를 허락하거나, 합리적인 범위에서 조건을 <u>&#9427;부과할</u> 수 있다</p>
+          <p>그러나 상대방에 따라 이용 범위를 차별하거나 필요 없는 기술을 함께 사게 하면 범위를 벗어난 것이다. 판단 기준은 그 조건이 실시에 필수적인지, 기술의 이용을 촉진하는지다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">상충하는가</div>
+        <ul>
+          <li>법의 내용만 보면 두 제도는 <u>&#9428;상충하는</u> 것처럼 보인다. 한쪽은 경쟁 제한 행위를 규제하는데 다른 쪽은 독점적 이용 권리를 주기 때문이다</li>
+          <li>그러나 독점규제법은 자본이 소수에 집중되면 혁신이 저해된다는 가정에서, 지식 재산 제도는 혁신을 촉진하려고 고안되었다. 둘은 <strong>혁신 장려</strong>라는 공동 목적을 가진다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">13 / 28</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide " style="--fs:1.43;">
+    <div class="qhead">
+      <h2 class="slide-title">11번 &middot; (가)와 (나)의 서술</h2>
+      <span class="ans-chip">정답 &#9314;</span>
+    </div>
+    <div class="body-area">
+      <ul class="opts">
+        <li class="ok"><span class="on">&#9314;</span> (가)는 독점규제법이 마련된 취지를, (나)는 지식 재산권 행사의 부당성을 판단하는 기준을 설명하고 있다</li>
+        <li><span class="on">&#9312;</span> (나)에 제도의 개정 방향은 나오지 않는다. (나)가 다룬 것은 현행 공정거래법의 적용 기준이다</li>
+        <li><span class="on">&#9313;</span> (나)는 지식 재산 제도가 강화된 이유가 아니라, 그 권리 행사가 규제 대상이 되는 경우를 다룬다</li>
+        <li><span class="on">&#9315;</span> (가)는 여러 나라가 독점규제법을 마련한다고만 했을 뿐 각국의 차이를 견주지 않는다</li>
+        <li><span class="on">&#9316;</span> (가)에 적용 범위가 확장된 양상은 없다. (나)도 남용을 해결하는 방안이 아니라 판단 기준을 제시한다</li>
+      </ul>
+    </div>
+    <div class="page-num">14 / 28</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide " style="--fs:1.19;">
+    <div class="qhead">
+      <h2 class="slide-title">12번 &middot; (가)의 이해</h2>
+      <span class="ans-chip">정답 &#9315;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">&#9315;가 맞지 않은 이유</div>
+        <p>(가)의 둘째 문단은 &ldquo;국가 공권력의 개입을 통해 독점 자본의 폐해를 적극적으로 시정하고&rdquo;라고 했다. 독점규제법은 공권력의 개입을 <strong>줄이는</strong> 것이 아니라 개입을 통해 자유 경쟁을 회복하려는 법이다</p>
+      </div>
+      <ul class="opts">
+        <li><span class="on">&#9312;</span> 초기 자본주의 체제에서는 공권력이 국가 경제에 개입하지 않았다</li>
+        <li><span class="on">&#9313;</span> 독점 자본이 가격을 일방적으로 결정하면 저렴한 가격에 살 수 없으므로 소비자 후생의 극대화에 이르지 못한다</li>
+        <li><span class="on">&#9314;</span> 기업 간 경쟁은 전체 국민의 행복의 크기를 키우는 데 도움이 된다고 했다</li>
+        <li><span class="on">&#9316;</span> 사전 신고와 심사는 독과점 기업의 등장을 사전에 방지하기 위한 것이다</li>
+      </ul>
+    </div>
+    <div class="page-num">15 / 28</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide " style="--fs:1.06;">
+    <div class="qhead">
+      <h2 class="slide-title">13번 &middot; 학습 활동지</h2>
+      <span class="ans-chip">정답 &#9314;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">질문 2가 묻는 것</div>
+        <p>지식 재산권 행사가 <strong>정당한 권리 범위를 벗어난</strong> 경우를 묻는다. 그런데 &#9314;의 &lsquo;이용 범위를 한정하여 부분적으로만 실시를 허락하는 것&rsquo;은 (나)가 특허권자가 <strong>할 수 있는 일</strong>로 든 것이다</p>
+      </div>
+      <ul class="opts">
+        <li><span class="on">&#9312;</span> 지식 재산 제도는 혁신적인 기술에 대한 정당한 보상을 통해 새로운 기술 혁신의 유인을 마련한다</li>
+        <li><span class="on">&#9313;</span> 실시료를 차별적으로 부과해 경쟁 제한 효과가 효율성 증대 효과를 상회하면 범위를 벗어난 것이다</li>
+        <li><span class="on">&#9315;</span> 독점규제법은 자본이 소수에게 집중되면 기술 혁신이 저해된다는 가정 위에 서 있다</li>
+        <li><span class="on">&#9316;</span> 지식 재산 제도는 보상을 통해 사람들이 기술 혁신에 참여하도록 유인한다</li>
+      </ul>
+      <div class="emotion">
+        <div class="etag">벗어난 예로 (나)가 든 것</div>
+        <ul>
+          <li>거래 상대방에 따라 이용 범위를 차별적으로 제한하거나, 실시에 직접 필요하지 않은 기술을 함께 구입하게 하는 행위</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">16 / 28</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide " style="--fs:1.12;">
+    <div class="qhead">
+      <h2 class="slide-title">14번 &middot; ㉠의 이해</h2>
+      <span class="ans-chip">정답 &#9315;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">㉠ 그러나 독점규제법은 중소기업과 같은 약소 기업을 직접적으로 보호하는 법은 아니다</div>
+        <p>바로 앞 문장은 독점규제법이 자유 경쟁의 정신을 회생시켜 기업 간 균형 있는 발전을 도모한다고 했다. 즉 균형 있는 발전은 약자에게 직접 혜택을 주어서가 아니라 <strong>경쟁 질서의 확립을 통해</strong> 이루어져야 한다는 뜻이다</p>
+      </div>
+      <ul class="opts">
+        <li class="ok"><span class="on">&#9315;</span> 기업 간 균형 있는 발전은 자유롭고 공정한 경쟁이 이루어지는 경쟁 질서의 확립을 통해 이루어져야 하는 것이다</li>
+        <li><span class="on">&#9312;</span> 약소 기업의 발생이 마땅한 결과라는 말은 (가)에 없다</li>
+        <li><span class="on">&#9313;</span> 경제력이 높은 주체의 시장 참여를 문제 삼은 것이 아니다</li>
+        <li><span class="on">&#9314;</span> 공권력의 개입은 초기 자본주의의 위기를 심화하는 것이 아니라 시정하기 위한 것이다</li>
+        <li><span class="on">&#9316;</span> 특정 주체에게 직접적 혜택을 주는 것이야말로 ㉠이 아니라고 못 박은 방식이다</li>
+      </ul>
+    </div>
+    <div class="page-num">17 / 28</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide " style="--fs:1.39;">
+    <div class="qhead">
+      <h2 class="slide-title">15번 &middot; &#9424;~&#9428;의 문맥적 의미</h2>
+      <span class="ans-chip">정답 &#9313;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">&#9425; 궁극적으로</div>
+        <p>&lsquo;끝에 가서는, 결국에는&rsquo;의 뜻이다. 기업 결합이 효율성을 높이더라도 <strong>결국에는</strong> 경쟁 사업자를 없애는 결과에 이른다는 말이므로, &lsquo;목표하던 대로&rsquo;로 바꿔 읽을 수 없다</p>
+      </div>
+      <ul class="opts">
+        <li><span class="on">&#9312;</span> &#9424; 회생시키고 &mdash; 파괴되어 가던 정신을 다시 살아나게 하고</li>
+        <li><span class="on">&#9314;</span> &#9426; 행사할 &mdash; 자신이 지닌 권리를 실현할</li>
+        <li><span class="on">&#9315;</span> &#9427; 부과할 &mdash; 요구하는 것을 거래 상대방에게 부담하여 맡게 할</li>
+        <li><span class="on">&#9316;</span> &#9428; 상충하는 &mdash; 둘의 내용이 서로 어긋나는</li>
+      </ul>
+    </div>
+    <div class="page-num">18 / 28</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide " style="--fs:1.05;">
+    <h2 class="slide-title">16번 &middot; &lt;보기&gt;의 사례 정리</h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr>
+          <th>A</th>
+          <td>디지털 이동 통신 기술 특허를 보유하고, 그 기술의 실시료로 수익을 낸다. 동시에 그 기술을 이용한 휴대폰용 모뎀칩을 직접 제조 &middot; 판매한다</td>
+        </tr>
+        <tr>
+          <th>행위 1</th>
+          <td>모뎀칩 시장에 신규 진입 사업자 B가 등장하자, 자사 모뎀칩을 쓰는지에 따라 실시료를 차별적으로 부과했다</td>
+        </tr>
+        <tr>
+          <th>결과</th>
+          <td>휴대폰 제조 업체들이 실시료 할인을 받으려고 A 이외의 사업자에게서 모뎀칩을 사려던 시도를 포기했다. A의 점유율은 40%가 되었다</td>
+        </tr>
+        <tr>
+          <th>행위 2</th>
+          <td>점유율 20%인 B의 기업과 합병하기로 하고 공정거래위원회에 신고했다</td>
+        </tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">지문의 어느 부분을 대는가</div>
+        <ul>
+          <li>실시료 차별은 (나)의 &lsquo;예 1&rsquo;, 합병은 (가)의 기업 결합 심사에 해당한다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">19 / 28</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide " style="--fs:1.19;">
+    <div class="qhead">
+      <h2 class="slide-title">16번 &middot; 풀이</h2>
+      <span class="ans-chip">정답 &#9312;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">&#9312;가 맞지 않은 이유</div>
+        <p>A가 한 것은 실시료를 차별적으로 부과한 행위다. 그 부당성은 <strong>경쟁 제한 효과가 효율성 증대 효과를 상회하는지</strong>로 판단한다. &lsquo;특허 발명의 실시에 필수적인지&rsquo;는 (나)가 <strong>조건을 부과하는 행위</strong>의 부당성을 판단할 때 보는 것이라고 밝힌 기준이다</p>
+      </div>
+      <ul class="opts">
+        <li><span class="on">&#9313;</span> 기업 결합이 이루어지면 비용 절감과 같은 효율성 증대 효과를 얻을 수 있다</li>
+        <li><span class="on">&#9314;</span> 40% + 20% = 60%로 제1위가 되므로 경쟁을 실질적으로 제한하는 것으로 간주될 수 있다</li>
+        <li><span class="on">&#9315;</span> 실시료 차별로 다른 사업자의 모뎀칩 구입 시도가 포기되었으므로 모뎀칩 시장의 경쟁 제한 효과가 발생했다</li>
+        <li><span class="on">&#9316;</span> 기술적 성과에 대한 보상인 실시료 수취 자체는 특허권에 의한 정당한 권리 행사다</li>
+      </ul>
+    </div>
+    <div class="page-num">20 / 28</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide " style="--fs:1.19;">
+    <h2 class="slide-title">문학 &middot; (가) 화자가 인물을 보는 방식</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>화자는 인물의 <strong>외양을 관찰</strong>하여 그 인물의 사연을 그리거나 과거를 추측한다</li>
+        <li><span class="n">2</span>비슷한 처지의 인물과 자신을 <strong>동일시</strong>하여 인물에 대한 공감을 드러낸다</li>
+        <li><span class="n">3</span>인물이 특정 현실을 살아가는 인물로 그려질 경우, 인물에 대한 감정과 인식은 <strong>그 현실에 대한 인식으로 확대</strong>된다</li>
+        <li><span class="n">4</span>인물이 처한 시공간과 상황은 ㉠<u>다양한 묘사</u>를 통해 구체화되어 시적 상황과 인물의 처지를 부각한다</li>
+      </ul>
+      <div class="emotion">
+        <div class="etag">문항으로 가는 길</div>
+        <ul>
+          <li>43번은 4번 항목(묘사), 44번은 &lsquo;유리창&rsquo;이라는 장치, 45번은 1~3번 항목 전체를 (나)와 (다)에 대어 본다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">21 / 28</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide " style="--fs:1.04;">
+    <h2 class="slide-title">(나) 백석, 「팔원 &ndash; 서행시초 3」</h2>
+    <div class="body-area">
+      <div class="cols wide-right" style="flex:0 0 auto;">
+        <div class="verse poem">
+          <p>차디찬 아침인데</p>
+          <p>묘향산행 승합자동차는 텅 하니 비어서</p>
+          <p>나이 어린 <span class="hl">계집아이</span> 하나가 오른다</p>
+          <p>옛말속같이 진진초록 새 저고리를 입고</p>
+          <p>손잔등이 밭고랑처럼 몹시도 터졌다</p>
+          <p>계집아이는 자성(慈城)으로 간다고 하는데</p>
+          <p>자성은 예서 삼백오십 리 묘향산 백오십 리</p>
+          <p>묘향산 어디메서 삼촌이 산다고 한다</p>
+        </div>
+        <div class="verse poem">
+          <p>새하얗게 얼은 자동차 &#9424;<u>유리창</u> 밖에</p>
+          <p>내지인 주재소장 같은 어른과 어린아이 둘이 내임을 낸다</p>
+          <p>계집아이는 운다 느끼며 운다</p>
+          <p>텅 비인 차 안 한구석에서 <span class="hl">어느 한 사람</span>도 눈을 씻는다</p>
+          <p>계집아이는 몇 해고 내지인 주재소장 집에서</p>
+          <p>밥을 짓고 걸레를 치고 아이보개를 하면서</p>
+          <p>이렇게 추운 아침에도 손이 꽁꽁 얼어서</p>
+          <p>찬물에 걸레를 쳤을 것이다</p>
+          <span class="src">&mdash; 백석, 「팔원(八院) &ndash; 서행시초(西行詩抄) 3」</span>
+          <div class="note-min">내지인: 식민지에서 지배국 사람을 일컫는 말</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">22 / 28</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide " style="--fs:0.99;">
+    <h2 class="slide-title">(나) 읽기</h2>
+    <div class="body-area">
+      <div class="cards3" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">상황</span></h3>
+          <p class="cite">차디찬 아침인데 / 텅 하니 비어서</p>
+          <p>추위와 빈 차가 겹쳐 아이가 혼자 감당해야 할 길임을 드러낸다. 자성까지 삼백오십 리, 배웅하는 이는 주인집 사람들뿐이다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">외양</span></h3>
+          <p class="cite">진진초록 새 저고리 / 밭고랑처럼 터진 손잔등</p>
+          <p>새 옷의 고움이 도리어 손등의 상처를 도드라지게 한다. 화자는 이 손등에서 아이가 지나온 몇 해를 읽는다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">화자</span></h3>
+          <p class="cite">어느 한 사람도 눈을 씻는다</p>
+          <p>우는 아이 곁에서 눈물을 훔치는 사람을 적어 연민을 드러낸다. 마지막 행의 &lsquo;~쳤을 것이다&rsquo;는 외양에서 미루어 짚은 과거다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">현실에 대한 인식으로</div>
+        <ul>
+          <li>&lsquo;내지인 주재소장 집&rsquo;에서 몇 해를 일한 아이라는 사실이 밝혀지면서, 한 아이에 대한 연민은 일제 강점기의 현실에 대한 인식으로 넓어진다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">23 / 28</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide " style="--fs:0.96;">
+    <h2 class="slide-title">(다) 기형도, 「기억할 만한 지나침」</h2>
+    <div class="body-area">
+      <div class="cols wide-right" style="flex:0 0 auto;">
+        <div class="verse poem">
+          <p>그리고 나는 우연히 그곳을 지나게 되었다</p>
+          <p>눈은 퍼부었고 거리는 캄캄했다</p>
+          <p>움직이지 못하는 건물들은 눈을 뒤집어쓰고</p>
+          <p>희고 <span class="hl">거대한 서류 뭉치</span>로 변해갔다</p>
+          <p>무슨 관공서였는데 희미한 불빛이 새어 나왔다</p>
+          <p>&#9425;<u>유리창</u> 너머 <span class="hl">한 사내</span>가 보였다</p>
+          <p>그 춥고 큰 방에서 서기(書記)는 혼자 울고 있었다!</p>
+        </div>
+        <div class="verse poem">
+          <p>눈은 퍼부었고 내 뒤에는 아무도 없었다</p>
+          <p>침묵을 달아나지 못하게 하느라 나는 거의 고통스러웠다</p>
+          <p>어떻게 해야 할까, 나는 중지시킬 수 없었다</p>
+          <p>나는 그가 울음을 그칠 때까지 창밖에서 떠나지 못했다</p>
+          <p>그리고 나는 우연히 지금 그를 떠올리게 되었다</p>
+          <p>밤은 깊고 텅 빈 사무실 창밖으로 눈이 퍼붓는다</p>
+          <p>나는 그 사내를 어리석은 자라고 생각하지 않는다</p>
+          <span class="src">&mdash; 기형도, 「기억할 만한 지나침」</span>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">24 / 28</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide " style="--fs:0.99;">
+    <h2 class="slide-title">(다) 읽기</h2>
+    <div class="body-area">
+      <div class="cards3" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">공간</span></h3>
+          <p class="cite">희고 거대한 서류 뭉치로 변해갔다</p>
+          <p>눈을 뒤집어쓴 건물이 서류 뭉치로 보인다는 진술은, 그 안의 사람을 서류에 묻힌 존재로 읽게 한다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">인물</span></h3>
+          <p class="cite">그 춥고 큰 방에서 서기는 혼자 울고 있었다!</p>
+          <p>관공서의 말단 서기가 아무도 없는 방에서 운다. 화자는 그 울음을 멈추게 할 수도, 자리를 뜰 수도 없었다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">지금</span></h3>
+          <p class="cite">텅 빈 사무실 창밖으로 눈이 퍼붓는다</p>
+          <p>그날과 같은 눈 오는 밤, 텅 빈 사무실에 남은 화자가 그를 떠올린다. 사내가 놓였던 자리에 자신이 서 있다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">마지막 행</div>
+        <ul>
+          <li>&lsquo;어리석은 자라고 생각하지 않는다&rsquo;는 비슷한 처지의 인물과 자신을 겹쳐 놓은 공감의 진술이다. 도시의 억압적 현실에 대한 인식이 여기서 드러난다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">25 / 28</div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide " style="--fs:1.31;">
+    <div class="qhead">
+      <h2 class="slide-title">43번 &middot; ㉠ 다양한 묘사</h2>
+      <span class="ans-chip">정답 &#9312;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">근거</div>
+        <p>(나)의 첫 행 &lsquo;차디찬 아침인데&rsquo;는 시간적 배경인 아침을 촉각적 이미지로 구체화한다. 이 추위는 마지막의 &lsquo;손이 꽁꽁 얼어서 찬물에 걸레를 쳤을 것이다&rsquo;와 맞물려 아이가 처한 현실을 부각한다</p>
+      </div>
+      <ul class="opts">
+        <li><span class="on">&#9313;</span> &lsquo;꽁꽁&rsquo;은 아이의 손 상태를 나타낼 뿐 시적 공간을 묘사한 것이 아니고, 분위기도 긴박하지 않다</li>
+        <li><span class="on">&#9314;</span> (다)에 시선 이동에 따른 묘사는 있으나 공간의 초월적 속성은 드러나지 않는다</li>
+        <li><span class="on">&#9315;</span> (다)에 청각을 시각으로 옮겨 놓은 표현은 없다</li>
+        <li><span class="on">&#9316;</span> &lsquo;진진초록&rsquo;, &lsquo;새하얗게&rsquo;, &lsquo;희고&rsquo; 같은 색채어는 있지만 시간의 순환성과는 무관하다</li>
+      </ul>
+    </div>
+    <div class="page-num">26 / 28</div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide " style="--fs:1.02;">
+    <div class="qhead">
+      <h2 class="slide-title">44번 &middot; 두 개의 &lsquo;유리창&rsquo;</h2>
+      <span class="ans-chip">정답 &#9313;</span>
+    </div>
+    <div class="body-area">
+      <div class="cards2" style="flex:0 0 auto;margin-bottom:1.5cqw;">
+        <div class="c3">
+          <h3><span class="word">&#9424; (나)의 유리창</span></h3>
+          <p class="cite">새하얗게 얼은 자동차 유리창 밖에 / 내지인 주재소장 같은 어른과 어린아이 둘이 내임을 낸다</p>
+          <p>차 안의 화자가 창 너머의 사람들을 보는 자리다. 창 밖의 인물은 관찰의 대상이지 주체가 아니다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">&#9425; (다)의 유리창</span></h3>
+          <p class="cite">유리창 너머 한 사내가 보였다</p>
+          <p>이 창을 통해 화자는 혼자 우는 서기를 본다. 그 뒤 화자는 고통스러웠고 울음이 그칠 때까지 떠나지 못한다</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">정답과 오답</div>
+        <ul>
+          <li>&#9313; &#9425;는 화자의 감정 변화를 촉발하는 다른 인물을 화자가 바라볼 수 있게 하는 매개체다</li>
+          <li>&#9312; &#9424;의 창 밖 인물은 주체가 아니라 대상이다 / &#9314; 두 창 모두 거리감을 만드는 것이 아니라 인물을 보게 한다 / &#9315; &#9424;는 과거와 현재를 잇지 않고 &#9425;도 앞날을 전망하게 하지 않는다 / &#9316; 소통을 유도하거나 방해하는 장치가 아니다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">27 / 28</div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide " style="--fs:1.31;">
+    <div class="qhead">
+      <h2 class="slide-title">45번 &middot; (가)를 참고한 감상</h2>
+      <span class="ans-chip">정답 &#9315;</span>
+    </div>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <div class="dt">&#9315;가 맞지 않은 이유</div>
+        <p>(나)의 &lsquo;찬물에 걸레를 쳤을 것이다&rsquo;는 터진 손잔등이라는 외양에서 미루어 짚은 과거가 맞다. 그러나 (다)의 &lsquo;우연히 지금 그를 떠올리&rsquo;는 것은 자신이 본 장면을 회상하는 것일 뿐, <strong>인물의 외양을 바탕으로 과거를 추측</strong>한 것이 아니다</p>
+      </div>
+      <ul class="opts">
+        <li><span class="on">&#9312;</span> &lsquo;진진초록 새 저고리&rsquo;에 대비되는 &lsquo;손잔등&rsquo; &mdash; 고단한 삶의 부각</li>
+        <li><span class="on">&#9313;</span> &lsquo;눈을 씻&rsquo;는 &lsquo;어느 한 사람&rsquo; &mdash; 계집아이에 대한 연민</li>
+        <li><span class="on">&#9314;</span> &lsquo;어리석은 자라고 생각하지 않&rsquo;는다 &mdash; 한 사내에 대한 공감</li>
+        <li><span class="on">&#9316;</span> &lsquo;몇 해&rsquo; 일한 인물 &mdash; 일제 강점기 현실 / &lsquo;혼자 울고 있&rsquo;는 인물 &mdash; 도시의 억압적 현실</li>
+      </ul>
+    </div>
+    <div class="page-num">28 / 28</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 1</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 넘김 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  function show(n, showAllSteps) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
