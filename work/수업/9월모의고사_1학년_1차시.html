@@ -58,7 +58,7 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: calc(var(--stage-w) * 0.042) calc(var(--stage-w) * 0.05);
+    padding: calc(var(--stage-w) * 0.034) calc(var(--stage-w) * 0.042);
   }
   /* 우측 상단 — 답안지의 마킹란 */
   .stage::before {
@@ -86,15 +86,6 @@
     font-family: "Gowun Batang", serif; font-weight: 700;
     font-size: clamp(1.45rem, 3.85cqw, 4.62rem); line-height: 1.2;
     display: block; margin-bottom: 2.3cqw; flex-shrink: 0;
-  }
-  .qhead {
-    display: flex; align-items: baseline; gap: 1.2cqw;
-    margin-bottom: 1.1cqw; flex-shrink: 0;
-  }
-  /* 문항 슬라이드는 제목이 번호뿐이므로 작게 잡아 본문에 자리를 넘긴다 */
-  .qhead h2.slide-title {
-    margin-bottom: 0;
-    font-size: clamp(1.15rem, 2.95cqw, 3.54rem);
   }
   .ans-chip {
     font-family: "Gowun Batang", serif; font-weight: 700;
@@ -257,13 +248,22 @@
   /* ───── 문항 슬라이드 ─────
      문제 전문을 왼쪽에 계속 띄워 두고, 풀이가 오른쪽에 한 선택지씩 나타난다.
      학생이 시험지로 눈을 내리지 않아도 되도록 발문과 선택지를 줄이지 않고 그대로 싣는다. */
+  /* 문항 번호를 발문과 한 줄에 둔다. 제목 줄을 따로 두면 본문 자리를 한 줄 잃는다. */
   .stem {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: baseline; column-gap: 1.2cqw;
     font-family: "Gowun Batang", serif; font-weight: 700;
     font-size: clamp(0.9rem, calc(2.12cqw * var(--fs)), calc(2.54rem * var(--fs)));
     line-height: 1.5; flex-shrink: 0;
-    margin-bottom: 0.8em; padding-bottom: 0.5em;
+    margin-bottom: 0.7em; padding-bottom: 0.42em;
     border-bottom: 1px solid var(--rule);
   }
+  .stem .qno {
+    color: var(--key); margin-right: 0.55em;
+    font-size: 1.16em; letter-spacing: 0.01em;
+  }
+  .stem .ans-chip { grid-column: 2; grid-row: 1; }
+  .stem .cite2 { grid-column: 1 / -1; }
   .stem .cite2 {
     display: block; margin-top: 0.5em; font-weight: 400; color: var(--ink-soft);
     font-size: 0.93em; line-height: 1.6;
@@ -286,7 +286,7 @@
 
   /* 정답 배경이 좌우로 번져도 목록 밖으로 나가지 않도록 같은 폭만큼 안쪽 여백을 둔다.
      이 여백이 없으면 ::before가 .body-area의 가로 넘침으로 잡혀 --fs 탐색이 통째로 막힌다. */
-  .opts.qz { padding: 0 0.6cqw; }
+  .opts.qz { padding: 0 0.6cqw; flex: 0 0 auto; }
   .opts.qz li {
     display: grid;
     grid-template-columns: auto minmax(0, 1.45fr) minmax(0, 1fr);
@@ -339,7 +339,7 @@
   .chat .u { color: var(--key); font-weight: 700; text-decoration: underline; text-underline-offset: 0.22em; }
 
   .page-num {
-    position: absolute; right: 0; bottom: -3.1cqw;
+    position: absolute; right: 0; bottom: -2.5cqw;
     font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.35cqw, 1.62rem);
     color: var(--ink-faint); letter-spacing: 0.08em;
   }
@@ -420,7 +420,7 @@
   </section>
 
   <!-- 2 -->
-  <section class="slide " style="--fs:1.15;">
+  <section class="slide " style="--fs:1.18;">
     <h2 class="slide-title">오늘의 차례</h2>
     <div class="body-area">
       <div class="cards3" style="flex:0 0 auto;">
@@ -484,7 +484,7 @@
   </section>
 
   <!-- 4 -->
-  <section class="slide " style="--fs:1.28;">
+  <section class="slide " style="--fs:1.31;">
     <h2 class="slide-title">화법 &middot; 줄임말의 무분별한 사용</h2>
     <div class="body-area">
       <div class="def-box">
@@ -522,13 +522,12 @@
   </section>
 
   <!-- 6 -->
-  <section class="slide tight" style="--fs:1.16;">
-    <div class="qhead">
-      <h2 class="slide-title">1번</h2>
-      <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.21;">
     <div class="body-area">
-      <div class="stem">위 발표자의 말하기 방식으로 가장 적절한 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">1번</span>위 발표자의 말하기 방식으로 가장 적절한 것은?</span>
+        <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
+      </div>
       <ul class="opts qz">
         <li class="ok" data-step="1">
           <span class="on">&#9312;</span>
@@ -561,13 +560,12 @@
   </section>
 
   <!-- 7 -->
-  <section class="slide tight" style="--fs:1.12;">
-    <div class="qhead">
-      <h2 class="slide-title">2번</h2>
-      <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.17;">
     <div class="body-area">
-      <div class="stem">다음은 위 발표를 하기 위해 학생이 세운 계획이다. 발표에 반영되지 <u>않은</u> 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">2번</span>다음은 위 발표를 하기 위해 학생이 세운 계획이다. 발표에 반영되지 <u>않은</u> 것은?</span>
+        <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
+      </div>
       <ul class="opts qz">
         <li>
           <span class="on">&#9312;</span>
@@ -600,7 +598,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide " style="--fs:1.08;">
+  <section class="slide " style="--fs:1.06;">
     <h2 class="slide-title">3번 &middot; &lt;보기&gt;</h2>
     <div class="body-area">
       <div class="cols wide-right">
@@ -630,13 +628,12 @@
   </section>
 
   <!-- 9 -->
-  <section class="slide tight" style="--fs:1.04;">
-    <div class="qhead">
-      <h2 class="slide-title">3번</h2>
-      <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.11;">
     <div class="body-area">
-      <div class="stem">&lt;보기&gt;는 위 발표 후 이어진 수업 내용의 일부이다. ㉠과 관련해 [A]에 들어갈 학생의 말로 적절하지 <u>않은</u> 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">3번</span>&lt;보기&gt;는 위 발표 후 이어진 수업 내용의 일부이다. ㉠과 관련해 [A]에 들어갈 학생의 말로 적절하지 <u>않은</u> 것은?</span>
+        <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
+      </div>
       <ul class="opts qz">
         <li>
           <span class="on">&#9312;</span>
@@ -695,7 +692,7 @@
   </section>
 
   <!-- 11 -->
-  <section class="slide " style="--fs:1.75;">
+  <section class="slide " style="--fs:1.89;">
     <h2 class="slide-title">(가) 초기 자본주의와 독점 자본</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;">
@@ -715,7 +712,7 @@
   </section>
 
   <!-- 12 -->
-  <section class="slide " style="--fs:1.35;">
+  <section class="slide " style="--fs:1.39;">
     <h2 class="slide-title">(가) 공권력의 개입, 그리고 ㉠</h2>
     <div class="body-area">
       <div class="def-box">
@@ -731,7 +728,7 @@
   </section>
 
   <!-- 13 -->
-  <section class="slide " style="--fs:1.75;">
+  <section class="slide " style="--fs:1.89;">
     <h2 class="slide-title">(가) 기업 결합의 두 얼굴</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;">
@@ -770,7 +767,7 @@
   </section>
 
   <!-- 15 -->
-  <section class="slide " style="--fs:1.55;">
+  <section class="slide " style="--fs:1.57;">
     <h2 class="slide-title">(나) 특허권과 &lsquo;부당하게&rsquo;</h2>
     <div class="body-area">
       <div class="def-box">
@@ -786,7 +783,7 @@
   </section>
 
   <!-- 16 -->
-  <section class="slide " style="--fs:1.62;">
+  <section class="slide " style="--fs:1.66;">
     <h2 class="slide-title">(나) 정당한 권리 범위를 넘는 때</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;">
@@ -806,7 +803,7 @@
   </section>
 
   <!-- 17 -->
-  <section class="slide " style="--fs:1.28;">
+  <section class="slide " style="--fs:1.31;">
     <h2 class="slide-title">(나) 두 제도는 상충하는가</h2>
     <div class="body-area">
       <div class="def-box">
@@ -825,13 +822,12 @@
   </section>
 
   <!-- 18 -->
-  <section class="slide tight" style="--fs:1.12;">
-    <div class="qhead">
-      <h2 class="slide-title">11번</h2>
-      <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.18;">
     <div class="body-area">
-      <div class="stem">(가)와 (나)에 대한 설명으로 가장 적절한 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">11번</span>(가)와 (나)에 대한 설명으로 가장 적절한 것은?</span>
+        <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
+      </div>
       <ul class="opts qz">
         <li>
           <span class="on">&#9312;</span>
@@ -864,13 +860,12 @@
   </section>
 
   <!-- 19 -->
-  <section class="slide tight" style="--fs:1.11;">
-    <div class="qhead">
-      <h2 class="slide-title">12번</h2>
-      <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.12;">
     <div class="body-area">
-      <div class="stem">(가)에 대한 이해로 적절하지 <u>않은</u> 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">12번</span>(가)에 대한 이해로 적절하지 <u>않은</u> 것은?</span>
+        <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
+      </div>
       <ul class="opts qz">
         <li>
           <span class="on">&#9312;</span>
@@ -903,7 +898,7 @@
   </section>
 
   <!-- 20 -->
-  <section class="slide " style="--fs:1.13;">
+  <section class="slide " style="--fs:1.16;">
     <h2 class="slide-title">13번 &middot; 학습 활동지의 질문</h2>
     <div class="body-area">
       <div class="def-box">
@@ -923,13 +918,12 @@
   </section>
 
   <!-- 21 -->
-  <section class="slide tight" style="--fs:1.12;">
-    <div class="qhead">
-      <h2 class="slide-title">13번</h2>
-      <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.16;">
     <div class="body-area">
-      <div class="stem">다음은 학생이 작성한 학습 활동지이다. (나)를 바탕으로 할 때, 적절하지 <u>않은</u> 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">13번</span>다음은 학생이 작성한 학습 활동지이다. (나)를 바탕으로 할 때, 적절하지 <u>않은</u> 것은?</span>
+        <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
+      </div>
       <ul class="opts qz">
         <li>
           <span class="on">&#9312;</span>
@@ -962,13 +956,11 @@
   </section>
 
   <!-- 22 -->
-  <section class="slide tight" style="--fs:0.98;">
-    <div class="qhead">
-      <h2 class="slide-title">14번</h2>
-      <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.03;">
     <div class="body-area">
-      <div class="stem">㉠에 대한 이해로 가장 적절한 것은?
+      <div class="stem">
+        <span class="qt"><span class="qno">14번</span>㉠에 대한 이해로 가장 적절한 것은?</span>
+        <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
         <span class="cite2">㉠ 그러나 독점규제법은 중소기업과 같은 약소 기업을 직접적으로 보호하는 법은 아니다.</span>
       </div>
       <ul class="opts qz">
@@ -1003,13 +995,12 @@
   </section>
 
   <!-- 23 -->
-  <section class="slide tight" style="--fs:1.20;">
-    <div class="qhead">
-      <h2 class="slide-title">15번</h2>
-      <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.28;">
     <div class="body-area">
-      <div class="stem">&#9424;~&#9428;의 문맥상 의미를 파악한 것으로 적절하지 <u>않은</u> 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">15번</span>&#9424;~&#9428;의 문맥상 의미를 파악한 것으로 적절하지 <u>않은</u> 것은?</span>
+        <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
+      </div>
       <ul class="opts qz">
         <li>
           <span class="on">&#9312;</span>
@@ -1068,13 +1059,12 @@
   </section>
 
   <!-- 25 -->
-  <section class="slide tight" style="--fs:1.01;">
-    <div class="qhead">
-      <h2 class="slide-title">16번 [3점]</h2>
-      <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.09;">
     <div class="body-area">
-      <div class="stem">(가)와 (나)를 참고하여 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">16번 [3점]</span>(가)와 (나)를 참고하여 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?</span>
+        <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
+      </div>
       <ul class="opts qz">
         <li class="ok" data-step="1">
           <span class="on">&#9312;</span>
@@ -1107,7 +1097,7 @@
   </section>
 
   <!-- 26 -->
-  <section class="slide " style="--fs:1.54;">
+  <section class="slide " style="--fs:1.57;">
     <h2 class="slide-title">문학 &middot; (가) 화자가 인물을 보는 방식</h2>
     <div class="body-area">
       <ul class="num-list">
@@ -1124,6 +1114,8 @@
   <section class="slide " style="--fs:1.04;">
     <h2 class="slide-title">(나) 백석, 「팔원 &ndash; 서행시초 3」</h2>
     <div class="body-area">
+      <!-- 줄바꿈을 막은 행은 min-content가 곧 칸 너비라 grid 비율은 듣지 않는다.
+           글자 크기는 '두 칸의 가장 긴 행의 합'으로 정해진다. -->
       <div class="cols wide-right" style="flex:0 0 auto;">
         <div class="verse poem">
           <p>차디찬 아침인데</p>
@@ -1173,7 +1165,7 @@
   </section>
 
   <!-- 29 -->
-  <section class="slide " style="--fs:1.45;">
+  <section class="slide " style="--fs:1.49;">
     <h2 class="slide-title">(나) 읽기 &middot; 화자의 시선</h2>
     <div class="body-area">
       <div class="def-box">
@@ -1258,13 +1250,11 @@
   </section>
 
   <!-- 33 -->
-  <section class="slide tight" style="--fs:1.02;">
-    <div class="qhead">
-      <h2 class="slide-title">43번</h2>
-      <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.12;">
     <div class="body-area">
-      <div class="stem">㉠을 중심으로 (나), (다)를 이해한 내용으로 가장 적절한 것은?
+      <div class="stem">
+        <span class="qt"><span class="qno">43번</span>㉠을 중심으로 (나), (다)를 이해한 내용으로 가장 적절한 것은?</span>
+        <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
         <span class="cite2">㉠ 인물이 처한 시공간 및 상황은 다양한 묘사를 통해 구체화되어 시적 상황 및 인물의 처지를 부각한다.</span>
       </div>
       <ul class="opts qz">
@@ -1299,7 +1289,7 @@
   </section>
 
   <!-- 34 -->
-  <section class="slide " style="--fs:1.51;">
+  <section class="slide " style="--fs:1.54;">
     <h2 class="slide-title">44번 &middot; 두 개의 &lsquo;유리창&rsquo;</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;">
@@ -1319,13 +1309,12 @@
   </section>
 
   <!-- 35 -->
-  <section class="slide tight" style="--fs:1.15;">
-    <div class="qhead">
-      <h2 class="slide-title">44번</h2>
-      <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.25;">
     <div class="body-area">
-      <div class="stem">&#9424;, &#9425;에 대한 이해로 가장 적절한 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">44번</span>&#9424;, &#9425;에 대한 이해로 가장 적절한 것은?</span>
+        <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
+      </div>
       <ul class="opts qz">
         <li>
           <span class="on">&#9312;</span>
@@ -1358,13 +1347,12 @@
   </section>
 
   <!-- 36 -->
-  <section class="slide tight" style="--fs:0.95;">
-    <div class="qhead">
-      <h2 class="slide-title">45번 [3점]</h2>
-      <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
-    </div>
+  <section class="slide tight" style="--fs:1.02;">
     <div class="body-area">
-      <div class="stem">(가)를 참고하여 (나), (다)를 감상한 내용으로 적절하지 <u>않은</u> 것은?</div>
+      <div class="stem">
+        <span class="qt"><span class="qno">45번 [3점]</span>(가)를 참고하여 (나), (다)를 감상한 내용으로 적절하지 <u>않은</u> 것은?</span>
+        <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
+      </div>
       <ul class="opts qz">
         <li>
           <span class="on">&#9312;</span>
