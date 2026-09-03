@@ -16,6 +16,7 @@
     --ink-faint: #8d9aa6;
     --key: #1f5a8f;          /* 시험지의 청람 */
     --key-soft: #5d8cb5;
+    --warn: #b03a2e;
     --rule: #cdd8e2;
     --card: #fbfcfe;
   }
@@ -62,14 +63,20 @@
   /* 우측 상단 — 답안지의 마킹란 */
   .stage::before {
     content: ""; position: absolute; top: 9%; right: -1.5%;
-    width: 20%; height: 78%; pointer-events: none; opacity: 0.08;
+    width: 20%; height: 78%; pointer-events: none; opacity: 0.06;
     background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><g fill='none' stroke='%231f5a8f'><rect x='6' y='6' width='188' height='288' stroke-width='3'/><path stroke-width='1.1' d='M6 42 H194 M6 78 H194 M6 114 H194 M6 150 H194 M6 186 H194 M6 222 H194 M6 258 H194 M46 6 V294'/><g stroke-width='2'><ellipse cx='72' cy='24' rx='11' ry='7'/><ellipse cx='102' cy='24' rx='11' ry='7'/><ellipse cx='132' cy='24' rx='11' ry='7'/><ellipse cx='162' cy='24' rx='11' ry='7'/><ellipse cx='72' cy='60' rx='11' ry='7'/><ellipse cx='102' cy='60' rx='11' ry='7'/><ellipse cx='132' cy='60' rx='11' ry='7'/><ellipse cx='162' cy='60' rx='11' ry='7'/><ellipse cx='72' cy='96' rx='11' ry='7'/><ellipse cx='102' cy='96' rx='11' ry='7'/><ellipse cx='132' cy='96' rx='11' ry='7'/><ellipse cx='162' cy='96' rx='11' ry='7'/><ellipse cx='72' cy='132' rx='11' ry='7'/><ellipse cx='102' cy='132' rx='11' ry='7'/><ellipse cx='132' cy='132' rx='11' ry='7'/><ellipse cx='162' cy='132' rx='11' ry='7'/><ellipse cx='72' cy='168' rx='11' ry='7'/><ellipse cx='102' cy='168' rx='11' ry='7'/><ellipse cx='132' cy='168' rx='11' ry='7'/><ellipse cx='162' cy='168' rx='11' ry='7'/><ellipse cx='72' cy='204' rx='11' ry='7'/><ellipse cx='102' cy='204' rx='11' ry='7'/><ellipse cx='132' cy='204' rx='11' ry='7'/><ellipse cx='162' cy='204' rx='11' ry='7'/><ellipse cx='72' cy='240' rx='11' ry='7'/><ellipse cx='102' cy='240' rx='11' ry='7'/><ellipse cx='132' cy='240' rx='11' ry='7'/><ellipse cx='162' cy='240' rx='11' ry='7'/><ellipse cx='72' cy='276' rx='11' ry='7'/><ellipse cx='102' cy='276' rx='11' ry='7'/><ellipse cx='132' cy='276' rx='11' ry='7'/><ellipse cx='162' cy='276' rx='11' ry='7'/></g></g></svg>");
   }
+  /* 문항 슬라이드는 오른쪽 끝까지 글자가 차므로 마킹란 무늬를 거의 지운다 */
+  .stage:has(.slide.tight.active)::before { opacity: 0.022; }
   .stage > .slide { position: relative; z-index: 1; }
 
   .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
   .slide.active { display: flex; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  /* 단계 공개 — display가 아니라 opacity로 숨긴다. 자리를 미리 차지해야 화면이 튀지 않는다 */
+  .reveal { opacity: 0; transition: opacity .3s ease; }
+  .reveal.shown { opacity: 1; }
 
   h1.title-main {
     font-family: "Gowun Batang", serif; font-weight: 700;
@@ -81,10 +88,14 @@
     display: block; margin-bottom: 2.3cqw; flex-shrink: 0;
   }
   .qhead {
-    display: flex; align-items: center; gap: 1.2cqw;
-    margin-bottom: 2.3cqw; flex-shrink: 0;
+    display: flex; align-items: baseline; gap: 1.2cqw;
+    margin-bottom: 1.1cqw; flex-shrink: 0;
   }
-  .qhead h2.slide-title { margin-bottom: 0; }
+  /* 문항 슬라이드는 제목이 번호뿐이므로 작게 잡아 본문에 자리를 넘긴다 */
+  .qhead h2.slide-title {
+    margin-bottom: 0;
+    font-size: clamp(1.15rem, 2.95cqw, 3.54rem);
+  }
   .ans-chip {
     font-family: "Gowun Batang", serif; font-weight: 700;
     background: var(--key); color: #fff; white-space: nowrap;
@@ -243,6 +254,23 @@
   }
   .c3 p.cite + p { margin-top: 0; }
 
+  /* ───── 문항 슬라이드 ─────
+     문제 전문을 왼쪽에 계속 띄워 두고, 풀이가 오른쪽에 한 선택지씩 나타난다.
+     학생이 시험지로 눈을 내리지 않아도 되도록 발문과 선택지를 줄이지 않고 그대로 싣는다. */
+  .stem {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.9rem, calc(2.12cqw * var(--fs)), calc(2.54rem * var(--fs)));
+    line-height: 1.5; flex-shrink: 0;
+    margin-bottom: 0.8em; padding-bottom: 0.5em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .stem .cite2 {
+    display: block; margin-top: 0.5em; font-weight: 400; color: var(--ink-soft);
+    font-size: 0.93em; line-height: 1.6;
+    background: rgba(31,90,143,0.06); border-left: 0.28em solid var(--rule);
+    padding: 0.42em 0.7em;
+  }
+
   /* 선택지 — 번호를 칸으로 세운다. 절대 배치 + 고정 padding으로 두면
      '①·④'처럼 표시가 길어진 줄에서 번호가 본문 글자 밑으로 깔린다. */
   .opts { list-style: none; }
@@ -255,6 +283,40 @@
   .opts li .on { flex: 0 0 auto; color: var(--ink-faint); white-space: nowrap; }
   .opts li.ok { color: var(--ink); }
   .opts li.ok .on { color: var(--key); font-weight: 700; }
+
+  /* 정답 배경이 좌우로 번져도 목록 밖으로 나가지 않도록 같은 폭만큼 안쪽 여백을 둔다.
+     이 여백이 없으면 ::before가 .body-area의 가로 넘침으로 잡혀 --fs 탐색이 통째로 막힌다. */
+  .opts.qz { padding: 0 0.6cqw; }
+  .opts.qz li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 0 0.8em; align-items: start; line-height: 1.52;
+    color: var(--ink); position: relative; z-index: 0;
+  }
+  .opts.qz li + li {
+    margin-top: 0.55em; padding-top: 0.55em;
+    border-top: 1px dotted var(--rule);
+  }
+  .opts.qz .tag {
+    display: inline-block; margin-right: 0.4em;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key-soft);
+    white-space: nowrap;
+  }
+  .opts.qz .ex {
+    color: var(--ink-soft); font-size: 0.95em; line-height: 1.45;
+    border-left: 0.22em solid var(--rule); padding-left: 0.65em;
+  }
+  .opts.qz .ex .vd { font-family: "Gowun Batang", serif; font-weight: 700; margin-right: 0.35em; }
+  .opts.qz .ex .vd.o { color: var(--key); }
+  .opts.qz .ex .vd.x { color: var(--warn); }
+  /* 정답 표시도 그 선택지 차례가 왔을 때 함께 켜진다 */
+  .opts.qz li.ok::before {
+    content: ""; position: absolute; inset: -0.28em -0.6cqw; z-index: -1;
+    background: rgba(31,90,143,0.085);
+    opacity: 0; transition: opacity .3s ease;
+  }
+  .opts.qz li.ok.shown::before { opacity: 1; }
+  .opts.qz li.ok.shown .on { color: var(--key); font-weight: 700; }
 
   /* 온라인 대화 — 3번 <보기> */
   .chat { display: flex; flex-direction: column; gap: 0.5em; }
@@ -295,6 +357,7 @@
   .controls button:hover { background: #2f4453; }
   .controls button:disabled { opacity: 0.35; cursor: default; }
   .hint { color: #7b8fa0; font-size: 0.78rem; }
+  #counter .st { color: #6f8496; }
 
   body:fullscreen { padding: 0; justify-content: center; background: #000; }
   body:fullscreen .nav-top,
@@ -309,6 +372,8 @@
 
   @media (max-width: 720px) {
     .cols, .cards3, .cards2 { grid-template-columns: 1fr; gap: 1rem; }
+    .opts.qz li { grid-template-columns: auto 1fr; }
+    .opts.qz .ex { grid-column: 2; margin-top: 0.4em; }
     .flow { flex-direction: column; }
     .flow-arrow { justify-content: center; transform: rotate(90deg); }
     .stage { aspect-ratio: auto; min-height: 78vh; }
@@ -322,6 +387,8 @@
   .slide.tight .c3 p + p { margin-top: 0.5em; }
   .slide.tight .num-list li { margin-bottom: 0.5em; }
   .slide.tight .opts li + li { margin-top: 0.45em; }
+  .slide.tight .opts.qz li + li { margin-top: 0.38em; padding-top: 0.38em; }
+  .slide.tight .stem { margin-bottom: 0.55em; padding-bottom: 0.36em; }
   .slide.tight .info-table th,
   .slide.tight .info-table td { padding: 0.45em 0.45em; }
 </style>
@@ -334,7 +401,7 @@
     <a href="../수업.html">수업</a>
     <a href="../../index.html">홈</a>
   </div>
-  <div class="nav-meta">9월 모의고사 풀이 &middot; 1학년 1차시 &middot; 업데이트 2026. 9. 2.</div>
+  <div class="nav-meta">9월 모의고사 풀이 &middot; 1학년 1차시 &middot; 업데이트 2026. 9. 3.</div>
 </div>
 
 <div class="stage" id="stage">
@@ -349,11 +416,11 @@
       <span>2026학년도 9월 고1 전국연합학력평가 국어 영역</span>
       <span>1학년 &middot; 1차시</span>
     </div>
-    <div class="page-num">1 / 41</div>
+    <div class="page-num">1 / 36</div>
   </section>
 
   <!-- 2 -->
-  <section class="slide " style="--fs:1.26;">
+  <section class="slide " style="--fs:1.15;">
     <h2 class="slide-title">오늘의 차례</h2>
     <div class="body-area">
       <div class="cards3" style="flex:0 0 auto;">
@@ -374,13 +441,13 @@
         </div>
       </div>
       <div class="emotion">
-        <div class="etag">읽는 순서</div>
+        <div class="etag">문항 슬라이드 보는 법</div>
         <ul>
-          <li>지문의 짜임을 먼저 잡고, 문항마다 답의 근거가 어느 문단 어느 문장인지를 확인한다</li>
+          <li>문제 전문이 화면에 그대로 올라간다. 스페이스 &middot; 클릭을 누를 때마다 선택지 하나씩 풀이가 오른쪽에 나타난다</li>
         </ul>
       </div>
     </div>
-    <div class="page-num">2 / 41</div>
+    <div class="page-num">2 / 36</div>
   </section>
 
   <!-- 3 -->
@@ -413,7 +480,7 @@
         </div>
       </div>
     </div>
-    <div class="page-num">3 / 41</div>
+    <div class="page-num">3 / 36</div>
   </section>
 
   <!-- 4 -->
@@ -432,7 +499,7 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">4 / 41</div>
+    <div class="page-num">4 / 36</div>
   </section>
 
   <!-- 5 -->
@@ -451,69 +518,90 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">5 / 41</div>
+    <div class="page-num">5 / 36</div>
   </section>
 
   <!-- 6 -->
-  <section class="slide " style="--fs:1.58;">
+  <section class="slide tight" style="--fs:1.16;">
     <div class="qhead">
-      <h2 class="slide-title">1번 &middot; 발표자의 말하기 방식</h2>
-      <span class="ans-chip">정답 &#9312;</span>
+      <h2 class="slide-title">1번</h2>
+      <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
     </div>
     <div class="body-area">
-      <div class="def-box">
-        <div class="dt">&#9312; 청중에게 질문하는 방식을 통해 관심을 유도하고 있다</div>
-        <p>&ldquo;여러분, 혹시 &lsquo;스카&rsquo;, &lsquo;자만추&rsquo;, &lsquo;갠소&rsquo;가 무슨 뜻인지 아시나요?&rdquo;</p>
-        <p>&ldquo;여러분은 이 말들이 무슨 뜻을 가진 것으로 이해되시나요?&rdquo;</p>
-      </div>
-      <div class="emotion">
-        <div class="etag">확인할 것</div>
-        <ul>
-          <li>두 번 모두 청중에게 물은 뒤 &lsquo;청중의 반응을 살피며&rsquo; 답을 알려 준다. 질문 &rarr; 반응 확인 &rarr; 설명의 순서가 반복된다</li>
-        </ul>
-      </div>
+      <div class="stem">위 발표자의 말하기 방식으로 가장 적절한 것은?</div>
+      <ul class="opts qz">
+        <li class="ok" data-step="1">
+          <span class="on">&#9312;</span>
+          <span class="ot">청중에게 질문하는 방식을 통해 관심을 유도하고 있다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd o">&#9711;</span>&lsquo;스카, 자만추, 갠소가 무슨 뜻인지 아시나요?&rsquo; 등 두 번 묻고 청중의 반응을 살핀 뒤 설명한다</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot">비언어적 표현을 활용하여 발표 순서를 안내하고 있다.</span>
+          <span class="ex reveal" data-step="2"><span class="vd x">&times;</span>&lsquo;화면을 손가락으로 가리키며&rsquo;는 자료를 가리킨 것이지 발표 순서를 안내한 것이 아니다</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot">시각 자료를 통해 발표 내용을 요약하여 제시하고 있다.</span>
+          <span class="ex reveal" data-step="3"><span class="vd x">&times;</span>화면에 띄운 것은 &lsquo;한두가지&rsquo;, &lsquo;배우신분&rsquo;이라는 예시일 뿐 내용을 요약한 자료가 아니다</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot">구체적인 수치를 활용하여 발표 내용을 뒷받침하고 있다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd x">&times;</span>발표 어디에도 수치는 나오지 않는다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">발표에 활용한 정보의 출처를 밝혀 신뢰성을 확보하고 있다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd x">&times;</span>정보의 출처를 밝힌 대목이 없다</span>
+        </li>
+      </ul>
     </div>
-    <div class="page-num">6 / 41</div>
+    <div class="page-num">6 / 36</div>
   </section>
 
   <!-- 7 -->
-  <section class="slide " style="--fs:1.75;">
-    <h2 class="slide-title">1번 &middot; 나머지 선택지</h2>
+  <section class="slide tight" style="--fs:1.12;">
+    <div class="qhead">
+      <h2 class="slide-title">2번</h2>
+      <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
+    </div>
     <div class="body-area">
-      <ul class="opts">
-        <li><span class="on">&#9313;</span>비언어적 표현은 &lsquo;화면을 손가락으로 가리키며&rsquo; 한 번 나오지만, 자료를 가리킨 것이지 발표 순서를 안내한 것이 아니다</li>
-        <li><span class="on">&#9314;</span>화면에 띄운 것은 &lsquo;한두가지&rsquo;, &lsquo;배우신분&rsquo;이라는 예시일 뿐 발표 내용을 요약한 시각 자료가 아니다</li>
-        <li><span class="on">&#9315;</span>발표 어디에도 구체적인 수치는 나오지 않는다</li>
-        <li><span class="on">&#9316;</span>정보의 출처를 밝힌 대목이 없다</li>
+      <div class="stem">다음은 위 발표를 하기 위해 학생이 세운 계획이다. 발표에 반영되지 <u>않은</u> 것은?</div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot"><span class="tag">[도입]</span>현대의 의사소통 양상을 언급하고, 발표 주제가 &lsquo;온라인 의사소통에서 나타나는 문제점&rsquo;임을 소개해야겠어.</span>
+          <span class="ex reveal" data-step="1"><span class="vd o">&#9711;</span>도입에서 그대로 실행했다</span>
+        </li>
+        <li class="ok" data-step="2">
+          <span class="on">&#9313;</span>
+          <span class="ot"><span class="tag">[전개]</span>줄임말에 담긴 의미가 시간이 지남에 따라 달라진다는 점을 제시해야겠어.</span>
+          <span class="ex reveal" data-step="2"><span class="vd x">&times;</span>발표는 <strong>사용자의 특성과 언어 공동체의 특성</strong>에 따라 달라진다고 했다. 시간에 따른 변화는 나오지 않는다</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot"><span class="tag">[전개]</span>사용자 및 언어 공동체의 특성이 줄임말 사용 양상에 영향을 미친다는 것을 언급해야겠어.</span>
+          <span class="ex reveal" data-step="3"><span class="vd o">&#9711;</span>연령 &middot; 직업 &middot; 인터넷 사용 빈도를 들어 언급했다</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot"><span class="tag">[전개]</span>구체적인 예시를 통해 띄어쓰기를 제대로 하지 않으면 의사소통에 어려움을 초래할 수 있음을 설명해야겠어.</span>
+          <span class="ex reveal" data-step="4"><span class="vd o">&#9711;</span>&lsquo;한두가지&rsquo;, &lsquo;배우신분&rsquo;으로 설명했다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot"><span class="tag">[정리]</span>청중에게 당부하고 싶은 바를 언급하며 발표를 마무리해야겠어.</span>
+          <span class="ex reveal" data-step="5"><span class="vd o">&#9711;</span>언어 습관을 돌아보기를 바란다는 당부로 맺었다</span>
+        </li>
       </ul>
     </div>
-    <div class="page-num">7 / 41</div>
+    <div class="page-num">7 / 36</div>
   </section>
 
   <!-- 8 -->
-  <section class="slide " style="--fs:1.35;">
-    <div class="qhead">
-      <h2 class="slide-title">2번 &middot; 발표 계획과 대조하기</h2>
-      <span class="ans-chip">정답 &#9313;</span>
-    </div>
-    <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.4cqw;">
-        <div class="dt">&#9313;는 발표에 반영되지 않았다</div>
-        <p>발표는 줄임말의 사용 양상이 <strong>사용자의 특성과 언어 공동체의 특성</strong>에 따라 달라진다고 했다. 시간이 지남에 따라 줄임말에 담긴 의미가 달라진다는 말은 나오지 않는다</p>
-      </div>
-      <ul class="opts">
-        <li><span class="on">&#9312;</span>도입에서 현대의 의사소통 양상을 언급하고 주제를 밝혔다</li>
-        <li><span class="on">&#9314;</span>사용자 및 언어 공동체의 특성이 사용 양상에 영향을 미친다고 언급했다</li>
-        <li><span class="on">&#9315;</span>&lsquo;한두가지&rsquo;, &lsquo;배우신분&rsquo;이라는 구체적인 예시로 설명했다</li>
-        <li><span class="on">&#9316;</span>언어 습관을 돌아보기를 바란다는 당부로 마무리했다</li>
-      </ul>
-    </div>
-    <div class="page-num">8 / 41</div>
-  </section>
-
-  <!-- 9 -->
-  <section class="slide " style="--fs:1.06;">
-    <h2 class="slide-title">3번 &middot; &lt;보기&gt;의 규정과 대화</h2>
+  <section class="slide " style="--fs:1.08;">
+    <h2 class="slide-title">3번 &middot; &lt;보기&gt;</h2>
     <div class="body-area">
       <div class="cols wide-right">
         <div>
@@ -538,50 +626,49 @@
         </div>
       </div>
     </div>
-    <div class="page-num">9 / 41</div>
+    <div class="page-num">8 / 36</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide tight" style="--fs:1.04;">
+    <div class="qhead">
+      <h2 class="slide-title">3번</h2>
+      <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
+    </div>
+    <div class="body-area">
+      <div class="stem">&lt;보기&gt;는 위 발표 후 이어진 수업 내용의 일부이다. ㉠과 관련해 [A]에 들어갈 학생의 말로 적절하지 <u>않은</u> 것은?</div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot">&#9424;의 &lsquo;같이&rsquo;는 조사가 아니라, 독립성을 가진 단어이기 때문에 앞말과 띄어 써야 합니다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd o">&#9711;</span>&lsquo;너 같이 갈래?&rsquo;의 &lsquo;같이&rsquo;는 &lsquo;함께&rsquo;라는 뜻의 부사다. &lsquo;너같이 예쁘다&rsquo;의 비교 조사와 구별할 것</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot">&#9425;의 &lsquo;이라면&rsquo;은 독립성을 가진 단어가 아니라, 조사이기 때문에 그 앞말과 붙여 써야 합니다.</span>
+          <span class="ex reveal" data-step="2"><span class="vd o">&#9711;</span>조사는 앞말에 붙여 쓴다 &rarr; &lsquo;내일이라면&rsquo;</span>
+        </li>
+        <li class="ok" data-step="3">
+          <span class="on">&#9314;</span>
+          <span class="ot">&#9426;의 &lsquo;밖에&rsquo;는 조사가 아니라, 독립성을 가진 단어 &lsquo;밖&rsquo;에 조사 &lsquo;에&rsquo;가 결합한 것이기 때문에 앞말과 띄어 써야 합니다.</span>
+          <span class="ex reveal" data-step="3"><span class="vd x">&times;</span>여기 &lsquo;밖에&rsquo;는 &lsquo;그것 말고는&rsquo;의 뜻을 더하는 <strong>조사</strong>다. 붙여 쓴 &lsquo;나밖에&rsquo;가 바른 표기다</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot">&#9424;의 &lsquo;갈래&rsquo;와 &#9427;의 &lsquo;같아&rsquo;는 모두, 독립성을 가진 단어이기 때문에 앞말과 띄어 써야 합니다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd o">&#9711;</span>둘 다 독립된 용언이므로 앞말과 띄어 쓴다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">&#9427;의 &lsquo;것&rsquo;과 &#9428;의 &lsquo;데&rsquo;는 모두, 의존 명사이기 때문에 앞말과 띄어 써야 합니다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd o">&#9711;</span>&lsquo;도착할 것 같아&rsquo;, &lsquo;앉을 데&rsquo;</span>
+        </li>
+      </ul>
+    </div>
+    <div class="page-num">9 / 36</div>
   </section>
 
   <!-- 10 -->
-  <section class="slide " style="--fs:1.64;">
-    <div class="qhead">
-      <h2 class="slide-title">3번 &middot; 정답과 근거</h2>
-      <span class="ans-chip">정답 &#9314;</span>
-    </div>
-    <div class="body-area">
-      <div class="def-box">
-        <div class="dt">&#9314;가 맞지 않은 이유</div>
-        <p>&#9426;의 &lsquo;밖에&rsquo;는 &lsquo;그것 말고는&rsquo;의 뜻을 더하는 <strong>조사</strong>다. 여기서는 &lsquo;나 말고는 없다&rsquo;는 뜻이므로 앞말에 붙여 쓴 &lsquo;나밖에&rsquo;가 바른 표기다. 띄어 써야 한다는 설명은 성립하지 않는다</p>
-      </div>
-      <div class="emotion">
-        <div class="etag">바르게 고치면</div>
-        <ul>
-          <li>너 같이 갈래? / 내일이라면 / 나밖에 / 도착할 것 같아 / 앉을 데</li>
-        </ul>
-      </div>
-    </div>
-    <div class="page-num">10 / 41</div>
-  </section>
-
-  <!-- 11 -->
-  <section class="slide " style="--fs:1.62;">
-    <h2 class="slide-title">3번 &middot; 나머지 선택지</h2>
-    <div class="body-area">
-      <ul class="opts">
-        <li><span class="on">&#9312;&middot;&#9315;</span>&#9424;는 &lsquo;너 같이 갈래?&rsquo;다. 여기서 &lsquo;같이&rsquo;는 &lsquo;함께&rsquo;라는 뜻의 부사이므로 앞말과 띄어 쓴다. &lsquo;갈래&rsquo;와 &#9427;의 &lsquo;같아&rsquo;도 각각 독립된 단어다</li>
-        <li><span class="on">&#9313;</span>&#9425;의 &lsquo;이라면&rsquo;은 조사이므로 &lsquo;내일&rsquo;에 붙여 쓴다</li>
-        <li><span class="on">&#9316;</span>&#9427;의 &lsquo;것&rsquo;과 &#9428;의 &lsquo;데&rsquo;는 의존 명사이므로 앞말과 띄어 쓴다</li>
-      </ul>
-      <div class="emotion">
-        <div class="etag">&lsquo;같이&rsquo;의 두 얼굴</div>
-        <ul>
-          <li>&lsquo;너같이 예쁘다&rsquo;의 &lsquo;같이&rsquo;는 비교를 나타내는 조사여서 붙여 쓰고, &lsquo;너 같이 갈래?&rsquo;의 &lsquo;같이&rsquo;는 &lsquo;함께&rsquo;라는 뜻의 부사여서 띄어 쓴다</li>
-        </ul>
-      </div>
-    </div>
-    <div class="page-num">11 / 41</div>
-  </section>
-
-  <!-- 12 -->
   <section class="slide " style="--fs:1.24;">
     <h2 class="slide-title">독서 &middot; (가)와 (나)의 관계</h2>
     <div class="body-area">
@@ -604,10 +691,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">12 / 41</div>
+    <div class="page-num">10 / 36</div>
   </section>
 
-  <!-- 13 -->
+  <!-- 11 -->
   <section class="slide " style="--fs:1.75;">
     <h2 class="slide-title">(가) 초기 자본주의와 독점 자본</h2>
     <div class="body-area">
@@ -624,10 +711,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">13 / 41</div>
+    <div class="page-num">11 / 36</div>
   </section>
 
-  <!-- 14 -->
+  <!-- 12 -->
   <section class="slide " style="--fs:1.35;">
     <h2 class="slide-title">(가) 공권력의 개입, 그리고 ㉠</h2>
     <div class="body-area">
@@ -640,10 +727,10 @@
         <p>중소기업과 같은 약소 기업을 직접적으로 보호하는 법은 아니어서, 사회적 약자 보호를 목적으로 하는 법들과는 성격이 다르다</p>
       </div>
     </div>
-    <div class="page-num">14 / 41</div>
+    <div class="page-num">12 / 36</div>
   </section>
 
-  <!-- 15 -->
+  <!-- 13 -->
   <section class="slide " style="--fs:1.75;">
     <h2 class="slide-title">(가) 기업 결합의 두 얼굴</h2>
     <div class="body-area">
@@ -660,10 +747,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">15 / 41</div>
+    <div class="page-num">13 / 36</div>
   </section>
 
-  <!-- 16 -->
+  <!-- 14 -->
   <section class="slide " style="--fs:1.31;">
     <h2 class="slide-title">(가) 사전 신고와 심사</h2>
     <div class="body-area">
@@ -679,11 +766,11 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">16 / 41</div>
+    <div class="page-num">14 / 36</div>
   </section>
 
-  <!-- 17 -->
-  <section class="slide " style="--fs:1.54;">
+  <!-- 15 -->
+  <section class="slide " style="--fs:1.55;">
     <h2 class="slide-title">(나) 특허권과 &lsquo;부당하게&rsquo;</h2>
     <div class="body-area">
       <div class="def-box">
@@ -695,10 +782,10 @@
         <p>지식 재산권의 행사로 인한 <strong>경쟁 제한 효과가 효율성 증대 효과를 상회하는</strong> 경우를 말한다</p>
       </div>
     </div>
-    <div class="page-num">17 / 41</div>
+    <div class="page-num">15 / 36</div>
   </section>
 
-  <!-- 18 -->
+  <!-- 16 -->
   <section class="slide " style="--fs:1.62;">
     <h2 class="slide-title">(나) 정당한 권리 범위를 넘는 때</h2>
     <div class="body-area">
@@ -715,10 +802,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">18 / 41</div>
+    <div class="page-num">16 / 36</div>
   </section>
 
-  <!-- 19 -->
+  <!-- 17 -->
   <section class="slide " style="--fs:1.28;">
     <h2 class="slide-title">(나) 두 제도는 상충하는가</h2>
     <div class="body-area">
@@ -734,153 +821,229 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">19 / 41</div>
+    <div class="page-num">17 / 36</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide tight" style="--fs:1.12;">
+    <div class="qhead">
+      <h2 class="slide-title">11번</h2>
+      <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
+    </div>
+    <div class="body-area">
+      <div class="stem">(가)와 (나)에 대한 설명으로 가장 적절한 것은?</div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot">(가)는 독점규제법이 지닌 의의를, (나)는 지식 재산 제도의 개정 방향을 설명하고 있다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd x">&times;</span>(나)에 개정 방향은 없다. 다룬 것은 현행 공정거래법의 적용 기준이다</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot">(가)는 독점규제법이 등장한 배경을, (나)는 지식 재산 제도가 강화된 이유를 설명하고 있다.</span>
+          <span class="ex reveal" data-step="2"><span class="vd x">&times;</span>(나)는 제도가 강화된 이유가 아니라, 권리 행사가 규제 대상이 되는 경우를 다룬다</span>
+        </li>
+        <li class="ok" data-step="3">
+          <span class="on">&#9314;</span>
+          <span class="ot">(가)는 독점규제법이 마련된 취지를, (나)는 지식 재산권 행사의 부당성을 판단하는 기준을 설명하고 있다.</span>
+          <span class="ex reveal" data-step="3"><span class="vd o">&#9711;</span>(가) 2문단의 &lsquo;마련된 것이다&rsquo;, (나)의 &lsquo;부당하게&rsquo;와 판단 기준이 그대로 대응한다</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot">(가)는 각국의 독점규제법이 보이는 차이점을, (나)는 지식 재산 제도와 독점규제법이 지닌 공통점을 제시하고 있다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd x">&times;</span>(가)는 여러 나라가 마련한다고만 했을 뿐 각국의 차이를 견주지 않는다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">(가)는 독점규제법의 적용 범위가 확장된 양상을, (나)는 지식 재산권의 남용을 해결하기 위한 방안을 제시하고 있다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd x">&times;</span>확장 양상도 없고, (나)도 해결 방안이 아니라 판단 기준을 제시한다</span>
+        </li>
+      </ul>
+    </div>
+    <div class="page-num">18 / 36</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide tight" style="--fs:1.11;">
+    <div class="qhead">
+      <h2 class="slide-title">12번</h2>
+      <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
+    </div>
+    <div class="body-area">
+      <div class="stem">(가)에 대한 이해로 적절하지 <u>않은</u> 것은?</div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot">초기 자본주의에서는 독점 자본이 과다한 이윤을 추구하는 것에 대한 규제가 부재하였다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd o">&#9711;</span>초기 자본주의 체제에서는 공권력이 국가 경제에 개입하지 않았다</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot">독점 자본이 가격을 일방적으로 결정하게 되면 소비자 후생의 극대화가 이루어지기 어렵다.</span>
+          <span class="ex reveal" data-step="2"><span class="vd o">&#9711;</span>저렴한 가격에 살 수 있어야 후생이 극대화된다고 했다</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot">세계 여러 나라가 독점규제법을 마련하는 것은 국민의 행복을 증대하는 데 기여하기 위해서이다.</span>
+          <span class="ex reveal" data-step="3"><span class="vd o">&#9711;</span>기업 간 경쟁은 전체 국민의 행복의 크기를 키우는 데 도움이 된다고 했다</span>
+        </li>
+        <li class="ok" data-step="4">
+          <span class="on">&#9315;</span>
+          <span class="ot">독점규제법은 기업 간의 자유 경쟁을 촉진하기 위해 국가 경제에 대한 공권력의 개입을 줄이고자 한다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd x">&times;</span>&lsquo;공권력의 개입을 통해 폐해를 적극적으로 시정하고&rsquo; &mdash; 개입을 <strong>줄이는</strong> 것이 아니라 개입해서 자유 경쟁을 되살리는 법이다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">기업 결합이 사전 신고의 대상이 되는 이유는 공정거래위원회의 심사를 통해 독과점 기업의 등장을 사전에 막기 위해서이다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd o">&#9711;</span>마지막 문단이 그대로 말한다</span>
+        </li>
+      </ul>
+    </div>
+    <div class="page-num">19 / 36</div>
   </section>
 
   <!-- 20 -->
-  <section class="slide " style="--fs:1.38;">
-    <div class="qhead">
-      <h2 class="slide-title">11번 &middot; (가)와 (나)의 서술</h2>
-      <span class="ans-chip">정답 &#9314;</span>
-    </div>
+  <section class="slide " style="--fs:1.13;">
+    <h2 class="slide-title">13번 &middot; 학습 활동지의 질문</h2>
     <div class="body-area">
-      <ul class="opts">
-        <li class="ok"><span class="on">&#9314;</span>(가)는 독점규제법이 마련된 취지를, (나)는 지식 재산권 행사의 부당성을 판단하는 기준을 설명하고 있다</li>
-        <li><span class="on">&#9312;</span>(나)에 제도의 개정 방향은 나오지 않는다. (나)가 다룬 것은 현행 공정거래법의 적용 기준이다</li>
-        <li><span class="on">&#9313;</span>(나)는 지식 재산 제도가 강화된 이유가 아니라, 그 권리 행사가 규제 대상이 되는 경우를 다룬다</li>
-        <li><span class="on">&#9315;</span>(가)는 여러 나라가 독점규제법을 마련한다고만 했을 뿐 각국의 차이를 견주지 않는다</li>
-        <li><span class="on">&#9316;</span>(가)에 적용 범위가 확장된 양상은 없다. (나)도 남용을 해결하는 방안이 아니라 판단 기준을 제시한다</li>
-      </ul>
+      <div class="def-box">
+        <div class="dt">질문 1</div>
+        <p>지식 재산 제도가 특허권자에게 특허권의 독점적 &middot; 배타적 사용권을 인정하는 이유는 무엇일까?</p>
+      </div>
+      <div class="def-box">
+        <div class="dt">질문 2</div>
+        <p>지식 재산권을 행사하는 행위가 정당한 권리 범위를 벗어난 것이라고 판단되는 경우는 어떤 것이 있을까?</p>
+      </div>
+      <div class="def-box">
+        <div class="dt">질문 3</div>
+        <p>독점규제법과 지식 재산 제도가 기술 혁신에 미치는 영향은 무엇인가?</p>
+      </div>
     </div>
-    <div class="page-num">20 / 41</div>
+    <div class="page-num">20 / 36</div>
   </section>
 
   <!-- 21 -->
-  <section class="slide " style="--fs:1.75;">
+  <section class="slide tight" style="--fs:1.12;">
     <div class="qhead">
-      <h2 class="slide-title">12번 &middot; 정답과 근거</h2>
-      <span class="ans-chip">정답 &#9315;</span>
+      <h2 class="slide-title">13번</h2>
+      <span class="ans-chip reveal" data-step="3">정답 &#9314;</span>
     </div>
     <div class="body-area">
-      <div class="def-box">
-        <div class="dt">&#9315;가 맞지 않은 이유</div>
-        <p>(가)의 둘째 문단은 &ldquo;국가 공권력의 개입을 통해 독점 자본의 폐해를 적극적으로 시정하고&rdquo;라고 했다</p>
-        <p>독점규제법은 공권력의 개입을 <strong>줄이는</strong> 것이 아니라, 개입을 통해 자유 경쟁을 회복하려는 법이다</p>
-      </div>
+      <div class="stem">다음은 학생이 작성한 학습 활동지이다. (나)를 바탕으로 할 때, 적절하지 <u>않은</u> 것은?</div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot"><span class="tag">질문 1</span>혁신적인 기술을 창조한 사람에게 그에 걸맞은 보상을 제공하기 위해서이다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd o">&#9711;</span>(나) 1문단 &mdash; 정당한 보상을 통해 기술 혁신의 유인을 마련한다</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot"><span class="tag">질문 2</span>거래 상대방에 따라 실시료를 다르게 부과하여 효율성 증대 효과보다 큰 경쟁 제한 효과가 발생한 경우</span>
+          <span class="ex reveal" data-step="2"><span class="vd o">&#9711;</span>실시료 차별 + 경쟁 제한 효과가 상회 &mdash; 벗어난 예로 든 그대로다</span>
+        </li>
+        <li class="ok" data-step="3">
+          <span class="on">&#9314;</span>
+          <span class="ot"><span class="tag">질문 2</span>특허권의 실시를 허락할 때 특허 발명을 부분적으로만 이용할 수 있도록 이용 범위를 한정하는 경우</span>
+          <span class="ex reveal" data-step="3"><span class="vd x">&times;</span>이것은 특허권자가 <strong>할 수 있는 일</strong>로 (나)가 든 것이다. 벗어나는 것은 상대방에 따라 범위를 <strong>차별</strong>할 때다</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot"><span class="tag">질문 3</span>독점규제법은 자본이 소수에게만 집중되지 않도록 하여 기술 혁신이 저해되지 않도록 한다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd o">&#9711;</span>마지막 문단의 가정 그대로다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot"><span class="tag">질문 3</span>지식 재산 제도는 사람들이 기술 혁신에 관심을 갖고 참여하도록 유인하여 기술 혁신을 촉진한다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd o">&#9711;</span>보상 &rarr; 유인 &rarr; 촉진의 흐름이다</span>
+        </li>
+      </ul>
     </div>
-    <div class="page-num">21 / 41</div>
+    <div class="page-num">21 / 36</div>
   </section>
 
   <!-- 22 -->
-  <section class="slide " style="--fs:1.75;">
-    <h2 class="slide-title">12번 &middot; 나머지 선택지</h2>
+  <section class="slide tight" style="--fs:0.98;">
+    <div class="qhead">
+      <h2 class="slide-title">14번</h2>
+      <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
+    </div>
     <div class="body-area">
-      <ul class="opts">
-        <li><span class="on">&#9312;</span>초기 자본주의 체제에서는 공권력이 국가 경제에 개입하지 않았다</li>
-        <li><span class="on">&#9313;</span>독점 자본이 가격을 일방적으로 결정하면 저렴한 가격에 살 수 없으므로 소비자 후생의 극대화에 이르지 못한다</li>
-        <li><span class="on">&#9314;</span>기업 간 경쟁은 전체 국민의 행복의 크기를 키우는 데 도움이 된다고 했다</li>
-        <li><span class="on">&#9316;</span>사전 신고와 심사는 독과점 기업의 등장을 사전에 방지하기 위한 것이다</li>
+      <div class="stem">㉠에 대한 이해로 가장 적절한 것은?
+        <span class="cite2">㉠ 그러나 독점규제법은 중소기업과 같은 약소 기업을 직접적으로 보호하는 법은 아니다.</span>
+      </div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot">여러 기업이 경쟁하는 시장 경제에서 약소 기업이 발생하는 것은 당위적인 결과이다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd x">&times;</span>약소 기업의 발생이 마땅하다는 말은 (가)에 없다</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot">경제력이 높은 주체가 시장 경제에 활발히 참여하는 것은 공권력의 자유방임에 의해 발생한 것이다.</span>
+          <span class="ex reveal" data-step="2"><span class="vd x">&times;</span>(가)가 자유방임의 결과로 든 것은 독점 자본의 성장과 그 폐해다</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot">공권력이 약자 보호를 위해 시장 경제에 개입하는 것은 초기 자본주의에서 나타났던 위기를 더 심화할 수 있다.</span>
+          <span class="ex reveal" data-step="3"><span class="vd x">&times;</span>공권력의 개입은 위기를 심화하는 것이 아니라 시정하기 위한 것이다</span>
+        </li>
+        <li class="ok" data-step="4">
+          <span class="on">&#9315;</span>
+          <span class="ot">기업 간 균형 있는 발전은 자유롭고 공정한 경쟁이 이루어지는 경쟁 질서의 확립을 통해 이루어져야 하는 것이다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd o">&#9711;</span>바로 앞 문장이 &lsquo;자유 경쟁의 정신을 회생시키고 기업 간 균형 있는 발전을 도모&rsquo;라고 했다. 직접 보호가 아니라 경쟁 질서로 이룬다는 뜻</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">시장 경제 내 특정 주체에게 직접적 혜택을 부여하는 것은 대기업과 중소기업의 균형적 발전을 위해 불가피한 조치이다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd x">&times;</span>특정 주체에 대한 직접적 보호야말로 ㉠이 아니라고 못 박은 것이다</span>
+        </li>
       </ul>
     </div>
-    <div class="page-num">22 / 41</div>
+    <div class="page-num">22 / 36</div>
   </section>
 
   <!-- 23 -->
-  <section class="slide " style="--fs:1.39;">
+  <section class="slide tight" style="--fs:1.20;">
     <div class="qhead">
-      <h2 class="slide-title">13번 &middot; 정답과 근거</h2>
-      <span class="ans-chip">정답 &#9314;</span>
+      <h2 class="slide-title">15번</h2>
+      <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
     </div>
     <div class="body-area">
-      <div class="def-box">
-        <div class="dt">질문 2가 묻는 것</div>
-        <p>지식 재산권 행사가 <strong>정당한 권리 범위를 벗어난</strong> 경우를 묻는다</p>
-        <p>그런데 &#9314;의 &lsquo;이용 범위를 한정하여 부분적으로만 실시를 허락하는 것&rsquo;은 (나)가 특허권자가 <strong>할 수 있는 일</strong>로 든 것이다</p>
-      </div>
-      <div class="emotion">
-        <div class="etag">벗어난 예로 (나)가 든 것</div>
-        <ul>
-          <li>거래 상대방에 따라 이용 범위를 차별적으로 제한하거나, 실시에 직접 필요하지 않은 기술을 함께 구입하게 하는 행위</li>
-        </ul>
-      </div>
+      <div class="stem">&#9424;~&#9428;의 문맥상 의미를 파악한 것으로 적절하지 <u>않은</u> 것은?</div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot">&#9424; : 파괴되어 가던 정신을 &lsquo;다시 살아나게 하고&rsquo;라는 의미이다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd o">&#9711;</span>회생(回生)시키고 &mdash; 자유 경쟁의 정신을 되살린다는 말이다</span>
+        </li>
+        <li class="ok" data-step="2">
+          <span class="on">&#9313;</span>
+          <span class="ot">&#9425; : 기업 결합을 시도할 때 &lsquo;목표하던 대로&rsquo;라는 의미이다.</span>
+          <span class="ex reveal" data-step="2"><span class="vd x">&times;</span>궁극적으로 = &lsquo;끝에 가서는&rsquo;. 효율성을 노린 결합이 <strong>결국</strong> 경쟁 사업자를 없앤다는 말이다</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot">&#9426; : 자신이 지닌 권리를 &lsquo;실현할&rsquo;이라는 의미이다.</span>
+          <span class="ex reveal" data-step="3"><span class="vd o">&#9711;</span>행사할 &mdash; 특허권을 실제로 쓴다는 뜻</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot">&#9427; : 요구하는 것을 거래 상대방에게 &lsquo;부담하여 맡게 할&rsquo;이라는 의미이다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd o">&#9711;</span>부과할 &mdash; 조건을 상대방에게 지운다는 뜻</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">&#9428; : 둘의 내용이 &lsquo;서로 어긋나는&rsquo;이라는 의미이다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd o">&#9711;</span>상충하는 &mdash; 두 제도가 부딪쳐 보인다는 말이다</span>
+        </li>
+      </ul>
     </div>
-    <div class="page-num">23 / 41</div>
+    <div class="page-num">23 / 36</div>
   </section>
 
   <!-- 24 -->
-  <section class="slide " style="--fs:1.64;">
-    <h2 class="slide-title">13번 &middot; 나머지 선택지</h2>
-    <div class="body-area">
-      <ul class="opts">
-        <li><span class="on">&#9312;</span>지식 재산 제도는 혁신적인 기술에 대한 정당한 보상을 통해 새로운 기술 혁신의 유인을 마련한다</li>
-        <li><span class="on">&#9313;</span>실시료를 차별적으로 부과해 경쟁 제한 효과가 효율성 증대 효과를 상회하면 범위를 벗어난 것이다</li>
-        <li><span class="on">&#9315;</span>독점규제법은 자본이 소수에게 집중되면 기술 혁신이 저해된다는 가정 위에 서 있다</li>
-        <li><span class="on">&#9316;</span>지식 재산 제도는 보상을 통해 사람들이 기술 혁신에 참여하도록 유인한다</li>
-      </ul>
-    </div>
-    <div class="page-num">24 / 41</div>
-  </section>
-
-  <!-- 25 -->
-  <section class="slide " style="--fs:1.24;">
-    <div class="qhead">
-      <h2 class="slide-title">14번 &middot; ㉠의 이해</h2>
-      <span class="ans-chip">정답 &#9315;</span>
-    </div>
-    <div class="body-area">
-      <div class="def-box">
-        <div class="dt">㉠ 독점규제법은 약소 기업을 직접적으로 보호하는 법은 아니다</div>
-        <p>바로 앞 문장은 독점규제법이 자유 경쟁의 정신을 회생시켜 기업 간 균형 있는 발전을 도모한다고 했다</p>
-        <p>곧 균형 있는 발전은 약자에게 직접 혜택을 주어서가 아니라 <strong>경쟁 질서의 확립을 통해</strong> 이루어져야 한다는 뜻이다</p>
-      </div>
-      <div class="emotion">
-        <div class="etag">그래서 정답은</div>
-        <ul>
-          <li>&#9315; 기업 간 균형 있는 발전은 자유롭고 공정한 경쟁이 이루어지는 경쟁 질서의 확립을 통해 이루어져야 하는 것이다</li>
-        </ul>
-      </div>
-    </div>
-    <div class="page-num">25 / 41</div>
-  </section>
-
-  <!-- 26 -->
-  <section class="slide " style="--fs:1.75;">
-    <h2 class="slide-title">14번 &middot; 나머지 선택지</h2>
-    <div class="body-area">
-      <ul class="opts">
-        <li><span class="on">&#9312;</span>약소 기업의 발생이 마땅한 결과라는 말은 (가)에 없다</li>
-        <li><span class="on">&#9313;</span>경제력이 높은 주체의 시장 참여를 문제 삼은 것이 아니다</li>
-        <li><span class="on">&#9314;</span>공권력의 개입은 초기 자본주의의 위기를 심화하는 것이 아니라 시정하기 위한 것이다</li>
-        <li><span class="on">&#9316;</span>특정 주체에게 직접적 혜택을 주는 것이야말로 ㉠이 아니라고 못 박은 방식이다</li>
-      </ul>
-    </div>
-    <div class="page-num">26 / 41</div>
-  </section>
-
-  <!-- 27 -->
-  <section class="slide " style="--fs:1.43;">
-    <div class="qhead">
-      <h2 class="slide-title">15번 &middot; 문맥적 의미</h2>
-      <span class="ans-chip">정답 &#9313;</span>
-    </div>
-    <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.4cqw;">
-        <div class="dt">&#9425; 궁극적으로 &mdash; &lsquo;끝에 가서는, 결국에는&rsquo;</div>
-        <p>기업 결합이 효율성을 높이더라도 <strong>결국에는</strong> 경쟁 사업자를 없애는 결과에 이른다는 말이므로, &lsquo;목표하던 대로&rsquo;로 바꿔 읽을 수 없다</p>
-      </div>
-      <ul class="opts">
-        <li><span class="on">&#9312;</span>&#9424; 회생시키고 &mdash; 파괴되어 가던 정신을 다시 살아나게 하고</li>
-        <li><span class="on">&#9314;</span>&#9426; 행사할 &mdash; 자신이 지닌 권리를 실현할</li>
-        <li><span class="on">&#9315;</span>&#9427; 부과할 &mdash; 요구하는 것을 거래 상대방에게 부담하여 맡게 할</li>
-        <li><span class="on">&#9316;</span>&#9428; 상충하는 &mdash; 둘의 내용이 서로 어긋나는</li>
-      </ul>
-    </div>
-    <div class="page-num">27 / 41</div>
-  </section>
-
-  <!-- 28 -->
   <section class="slide " style="--fs:1.39;">
-    <h2 class="slide-title">16번 &middot; &lt;보기&gt;의 사례</h2>
+    <h2 class="slide-title">16번 &middot; &lt;보기&gt;</h2>
     <div class="body-area">
       <table class="info-table">
         <tr>
@@ -901,40 +1064,49 @@
         </tr>
       </table>
     </div>
-    <div class="page-num">28 / 41</div>
+    <div class="page-num">24 / 36</div>
   </section>
 
-  <!-- 29 -->
-  <section class="slide " style="--fs:1.75;">
+  <!-- 25 -->
+  <section class="slide tight" style="--fs:1.01;">
     <div class="qhead">
-      <h2 class="slide-title">16번 &middot; 정답과 근거</h2>
-      <span class="ans-chip">정답 &#9312;</span>
+      <h2 class="slide-title">16번 [3점]</h2>
+      <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
     </div>
     <div class="body-area">
-      <div class="def-box">
-        <div class="dt">&#9312;가 맞지 않은 이유</div>
-        <p>A가 한 것은 실시료를 차별적으로 부과한 행위다. 그 부당성은 <strong>경쟁 제한 효과가 효율성 증대 효과를 상회하는지</strong>로 판단한다</p>
-        <p>&lsquo;특허 발명의 실시에 필수적인지&rsquo;는 (나)가 <strong>조건을 부과하는 행위</strong>의 부당성을 판단할 때 보는 것이라고 밝힌 기준이다</p>
-      </div>
-    </div>
-    <div class="page-num">29 / 41</div>
-  </section>
-
-  <!-- 30 -->
-  <section class="slide " style="--fs:1.61;">
-    <h2 class="slide-title">16번 &middot; 나머지 선택지</h2>
-    <div class="body-area">
-      <ul class="opts">
-        <li><span class="on">&#9313;</span>기업 결합이 이루어지면 비용 절감과 같은 효율성 증대 효과를 얻을 수 있다</li>
-        <li><span class="on">&#9314;</span>40% + 20% = 60%로 제1위가 되므로 경쟁을 실질적으로 제한하는 것으로 간주될 수 있다</li>
-        <li><span class="on">&#9315;</span>실시료 차별로 다른 사업자의 모뎀칩 구입 시도가 포기되었으므로 모뎀칩 시장의 경쟁 제한 효과가 발생했다</li>
-        <li><span class="on">&#9316;</span>기술적 성과에 대한 보상인 실시료 수취 자체는 특허권에 의한 정당한 권리 행사다</li>
+      <div class="stem">(가)와 (나)를 참고하여 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?</div>
+      <ul class="opts qz">
+        <li class="ok" data-step="1">
+          <span class="on">&#9312;</span>
+          <span class="ot">A가 실시료 할인을 제공한 것이 부당한지 판단하려면 할인이 특허 발명의 실시에 필수적인지 고려해야겠군.</span>
+          <span class="ex reveal" data-step="1"><span class="vd x">&times;</span>실시료 차별의 부당성은 <strong>경쟁 제한 효과가 효율성 증대 효과를 상회하는지</strong>로 잰다. &lsquo;실시에 필수적인지&rsquo;는 <strong>조건 부과</strong>의 기준이다</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot">A의 기업과 B의 기업이 하나의 기업으로 합병한다면 비용 절감을 통해 효율성이 증대되는 효과를 얻을 수 있겠군.</span>
+          <span class="ex reveal" data-step="2"><span class="vd o">&#9711;</span>(가)가 기업 결합의 효과로 든 것 그대로다</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot">공정거래위원회는 A의 기업과 B의 기업이 합병한다면 모뎀칩 시장의 경쟁을 실질적으로 제한한다고 간주할 수 있겠군.</span>
+          <span class="ex reveal" data-step="3"><span class="vd o">&#9711;</span>40% + 20% = 60%로 제1위가 된다</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot">A가 디지털 이동 통신 기술의 실시료를 차별적으로 부과한 것은 모뎀칩 시장의 경쟁을 제한하는 효과를 발생시킨 것으로 볼 수 있겠군.</span>
+          <span class="ex reveal" data-step="4"><span class="vd o">&#9711;</span>다른 사업자에게서 사려던 시도가 실제로 포기되었다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">B가 모뎀칩 시장에 진입하기 전 A가 디지털 이동 통신 기술의 실시료로 수익을 창출한 것은 공정거래법의 적용 대상에 해당하지 않겠군.</span>
+          <span class="ex reveal" data-step="5"><span class="vd o">&#9711;</span>실시료 수취 자체는 정당한 권리 행사다</span>
+        </li>
       </ul>
     </div>
-    <div class="page-num">30 / 41</div>
+    <div class="page-num">25 / 36</div>
   </section>
 
-  <!-- 31 -->
+  <!-- 26 -->
   <section class="slide " style="--fs:1.54;">
     <h2 class="slide-title">문학 &middot; (가) 화자가 인물을 보는 방식</h2>
     <div class="body-area">
@@ -945,10 +1117,10 @@
         <li><span class="n">4</span><span>인물이 처한 시공간과 상황은 ㉠<u>다양한 묘사</u>를 통해 구체화되어 시적 상황과 인물의 처지를 부각한다</span></li>
       </ul>
     </div>
-    <div class="page-num">31 / 41</div>
+    <div class="page-num">26 / 36</div>
   </section>
 
-  <!-- 32 -->
+  <!-- 27 -->
   <section class="slide " style="--fs:1.04;">
     <h2 class="slide-title">(나) 백석, 「팔원 &ndash; 서행시초 3」</h2>
     <div class="body-area">
@@ -964,7 +1136,7 @@
           <p>묘향산 어디메서 삼촌이 산다고 한다</p>
         </div>
         <div class="verse poem">
-          <p>새하얗게 얼은 자동차 &#9424;<u>유리창</u> 밖에</p>
+          <p>쌔하얗게 얼은 자동차 &#9424;<u>유리창</u> 밖에</p>
           <p>내지인 주재소장 같은 어른과 어린아이 둘이 내임을 낸다</p>
           <p>계집아이는 운다 느끼며 운다</p>
           <p>텅 비인 차 안 한구석에서 <span class="hl">어느 한 사람</span>도 눈을 씻는다</p>
@@ -977,10 +1149,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">32 / 41</div>
+    <div class="page-num">27 / 36</div>
   </section>
 
-  <!-- 33 -->
+  <!-- 28 -->
   <section class="slide " style="--fs:1.56;">
     <h2 class="slide-title">(나) 읽기 &middot; 상황과 외양</h2>
     <div class="body-area">
@@ -997,10 +1169,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">33 / 41</div>
+    <div class="page-num">28 / 36</div>
   </section>
 
-  <!-- 34 -->
+  <!-- 29 -->
   <section class="slide " style="--fs:1.45;">
     <h2 class="slide-title">(나) 읽기 &middot; 화자의 시선</h2>
     <div class="body-area">
@@ -1015,10 +1187,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">34 / 41</div>
+    <div class="page-num">29 / 36</div>
   </section>
 
-  <!-- 35 -->
+  <!-- 30 -->
   <section class="slide " style="--fs:0.96;">
     <h2 class="slide-title">(다) 기형도, 「기억할 만한 지나침」</h2>
     <div class="body-area">
@@ -1044,10 +1216,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">35 / 41</div>
+    <div class="page-num">30 / 36</div>
   </section>
 
-  <!-- 36 -->
+  <!-- 31 -->
   <section class="slide " style="--fs:1.55;">
     <h2 class="slide-title">(다) 읽기 &middot; 공간과 인물</h2>
     <div class="body-area">
@@ -1064,10 +1236,10 @@
         </div>
       </div>
     </div>
-    <div class="page-num">36 / 41</div>
+    <div class="page-num">31 / 36</div>
   </section>
 
-  <!-- 37 -->
+  <!-- 32 -->
   <section class="slide " style="--fs:1.63;">
     <h2 class="slide-title">(다) 읽기 &middot; 지금의 화자</h2>
     <div class="body-area">
@@ -1082,38 +1254,58 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">37 / 41</div>
+    <div class="page-num">32 / 36</div>
   </section>
 
-  <!-- 38 -->
-  <section class="slide " style="--fs:1.28;">
+  <!-- 33 -->
+  <section class="slide tight" style="--fs:1.02;">
     <div class="qhead">
-      <h2 class="slide-title">43번 &middot; ㉠ 다양한 묘사</h2>
-      <span class="ans-chip">정답 &#9312;</span>
+      <h2 class="slide-title">43번</h2>
+      <span class="ans-chip reveal" data-step="1">정답 &#9312;</span>
     </div>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.4cqw;">
-        <div class="dt">근거</div>
-        <p>(나)의 첫 행 &lsquo;차디찬 아침인데&rsquo;는 시간적 배경인 아침을 촉각적 이미지로 구체화한다. 이 추위는 마지막의 &lsquo;손이 꽁꽁 얼어서 찬물에 걸레를 쳤을 것이다&rsquo;와 맞물려 아이가 처한 현실을 부각한다</p>
+      <div class="stem">㉠을 중심으로 (나), (다)를 이해한 내용으로 가장 적절한 것은?
+        <span class="cite2">㉠ 인물이 처한 시공간 및 상황은 다양한 묘사를 통해 구체화되어 시적 상황 및 인물의 처지를 부각한다.</span>
       </div>
-      <ul class="opts">
-        <li><span class="on">&#9313;</span>&lsquo;꽁꽁&rsquo;은 아이의 손 상태를 나타낼 뿐 시적 공간을 묘사한 것이 아니고, 분위기도 긴박하지 않다</li>
-        <li><span class="on">&#9314;</span>(다)에 시선 이동에 따른 묘사는 있으나 공간의 초월적 속성은 드러나지 않는다</li>
-        <li><span class="on">&#9315;</span>(다)에 청각을 시각으로 옮겨 놓은 표현은 없다</li>
-        <li><span class="on">&#9316;</span>색채어는 있지만 시간의 순환성과는 무관하다</li>
+      <ul class="opts qz">
+        <li class="ok" data-step="1">
+          <span class="on">&#9312;</span>
+          <span class="ot">(나)는 시간적 배경을 촉각적 이미지로 구체화하여 인물이 처한 현실을 부각하고 있다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd o">&#9711;</span>첫 행 &lsquo;차디찬 아침인데&rsquo;가 마지막 &lsquo;손이 꽁꽁 얼어서&rsquo;와 맞물린다</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot">(나)는 시적 공간을 음성 상징어를 통해 묘사하여 긴박한 시적 분위기를 형성하고 있다.</span>
+          <span class="ex reveal" data-step="2"><span class="vd x">&times;</span>&lsquo;꽁꽁&rsquo;은 손 상태를 나타낼 뿐 공간 묘사가 아니고, 분위기도 긴박하지 않다</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot">(다)는 시적 공간을 화자의 시선 이동에 따라 묘사하여 공간의 초월적 속성을 표현하고 있다.</span>
+          <span class="ex reveal" data-step="3"><span class="vd x">&times;</span>시선 이동에 따른 묘사는 있으나 초월적 속성은 드러나지 않는다</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot">(다)는 인물이 처한 상황을 청각의 시각화를 통해 구체화하여 상황의 변화를 암시하고 있다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd x">&times;</span>청각을 시각으로 옮겨 놓은 표현이 없다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">(나)와 (다)는 모두, 계절적 배경을 색채 이미지를 통해 구체화하여 시간의 순환성을 드러내고 있다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd x">&times;</span>색채어는 있지만 시간의 순환성과는 무관하다</span>
+        </li>
       </ul>
     </div>
-    <div class="page-num">38 / 41</div>
+    <div class="page-num">33 / 36</div>
   </section>
 
-  <!-- 39 -->
+  <!-- 34 -->
   <section class="slide " style="--fs:1.51;">
     <h2 class="slide-title">44번 &middot; 두 개의 &lsquo;유리창&rsquo;</h2>
     <div class="body-area">
       <div class="cards2" style="flex:0 0 auto;">
         <div class="c3">
           <h3><span class="word">&#9424; (나)의 유리창</span></h3>
-          <p class="cite">새하얗게 얼은 자동차 유리창 밖에 / 어른과 어린아이 둘이 내임을 낸다</p>
+          <p class="cite">쌔하얗게 얼은 자동차 유리창 밖에 / 어른과 어린아이 둘이 내임을 낸다</p>
           <p>차 안의 화자가 창 너머의 사람들을 보는 자리다. 창 밖의 인물은 관찰의 대상이지 주체가 아니다</p>
         </div>
         <div class="c3">
@@ -1123,46 +1315,85 @@
         </div>
       </div>
     </div>
-    <div class="page-num">39 / 41</div>
+    <div class="page-num">34 / 36</div>
   </section>
 
-  <!-- 40 -->
-  <section class="slide " style="--fs:1.75;">
+  <!-- 35 -->
+  <section class="slide tight" style="--fs:1.15;">
     <div class="qhead">
-      <h2 class="slide-title">44번 &middot; 정답과 오답</h2>
-      <span class="ans-chip">정답 &#9313;</span>
+      <h2 class="slide-title">44번</h2>
+      <span class="ans-chip reveal" data-step="2">정답 &#9313;</span>
     </div>
     <div class="body-area">
-      <ul class="opts">
-        <li class="ok"><span class="on">&#9313;</span>&#9425;는 화자의 감정 변화를 촉발하는 다른 인물을 화자가 바라볼 수 있게 하는 매개체다</li>
-        <li><span class="on">&#9312;</span>&#9424;의 창 밖 인물은 관찰의 주체가 아니라 대상이다</li>
-        <li><span class="on">&#9314;</span>두 창 모두 거리감을 만드는 것이 아니라 인물을 보게 한다</li>
-        <li><span class="on">&#9315;</span>&#9424;는 과거와 현재를 잇지 않고, &#9425;도 앞날을 전망하게 하지 않는다</li>
-        <li><span class="on">&#9316;</span>소통을 유도하거나 방해하는 장치가 아니다</li>
+      <div class="stem">&#9424;, &#9425;에 대한 이해로 가장 적절한 것은?</div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot">&#9424;는 공간 외부의 인물을 관찰의 주체로 전환하는 장치이다.</span>
+          <span class="ex reveal" data-step="1"><span class="vd x">&times;</span>창 밖의 어른과 아이는 관찰의 <strong>대상</strong>이지 주체가 아니다</span>
+        </li>
+        <li class="ok" data-step="2">
+          <span class="on">&#9313;</span>
+          <span class="ot">&#9425;는 화자의 감정 변화를 촉발하는 다른 인물을 화자가 바라볼 수 있게 하는 매개체이다.</span>
+          <span class="ex reveal" data-step="2"><span class="vd o">&#9711;</span>창 너머 우는 서기를 본 뒤 화자는 &lsquo;거의 고통스러웠다&rsquo;고 하고 떠나지 못한다</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot">&#9424;와 &#9425;는 모두, 다른 인물에 대한 화자의 심리적 거리감을 조성하는 장치이다.</span>
+          <span class="ex reveal" data-step="3"><span class="vd x">&times;</span>두 창 모두 거리감을 만드는 것이 아니라 인물을 보게 하는 통로다</span>
+        </li>
+        <li>
+          <span class="on">&#9315;</span>
+          <span class="ot">&#9424;는 다른 인물의 과거와 현재를 연결하는, &#9425;는 다른 인물의 앞날을 전망하게 하는 매개체이다.</span>
+          <span class="ex reveal" data-step="4"><span class="vd x">&times;</span>&#9424;는 과거와 현재를 잇지 않고, &#9425;도 앞날을 전망하게 하지 않는다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">&#9424;는 화자와 다른 인물 간 소통을 유도하는, &#9425;는 화자와 다른 인물 간 소통을 방해하는 장치이다.</span>
+          <span class="ex reveal" data-step="5"><span class="vd x">&times;</span>어느 쪽도 소통을 유도하거나 방해하는 장치가 아니다</span>
+        </li>
       </ul>
     </div>
-    <div class="page-num">40 / 41</div>
+    <div class="page-num">35 / 36</div>
   </section>
 
-  <!-- 41 -->
-  <section class="slide " style="--fs:1.28;">
+  <!-- 36 -->
+  <section class="slide tight" style="--fs:0.95;">
     <div class="qhead">
-      <h2 class="slide-title">45번 &middot; (가)를 참고한 감상</h2>
-      <span class="ans-chip">정답 &#9315;</span>
+      <h2 class="slide-title">45번 [3점]</h2>
+      <span class="ans-chip reveal" data-step="4">정답 &#9315;</span>
     </div>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.4cqw;">
-        <div class="dt">&#9315;가 맞지 않은 이유</div>
-        <p>(나)의 &lsquo;찬물에 걸레를 쳤을 것이다&rsquo;는 외양에서 미루어 짚은 과거가 맞다. 그러나 (다)의 &lsquo;우연히 지금 그를 떠올리&rsquo;는 것은 자신이 본 장면을 회상하는 것일 뿐, <strong>인물의 외양을 바탕으로 과거를 추측</strong>한 것이 아니다</p>
-      </div>
-      <ul class="opts">
-        <li><span class="on">&#9312;</span>&lsquo;진진초록 새 저고리&rsquo;에 대비되는 &lsquo;손잔등&rsquo; &mdash; 고단한 삶의 부각</li>
-        <li><span class="on">&#9313;</span>&lsquo;눈을 씻&rsquo;는 &lsquo;어느 한 사람&rsquo; &mdash; 계집아이에 대한 연민</li>
-        <li><span class="on">&#9314;</span>&lsquo;어리석은 자라고 생각하지 않&rsquo;는다 &mdash; 한 사내에 대한 공감</li>
-        <li><span class="on">&#9316;</span>&lsquo;몇 해&rsquo; 일한 인물 &mdash; 일제 강점기 현실 / &lsquo;혼자 울고 있&rsquo;는 인물 &mdash; 도시의 억압적 현실</li>
+      <div class="stem">(가)를 참고하여 (나), (다)를 감상한 내용으로 적절하지 <u>않은</u> 것은?</div>
+      <ul class="opts qz">
+        <li>
+          <span class="on">&#9312;</span>
+          <span class="ot">(나)는 &lsquo;진진초록 새 저고리&rsquo;에 대비되는 &lsquo;손잔등&rsquo;을 통해 &lsquo;계집아이&rsquo;의 고단한 삶의 모습을 부각하는군.</span>
+          <span class="ex reveal" data-step="1"><span class="vd o">&#9711;</span>외양 관찰 &mdash; (가)의 1</span>
+        </li>
+        <li>
+          <span class="on">&#9313;</span>
+          <span class="ot">(나)는 &lsquo;차 안 한구석&rsquo;에서 &lsquo;눈을 씻&rsquo;는 &lsquo;어느 한 사람&rsquo;의 행위에 주목하여 &lsquo;계집아이&rsquo;에 대한 연민을 드러내는군.</span>
+          <span class="ex reveal" data-step="2"><span class="vd o">&#9711;</span>인물에 대한 감정 &mdash; 연민</span>
+        </li>
+        <li>
+          <span class="on">&#9314;</span>
+          <span class="ot">(다)는 &lsquo;눈이 퍼붓&rsquo;는 &lsquo;밤&rsquo;의 &lsquo;텅 빈 사무실&rsquo;에서 화자가 &lsquo;그 사내&rsquo;를 &lsquo;어리석은 자라고 생각하지 않&rsquo;는 것을 통해 &lsquo;한 사내&rsquo;에 대한 공감을 드러내는군.</span>
+          <span class="ex reveal" data-step="3"><span class="vd o">&#9711;</span>동일시에 따른 공감 &mdash; (가)의 2</span>
+        </li>
+        <li class="ok" data-step="4">
+          <span class="on">&#9315;</span>
+          <span class="ot">(나)는 &lsquo;계집아이&rsquo;가 &lsquo;찬물에 걸레를 쳤을 것&rsquo;이라는 것을 통해, (다)는 &lsquo;나&rsquo;가 &lsquo;우연히 지금 그를 떠올리&rsquo;는 것을 통해 인물의 외양을 바탕으로 과거를 추측하고 있음을 보여 주는군.</span>
+          <span class="ex reveal" data-step="4"><span class="vd x">&times;</span>(나)는 맞다. 그러나 (다)의 &lsquo;떠올리&rsquo;는 것은 자신이 본 장면의 <strong>회상</strong>일 뿐, 외양을 바탕으로 한 과거 추측이 아니다</span>
+        </li>
+        <li>
+          <span class="on">&#9316;</span>
+          <span class="ot">(나)는 &lsquo;내지인 주재소장 집&rsquo;에서 &lsquo;몇 해&rsquo; 동안 일했을 인물을 통해 일제 강점기 현실에 대한, (다)는 &lsquo;거대한 서류 뭉치&rsquo;로 변해가는 &lsquo;건물&rsquo;에서 &lsquo;혼자 울고 있&rsquo;는 인물을 통해 도시의 억압적 현실에 대한 화자의 부정적 인식을 드러내는군.</span>
+          <span class="ex reveal" data-step="5"><span class="vd o">&#9711;</span>현실 인식으로의 확대 &mdash; (가)의 3</span>
+        </li>
       </ul>
     </div>
-    <div class="page-num">41 / 41</div>
+    <div class="page-num">36 / 36</div>
   </section>
 
 </div>
@@ -1172,7 +1403,7 @@
   <span id="counter">1 / 1</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
-  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 넘김 &middot; F 전체화면</span>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키는 장 단위 &middot; F 전체화면</span>
 </div>
 
 <script>
@@ -1180,28 +1411,61 @@
   const counter = document.getElementById('counter');
   const prevBtn = document.getElementById('prev');
   const nextBtn = document.getElementById('next');
-  let idx = 0;
+  let idx = 0, step = 0;
 
   let syncingHash = false;
 
-  function updateButtons() {
-    prevBtn.disabled = idx === 0;
-    nextBtn.disabled = idx === slides.length - 1;
+  function stepEls(s) { return s.querySelectorAll('[data-step]'); }
+  function maxStep(s) {
+    let m = 0;
+    stepEls(s).forEach(e => { const v = +e.dataset.step || 0; if (v > m) m = v; });
+    return m;
+  }
+  function applySteps(s, k) {
+    stepEls(s).forEach(e => e.classList.toggle('shown', (+e.dataset.step || 0) <= k));
   }
 
-  function show(n) {
+  function updateButtons() {
+    prevBtn.disabled = idx === 0 && step === 0;
+    nextBtn.disabled = idx === slides.length - 1 && step === maxStep(slides[idx]);
+  }
+
+  function render() {
+    const s = slides[idx];
+    applySteps(s, step);
+    const m = maxStep(s);
+    counter.textContent = (idx + 1) + ' / ' + slides.length +
+      (m ? '  ' : '');
+    if (m) {
+      const sp = document.createElement('span');
+      sp.className = 'st';
+      sp.textContent = '· ' + step + '/' + m;
+      counter.appendChild(sp);
+    }
+    updateButtons();
+  }
+
+  function show(n, openAll) {
     idx = Math.max(0, Math.min(slides.length - 1, n));
     slides.forEach((s, i) => s.classList.toggle('active', i === idx));
-    counter.textContent = (idx + 1) + ' / ' + slides.length;
-    updateButtons();
+    step = openAll ? maxStep(slides[idx]) : 0;
+    render();
     if (location.hash !== '#' + (idx + 1)) {
       syncingHash = true;
       location.hash = idx + 1;
     }
   }
 
-  function next() { if (idx < slides.length - 1) show(idx + 1); }
-  function prev() { if (idx > 0) show(idx - 1); }
+  function next() {
+    if (step < maxStep(slides[idx])) { step++; render(); }
+    else if (idx < slides.length - 1) show(idx + 1, false);
+  }
+  function prev() {
+    if (step > 0) { step--; render(); }
+    else if (idx > 0) show(idx - 1, true);
+  }
+  function nextSlide() { if (idx < slides.length - 1) show(idx + 1, false); }
+  function prevSlide() { if (idx > 0) show(idx - 1, false); }
 
   prevBtn.addEventListener('click', prev);
   nextBtn.addEventListener('click', next);
@@ -1226,21 +1490,23 @@
   });
 
   document.addEventListener('keydown', (e) => {
-    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
-    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
-    else if (e.key === 'Home') show(0);
-    else if (e.key === 'End') show(slides.length - 1);
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+    else if (e.key === 'Home') show(0, false);
+    else if (e.key === 'End') show(slides.length - 1, false);
     else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
   });
 
   window.addEventListener('hashchange', () => {
     if (syncingHash) { syncingHash = false; return; }
     const n = parseInt(location.hash.replace('#', ''), 10);
-    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1, false);
   });
 
   const start = parseInt(location.hash.replace('#', ''), 10);
-  show(isNaN(start) ? 0 : start - 1);
+  show(isNaN(start) ? 0 : start - 1, false);
 </script>
 </body>
 </html>
