@@ -104,19 +104,51 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 .st.bad{color:var(--red);font-weight:600}
 
 /* 학년 고르기 */
-.cohort-gate{max-width:640px;margin:60px auto;padding:0 20px}
+.cohort-gate{max-width:720px;margin:60px auto;padding:0 20px}
 .cohort-gate h1{font-size:20px;margin:0 0 6px}
 .cohort-gate .sub{font-size:13.5px;color:var(--soft);margin:0 0 24px}
 .cohort-cards{display:flex;flex-wrap:wrap;gap:14px}
 .cohort-card{
-  flex:1 1 260px;text-align:left;cursor:pointer;background:var(--card);
-  border:1.5px solid var(--rule);border-radius:14px;padding:20px;
-  font-family:inherit;color:var(--ink);transition:transform .09s ease;
+  flex:1 1 260px;background:var(--card);
+  border:1.5px solid var(--rule);border-radius:14px;padding:18px 20px;
+  font-family:inherit;color:var(--ink);
 }
-.cohort-card:hover{transform:translate(-1px,-1px);border-color:var(--teal)}
+.cohort-card-pick{
+  display:block;width:100%;text-align:left;cursor:pointer;background:none;border:0;
+  padding:0;font-family:inherit;color:var(--ink);transition:transform .09s ease;
+}
+.cohort-card-pick:hover{transform:translate(-1px,-1px)}
+.cohort-card:has(.cohort-card-pick:hover){border-color:var(--teal)}
 .cohort-card .ttl{font-size:16px;font-weight:700;margin-bottom:6px}
 .cohort-card .desc{font-size:13px;color:var(--soft)}
+.cohort-card .meta2{font-size:12px;color:var(--faint);margin-top:8px}
 .cohort-card .hidden-tag{display:inline-block;margin-top:8px;font-size:11px;color:var(--red);border:1px solid var(--red);border-radius:6px;padding:1px 6px}
+.cohort-card-foot{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--rule)}
+.cohort-card-foot .btn{padding:5px 10px;font-size:12.5px}
+
+.expose-sw{
+  display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--soft);
+  cursor:pointer;user-select:none;
+}
+.expose-sw .track{
+  position:relative;width:34px;height:19px;border-radius:10px;background:var(--rule);
+  transition:background .12s ease;flex:none;
+}
+.expose-sw .track::after{
+  content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;
+  background:#fff;transition:transform .12s ease;box-shadow:0 1px 2px rgba(0,0,0,.25);
+}
+.expose-sw input{position:absolute;opacity:0;width:0;height:0}
+.expose-sw input:checked ~ .track{background:var(--teal)}
+.expose-sw input:checked ~ .track::after{transform:translateX(15px)}
+.expose-sw input:disabled ~ .track{opacity:.5;cursor:default}
+
+.cohort-new-card{
+  flex:1 1 260px;display:flex;align-items:center;justify-content:center;
+  border:1.5px dashed var(--rule);border-radius:14px;padding:18px 20px;min-height:96px;
+  background:none;font-family:inherit;font-size:14px;font-weight:600;color:var(--soft);cursor:pointer;
+}
+.cohort-new-card:hover{border-color:var(--teal);color:var(--teal)}
 
 /* 지금 편집 중 표시줄 */
 .editing-bar{
@@ -160,6 +192,13 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 .rule-table td{text-align:center;padding:6px;border-bottom:1px solid var(--rule)}
 .rule-table td:first-child{text-align:left;font-weight:600}
 .rule-table input[type=number]{width:56px;text-align:center}
+
+/* 학교 교육과정 표 — 정렬 헤더 · 학기 칸 묶음 · 수능 칸 구분선 */
+#offTable th[data-sort]{cursor:pointer;user-select:none}
+#offTable th[data-sort]:hover{color:var(--teal)}
+#offTable th .sort-arrow{margin-left:3px;color:var(--teal)}
+#offTable .exam-col-th,#offTable td.exam-col{border-left:2px solid var(--rule)}
+.sem-box{display:inline-flex;flex-direction:column;gap:2px;border:1px solid var(--rule);border-radius:8px;padding:4px 8px;background:#F8F6F2}
 
 
 /* 저장 전 미리보기 모달 */
@@ -307,6 +346,13 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
       <div class="bar">
         <label for="offSearch">검색</label>
         <input type="text" id="offSearch" placeholder="과목명 검색...">
+        <label for="offFilterGroup">교과군</label>
+        <select id="offFilterGroup"><option value="">전체</option></select>
+        <label for="offFilterTrack">선택군</label>
+        <select id="offFilterTrack"><option value="">전체</option></select>
+        <label for="offFilterGrade">학년</label>
+        <select id="offFilterGrade"><option value="">전체</option></select>
+        <button type="button" class="btn ghost" id="offSortResetBtn">원래 순서로</button>
         <button type="button" class="btn" id="offAddBtn">+ 새 과목 추가</button>
         <span class="count" id="offCnt"></span>
       </div>
@@ -315,7 +361,16 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
       <table style="width:100%;border-collapse:collapse;font-size:13px" id="offTable">
         <thead>
           <tr style="text-align:left;border-bottom:2px solid var(--rule)">
-            <th style="padding:6px">과목명</th><th>교과군</th><th>유형</th><th>학점</th><th>학년</th><th>선택군</th><th>성적방식</th><th>수능</th><th>학기</th><th></th>
+            <th style="padding:6px" data-sort="과목">과목명</th>
+            <th data-sort="교과군">교과군</th>
+            <th data-sort="유형">유형</th>
+            <th data-sort="운영학점">학점</th>
+            <th data-sort="학년">학년</th>
+            <th data-sort="선택군">선택군</th>
+            <th class="sem-col-th">학기</th>
+            <th data-sort="평가">성적방식</th>
+            <th class="exam-col-th">수능 출제</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="offTbody"></tbody>
@@ -364,6 +419,51 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
   </div>
 
   <footer class="wrap">폐강 표시는 편성표 원본을 건드리지 않습니다. 2차 정정에서 되살아나면 다시 눌러 해제하면 됩니다.</footer>
+</div>
+
+<!-- 새 학년도 만들기 -->
+<div class="diff-modal" id="newCohortModal" hidden>
+  <div class="scrim" data-close-newcohort></div>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="nct">
+    <div class="mhead">
+      <h2 id="nct">새 학년도 만들기</h2>
+      <button type="button" class="mx" data-close-newcohort aria-label="닫기">✕</button>
+    </div>
+    <div class="mbody">
+      <label class="hint" style="display:block;margin-bottom:4px" for="ncYear">입학연도</label>
+      <input type="text" id="ncYear" placeholder="예: 2027" style="width:100%;margin-bottom:12px">
+      <label class="hint" style="display:block;margin-bottom:4px" for="ncTitle">화면에 뭐라고 부를지</label>
+      <input type="text" id="ncTitle" placeholder="예: 2027학년도 입학생" style="width:100%;margin-bottom:12px">
+      <label class="hint" style="display:block;margin-bottom:4px" for="ncDesc">학생에게 뭐라고 안내할지</label>
+      <input type="text" id="ncDesc" placeholder="예: 2·3학년 때 들을 과목을 고릅니다" style="width:100%;margin-bottom:12px">
+      <label class="hint" style="display:block;margin-bottom:4px" for="ncTarget">대상</label>
+      <input type="text" id="ncTarget" placeholder="예: 현재 1학년" style="width:100%;margin-bottom:12px">
+      <label class="hint" style="display:block;margin-bottom:4px" for="ncCopyFrom">어느 학년도를 본떠 만들지</label>
+      <select id="ncCopyFrom" style="width:100%;margin-bottom:4px"></select>
+      <p class="hint" style="margin-top:2px">고른 학년도의 개설과목·이수규칙을 그대로 복사합니다. 폐강 표시는 복사하지 않습니다.</p>
+      <p class="st bad" id="ncMsg"></p>
+    </div>
+    <div class="mhead" style="border-top:1.5px solid var(--rule);border-bottom:0;justify-content:flex-end;gap:10px">
+      <button type="button" class="btn ghost" id="ncCancelBtn">취소</button>
+      <button type="button" class="btn" id="ncCreateBtn">만들기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 학년도 지우기 -->
+<div class="diff-modal" id="deleteCohortModal" hidden>
+  <div class="scrim" data-close-delcohort></div>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="dct">
+    <div class="mhead">
+      <h2 id="dct">학년도 지우기</h2>
+      <button type="button" class="mx" data-close-delcohort aria-label="닫기">✕</button>
+    </div>
+    <div class="mbody" id="delCohortBody"></div>
+    <div class="mhead" style="border-top:1.5px solid var(--rule);border-bottom:0;justify-content:flex-end;gap:10px">
+      <button type="button" class="btn ghost" id="dcCancelBtn">취소</button>
+      <button type="button" class="btn" id="dcConfirmBtn" disabled>백업 내려받고 지우기</button>
+    </div>
+  </div>
 </div>
 
 <!-- 이수규칙 저장 전 미리보기 -->
@@ -479,7 +579,7 @@ sb.auth.getSession().then(function(res){
 var D = {}, CO = null, SCHOOL = [], OFF = {};   // OFF: '과목|선택군|과정|학기' → true
 /* 전체 코호트 통틀어 쓰이는 교과군/과목(드롭다운 2순위)과 과목 마스터(subjects, 3순위).
    loadCohorts()에서 한 번 불러와 둔다 — 코호트를 바꿔도 다시 불러오지 않는다(전체 목록이라 바뀌지 않음). */
-var ALL_교과군 = [], ALL_과목 = [], SUBJECTS_MASTER = [];
+var ALL_교과군 = [], ALL_과목 = [], ALL_선택군 = [], SUBJECTS_MASTER = [];
 var RULES = null;   // school_rules 원본 행(id, cohort_id 포함) 전체. 이수규칙 빌더가 이걸 직접 수정한다.
 var RULES_ORIGINAL = null;   // pick()이 읽어온 시점의 깊은 복사본. 저장 전 미리보기의 비교 기준.
 
@@ -680,7 +780,7 @@ function pick(id){
 function loadCohorts(){
   Promise.all([
     sb.from('school_cohorts').select('*'),
-    sb.from('school_offerings').select('교과군,과목'),
+    sb.from('school_offerings').select('cohort_id,교과군,과목,선택군'),
     sb.from('subjects').select('name,교과군')
   ]).then(function(res){
     if(res[0].error){ $('#cohortCards').innerHTML = '<p class="st bad">코호트 목록 로드 실패: '+esc(res[0].error.message)+'</p>'; $('#cohortGate').hidden = false; return; }
@@ -693,28 +793,80 @@ function loadCohorts(){
     D.cohorts = { 목록: list };
 
     // 드롭다운 2순위(전체 코호트 통틀어 쓰이는 값)와 3순위(과목 마스터)를 미리 만들어 둔다.
+    // 같은 조회 결과로 카드에 표시할 코호트별 개설과목 수도 함께 센다(cohort_id별로 묶음).
+    var countByCohort = {};
     if(!res[1].error){
-      var g1 = {}, s1 = {};
-      res[1].data.forEach(function(r){ if(r.교과군) g1[r.교과군]=true; if(r.과목) s1[r.과목]=true; });
+      var g1 = {}, s1 = {}, t1 = {};
+      res[1].data.forEach(function(r){
+        if(r.교과군) g1[r.교과군]=true; if(r.과목) s1[r.과목]=true; if(r.선택군) t1[r.선택군]=true;
+        countByCohort[r.cohort_id] = (countByCohort[r.cohort_id]||0) + 1;
+      });
       ALL_교과군 = Object.keys(g1).sort();
       ALL_과목 = Object.keys(s1).sort();
+      ALL_선택군 = Object.keys(t1).sort();
     }
     if(!res[2].error){
       SUBJECTS_MASTER = res[2].data.map(function(r){ return { name: r.name, 교과군: r.교과군 }; });
     }
 
-    $('#cohortCards').innerHTML = list.map(function(x){
-      return '<button type="button" class="cohort-card" data-cohort="'+esc(x.id)+'">'+
-        '<div class="ttl">'+esc(x.제목)+'</div>'+
-        '<div class="desc">'+esc(x.설명||'')+'</div>'+
-        (x.노출?'':'<div class="hidden-tag">숨김</div>')+
-        '</button>';
-    }).join('');
-    Array.prototype.forEach.call($('#cohortCards').querySelectorAll('.cohort-card'), function(b){
-      b.onclick = function(){ selectCohort(b.dataset.cohort); };
-    });
+    renderCohortCards(list, countByCohort);
     $('#page').hidden = true;
     $('#cohortGate').hidden = false;
+  });
+}
+
+/* 학년 고르기 카드 — 3단계 지시: 과목 개수·노출 스위치·지우기 버튼을 카드에 더하고,
+   맨 끝에 '+ 새 학년도 만들기' 카드를 둔다. 카드 클릭(제목/설명 영역)은 그 학년으로 진입하고,
+   스위치·지우기는 카드 안의 별도 버튼이라 클릭이 진입으로 번지지 않게 stopPropagation한다. */
+function renderCohortCards(list, countByCohort){
+  var html = list.map(function(x){
+    var n = countByCohort[x._db_id] || 0;
+    return '<div class="cohort-card" data-cohort="'+esc(x.id)+'">'+
+      '<button type="button" class="cohort-card-pick" data-pick="'+esc(x.id)+'">'+
+      '<div class="ttl">'+esc(x.제목)+'</div>'+
+      '<div class="desc">'+esc(x.설명||'')+'</div>'+
+      '<div class="meta2">과목 '+n+'개</div>'+
+      '</button>'+
+      '<div class="cohort-card-foot">'+
+      '<label class="expose-sw">'+
+      '<input type="checkbox" class="expose-toggle-f" data-cohort="'+esc(x.id)+'"'+(x.노출?' checked':'')+'>'+
+      '<span class="track"></span> 학생 화면에 보이기'+
+      '</label>'+
+      '<button type="button" class="btn ghost" data-delete-cohort="'+esc(x.id)+'" style="margin-left:auto"'+
+      (x.노출?' disabled title="학생 화면에 보이는 동안에는 지울 수 없습니다. 먼저 보이기를 꺼 주세요."':'')+
+      '>지우기</button>'+
+      '</div>'+
+      '</div>';
+  }).join('');
+  html += '<button type="button" class="cohort-new-card" id="cohortNewBtn">+ 새 학년도 만들기</button>';
+  $('#cohortCards').innerHTML = html;
+
+  Array.prototype.forEach.call($('#cohortCards').querySelectorAll('[data-pick]'), function(b){
+    b.onclick = function(){ selectCohort(b.dataset.pick); };
+  });
+  Array.prototype.forEach.call($('#cohortCards').querySelectorAll('.expose-toggle-f'), function(cb){
+    cb.onclick = function(ev){ ev.stopPropagation(); };
+    cb.onchange = function(){ toggleCohortExposure(cb.dataset.cohort, cb.checked, cb); };
+  });
+  Array.prototype.forEach.call($('#cohortCards').querySelectorAll('[data-delete-cohort]'), function(b){
+    b.onclick = function(ev){ ev.stopPropagation(); if(!b.disabled) openDeleteCohortModal(b.dataset.deleteCohort); };
+  });
+  $('#cohortNewBtn').onclick = openNewCohortModal;
+}
+
+function toggleCohortExposure(id, on, checkboxEl){
+  var co = D.cohorts.목록.filter(function(c){ return c.id === id; })[0];
+  if(!co) return;
+  checkboxEl.disabled = true;
+  sb.from('school_cohorts').update({ 노출: on }).eq('id', co._db_id).then(function(res){
+    checkboxEl.disabled = false;
+    if(res.error){ alert('저장 실패: ' + res.error.message); checkboxEl.checked = !on; return; }
+    co.노출 = on;
+    // 지우기 버튼의 잠금 상태(노출 중이면 잠김)를 함께 갱신한다.
+    var card = checkboxEl.closest('.cohort-card');
+    var delBtn = card.querySelector('[data-delete-cohort]');
+    delBtn.disabled = on;
+    delBtn.title = on ? '학생 화면에 보이는 동안에는 지울 수 없습니다. 먼저 보이기를 꺼 주세요.' : '';
   });
 }
 
@@ -726,7 +878,211 @@ function selectCohort(id){
 
 $('#changeCohortBtn').onclick = function(){
   $('#page').hidden = true;
-  $('#cohortGate').hidden = false;
+  loadCohorts();   // 카드 목록을 다시 불러온다(다른 학년도를 만들거나 지웠을 수 있으므로)
+};
+
+/* ── 새 학년도 만들기 (3단계) ─────────────────────
+   설계 문서: 입학연도·제목·설명·대상·본뜰 학년도를 물은 뒤 school_cohorts에 새 행을 만들고
+   본뜰 학년도의 school_offerings 전체와 school_rules 1행을 복사한다. closed_subjects는
+   복사하지 않는다(폐강은 그 해의 사정). 노출은 항상 false로 시작해, 편성표를 다 손본 뒤
+   학년 고르기 화면에서 켜게 한다. */
+function openNewCohortModal(){
+  $('#ncYear').value = '';
+  $('#ncTitle').value = '';
+  $('#ncDesc').value = '';
+  $('#ncTarget').value = '';
+  $('#ncMsg').textContent = '';
+  $('#ncMsg').className = 'st';
+  $('#ncCopyFrom').innerHTML = D.cohorts.목록.map(function(c){
+    return '<option value="'+esc(c.id)+'">'+esc(c.제목)+'</option>';
+  }).join('');
+  $('#newCohortModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+function closeNewCohortModal(){
+  $('#newCohortModal').hidden = true;
+  document.body.style.overflow = '';
+}
+Array.prototype.forEach.call(document.querySelectorAll('[data-close-newcohort]'), function(b){ b.onclick = closeNewCohortModal; });
+$('#ncCancelBtn').onclick = closeNewCohortModal;
+
+/* 코호트id 자동 생성: {입학연도}-g2 형태. 중복이면 뒤에 숫자를 붙인다(-2, -3, ...). */
+function makeCohortId(입학연도){
+  var base = 입학연도 + '-g2';
+  var existing = D.cohorts.목록.map(function(c){ return c.id; });
+  if(existing.indexOf(base) === -1) return base;
+  var i = 2;
+  while(existing.indexOf(base + '-' + i) !== -1) i++;
+  return base + '-' + i;
+}
+
+$('#ncCreateBtn').onclick = function(){
+  var yearRaw = $('#ncYear').value.trim();
+  var title = $('#ncTitle').value.trim();
+  var desc = $('#ncDesc').value.trim();
+  var target = $('#ncTarget').value.trim();
+  var copyFromId = $('#ncCopyFrom').value;
+  var year = Number(yearRaw);
+  $('#ncMsg').className = 'st bad';
+  if(!yearRaw || isNaN(year) || !Number.isInteger(year)){ $('#ncMsg').textContent = '입학연도를 숫자로 입력해 주세요.'; return; }
+  if(!title){ $('#ncMsg').textContent = '화면에 표시할 이름을 입력해 주세요.'; return; }
+  var copyFrom = D.cohorts.목록.filter(function(c){ return c.id === copyFromId; })[0];
+  if(!copyFrom){ $('#ncMsg').textContent = '본뜰 학년도를 골라 주세요.'; return; }
+
+  var newId = makeCohortId(year);
+  $('#ncMsg').className = 'st';
+  $('#ncMsg').textContent = '만드는 중…';
+  $('#ncCreateBtn').disabled = true;
+
+  sb.from('school_cohorts').insert({
+    코호트id: newId, 입학연도: year, 대상: target, 제목: title,
+    설명: desc, 선택군: copyFrom.선택군 || [], 노출: false
+  }).select().then(function(res){
+    if(res.error) throw new Error('학년도 생성 실패: ' + res.error.message);
+    var newDbId = res.data[0].id;
+    return Promise.all([
+      sb.from('school_offerings').select('*').eq('cohort_id', copyFrom._db_id),
+      sb.from('school_rules').select('*').eq('cohort_id', copyFrom._db_id).single()
+    ]).then(function(r){
+      if(r[0].error) throw new Error('개설과목 복사 실패: ' + r[0].error.message);
+      if(r[1].error) throw new Error('이수규칙 복사 실패: ' + r[1].error.message);
+      var offeringsPayload = r[0].data.map(function(row){
+        var copy = Object.assign({}, row);
+        delete copy.id;
+        copy.cohort_id = newDbId;
+        return copy;
+      });
+      var rulesRow = Object.assign({}, r[1].data);
+      delete rulesRow.id;
+      rulesRow.cohort_id = newDbId;
+      var jobs = [];
+      if(offeringsPayload.length) jobs.push(sb.from('school_offerings').insert(offeringsPayload));
+      jobs.push(sb.from('school_rules').insert(rulesRow));
+      return Promise.all(jobs);
+    }).then(function(results){
+      var failed = results.filter(function(r){ return r.error; });
+      if(failed.length) throw new Error('복사 중 오류: ' + failed[0].error.message);
+      return newId;
+    });
+  }).then(function(newIdOk){
+    closeNewCohortModal();
+    $('#ncCreateBtn').disabled = false;
+    loadCohorts();   // 목록을 다시 불러오고, 만든 학년도로 곧바로 진입한다
+    // loadCohorts()는 비동기이므로, 목록이 준비된 뒤 진입하도록 잠깐 기다린다.
+    var tries = 0;
+    (function waitAndEnter(){
+      var co = D.cohorts && D.cohorts.목록 && D.cohorts.목록.filter(function(c){ return c.id === newIdOk; })[0];
+      if(co){ selectCohort(newIdOk); return; }
+      if(++tries > 40) return;   // 4초 넘어가면 포기(카드 화면에서 직접 고르면 됨)
+      setTimeout(waitAndEnter, 100);
+    })();
+  }).catch(function(e){
+    $('#ncMsg').className = 'st bad';
+    $('#ncMsg').textContent = e.message;
+    $('#ncCreateBtn').disabled = false;
+  });
+};
+
+/* ── 졸업한 학년도 지우기 (3단계) ───────────────────
+   안전장치 네 겹(설계 문서):
+   1) 노출 중이면 지우기 버튼 자체가 잠긴다(renderCohortCards에서 disabled 처리, 이 함수는 그 다음 단계).
+   2) 무엇이 사라지는지 숫자로 보여준다(개설과목/이수규칙/개설현황 개수를 실제로 센다).
+   3) 학년도 제목을 그대로 입력해야 지우기 버튼이 활성화된다.
+   4) 지우기 직전 자동으로 백업(JSON) 다운로드 — 다운로드가 끝난 뒤에만 삭제한다.
+   삭제는 school_cohorts 행 하나만 지우면 FK cascade로 school_offerings/school_rules/
+   closed_subjects가 함께 지워진다(db이원화 설계문서에서 on delete cascade로 확인됨). */
+var DELETE_TARGET_COHORT = null;
+
+function openDeleteCohortModal(id){
+  var co = D.cohorts.목록.filter(function(c){ return c.id === id; })[0];
+  if(!co) return;
+  DELETE_TARGET_COHORT = co;
+  $('#delCohortBody').innerHTML = '<p>세는 중…</p>';
+  $('#dcConfirmBtn').disabled = true;
+  $('#deleteCohortModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+
+  Promise.all([
+    sb.from('school_offerings').select('id', { count: 'exact', head: true }).eq('cohort_id', co._db_id),
+    sb.from('school_rules').select('id', { count: 'exact', head: true }).eq('cohort_id', co._db_id),
+    sb.from('closed_subjects').select('id', { count: 'exact', head: true }).eq('cohort_id', co._db_id)
+  ]).then(function(res){
+    var offCount = res[0].count || 0;
+    var ruleCount = res[1].count || 0;
+    var closedCount = res[2].count || 0;
+    $('#delCohortBody').innerHTML =
+      '<p><b>'+esc(co.제목)+'</b>을(를) 지웁니다</p>'+
+      '<ul>'+
+      '<li>개설과목 '+offCount+'개</li>'+
+      '<li>이수규칙 '+ruleCount+'벌</li>'+
+      '<li>개설현황(폐강 표시) '+closedCount+'개</li>'+
+      '</ul>'+
+      '<p class="st bad">이 자료는 되돌릴 수 없습니다. 지우기 전에 자동으로 백업 파일을 내려받습니다.</p>'+
+      '<label class="hint" style="display:block;margin:10px 0 4px" for="dcNameCheck">확인을 위해 학년도 이름을 그대로 입력하세요</label>'+
+      '<input type="text" id="dcNameCheck" placeholder="'+esc(co.제목)+'" style="width:100%">';
+    document.getElementById('dcNameCheck').addEventListener('input', function(){
+      $('#dcConfirmBtn').disabled = this.value !== co.제목;
+    });
+  }).catch(function(e){
+    $('#delCohortBody').innerHTML = '<p class="st bad">개수를 세는 중 오류: '+esc(e.message)+'</p>';
+  });
+}
+
+function closeDeleteCohortModal(){
+  $('#deleteCohortModal').hidden = true;
+  document.body.style.overflow = '';
+  DELETE_TARGET_COHORT = null;
+}
+Array.prototype.forEach.call(document.querySelectorAll('[data-close-delcohort]'), function(b){ b.onclick = closeDeleteCohortModal; });
+$('#dcCancelBtn').onclick = closeDeleteCohortModal;
+
+$('#dcConfirmBtn').onclick = function(){
+  var co = DELETE_TARGET_COHORT;
+  if(!co) return;
+  $('#dcConfirmBtn').disabled = true;
+  $('#dcConfirmBtn').textContent = '백업 만드는 중…';
+
+  Promise.all([
+    sb.from('school_cohorts').select('*').eq('id', co._db_id).single(),
+    sb.from('school_offerings').select('*').eq('cohort_id', co._db_id),
+    sb.from('school_rules').select('*').eq('cohort_id', co._db_id),
+    sb.from('closed_subjects').select('*').eq('cohort_id', co._db_id)
+  ]).then(function(res){
+    var failed = res.filter(function(r){ return r.error; });
+    if(failed.length) throw new Error('백업 조회 실패: ' + failed[0].error.message);
+    var backup = {
+      만든날: new Date().toISOString(),
+      school_cohorts: res[0].data,
+      school_offerings: res[1].data,
+      school_rules: res[2].data,
+      closed_subjects: res[3].data
+    };
+    var blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json;charset=utf-8' });
+    var today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = co.제목 + '-백업-' + today + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    // 다운로드가 끝난 뒤에만 삭제한다 — revokeObjectURL을 늦게 불러 다운로드가 끝날 시간을 준다.
+    return new Promise(function(resolve){
+      setTimeout(function(){ URL.revokeObjectURL(a.href); resolve(); }, 800);
+    });
+  }).then(function(){
+    $('#dcConfirmBtn').textContent = '지우는 중…';
+    return sb.from('school_cohorts').delete().eq('id', co._db_id);
+  }).then(function(res){
+    if(res.error) throw new Error('삭제 실패: ' + res.error.message);
+    closeDeleteCohortModal();
+    $('#dcConfirmBtn').disabled = false;
+    $('#dcConfirmBtn').textContent = '백업 내려받고 지우기';
+    loadCohorts();
+  }).catch(function(e){
+    alert(e.message);
+    $('#dcConfirmBtn').disabled = false;
+    $('#dcConfirmBtn').textContent = '백업 내려받고 지우기';
+  });
 };
 
 /* ── Supabase에 바로 반영 ─────────────────────────
@@ -798,13 +1154,84 @@ function offSay(msg, kind){
   $('#offSt').className = 'st' + (kind ? ' ' + kind : '');
 }
 
-function renderOfferings(){
-  var q = $('#offSearch').value.trim();
+/* 정렬 상태 — 기본은 원래 순서(DB id 순 = 편성표에 적힌 차례, 사용자 지적 2-2).
+   헤더를 누를 때마다 오름/내림 토글, '원래 순서로' 버튼으로 되돌린다. */
+var offSortKey = null;   // null이면 원래 순서
+var offSortDir = 1;      // 1=오름, -1=내림
+
+/* 필터 드롭다운(교과군·선택군·학년)을 지금 코호트의 전체 개설과목 값으로 채운다.
+   pick()이 새 코호트를 불러올 때마다 다시 불러야 하므로 renderOfferings 진입 시 호출한다. */
+function offRefreshFilterOptions(){
   var list = (D.school && D.school.개설) || [];
-  var rows = list.filter(function(r){ return !q || r.과목.indexOf(q) !== -1; });
-  $('#offCnt').textContent = rows.length + '과목 (전체 ' + list.length + ')';
-  $('#offTbody').innerHTML = rows.map(offRowHTML).join('');
+  function fillSelect(sel, values, keepVal){
+    var opts = values.slice().sort(function(a,b){ return String(a).localeCompare(String(b),'ko'); });
+    sel.innerHTML = '<option value="">전체</option>' +
+      opts.map(function(v){ return '<option'+(String(v)===keepVal?' selected':'')+'>'+esc(v)+'</option>'; }).join('');
+  }
+  var groups = list.map(function(r){ return r.교과군; }).filter(function(v,i,a){ return v!=null && a.indexOf(v)===i; });
+  var tracks = list.map(function(r){ return r.선택군; }).filter(function(v,i,a){ return v!=null && a.indexOf(v)===i; });
+  var grades = list.map(function(r){ return r.학년; }).filter(function(v,i,a){ return v!=null && a.indexOf(v)===i; });
+  fillSelect($('#offFilterGroup'), groups, $('#offFilterGroup').value);
+  fillSelect($('#offFilterTrack'), tracks, $('#offFilterTrack').value);
+  fillSelect($('#offFilterGrade'), grades, $('#offFilterGrade').value);
 }
+
+function renderOfferings(){
+  offRefreshFilterOptions();
+  var q = $('#offSearch').value.trim();
+  var fGroup = $('#offFilterGroup').value;
+  var fTrack = $('#offFilterTrack').value;
+  var fGrade = $('#offFilterGrade').value;
+  var list = (D.school && D.school.개설) || [];
+  var rows = list.filter(function(r){
+    if(q && r.과목.indexOf(q) === -1) return false;
+    if(fGroup && r.교과군 !== fGroup) return false;
+    if(fTrack && r.선택군 !== fTrack) return false;
+    if(fGrade && String(r.학년) !== fGrade) return false;
+    return true;
+  });
+  if(offSortKey){
+    rows = rows.slice().sort(function(a,b){
+      var av = a[offSortKey], bv = b[offSortKey];
+      var cmp;
+      if(offSortKey === '과목' || offSortKey === '교과군' || offSortKey === '유형' || offSortKey === '선택군' || offSortKey === '평가'){
+        cmp = String(av||'').localeCompare(String(bv||''), 'ko');
+      } else {
+        cmp = (av==null?-Infinity:av) < (bv==null?-Infinity:bv) ? -1 : (av===bv ? 0 : 1);
+      }
+      return cmp * offSortDir;
+    });
+  }
+  var filtered = (q || fGroup || fTrack || fGrade);
+  $('#offCnt').textContent = filtered
+    ? (list.length + '개 중 ' + rows.length + '개 보는 중')
+    : (rows.length + '과목 (전체 ' + list.length + ')');
+  $('#offTbody').innerHTML = rows.map(offRowHTML).join('');
+  Array.prototype.forEach.call($('#offTable').querySelectorAll('th[data-sort]'), function(th){
+    var k = th.dataset.sort;
+    var arrow = th.querySelector('.sort-arrow');
+    if(arrow) arrow.remove();
+    if(k === offSortKey){
+      th.insertAdjacentHTML('beforeend', '<span class="sort-arrow">'+(offSortDir===1?'▲':'▼')+'</span>');
+    }
+  });
+}
+
+Array.prototype.forEach.call(document.querySelectorAll('#offTable th[data-sort]'), function(th){
+  th.addEventListener('click', function(){
+    var k = th.dataset.sort;
+    if(offSortKey === k) offSortDir = -offSortDir;
+    else { offSortKey = k; offSortDir = 1; }
+    renderOfferings();
+  });
+});
+$('#offSortResetBtn').addEventListener('click', function(){
+  offSortKey = null; offSortDir = 1;
+  renderOfferings();
+});
+$('#offFilterGroup').addEventListener('change', renderOfferings);
+$('#offFilterTrack').addEventListener('change', renderOfferings);
+$('#offFilterGrade').addEventListener('change', renderOfferings);
 
 function offSelectOptions(list, val, emptyLabel){
   var opts = list.slice();
@@ -827,7 +1254,7 @@ function offSelectOptions(list, val, emptyLabel){
 function 학기체크박스HTML(학기){
   var courses = (RULES && RULES.과정구분) || [];
   학기 = 학기 || {};
-  return courses.map(function(g){
+  var inner = courses.map(function(g){
     var sems = 학기[g] || [];
     var boxes = [1,2].map(function(s){
       var on = sems.indexOf(s) !== -1;
@@ -837,20 +1264,25 @@ function 학기체크박스HTML(학기){
     }).join('');
     return '<div style="white-space:nowrap">'+esc(g)+' '+boxes+'</div>';
   }).join('');
+  return '<div class="sem-box">'+inner+'</div>';
 }
 
+/* 과목명·선택군 드롭다운 — 사용자 지적 2-4("과목이름을 타자 치게 하면 안 돼")에 따라 자유 텍스트를
+   없애고 계층형 드롭다운(개설과목명티어/개설선택군티어)으로 바꾼다. '+ 직접 입력…'을 고르면 그 자리가
+   텍스트칸으로 바뀐다(activateCustomInput, 1단계와 같은 탈출구 패턴). 목록 밖 DB 값도
+   tieredSelectOptions가 1순위 맨 위에 끼워 넣어 그대로 보존한다. */
 function offRowHTML(r){
   var rid = r.id != null ? r.id : ('new-'+r._tmp);
   return '<tr data-id="'+esc(String(rid))+'" style="border-bottom:1px solid var(--rule)">'+
-    '<td style="padding:6px"><input class="off-f" data-k="과목" value="'+esc(r.과목)+'" style="width:150px"></td>'+
+    '<td style="padding:6px"><select class="off-f off-subject-f" data-k="과목">'+tieredSelectOptions(개설과목명티어(), r.과목, '(과목 고르기)')+'</select></td>'+
     '<td><select class="off-f" data-k="교과군">'+offSelectOptions(교과군목록, r.교과군)+'</select></td>'+
     '<td><select class="off-f" data-k="유형">'+offSelectOptions(유형목록, r.유형)+'</select></td>'+
     '<td><input class="off-f" data-k="운영학점" type="number" value="'+esc(r.운영학점)+'" style="width:50px"></td>'+
     '<td><input class="off-f" data-k="학년" type="number" value="'+esc(r.학년)+'" style="width:40px"></td>'+
-    '<td><input class="off-f" data-k="선택군" value="'+esc(r.선택군)+'" style="width:70px"></td>'+
-    '<td><select class="off-f" data-k="평가">'+offSelectOptions(평가목록, r.평가, '(미정)')+'</select></td>'+
-    '<td style="text-align:center"><input type="checkbox" class="off-f" data-k="수능"'+(r.수능?' checked':'')+'></td>'+
+    '<td><select class="off-f off-track-f" data-k="선택군">'+tieredSelectOptions(개설선택군티어(), r.선택군, '(선택군 고르기)')+'</select></td>'+
     '<td>'+학기체크박스HTML(r.학기)+'</td>'+
+    '<td><select class="off-f" data-k="평가">'+offSelectOptions(평가목록, r.평가, '(미정)')+'</select></td>'+
+    '<td class="exam-col" style="text-align:center"><input type="checkbox" class="off-f" data-k="수능"'+(r.수능?' checked':'')+'></td>'+
     '<td><button type="button" class="btn ghost" data-del="'+esc(String(rid))+'">삭제</button></td>'+
     '</tr>';
 }
@@ -892,6 +1324,15 @@ $('#offTbody').addEventListener('change', function(ev){
     saveOffering(row);
     return;
   }
+  // 과목명·선택군 드롭다운에서 '+ 직접 입력…'을 고르면 그 자리를 텍스트칸으로 바꾼다(탈출구, 1단계와 같은 패턴).
+  if(ev.target.value === CUSTOM_VALUE && (key === '과목' || key === '선택군')){
+    activateCustomInput(ev.target, function(custom){
+      if(!custom) { renderOfferings(); return; }
+      row[key] = custom;
+      saveOffering(row);
+    }, key === '과목' ? '과목명' : '선택군 이름');
+    return;
+  }
   var val = ev.target.value;
   if(key === '평가'){
     row.평가 = val === '' ? null : val;
@@ -907,6 +1348,8 @@ $('#offTbody').addEventListener('click', function(ev){
 });
 
 function saveOffering(row){
+  // 새 행이고 과목명을 아직 안 골랐으면 저장하지 않는다(빈 과목명으로 insert되는 것을 막는다).
+  if(!row.id && !row.과목){ offSay('과목명을 먼저 골라 주세요.', 'bad'); return; }
   var payload = {
     cohort_id: CO._db_id, 과목: row.과목, 교과군: row.교과군, 유형: row.유형,
     운영학점: row.운영학점, 선택군: row.선택군, 학년: row.학년,
@@ -923,7 +1366,9 @@ function saveOffering(row){
       delete row._tmp;
       renderOfferings();
     }
-    offSay('저장됨', 'good');
+    // 과목 마스터(139개)에 없는 이름이면 경고만 하고 저장은 그대로 둔다(직접 입력 탈출구를 막지 않는다).
+    var inMaster = SUBJECTS_MASTER.some(function(m){ return m.name === row.과목; });
+    offSay(inMaster ? '저장됨' : '저장됨 (과목 마스터에 없는 이름입니다)', inMaster ? 'good' : 'bad');
   });
 }
 
@@ -947,8 +1392,9 @@ function deleteOffering(rid){
 
 var offTmpSeq = 0;
 $('#offAddBtn').addEventListener('click', function(){
+  // 과목명은 비워 두어 드롭다운에서 직접 고르게 한다(사용자 지적 2-4 — 새 과목도 타자 대신 고르기).
   D.school.개설.unshift({
-    _tmp: ++offTmpSeq, 과목: '새 과목', 교과군: '국어', 유형: '일반',
+    _tmp: ++offTmpSeq, 과목: '', 교과군: '국어', 유형: '일반',
     운영학점: 4, 학년: 2, 선택군: '선택군1', 학기: {}, 평가: '상대절대', 수능: false
   });
   renderOfferings();
@@ -1008,6 +1454,27 @@ function 과목티어(교과군필터){
     .map(function(m){ return m.name; });
   var tier3 = masterNames.filter(function(s){ return tier1.indexOf(s)===-1 && tier2.indexOf(s)===-1; });
   return { tier1: tier1, tier2: tier2, tier3: tier3 };
+}
+
+/* 학교 교육과정 탭(과목명·선택군 드롭다운)은 D.school.개설(선택군 '지정' 포함, 미필터)을 기준으로 한다.
+   SCHOOL은 '지정'을 빼고 걸러낸 목록이라 이 탭에는 맞지 않는다. 2순위는 전체 코호트(ALL_교과군/ALL_과목과
+   같은 방식으로 loadCohorts()에서 미리 모아둔 값), 과목은 3순위로 과목 마스터까지 이어간다. */
+function 코호트개설과목전체목록(){
+  return (D.school && D.school.개설) || [];
+}
+function 개설과목명티어(){
+  var set = {}; 코호트개설과목전체목록().forEach(function(r){ if(r.과목) set[r.과목]=true; });
+  var tier1 = Object.keys(set).sort();
+  var tier2 = ALL_과목.filter(function(s){ return tier1.indexOf(s)===-1; });
+  var tier3 = SUBJECTS_MASTER.map(function(m){ return m.name; })
+    .filter(function(s){ return tier1.indexOf(s)===-1 && tier2.indexOf(s)===-1; });
+  return { tier1: tier1, tier2: tier2, tier3: tier3 };
+}
+function 개설선택군티어(){
+  var set = {}; 코호트개설과목전체목록().forEach(function(r){ if(r.선택군) set[r.선택군]=true; });
+  var tier1 = Object.keys(set).sort();
+  var tier2 = ALL_선택군.filter(function(v){ return tier1.indexOf(v)===-1; });
+  return { tier1: tier1, tier2: tier2, tier3: [] };
 }
 
 var CUSTOM_VALUE = '__custom__';
@@ -1802,6 +2269,8 @@ Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape' && !$('#modal').hidden) closeHelp();
   if(e.key==='Escape' && !$('#diffModal').hidden) closeDiffModal();
+  if(e.key==='Escape' && !$('#newCohortModal').hidden) closeNewCohortModal();
+  if(e.key==='Escape' && !$('#deleteCohortModal').hidden) closeDeleteCohortModal();
 });
 
 $('#stage').onchange = refresh;
