@@ -91,19 +91,14 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 }
 .gbox h2{font-size:18px;margin:0}
 .gbox p{font-size:13px;color:var(--soft);margin:0 0 6px}
-#gpw{font-family:inherit;font-size:15px;text-align:center;letter-spacing:.18em;padding:10px;border:1.5px solid var(--rule);border-radius:9px}
+#gemail,#gpw{font-family:inherit;font-size:15px;padding:10px;border:1.5px solid var(--rule);border-radius:9px}
 .gmsg{font-size:12.5px;color:var(--red);min-height:1.2em;margin:0}
 .gback{font-size:12px;color:var(--faint);text-decoration:none;margin-top:4px}
 .gback:hover{color:var(--teal);text-decoration:underline}
 
-/* 깃헙 반영 */
+/* 반영 */
 .pub{border-top:1.5px solid var(--teal)}
 .pubrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-#tok{
-  flex:1 1 300px;min-width:220px;font-family:ui-monospace,Menlo,Consolas,monospace;
-  font-size:12.5px;padding:7px 10px;border:1.5px solid var(--rule);border-radius:8px;
-}
-.chk{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--soft)}
 .st{font-size:12.5px;color:var(--soft);margin:10px 0 0}
 .st.good{color:var(--teal);font-weight:600}
 .st.bad{color:var(--red);font-weight:600}
@@ -138,18 +133,20 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 .mbody code{background:var(--card);border:1px solid var(--rule);border-radius:5px;padding:1px 5px;font-size:12px}
 .mbody b{color:var(--ink)}
 .mbody .sem{font-size:10.5px;color:var(--faint);border:1px solid var(--rule);border-radius:5px;padding:1px 5px}
-.mbody .warn{background:var(--red-w);border:1.5px solid var(--red);border-radius:10px;padding:10px 12px;color:var(--red);font-size:12.5px;margin:12px 0 0}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 
-<!-- 비밀번호 잠금 -->
+<!-- 로그인 -->
 <div class="gate" id="gate">
   <form class="gbox" id="gform">
     <h2>개설 현황 관리</h2>
     <p>관리자만 쓰는 화면입니다.</p>
-    <input type="password" id="gpw" placeholder="비밀번호" autocomplete="current-password" autofocus>
-    <button type="submit" class="btn">들어가기</button>
+    <input type="text" id="gemail" placeholder="이메일" autocomplete="username" autofocus>
+    <input type="password" id="gpw" placeholder="비밀번호" autocomplete="current-password">
+    <button type="submit" class="btn">로그인</button>
     <p class="gmsg" id="gmsg"></p>
     <a class="gback" href="index.html">학생용 페이지로 가기</a>
   </form>
@@ -172,6 +169,14 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 
   <div class="wrap">
 
+    <div class="tabbar" style="display:flex;gap:8px;margin-bottom:16px">
+      <button type="button" class="btn" id="tabClosed">개설현황</button>
+      <button type="button" class="btn ghost" id="tabOfferings">학교 교육과정</button>
+      <button type="button" class="btn ghost" id="tabRules">이수규칙</button>
+    </div>
+
+    <div id="panelClosed">
+
     <div class="bar">
       <label for="co">대상</label>
       <select id="co"></select>
@@ -191,23 +196,75 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
     <div id="body"></div>
 
     <div class="out pub">
-      <h2>학생 화면에 반영하기 <span class="q" id="help3">토큰이 뭔가요</span></h2>
+      <h2>학생 화면에 반영하기</h2>
       <div class="pubrow">
-        <input type="password" id="tok" placeholder="깃헙 토큰 (github_pat_… 또는 ghp_…)" autocomplete="off">
-        <label class="chk"><input type="checkbox" id="save"> 이 기기에 저장</label>
         <button type="button" class="btn" id="push">지금 반영하기</button>
         <button type="button" class="btn ghost" id="dl">JSON 내려받기</button>
       </div>
-      <p class="st" id="st">토큰을 한 번 넣어 두면 버튼 하나로 커밋됩니다.</p>
+      <p class="st" id="st">버튼을 누르면 바로 저장되고, 학생 화면을 새로고침하면 반영됩니다.</p>
     </div>
 
     <div class="out">
       <h2>올라갈 내용 <span class="q" id="help2">사용법</span></h2>
       <textarea id="json" readonly></textarea>
       <p class="hint">
-        토큰을 쓰지 않으실 때는 <b>JSON 내려받기</b>로 받아 저장소의 <code>data/</code> 폴더에
-        <code id="fname">closed-2026.json</code> 으로 덮어쓴 뒤 커밋하시면 됩니다.
+        위 내용은 <b>지금 반영하기</b>를 누르면 그대로 저장됩니다.
+        <b>JSON 내려받기</b>는 기록을 남겨 두고 싶을 때 참고용으로만 쓰시면 됩니다.
       </p>
+    </div>
+
+    </div>
+
+    <div id="panelOfferings" style="display:none">
+      <div class="bar">
+        <label for="offSearch">검색</label>
+        <input type="text" id="offSearch" placeholder="과목명 검색...">
+        <button type="button" class="btn" id="offAddBtn">+ 새 과목 추가</button>
+        <span class="count" id="offCnt"></span>
+      </div>
+      <p class="st" id="offSt"></p>
+      <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px" id="offTable">
+        <thead>
+          <tr style="text-align:left;border-bottom:2px solid var(--rule)">
+            <th style="padding:6px">과목명</th><th>교과군</th><th>유형</th><th>학점</th><th>학년</th><th>선택군</th><th>성적방식</th><th>수능</th><th>학기</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="offTbody"></tbody>
+      </table>
+      </div>
+    </div>
+
+    <div id="panelRules" style="display:none">
+      <p class="st" id="rulesLoadSt"></p>
+
+      <h3>① 선택슬롯</h3>
+      <div id="slotList"></div>
+      <button type="button" class="btn ghost" id="slotAddBtn">+ 선택군 추가</button>
+
+      <h3 style="margin-top:22px">② 교과군 최소 이수</h3>
+      <div id="minList"></div>
+      <button type="button" class="btn ghost" id="minAddBtn">+ 규칙 추가</button>
+
+      <h3 style="margin-top:22px">③ 교과군 최대 이수</h3>
+      <div id="maxBox"></div>
+
+      <h3 style="margin-top:22px">④ 과학중점 전용 규칙</h3>
+      <div id="scienceBox"></div>
+
+      <h3 style="margin-top:22px">⑤ 선수과목 관계</h3>
+      <div id="prereqList"></div>
+      <button type="button" class="btn ghost" id="prereqAddBtn">+ 관계 추가</button>
+
+      <h3 style="margin-top:22px">⑥ 유의사항 (학생 화면에 표시됨, 한 줄에 하나씩)</h3>
+      <div id="noticeBox"></div>
+
+      <h3 style="margin-top:22px">⑦ 과정구분</h3>
+      <div id="courseTypeBox"></div>
+
+      <button type="button" class="btn" id="rulesSaveBtn" style="margin-top:20px">이수규칙 전체 저장</button>
+      <button type="button" class="btn ghost" id="rulesReloadBtn" style="margin-top:20px">다시 불러오기 (저장하지 않은 변경 취소)</button>
+      <p class="st" id="rulesMsg"></p>
     </div>
 
   </div>
@@ -254,25 +311,10 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
           과정 이름이 붙습니다. 영어 독해와 작문이 그런 경우입니다.</li>
       </ul>
 
-      <h3>반영하는 법 — 두 가지</h3>
-      <p><b>① 토큰을 넣어 자동 커밋</b><br>
-        토큰을 한 번 넣어 두면 <b>지금 반영하기</b> 버튼만 누르면 됩니다.
-        저장소에 바로 커밋되고, 1분쯤 뒤 학생 화면에 반영됩니다.</p>
-      <p><b>② 내려받아 직접 커밋</b><br>
-        <b>JSON 내려받기</b>로 파일을 받아 저장소의
-        <code>work/교육과정/2028과목선택/data/</code> 폴더에 덮어쓰고 커밋합니다.</p>
-
-      <h3>토큰 만들기</h3>
-      <ol>
-        <li>깃헙 &rarr; Settings &rarr; Developer settings &rarr;
-          <b>Fine-grained personal access tokens</b> &rarr; Generate new token</li>
-        <li>Repository access는 <code>presentations</code> <b>하나만</b> 고릅니다.</li>
-        <li>Permissions에서 <b>Contents: Read and write</b> 만 켭니다.</li>
-        <li>만료일을 정하고 만든 뒤, 나온 토큰을 위 칸에 붙여 넣습니다.</li>
-      </ol>
-      <p class="warn">토큰은 비밀번호와 같습니다. <b>공용 컴퓨터에서는 '이 기기에 저장'을 켜지 마세요.</b>
-        권한을 이 저장소의 파일 쓰기로만 좁혀 두면 새어 나가도 피해가 이 저장소에 그칩니다.
-        의심되면 깃헙에서 즉시 폐기(revoke)하시면 됩니다.</p>
+      <h3>반영하는 법</h3>
+      <p><b>지금 반영하기</b> 버튼만 누르면 됩니다.
+        로그인된 계정으로 바로 저장되고, 학생 화면을 새로고침하면 곧바로 반영됩니다.
+        <b>JSON 내려받기</b>는 저장된 내용을 따로 기록해 두고 싶을 때만 쓰면 됩니다.</p>
 
       <h3>이미 담아둔 학생은</h3>
       <p>폐강된 과목을 담아둔 학생이 페이지를 열면 안내가 뜬 뒤 그 과목이 자동으로 빠집니다.</p>
@@ -282,12 +324,11 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 </div>
 
 <script>
-/* ── 비밀번호 잠금 ────────────────────────────────
-   정적 페이지라 이 잠금은 '아무나 들어와 헷갈리지 않게' 막는 문턱입니다.
-   소스를 보면 비밀번호가 보이므로 진짜 보안은 아닙니다.
-   실제 잠금은 깃헙 토큰입니다 — 토큰 없이는 아무것도 바꿀 수 없습니다.
-   비밀번호를 바꾸려면 아래 PW 값만 고치면 됩니다. */
-var PW = '850525';
+/* ── 로그인 (Supabase Auth) ──────────────────────
+   실제 보안은 이 로그인과, 이후 태스크에서 붙는 RLS(행 단위 권한)입니다.
+   로그인한 세션의 Supabase 클라이언트(sb)를 그대로 이후 태스크(개설현황 편집,
+   교육과정 편집 등의 쓰기 작업)가 재사용합니다. */
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function $(s){ return document.querySelector(s); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
@@ -299,25 +340,34 @@ function unlock(){
   boot();
 }
 
+function lock(msg){
+  $('#gate').hidden = false;
+  $('#page').hidden = true;
+  $('#gmsg').textContent = msg || '';
+}
+
 $('#gform').addEventListener('submit', function(e){
   e.preventDefault();
-  if($('#gpw').value.trim() === PW){
-    try{ sessionStorage.setItem('adm_ok','1'); }catch(err){}
+  var email = $('#gemail').value.trim();
+  var pw = $('#gpw').value;
+  $('#gmsg').textContent = '';
+  sb.auth.signInWithPassword({ email: email, password: pw }).then(function(res){
+    if(res.error){
+      $('#gmsg').textContent = '로그인 실패: ' + res.error.message;
+      $('#gpw').value = ''; $('#gpw').focus();
+      return;
+    }
     unlock();
-  } else {
-    $('#gmsg').textContent = '비밀번호가 다릅니다.';
-    $('#gpw').value = ''; $('#gpw').focus();
-  }
+  });
+});
+
+sb.auth.getSession().then(function(res){
+  if(res.data.session) unlock(); else lock();
 });
 
 /* ── 자료 ─────────────────────────────────────── */
-var V = '20260819a';
 var D = {}, CO = null, SCHOOL = [], OFF = {};   // OFF: '과목|선택군|과정|학기' → true
-
-function getJSON(n){
-  return fetch('data/'+n+'?v='+V).then(function(r){
-    if(!r.ok) throw new Error(n+' '+r.status); return r.json(); });
-}
+var RULES = null;   // school_rules 원본 행(id, cohort_id 포함) 전체. 이수규칙 빌더가 이걸 직접 수정한다.
 
 function key(과목,선택군,과정,학기){ return [과목,선택군,과정,학기].join('|'); }
 
@@ -401,7 +451,6 @@ function refresh(){
   var n = countUnits();
   $('#cnt').innerHTML = n ? '폐강 <b>'+n+'</b>과목' : '<span class="ok">폐강 없음</span>';
   $('#json').value = build();
-  $('#fname').textContent = CO.폐강;
 }
 
 function render(){
@@ -466,106 +515,563 @@ function render(){
 
 function pick(id){
   CO = D.cohorts.목록.filter(function(c){return c.id===id})[0];
-  Promise.all([ getJSON(CO.편성표), getJSON(CO.폐강).catch(function(){return {폐강:[]}}) ])
-  .then(function(res){
-    D.school = res[0];
+  Promise.all([
+    sb.from('school_offerings').select('*').eq('cohort_id', CO._db_id),
+    sb.from('school_rules').select('*').eq('cohort_id', CO._db_id).single(),
+    sb.from('closed_subjects').select('*').eq('cohort_id', CO._db_id)
+  ]).then(function(res){
+    if(res[0].error){ $('#body').innerHTML = '<p class="st bad">개설과목 로드 실패: '+esc(res[0].error.message)+'</p>'; return; }
+    if(res[1].error){ $('#body').innerHTML = '<p class="st bad">이수규칙 로드 실패: '+esc(res[1].error.message)+'</p>'; return; }
+    if(res[2].error){ $('#body').innerHTML = '<p class="st bad">폐강 목록 로드 실패: '+esc(res[2].error.message)+'</p>'; return; }
+
+    D.school = {
+      meta: { 선택슬롯: res[1].data.선택슬롯 },
+      개설: res[0].data.map(function(r){
+        return {
+          id:r.id, 과목:r.과목, 교과군:r.교과군, 유형:r.유형, 운영학점:r.운영학점,
+          선택군:r.선택군, 학년:r.학년, 학기:r.학기, 평가:r.평가, 수능:r.수능
+        };
+      })
+    };
+    // school_rules 원본 행 전체를 그대로 보관한다 — 이수규칙 빌더가 편집/저장의 기준으로 쓴다.
+    // (편집 UI가 다루지 않는 하위 필드가 있어도 이 객체에 남아있으므로 저장 시 유실되지 않는다.)
+    RULES = res[1].data;
     // 이 코호트가 다루는 선택군만 본다
     var 대상 = CO.선택군 || [];
     SCHOOL = D.school.개설.filter(function(c){
       return c.선택군!=='지정' && c.학기 && (!대상.length || 대상.indexOf(c.선택군)!==-1);
     });
-    var cl = res[1];
-    var st = (cl.meta&&cl.meta.단계) || '신청 전';
-    var opt = Array.prototype.map.call($('#stage').options, function(o){return o.value});
-    $('#stage').value = opt.indexOf(st)!==-1 ? st : '신청 전';
-    $('#date').value  = (cl.meta&&cl.meta.갱신일) || new Date().toISOString().slice(0,10);
-    spread(cl);
+    var closed = res[2].data.map(function(x){
+      return { 과목:x.과목, 학기:x.학기, 사유:x.사유, 선택군:x.선택군, 과정:x.과정 };
+    });
+    var latest = closed.reduce(function(a,x){ return (x.갱신일||'') > a ? x.갱신일 : a; }, '');
+    $('#date').value = latest || new Date().toISOString().slice(0,10);
+    spread({ 폐강: closed });
     render();
+    if(currentTab === 'offerings') renderOfferings();
+    if(currentTab === 'rules') renderRules();
   });
 }
 
 function boot(){
-  getJSON('cohorts.json').then(function(c){
-    D.cohorts = c;
-    var list = c.목록;   // 관리자는 숨긴 코호트도 손볼 수 있어야 한다
+  sb.from('school_cohorts').select('*').then(function(res){
+    if(res.error){ $('#body').innerHTML = '<p class="st bad">코호트 목록 로드 실패: '+esc(res.error.message)+'</p>'; return; }
+    var list = res.data.map(function(c){
+      return {
+        id: c.코호트id, 입학연도: c.입학연도, 대상: c.대상, 제목: c.제목,
+        설명: c.설명, 선택군: c.선택군, 노출: c.노출, _db_id: c.id
+      };
+    });   // 관리자는 숨긴 코호트도 손볼 수 있어야 한다
+    D.cohorts = { 목록: list };
     $('#co').innerHTML = list.map(function(x){
       return '<option value="'+esc(x.id)+'">'+esc(x.제목)+(x.노출?'':' (숨김)')+'</option>';
     }).join('');
     $('#co').onchange = function(){ pick(this.value); };
     pick(list[0].id);
-  }).catch(function(e){
-    $('#body').innerHTML = '<p class="st bad">자료를 불러오지 못했습니다. ('+esc(e.message)+')</p>';
   });
 }
 
-/* ── 깃헙에 바로 반영 ─────────────────────────────
-   깃헙 페이지는 정적 호스팅이라 서버가 없다. 그래서 브라우저에서
-   깃헙 Contents API 로 파일을 직접 커밋한다.
-   토큰은 이 기기 밖으로 나가지 않으며 api.github.com 으로만 보내진다. */
-var REPO = { owner:'GuitaruMan', repo:'presentations', branch:'main' };
-var BASE = 'work/교육과정/2028과목선택/data/';
-
-function tokenOf(){ return $('#tok').value.trim(); }
-
+/* ── Supabase에 바로 반영 ─────────────────────────
+   로그인된 세션의 sb 클라이언트로 closed_subjects 테이블을 직접 쓴다.
+   RLS 정책(auth.role() = 'authenticated')이 로그인 여부로 쓰기를 허용한다. */
 function say(msg, kind){
   $('#st').textContent = msg;
   $('#st').className = 'st' + (kind ? ' ' + kind : '');
 }
 
-function b64(str){
-  var bytes = new TextEncoder().encode(str), bin = '';
-  for(var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
-  return btoa(bin);
-}
-
-function api(path, opt){
-  opt = opt || {};
-  opt.headers = Object.assign({
-    'Authorization':'Bearer ' + tokenOf(),
-    'Accept':'application/vnd.github+json',
-    'X-GitHub-Api-Version':'2022-11-28'
-  }, opt.headers || {});
-  return fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.repo+path, opt);
-}
-
 function pushNow(){
-  if(!tokenOf()){ say('토큰을 먼저 넣어 주세요.', 'bad'); return; }
+  var cohortDbId = CO._db_id;
+  var closedList = collect();
 
-  var file = BASE + CO.폐강;
-  var url = '/contents/' + file.split('/').map(encodeURIComponent).join('/');
-  var msg = '개설 현황 갱신 — ' + CO.제목 + ' / ' + $('#stage').value +
-            ' / 폐강 ' + countUnits() + '과목';
-
-  say('올리는 중…');
+  say('저장하는 중…');
   $('#push').disabled = true;
 
-  api(url + '?ref=' + REPO.branch).then(function(r){
-    if(r.status===401 || r.status===403)
-      throw new Error('토큰이 거부되었습니다. 권한(Contents: Read and write)과 만료일을 확인해 주세요.');
-    return r.status===404 ? null : r.json();
-  }).then(function(cur){
-    return api(url, {
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        message: msg,
-        content: b64(build()),
-        branch: REPO.branch,
-        sha: cur && cur.sha ? cur.sha : undefined
-      })
+  sb.from('closed_subjects').delete().eq('cohort_id', cohortDbId)
+    .then(function(del){
+      if(del.error) throw new Error(del.error.message);
+      var payload = closedList.map(function(x){
+        return {
+          cohort_id: cohortDbId, 과목: x.과목, 학기: x.학기 || [],
+          선택군: x.선택군 || null, 과정: x.과정 || [],
+          사유: x.사유 || '', 갱신일: $('#date').value || new Date().toISOString().slice(0,10)
+        };
+      });
+      if(!payload.length) return { error: null };
+      return sb.from('closed_subjects').insert(payload);
+    })
+    .then(function(ins){
+      if(ins.error) throw new Error(ins.error.message);
+      say('저장 완료. 학생 화면을 새로고침하면 바로 반영됩니다.', 'good');
+    })
+    .catch(function(e){
+      say('저장 실패: ' + e.message, 'bad');
+    })
+    .finally(function(){
+      $('#push').disabled = false;
     });
-  }).then(function(r){
-    if(!r.ok) return r.json().then(function(e){ throw new Error(e.message || ('HTTP '+r.status)); });
-    return r.json();
-  }).then(function(){
-    say('올렸습니다. 깃헙 페이지가 다시 만들어지는 데 1분쯤 걸립니다. ' +
-        '그 뒤 학생 화면을 새로고침하면 반영됩니다.', 'good');
-  }).catch(function(e){
-    say('실패: ' + e.message, 'bad');
-  }).then(function(){
-    $('#push').disabled = false;
+}
+
+/* ── 탭 전환 ──────────────────────────────────── */
+var currentTab = 'closed';
+
+function switchTab(name){
+  currentTab = name;
+  $('#panelClosed').style.display = name === 'closed' ? '' : 'none';
+  $('#panelOfferings').style.display = name === 'offerings' ? '' : 'none';
+  $('#panelRules').style.display = name === 'rules' ? '' : 'none';
+  $('#tabClosed').classList.toggle('ghost', name !== 'closed');
+  $('#tabOfferings').classList.toggle('ghost', name !== 'offerings');
+  $('#tabRules').classList.toggle('ghost', name !== 'rules');
+  if(name === 'offerings') renderOfferings();
+  if(name === 'rules') renderRules();
+}
+
+/* ── 학교 교육과정(개설과목 표) CRUD ─────────────
+   D.school.개설: pick()에서 채워지는, 이 코호트의 전체 개설과목 목록(선택군 '지정' 포함,
+   SCHOOL과 달리 필터링되지 않음 — 관리자는 전체를 편집할 수 있어야 하므로 이걸 쓴다).
+   편집 가능 필드: 과목/교과군/유형/운영학점/학년/선택군/평가(성적방식)/수능/학기.
+   학기는 {일반:[..],과학중점:[..]} 형태의 JSONB라 과정×학기 체크박스로 편집한다(RULES.과정구분 기준). */
+var 교과군목록 = ['국어','수학','영어','사회','과학','기술·가정/정보','제2외국어/한문','교양','체육','예술','한국사','한문','정보'];
+var 유형목록 = ['공통','일반','진로','융합'];
+var 평가목록 = ['상대절대','석차미기재','성취3단계','이수여부'];
+
+function offSay(msg, kind){
+  $('#offSt').textContent = msg;
+  $('#offSt').className = 'st' + (kind ? ' ' + kind : '');
+}
+
+function renderOfferings(){
+  var q = $('#offSearch').value.trim();
+  var list = (D.school && D.school.개설) || [];
+  var rows = list.filter(function(r){ return !q || r.과목.indexOf(q) !== -1; });
+  $('#offCnt').textContent = rows.length + '과목 (전체 ' + list.length + ')';
+  $('#offTbody').innerHTML = rows.map(offRowHTML).join('');
+}
+
+function offSelectOptions(list, val, emptyLabel){
+  var opts = list.slice();
+  if (val != null && val !== '' && opts.indexOf(val) === -1) opts.push(val);
+  // 빈 값(null/미기재)도 고를 수 있어야 한다 — 억지로 첫 옵션이 골라진 것처럼 보이면 안 된다.
+  // emptyLabel은 성적방식처럼 null이 실제로 존재하는 필드에서만 넘겨준다
+  // (교과군/유형처럼 null 행이 없는 필드는 빈 줄만 보이면 충분하다).
+  var html = '<option value=""' + (val == null || val === '' ? ' selected' : '') + '>' +
+    (emptyLabel ? esc(emptyLabel) : '') + '</option>';
+  html += opts.map(function(o){
+    return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>';
+  }).join('');
+  return html;
+}
+
+/* 학기 체크박스 — 과정(RULES.과정구분)마다 1학기/2학기를 따로 켤 수 있다.
+   과정마다 학기가 다른 경우가 실제로 있어(과학중점:[], 일반:[1] 등) 과정별로 나눈다.
+   빈 객체({})인 행(선택군 '지정' 등)은 전부 꺼진 상태로 보이면 되고,
+   여기서 억지로 과정 키를 만들어 넣지는 않는다(저장 시점에 실제 체크 상태를 그대로 읽는다). */
+function 학기체크박스HTML(학기){
+  var courses = (RULES && RULES.과정구분) || [];
+  학기 = 학기 || {};
+  return courses.map(function(g){
+    var sems = 학기[g] || [];
+    var boxes = [1,2].map(function(s){
+      var on = sems.indexOf(s) !== -1;
+      return '<label style="white-space:nowrap;margin-right:6px">'+
+        '<input type="checkbox" class="off-sem-f" data-course="'+esc(g)+'" data-sem="'+s+'"'+
+        (on?' checked':'')+'> '+s+'학기</label>';
+    }).join('');
+    return '<div style="white-space:nowrap">'+esc(g)+' '+boxes+'</div>';
+  }).join('');
+}
+
+function offRowHTML(r){
+  var rid = r.id != null ? r.id : ('new-'+r._tmp);
+  return '<tr data-id="'+esc(String(rid))+'" style="border-bottom:1px solid var(--rule)">'+
+    '<td style="padding:6px"><input class="off-f" data-k="과목" value="'+esc(r.과목)+'" style="width:150px"></td>'+
+    '<td><select class="off-f" data-k="교과군">'+offSelectOptions(교과군목록, r.교과군)+'</select></td>'+
+    '<td><select class="off-f" data-k="유형">'+offSelectOptions(유형목록, r.유형)+'</select></td>'+
+    '<td><input class="off-f" data-k="운영학점" type="number" value="'+esc(r.운영학점)+'" style="width:50px"></td>'+
+    '<td><input class="off-f" data-k="학년" type="number" value="'+esc(r.학년)+'" style="width:40px"></td>'+
+    '<td><input class="off-f" data-k="선택군" value="'+esc(r.선택군)+'" style="width:70px"></td>'+
+    '<td><select class="off-f" data-k="평가">'+offSelectOptions(평가목록, r.평가, '(미정)')+'</select></td>'+
+    '<td style="text-align:center"><input type="checkbox" class="off-f" data-k="수능"'+(r.수능?' checked':'')+'></td>'+
+    '<td>'+학기체크박스HTML(r.학기)+'</td>'+
+    '<td><button type="button" class="btn ghost" data-del="'+esc(String(rid))+'">삭제</button></td>'+
+    '</tr>';
+}
+
+function findOffRow(rid){
+  return (D.school.개설 || []).filter(function(r){
+    var id = r.id != null ? String(r.id) : ('new-'+r._tmp);
+    return id === rid;
+  })[0];
+}
+
+$('#offSearch').addEventListener('input', renderOfferings);
+
+$('#offTbody').addEventListener('change', function(ev){
+  var tr = ev.target.closest('tr');
+  var row = findOffRow(tr.dataset.id);
+  if(!row) return;
+
+  if(ev.target.classList.contains('off-sem-f')){
+    // 체크박스 상태 → {과정: [학기...]} — 반드시 숫자 배열, 정렬된 상태로 만든다
+    var g = ev.target.dataset.course;
+    var s = Number(ev.target.dataset.sem);
+    var 학기 = row.학기 ? Object.assign({}, row.학기) : {};
+    var sems = (학기[g] || []).slice();
+    var i = sems.indexOf(s);
+    if(ev.target.checked){ if(i===-1) sems.push(s); }
+    else { if(i!==-1) sems.splice(i,1); }
+    sems.sort(function(a,b){return a-b;});
+    학기[g] = sems;
+    row.학기 = 학기;
+    saveOffering(row);
+    return;
+  }
+
+  if(!ev.target.classList.contains('off-f')) return;
+  var key = ev.target.dataset.k;
+  if(key === '수능'){
+    row.수능 = ev.target.checked;
+    saveOffering(row);
+    return;
+  }
+  var val = ev.target.value;
+  if(key === '평가'){
+    row.평가 = val === '' ? null : val;
+  } else {
+    row[key] = (key === '운영학점' || key === '학년') ? Number(val) : val;
+  }
+  saveOffering(row);
+});
+
+$('#offTbody').addEventListener('click', function(ev){
+  if(!ev.target.dataset.del) return;
+  deleteOffering(ev.target.dataset.del);
+});
+
+function saveOffering(row){
+  var payload = {
+    cohort_id: CO._db_id, 과목: row.과목, 교과군: row.교과군, 유형: row.유형,
+    운영학점: row.운영학점, 선택군: row.선택군, 학년: row.학년,
+    학기: row.학기 || {}, 평가: (row.평가 === '' ? null : row.평가), 수능: !!row.수능
+  };
+  offSay('저장하는 중…');
+  var query = row.id
+    ? sb.from('school_offerings').update(payload).eq('id', row.id)
+    : sb.from('school_offerings').insert(payload).select();
+  query.then(function(res){
+    if(res.error){ offSay('저장 실패: ' + res.error.message, 'bad'); return; }
+    if(!row.id && res.data && res.data[0]){
+      row.id = res.data[0].id;
+      delete row._tmp;
+      renderOfferings();
+    }
+    offSay('저장됨', 'good');
   });
 }
+
+function deleteOffering(rid){
+  var row = findOffRow(rid);
+  if(!row) return;
+  if(!row.id){
+    D.school.개설 = D.school.개설.filter(function(r){ return r !== row; });
+    renderOfferings();
+    return;
+  }
+  if(!confirm('"'+row.과목+'"을(를) 삭제할까요?')) return;
+  offSay('삭제하는 중…');
+  sb.from('school_offerings').delete().eq('id', row.id).then(function(res){
+    if(res.error){ offSay('삭제 실패: ' + res.error.message, 'bad'); return; }
+    D.school.개설 = D.school.개설.filter(function(r){ return r !== row; });
+    renderOfferings();
+    offSay('삭제됨', 'good');
+  });
+}
+
+var offTmpSeq = 0;
+$('#offAddBtn').addEventListener('click', function(){
+  D.school.개설.unshift({
+    _tmp: ++offTmpSeq, 과목: '새 과목', 교과군: '국어', 유형: '일반',
+    운영학점: 4, 학년: 2, 선택군: '선택군1', 학기: {}, 평가: '상대절대', 수능: false
+  });
+  renderOfferings();
+});
+
+/* ── 이수규칙 빌더 (school_rules 5개 컬럼: 이수규칙/선수과목/선택슬롯/유의사항/과정구분) ──
+   RULES = pick()에서 채워지는 school_rules 원본 행 전체(id, cohort_id 포함).
+   각 렌더 함수는 RULES의 하위 객체를 "그 자리에서" 수정한다(교체가 아니라 in-place 변경).
+   이렇게 하면 이 태스크의 편집 UI가 다루지 않는 하위 필드(예: 선택슬롯.*.학점 중 UI에
+   없는 부분, 향후 추가될 필드 등)가 있어도 RULES 안에 원본 그대로 남아있으므로
+   저장 시 유실되지 않는다. 저장은 항상 RULES 전체를 payload로 보낸다. */
+
+/* 숫자 입력칸 방어: 빈 문자열/공백/문자/음수는 저장하지 않고 원래 값으로 되돌린다.
+   Number('') === 0 이라서 그냥 Number()만 쓰면 관리자가 칸을 지웠다가 탭아웃만 해도
+   조용히 0으로 저장돼버린다(예: 교과군최대.최대 14→0, 심화최소/수학최소도 동일 위험).
+   유효하면 숫자를 콜백에 넘기고, 무효하면 revertRender()만 호출해 화면을 원복한다. */
+function applyNumOrRevert(rawValue, revertRender, apply){
+  var n = Number(rawValue);
+  if(String(rawValue).trim() === '' || isNaN(n) || n < 0){ revertRender(); return; }
+  apply(n);
+}
+
+function renderRules(){
+  if(!RULES){ $('#rulesLoadSt').textContent = '이수규칙을 불러오는 중…'; return; }
+  $('#rulesLoadSt').textContent = '';
+  $('#rulesMsg').textContent = '';   // 다시 불러오기 등으로 인한 이전 메시지("불러오는 중…")를 지운다
+  $('#rulesMsg').className = 'st';
+  renderSlots();
+  renderMinRules();
+  renderMaxRule();
+  renderScienceRule();
+  renderPrereqs();
+  renderNotices();
+  renderCourseTypes();
+}
+
+/* ① 선택슬롯 — 선택군별 학년/학기별 택수 + 학기별 학점(누락 시 통째로 사라지므로 반드시 편집 가능하게 둔다) */
+function renderSlots(){
+  var slots = RULES.선택슬롯 || {};
+  var html = Object.keys(slots).map(function(name){
+    var s = slots[name];
+    var credit = s.학점 || {};
+    return '<div class="slot-row" data-name="'+esc(name)+'" style="background:var(--card);border:1.5px solid var(--rule);border-radius:8px;padding:10px;margin-bottom:8px">'+
+      '<div style="font-weight:600;margin-bottom:6px">'+esc(name)+'</div>'+
+      '<label>학년 <input class="slot-f" data-k="학년" type="number" value="'+esc(s.학년==null?'':s.학년)+'" style="width:50px"></label> '+
+      '<label>1학기 택 <input class="slot-f" data-k="1학기" type="number" value="'+esc(s['1학기']==null?0:s['1학기'])+'" style="width:50px"></label> '+
+      '<label>2학기 택 <input class="slot-f" data-k="2학기" type="number" value="'+esc(s['2학기']==null?0:s['2학기'])+'" style="width:50px"></label> '+
+      '<label>1학기 학점 <input class="slot-credit-f" data-k="1학기" type="number" value="'+esc(credit['1학기']==null?0:credit['1학기'])+'" style="width:50px"></label> '+
+      '<label>2학기 학점 <input class="slot-credit-f" data-k="2학기" type="number" value="'+esc(credit['2학기']==null?0:credit['2학기'])+'" style="width:50px"></label> '+
+      '<button type="button" class="btn ghost" data-remove-slot="'+esc(name)+'">삭제</button>'+
+      '</div>';
+  }).join('');
+  $('#slotList').innerHTML = html || '<p class="st">선택슬롯이 없습니다.</p>';
+}
+
+$('#slotList').addEventListener('change', function(ev){
+  var row = ev.target.closest('.slot-row');
+  if(!row) return;
+  var name = row.dataset.name;
+  if(ev.target.classList.contains('slot-f')){
+    applyNumOrRevert(ev.target.value, renderSlots, function(n){
+      RULES.선택슬롯[name][ev.target.dataset.k] = n;
+    });
+  } else if(ev.target.classList.contains('slot-credit-f')){
+    applyNumOrRevert(ev.target.value, renderSlots, function(n){
+      if(!RULES.선택슬롯[name].학점) RULES.선택슬롯[name].학점 = {};
+      RULES.선택슬롯[name].학점[ev.target.dataset.k] = n;
+    });
+  }
+});
+
+$('#slotList').addEventListener('click', function(ev){
+  var name = ev.target.dataset.removeSlot;
+  if(!name) return;
+  if(!confirm('"'+name+'"을(를) 삭제할까요?')) return;
+  delete RULES.선택슬롯[name];
+  renderSlots();
+});
+
+$('#slotAddBtn').addEventListener('click', function(){
+  var name = prompt('선택군 이름 (예: 선택군4)');
+  if(!name) return;
+  if(!RULES.선택슬롯) RULES.선택슬롯 = {};
+  RULES.선택슬롯[name] = { 학년: 3, '1학기': 0, '2학기': 0, 학점: { '1학기': 0, '2학기': 0 } };
+  renderSlots();
+});
+
+/* ② 교과군 최소 이수 — 이름은 사람이 쓴 문구이므로 자동 생성으로 덮어쓰지 않고 직접 편집한다 */
+function renderMinRules(){
+  var list = (RULES.이수규칙 && RULES.이수규칙.교과군최소) || [];
+  var html = list.map(function(r, i){
+    return '<div class="min-row" data-idx="'+i+'" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px">'+
+      '<input class="min-f" data-k="이름" value="'+esc(r.이름||'')+'" style="width:220px" placeholder="이름(학생 화면에 표시될 문구)">'+
+      '<input class="min-f" data-k="교과군" value="'+esc((r.교과군||[]).join(','))+'" style="width:160px" placeholder="교과군(쉼표로 여러 개)">'+
+      '<span>최소</span>'+
+      '<input class="min-f" data-k="최소" type="number" value="'+esc(r.최소==null?'':r.최소)+'" style="width:50px">'+
+      '<span>과목</span>'+
+      '<button type="button" class="btn ghost" data-remove-min="'+i+'">삭제</button>'+
+      '</div>';
+  }).join('');
+  $('#minList').innerHTML = html || '<p class="st">규칙이 없습니다.</p>';
+}
+
+$('#minList').addEventListener('change', function(ev){
+  if(!ev.target.classList.contains('min-f')) return;
+  var i = Number(ev.target.closest('.min-row').dataset.idx);
+  var r = RULES.이수규칙.교과군최소[i];
+  var k = ev.target.dataset.k;
+  if(k === '교과군'){
+    r.교과군 = ev.target.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+  } else if(k === '최소'){
+    applyNumOrRevert(ev.target.value, renderMinRules, function(n){ r.최소 = n; });
+  } else if(k === '이름'){
+    r.이름 = ev.target.value;
+  }
+  // 이름은 사용자가 직접 쓴 문구이므로 교과군/최소가 바뀌어도 자동으로 다시 생성하지 않는다.
+});
+
+$('#minList').addEventListener('click', function(ev){
+  var idxStr = ev.target.dataset.removeMin;
+  if(idxStr == null) return;
+  RULES.이수규칙.교과군최소.splice(Number(idxStr), 1);
+  renderMinRules();
+});
+
+$('#minAddBtn').addEventListener('click', function(){
+  if(!RULES.이수규칙) RULES.이수규칙 = {};
+  if(!RULES.이수규칙.교과군최소) RULES.이수규칙.교과군최소 = [];
+  // 새 규칙을 추가할 때만 초기값으로 자동 생성 문구를 넣어준다(이후 수정해도 자동 갱신되지 않음).
+  RULES.이수규칙.교과군최소.push({ 교과군: [], 최소: 1, 이름: '새 규칙 1과목 이상' });
+  renderMinRules();
+});
+
+/* ③ 교과군 최대 이수 — 역시 이름은 직접 편집 */
+function renderMaxRule(){
+  var r = (RULES.이수규칙 && RULES.이수규칙.교과군최대) || { 교과군: [], 최대: 0, 이름: '' };
+  $('#maxBox').innerHTML =
+    '<input id="maxName" value="'+esc(r.이름||'')+'" style="width:260px" placeholder="이름(학생 화면에 표시될 문구)"> '+
+    '<input id="maxSubjects" value="'+esc((r.교과군||[]).join(','))+'" style="width:180px" placeholder="교과군(쉼표로 구분)"> '+
+    '<span>합계 최대</span> <input id="maxCount" type="number" value="'+esc(r.최대==null?0:r.최대)+'" style="width:50px"> <span>과목</span>';
+  ['maxName','maxSubjects','maxCount'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', updateMaxRule);
+  });
+}
+
+function updateMaxRule(){
+  if(!RULES.이수규칙) RULES.이수규칙 = {};
+  if(!RULES.이수규칙.교과군최대) RULES.이수규칙.교과군최대 = { 교과군: [], 최대: 0, 이름: '' };
+  var target = RULES.이수규칙.교과군최대;
+  // 최대(숫자)만 비어있거나/음수/문자면 저장하지 않고 이 필드만 원복한다. 교과군/이름은 그대로 반영.
+  applyNumOrRevert(document.getElementById('maxCount').value, renderMaxRule, function(n){
+    // Object.assign으로 실제 in-place 수정 — 새 객체로 교체하면 이 UI가 모르는 하위 키가
+    // 조용히 사라질 수 있으므로(I-3) 기존 객체를 유지한 채 알려진 키만 갱신한다.
+    Object.assign(target, {
+      교과군: document.getElementById('maxSubjects').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
+      이름: document.getElementById('maxName').value,
+      최대: n
+    });
+  });
+}
+
+/* ④ 과학중점 전용 규칙 */
+function renderScienceRule(){
+  var r = (RULES.이수규칙 && RULES.이수규칙.과학중점) || {};
+  $('#scienceBox').innerHTML =
+    '<div style="margin-bottom:6px">과제연구 필수: <input id="sciTask" value="'+esc(r.과제연구||'')+'" style="width:160px"></div>'+
+    '<div style="margin-bottom:6px">일반선택 필수(쉼표로 구분): <input id="sciGeneral" value="'+esc((r.일반선택필수||[]).join(','))+'" style="width:260px"></div>'+
+    '<div style="margin-bottom:6px">진로선택 심화 최소: <input id="sciDeep" type="number" value="'+esc(r.심화최소==null?0:r.심화최소)+'" style="width:50px"> 과목</div>'+
+    '<div>수학 최소: <input id="sciMath" type="number" value="'+esc(r.수학최소==null?0:r.수학최소)+'" style="width:50px"> 과목</div>';
+  ['sciTask','sciGeneral','sciDeep','sciMath'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', updateScienceRule);
+  });
+}
+
+function updateScienceRule(){
+  if(!RULES.이수규칙) RULES.이수규칙 = {};
+  if(!RULES.이수규칙.과학중점) RULES.이수규칙.과학중점 = {};
+  var target = RULES.이수규칙.과학중점;
+  var deepRaw = document.getElementById('sciDeep').value;
+  var mathRaw = document.getElementById('sciMath').value;
+  var deepN = Number(deepRaw), mathN = Number(mathRaw);
+  var deepOk = String(deepRaw).trim() !== '' && !isNaN(deepN) && deepN >= 0;
+  var mathOk = String(mathRaw).trim() !== '' && !isNaN(mathN) && mathN >= 0;
+  if(!deepOk || !mathOk){ renderScienceRule(); return; }
+  // Object.assign으로 실제 in-place 수정 — 새 객체로 교체하면 이 UI가 모르는 하위 키가
+  // 조용히 사라질 수 있으므로(I-3) 기존 객체를 유지한 채 알려진 키만 갱신한다.
+  Object.assign(target, {
+    과제연구: document.getElementById('sciTask').value,
+    일반선택필수: document.getElementById('sciGeneral').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
+    심화최소: deepN,
+    수학최소: mathN
+  });
+}
+
+/* ⑤ 선수과목 관계 */
+function renderPrereqs(){
+  var map = RULES.선수과목 || {};
+  var html = Object.keys(map).map(function(course){
+    return '<div class="prereq-row" data-course="'+esc(course)+'" style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'+
+      '<span style="min-width:100px">'+esc(course)+'</span><span>← 먼저:</span>'+
+      '<input class="prereq-f" value="'+esc((map[course]||[]).join(','))+'" style="width:180px">'+
+      '<button type="button" class="btn ghost" data-remove-prereq="'+esc(course)+'">삭제</button>'+
+      '</div>';
+  }).join('');
+  $('#prereqList').innerHTML = html || '<p class="st">선수과목 관계가 없습니다.</p>';
+}
+
+$('#prereqList').addEventListener('change', function(ev){
+  if(!ev.target.classList.contains('prereq-f')) return;
+  var course = ev.target.closest('.prereq-row').dataset.course;
+  RULES.선수과목[course] = ev.target.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+});
+
+$('#prereqList').addEventListener('click', function(ev){
+  var course = ev.target.dataset.removePrereq;
+  if(!course) return;
+  delete RULES.선수과목[course];
+  renderPrereqs();
+});
+
+$('#prereqAddBtn').addEventListener('click', function(){
+  var course = prompt('과목명 (예: 미적분Ⅱ)');
+  if(!course) return;
+  if(!RULES.선수과목) RULES.선수과목 = {};
+  RULES.선수과목[course] = [];
+  renderPrereqs();
+});
+
+/* ⑥ 유의사항 — 문자열 배열, 학생 화면에 그대로 표시되므로(app.js) 줄바꿈으로 구분되는 textarea로 편집 */
+function renderNotices(){
+  var list = RULES.유의사항 || [];
+  $('#noticeBox').innerHTML = '<textarea id="noticeText" style="min-height:120px">'+esc(list.join('\n'))+'</textarea>';
+  document.getElementById('noticeText').addEventListener('change', function(){
+    RULES.유의사항 = this.value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+  });
+}
+
+/* ⑦ 과정구분 — 예: ["일반","과학중점"]. 쉼표 구분 텍스트로 편집(이 파일의 다른 목록 필드와 동일한 방식) */
+function renderCourseTypes(){
+  var list = RULES.과정구분 || [];
+  $('#courseTypeBox').innerHTML = '<input id="courseTypeText" value="'+esc(list.join(','))+'" style="width:260px" placeholder="과정구분(쉼표로 구분, 예: 일반,과학중점)">';
+  document.getElementById('courseTypeText').addEventListener('change', function(){
+    RULES.과정구분 = this.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+  });
+}
+
+/* 전체 저장 — RULES 전체(5개 컬럼)를 그대로 update한다.
+   렌더 함수들이 RULES를 in-place로 수정하므로, 이 UI가 다루지 않는 하위 필드도
+   RULES 안에 원본 그대로 남아있어 함께 저장된다(유실 없음). */
+$('#rulesSaveBtn').addEventListener('click', function(){
+  if(!RULES){ return; }
+  var msg = $('#rulesMsg');
+  msg.textContent = '저장하는 중…';
+  msg.className = 'st';
+  sb.from('school_rules').update({
+    이수규칙: RULES.이수규칙,
+    선수과목: RULES.선수과목,
+    선택슬롯: RULES.선택슬롯,
+    유의사항: RULES.유의사항,
+    과정구분: RULES.과정구분
+  }).eq('cohort_id', CO._db_id).then(function(res){
+    if(res.error){ msg.textContent = '저장 실패: ' + res.error.message; msg.className = 'st bad'; return; }
+    msg.textContent = '저장 완료.';
+    msg.className = 'st good';
+  });
+});
+
+/* 저장 전 되돌리기 — removeSlot/removePrereq/removeMin 등은 RULES를 즉시 변형하는데
+   저장 전에는 취소할 방법이 없었다(I-2). DB에서 다시 조회해 RULES를 원본으로 되돌린다. */
+$('#rulesReloadBtn').addEventListener('click', function(){
+  if(!CO) return;
+  if(!confirm('저장하지 않은 변경 내용을 모두 취소하고 DB에서 다시 불러올까요?')) return;
+  var msg = $('#rulesMsg');
+  msg.textContent = '다시 불러오는 중…';
+  msg.className = 'st';
+  pick(CO.id);
+});
+
+$('#tabClosed').onclick = function(){ switchTab('closed'); };
+$('#tabOfferings').onclick = function(){ switchTab('offerings'); };
+$('#tabRules').onclick = function(){ switchTab('rules'); };
 
 /* ── 사용법 모달 ──────────────────────────────── */
 function openHelp(){ $('#modal').hidden = false; document.body.style.overflow='hidden'; $('.mx').focus(); }
@@ -574,7 +1080,6 @@ function closeHelp(){ $('#modal').hidden = true; document.body.style.overflow=''
 /* ── 연결 ─────────────────────────────────────── */
 $('#help').onclick = openHelp;
 $('#help2').onclick = openHelp;
-$('#help3').onclick = openHelp;
 Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function(b){ b.onclick = closeHelp; });
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape' && !$('#modal').hidden) closeHelp();
@@ -589,27 +1094,10 @@ $('#dl').onclick = function(){
   var blob = new Blob([build()], {type:'application/json;charset=utf-8'});
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = CO.폐강;
+  a.download = 'closed-' + CO.id + '.json';
   a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
 };
-
-$('#save').onchange = function(){
-  try{
-    if(this.checked) localStorage.setItem('ghtok', tokenOf());
-    else localStorage.removeItem('ghtok');
-  }catch(e){}
-};
-$('#tok').oninput = function(){
-  if($('#save').checked){ try{ localStorage.setItem('ghtok', tokenOf()); }catch(e){} }
-};
-try{
-  var saved = localStorage.getItem('ghtok');
-  if(saved){ $('#tok').value = saved; $('#save').checked = true; }
-}catch(e){}
-
-// 같은 창에서 이미 통과했으면 다시 묻지 않는다
-try{ if(sessionStorage.getItem('adm_ok')==='1') unlock(); }catch(e){}
 </script>
 </body>
 </html>
