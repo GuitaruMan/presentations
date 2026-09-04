@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260902a';
+var VERSION = '20260903a';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1152,7 +1152,7 @@ function courseIn(name, slot) {
 var EVAL_MARK = {
   석차미기재: { 약칭: '석차 미기재', 설명: '상대평가 석차 등급을 기재하지 않는 과목' },
   성취3단계: { 약칭: '성취 3단계', 설명: '성취도 3단계(A·B·C)로 평가하는 과목' },
-  이수여부: { 약칭: 'P', 설명: '이수 여부만 기재하는 과목' },
+  이수여부: { 약칭: '이수', 설명: '이수 여부만 기재하는 과목' },
   // 가장 흔한 경우라 목록에서는 배지를 붙이지 않는다(bare:true).
   // 다만 과목 설명에서는 이것도 분명히 밝힌다.
   상대절대: { 약칭: '', 설명: '상대평가와 절대평가를 모두 기재하는 과목', bare: true }
