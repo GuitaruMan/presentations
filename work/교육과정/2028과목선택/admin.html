@@ -103,6 +103,76 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 .st.good{color:var(--teal);font-weight:600}
 .st.bad{color:var(--red);font-weight:600}
 
+/* 학년 고르기 */
+.cohort-gate{max-width:640px;margin:60px auto;padding:0 20px}
+.cohort-gate h1{font-size:20px;margin:0 0 6px}
+.cohort-gate .sub{font-size:13.5px;color:var(--soft);margin:0 0 24px}
+.cohort-cards{display:flex;flex-wrap:wrap;gap:14px}
+.cohort-card{
+  flex:1 1 260px;text-align:left;cursor:pointer;background:var(--card);
+  border:1.5px solid var(--rule);border-radius:14px;padding:20px;
+  font-family:inherit;color:var(--ink);transition:transform .09s ease;
+}
+.cohort-card:hover{transform:translate(-1px,-1px);border-color:var(--teal)}
+.cohort-card .ttl{font-size:16px;font-weight:700;margin-bottom:6px}
+.cohort-card .desc{font-size:13px;color:var(--soft)}
+.cohort-card .hidden-tag{display:inline-block;margin-top:8px;font-size:11px;color:var(--red);border:1px solid var(--red);border-radius:6px;padding:1px 6px}
+
+/* 지금 편집 중 표시줄 */
+.editing-bar{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:var(--teal-w);border:1.5px solid var(--teal);border-radius:10px;
+  margin-bottom:16px;font-size:13.5px;
+}
+.editing-bar b{color:var(--teal)}
+.editing-bar .btn{margin-left:auto;padding:5px 12px;font-size:12.5px}
+
+/* 이수규칙 — 문장형 규칙 줄 */
+.rule-sentence{
+  background:var(--card);border:1.5px solid var(--rule);border-radius:10px;
+  padding:12px 14px;margin-bottom:10px;
+}
+.rule-calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.rule-calc select,.rule-calc input[type=number]{font-size:13.5px}
+.rule-calc input[type=number]{width:56px;text-align:center}
+.rule-display{
+  display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 10px;
+  background:#F3F1EC;border-radius:8px;
+}
+.rule-display .lbl{font-size:11.5px;color:var(--faint);white-space:nowrap}
+.rule-display input[type=text]{flex:1;min-width:120px}
+.chipbox{display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-width:160px}
+.chip{
+  display:inline-flex;align-items:center;gap:4px;font-size:12.5px;
+  background:var(--teal-w);color:var(--teal);border:1px solid var(--teal);
+  border-radius:20px;padding:2px 4px 2px 10px;
+}
+.chip button{background:none;border:0;color:var(--teal);cursor:pointer;font-size:13px;line-height:1;padding:0 5px}
+.chip-add{font-size:12.5px;padding:4px 8px;border:1.5px dashed var(--rule);border-radius:8px;background:#fff;color:var(--soft);cursor:pointer}
+
+.sci-line{margin-bottom:14px}
+.sci-desc{font-size:13px;color:var(--soft);margin:0 0 6px}
+.sci-checks{display:flex;flex-wrap:wrap;gap:10px}
+.sci-checks label{font-size:13.5px;display:inline-flex;align-items:center;gap:4px}
+
+.rule-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px}
+.rule-table th{text-align:center;padding:6px;border-bottom:2px solid var(--rule);font-size:12px;color:var(--soft)}
+.rule-table td{text-align:center;padding:6px;border-bottom:1px solid var(--rule)}
+.rule-table td:first-child{text-align:left;font-weight:600}
+.rule-table input[type=number]{width:56px;text-align:center}
+
+
+/* 저장 전 미리보기 모달 */
+.diff-modal[hidden]{display:none}
+.diff-modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px}
+.diffbody h4{font-size:13px;margin:14px 0 6px;color:var(--teal)}
+.diffbody h4:first-child{margin-top:0}
+.diff-item{font-size:13px;padding:5px 0;border-bottom:1px dashed var(--rule)}
+.diff-item .arrow{color:var(--faint);margin:0 6px}
+.diff-item .added{color:var(--teal);font-weight:600}
+.diff-item .removed{color:var(--red);font-weight:600}
+.diff-item.danger{color:var(--red);font-weight:600;background:var(--red-w);border-radius:6px;padding:6px 8px;border-bottom:0}
+
 /* 사용법 모달 */
 .q{
   font-size:11.5px;font-weight:600;cursor:pointer;color:var(--teal);
@@ -152,6 +222,21 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
   </form>
 </div>
 
+<!-- 학년 고르기 -->
+<div id="cohortGate" hidden>
+  <div class="wrap top">
+    <a href="index.html">학생용 페이지</a>
+    <a href="../../교육과정.html">&larr; 교육과정</a>
+    <a href="../../work.html">업무용</a>
+    <a href="../../../index.html">홈으로</a>
+  </div>
+  <div class="cohort-gate">
+    <h1>어느 학년 것을 손볼까요?</h1>
+    <p class="sub">고르면 개설현황·학교 교육과정·이수규칙 세 탭 전체가 그 학년으로 고정됩니다.</p>
+    <div class="cohort-cards" id="cohortCards"></div>
+  </div>
+</div>
+
 <div id="page" hidden>
 
   <div class="wrap top">
@@ -169,6 +254,11 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 
   <div class="wrap">
 
+    <div class="editing-bar">
+      지금 편집 중: <b id="editingCohortName"></b>
+      <button type="button" class="btn ghost" id="changeCohortBtn">바꾸기</button>
+    </div>
+
     <div class="tabbar" style="display:flex;gap:8px;margin-bottom:16px">
       <button type="button" class="btn" id="tabClosed">개설현황</button>
       <button type="button" class="btn ghost" id="tabOfferings">학교 교육과정</button>
@@ -178,8 +268,6 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
     <div id="panelClosed">
 
     <div class="bar">
-      <label for="co">대상</label>
-      <select id="co"></select>
       <label for="stage">단계</label>
       <select id="stage">
         <option value="신청 전">신청 전</option>
@@ -239,27 +327,33 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
       <p class="st" id="rulesLoadSt"></p>
 
       <h3>① 선택슬롯</h3>
+      <p class="hint" style="margin-top:0">선택군마다 학년 · 학기별 택할 과목 수 · 학기별 학점을 정합니다.</p>
       <div id="slotList"></div>
       <button type="button" class="btn ghost" id="slotAddBtn">+ 선택군 추가</button>
 
       <h3 style="margin-top:22px">② 교과군 최소 이수</h3>
+      <p class="hint" style="margin-top:0">이 교과(군)에서 최소 몇 과목을 들어야 하는지 정합니다. 위 칸(드롭다운·숫자)은 실제 계산에 쓰이고, 회색 칸은 학생 화면에 그대로 보이는 문구입니다.</p>
       <div id="minList"></div>
       <button type="button" class="btn ghost" id="minAddBtn">+ 규칙 추가</button>
 
       <h3 style="margin-top:22px">③ 교과군 최대 이수</h3>
+      <p class="hint" style="margin-top:0">이 교과(군) 합계가 몇 과목을 넘으면 안 되는지 정합니다.</p>
       <div id="maxBox"></div>
 
       <h3 style="margin-top:22px">④ 과학중점 전용 규칙</h3>
       <div id="scienceBox"></div>
 
       <h3 style="margin-top:22px">⑤ 선수과목 관계</h3>
+      <p class="hint" style="margin-top:0">이 과목을 들으려면 먼저 들어야 하는 과목을 정합니다. 둘 다 이 학년 개설과목 중에서 고릅니다.</p>
       <div id="prereqList"></div>
       <button type="button" class="btn ghost" id="prereqAddBtn">+ 관계 추가</button>
 
-      <h3 style="margin-top:22px">⑥ 유의사항 (학생 화면에 표시됨, 한 줄에 하나씩)</h3>
+      <h3 style="margin-top:22px">⑥ 유의사항</h3>
+      <p class="hint" style="margin-top:0">학생 화면에 이대로 표시됩니다. 한 줄에 하나씩 적습니다.</p>
       <div id="noticeBox"></div>
 
       <h3 style="margin-top:22px">⑦ 과정구분</h3>
+      <p class="hint" style="margin-top:0">편성표의 학기 표기와 맞물려 있습니다. 이름을 바꾸거나 지우면 그 영향(개설과목 몇 개가 바뀌는지)을 먼저 물어봅니다.</p>
       <div id="courseTypeBox"></div>
 
       <button type="button" class="btn" id="rulesSaveBtn" style="margin-top:20px">이수규칙 전체 저장</button>
@@ -270,6 +364,22 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
   </div>
 
   <footer class="wrap">폐강 표시는 편성표 원본을 건드리지 않습니다. 2차 정정에서 되살아나면 다시 눌러 해제하면 됩니다.</footer>
+</div>
+
+<!-- 이수규칙 저장 전 미리보기 -->
+<div class="diff-modal" id="diffModal" hidden>
+  <div class="scrim" data-close-diff></div>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="dmt">
+    <div class="mhead">
+      <h2 id="dmt">이렇게 저장됩니다</h2>
+      <button type="button" class="mx" data-close-diff aria-label="닫기">✕</button>
+    </div>
+    <div class="mbody diffbody" id="diffBody"></div>
+    <div class="mhead" style="border-top:1.5px solid var(--rule);border-bottom:0;justify-content:flex-end;gap:10px">
+      <button type="button" class="btn ghost" id="diffCancelBtn">취소</button>
+      <button type="button" class="btn" id="diffConfirmBtn">저장</button>
+    </div>
+  </div>
 </div>
 
 <!-- 사용법 -->
@@ -336,13 +446,13 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
 
 function unlock(){
   $('#gate').hidden = true;
-  $('#page').hidden = false;
-  boot();
+  loadCohorts();
 }
 
 function lock(msg){
   $('#gate').hidden = false;
   $('#page').hidden = true;
+  $('#cohortGate').hidden = true;
   $('#gmsg').textContent = msg || '';
 }
 
@@ -367,7 +477,11 @@ sb.auth.getSession().then(function(res){
 
 /* ── 자료 ─────────────────────────────────────── */
 var D = {}, CO = null, SCHOOL = [], OFF = {};   // OFF: '과목|선택군|과정|학기' → true
+/* 전체 코호트 통틀어 쓰이는 교과군/과목(드롭다운 2순위)과 과목 마스터(subjects, 3순위).
+   loadCohorts()에서 한 번 불러와 둔다 — 코호트를 바꿔도 다시 불러오지 않는다(전체 목록이라 바뀌지 않음). */
+var ALL_교과군 = [], ALL_과목 = [], SUBJECTS_MASTER = [];
 var RULES = null;   // school_rules 원본 행(id, cohort_id 포함) 전체. 이수규칙 빌더가 이걸 직접 수정한다.
+var RULES_ORIGINAL = null;   // pick()이 읽어온 시점의 깊은 복사본. 저장 전 미리보기의 비교 기준.
 
 function key(과목,선택군,과정,학기){ return [과목,선택군,과정,학기].join('|'); }
 
@@ -515,6 +629,7 @@ function render(){
 
 function pick(id){
   CO = D.cohorts.목록.filter(function(c){return c.id===id})[0];
+  $('#editingCohortName').textContent = CO.제목;
   Promise.all([
     sb.from('school_offerings').select('*').eq('cohort_id', CO._db_id),
     sb.from('school_rules').select('*').eq('cohort_id', CO._db_id).single(),
@@ -536,6 +651,11 @@ function pick(id){
     // school_rules 원본 행 전체를 그대로 보관한다 — 이수규칙 빌더가 편집/저장의 기준으로 쓴다.
     // (편집 UI가 다루지 않는 하위 필드가 있어도 이 객체에 남아있으므로 저장 시 유실되지 않는다.)
     RULES = res[1].data;
+    // pick()이 읽어온 시점의 값을 깊은 복사해 둔다 — 저장 전 미리보기(무엇이 바뀌는지)의 비교 기준.
+    RULES_ORIGINAL = JSON.parse(JSON.stringify(RULES));
+    // 과정구분 이름 변경/삭제 이력도 코호트를 바꾸거나 다시 불러오면 초기화한다.
+    COURSE_TYPE_RENAMES = [];
+    COURSE_TYPE_DELETES = [];
     // 이 코호트가 다루는 선택군만 본다
     var 대상 = CO.선택군 || [];
     SCHOOL = D.school.개설.filter(function(c){
@@ -553,23 +673,61 @@ function pick(id){
   });
 }
 
-function boot(){
-  sb.from('school_cohorts').select('*').then(function(res){
-    if(res.error){ $('#body').innerHTML = '<p class="st bad">코호트 목록 로드 실패: '+esc(res.error.message)+'</p>'; return; }
-    var list = res.data.map(function(c){
+/* ── 학년 고르기 (로그인 다음 첫 화면) ─────────────
+   school_cohorts에서 읽어 카드로 보여준다. 하드코딩된 코호트는 없다.
+   고른 코호트로 세 탭 전체가 고정되고, #page 상단의 "지금 편집 중" 표시줄에
+   항상 보인다. [바꾸기]를 누르면 이 화면으로 돌아온다(편집 화면은 그대로 숨김). */
+function loadCohorts(){
+  Promise.all([
+    sb.from('school_cohorts').select('*'),
+    sb.from('school_offerings').select('교과군,과목'),
+    sb.from('subjects').select('name,교과군')
+  ]).then(function(res){
+    if(res[0].error){ $('#cohortCards').innerHTML = '<p class="st bad">코호트 목록 로드 실패: '+esc(res[0].error.message)+'</p>'; $('#cohortGate').hidden = false; return; }
+    var list = res[0].data.map(function(c){
       return {
         id: c.코호트id, 입학연도: c.입학연도, 대상: c.대상, 제목: c.제목,
         설명: c.설명, 선택군: c.선택군, 노출: c.노출, _db_id: c.id
       };
     });   // 관리자는 숨긴 코호트도 손볼 수 있어야 한다
     D.cohorts = { 목록: list };
-    $('#co').innerHTML = list.map(function(x){
-      return '<option value="'+esc(x.id)+'">'+esc(x.제목)+(x.노출?'':' (숨김)')+'</option>';
+
+    // 드롭다운 2순위(전체 코호트 통틀어 쓰이는 값)와 3순위(과목 마스터)를 미리 만들어 둔다.
+    if(!res[1].error){
+      var g1 = {}, s1 = {};
+      res[1].data.forEach(function(r){ if(r.교과군) g1[r.교과군]=true; if(r.과목) s1[r.과목]=true; });
+      ALL_교과군 = Object.keys(g1).sort();
+      ALL_과목 = Object.keys(s1).sort();
+    }
+    if(!res[2].error){
+      SUBJECTS_MASTER = res[2].data.map(function(r){ return { name: r.name, 교과군: r.교과군 }; });
+    }
+
+    $('#cohortCards').innerHTML = list.map(function(x){
+      return '<button type="button" class="cohort-card" data-cohort="'+esc(x.id)+'">'+
+        '<div class="ttl">'+esc(x.제목)+'</div>'+
+        '<div class="desc">'+esc(x.설명||'')+'</div>'+
+        (x.노출?'':'<div class="hidden-tag">숨김</div>')+
+        '</button>';
     }).join('');
-    $('#co').onchange = function(){ pick(this.value); };
-    pick(list[0].id);
+    Array.prototype.forEach.call($('#cohortCards').querySelectorAll('.cohort-card'), function(b){
+      b.onclick = function(){ selectCohort(b.dataset.cohort); };
+    });
+    $('#page').hidden = true;
+    $('#cohortGate').hidden = false;
   });
 }
+
+function selectCohort(id){
+  $('#cohortGate').hidden = true;
+  $('#page').hidden = false;
+  pick(id);
+}
+
+$('#changeCohortBtn').onclick = function(){
+  $('#page').hidden = true;
+  $('#cohortGate').hidden = false;
+};
 
 /* ── Supabase에 바로 반영 ─────────────────────────
    로그인된 세션의 sb 클라이언트로 closed_subjects 테이블을 직접 쓴다.
@@ -813,6 +971,102 @@ function applyNumOrRevert(rawValue, revertRender, apply){
   apply(n);
 }
 
+/* 이 코호트의 개설과목에서 뽑은 교과군/과목 목록 — 이수규칙 드롭다운의 1순위.
+   타자를 기본 경로로 만들지 않으려는 것이 이번 재설계의 핵심이지만, 드롭다운이 "이미 있는 값"만
+   보여주면 새 교과군·새 과목이 생겼을 때 막힌다(코디네이터 지시 1). 그래서 목록은 3단으로 쌓는다(각 단은 가나다순).
+     1순위: 이 코호트 개설과목에서 실제로 쓰이는 값
+     2순위: 전체 코호트를 통틀어 쓰이는 값
+     3순위: 과목명은 과목 마스터(subjects) 139개까지
+     마지막: '+ 직접 입력…' — 골랐을 때만 텍스트칸으로 바뀐다(탈출구, 기본 경로는 아님) */
+function 코호트교과군목록(){
+  var set = {};
+  (SCHOOL||[]).forEach(function(c){ if(c.교과군) set[c.교과군] = true; });
+  return Object.keys(set).sort();
+}
+function 코호트과목목록(){
+  var set = {};
+  (SCHOOL||[]).forEach(function(c){ if(c.과목) set[c.과목] = true; });
+  return Object.keys(set).sort();
+}
+function 코호트과목목록By교과군(교과군){
+  var set = {};
+  (SCHOOL||[]).forEach(function(c){ if(c.과목 && c.교과군===교과군) set[c.과목] = true; });
+  return Object.keys(set).sort();
+}
+/* 교과군 3단 티어: [이 코호트], [전체 코호트](이 코호트에 없는 것만) */
+function 교과군티어(){
+  var tier1 = 코호트교과군목록();
+  var tier2 = ALL_교과군.filter(function(g){ return tier1.indexOf(g) === -1; });
+  return { tier1: tier1, tier2: tier2, tier3: [] };
+}
+/* 과목 3단 티어: [이 코호트], [전체 코호트], [과목 마스터](각각 앞 단계에 없는 것만) */
+function 과목티어(교과군필터){
+  var tier1 = 교과군필터 ? 코호트과목목록By교과군(교과군필터) : 코호트과목목록();
+  var tier2 = ALL_과목.filter(function(s){ return tier1.indexOf(s) === -1; });
+  var masterNames = SUBJECTS_MASTER
+    .filter(function(m){ return !교과군필터 || m.교과군 === 교과군필터; })
+    .map(function(m){ return m.name; });
+  var tier3 = masterNames.filter(function(s){ return tier1.indexOf(s)===-1 && tier2.indexOf(s)===-1; });
+  return { tier1: tier1, tier2: tier2, tier3: tier3 };
+}
+
+var CUSTOM_VALUE = '__custom__';
+
+/* 드롭다운 옵션(티어 구분 + 직접입력 탈출구) — DB 값이 어느 티어에도 없으면 그 값을 1순위 맨 위에
+   추가하고 selected 처리한다(offSelectOptions와 동일한 방어). 조용히 다른 값으로 바뀌는 일이 없어야 한다. */
+function tieredSelectOptions(tiers, val, placeholder){
+  var t1 = tiers.tier1.slice(), t2 = tiers.tier2 || [], t3 = tiers.tier3 || [];
+  var inAny = t1.indexOf(val) !== -1 || t2.indexOf(val) !== -1 || t3.indexOf(val) !== -1;
+  if(val != null && val !== '' && !inAny) t1.unshift(val);
+  var html = '<option value=""'+(val==null||val===''?' selected':'')+'>'+esc(placeholder||'(고르세요)')+'</option>';
+  function optsHTML(list){
+    return list.map(function(o){ return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>'; }).join('');
+  }
+  if(t1.length) html += optsHTML(t1);
+  if(t2.length) html += '<option disabled>──────────</option>' + optsHTML(t2);
+  if(t3.length) html += '<option disabled>──────────</option>' + optsHTML(t3);
+  html += '<option disabled>──────────</option><option value="'+CUSTOM_VALUE+'">+ 직접 입력…</option>';
+  return html;
+}
+
+/* '+ 직접 입력…'을 고르면 그 select를 같은 자리의 텍스트 입력으로 바꿔치기한다.
+   확인(Enter/포커스 아웃)하면 onCommit(값)을 부르고, 원래 select 자리로 되돌아가진 않는다
+   (다시 렌더될 때 정상적인 값으로 다시 select가 그려진다). */
+function activateCustomInput(selectEl, onCommit, placeholder){
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.className = selectEl.className.replace(/\bchip-add-select\b/, '').trim();
+  input.placeholder = placeholder || '직접 입력';
+  input.style.cssText = selectEl.getAttribute('style') || '';
+  selectEl.parentNode.replaceChild(input, selectEl);
+  input.focus();
+  var committed = false;
+  function commit(){
+    if(committed) return; committed = true;
+    var v = input.value.trim();
+    onCommit(v);
+  }
+  input.addEventListener('change', commit);
+  input.addEventListener('blur', commit);
+}
+
+/* 여러 개 고르는 칩 — 드롭다운에서 하나 고르면 칩으로 쌓인다. 값 배열에 목록 밖 항목이 있으면
+   그대로 칩으로 보존한다(같은 방어 원칙). tiers가 있으면 2단(전체 코호트)까지 추가 후보로 보여준다. */
+function chipBoxHTML(tiers, selected, addPlaceholder){
+  selected = selected || [];
+  var chips = selected.map(function(v, i){
+    return '<span class="chip" data-idx="'+i+'">'+esc(v)+'<button type="button" data-remove-chip="'+i+'" aria-label="제거">✕</button></span>';
+  }).join('');
+  var t1 = tiers.tier1.filter(function(o){ return selected.indexOf(o) === -1; });
+  var t2 = (tiers.tier2||[]).filter(function(o){ return selected.indexOf(o) === -1; });
+  var addHtml = '<select class="chip-add-select"><option value="">'+esc(addPlaceholder||'+ 추가')+'</option>'+
+    t1.map(function(o){ return '<option>'+esc(o)+'</option>'; }).join('') +
+    (t2.length ? '<option disabled>──────────</option>' + t2.map(function(o){ return '<option>'+esc(o)+'</option>'; }).join('') : '') +
+    '<option disabled>──────────</option><option value="'+CUSTOM_VALUE+'">+ 직접 입력…</option>' +
+    '</select>';
+  return '<div class="chipbox">'+chips+addHtml+'</div>';
+}
+
 function renderRules(){
   if(!RULES){ $('#rulesLoadSt').textContent = '이수규칙을 불러오는 중…'; return; }
   $('#rulesLoadSt').textContent = '';
@@ -827,23 +1081,30 @@ function renderRules(){
   renderCourseTypes();
 }
 
-/* ① 선택슬롯 — 선택군별 학년/학기별 택수 + 학기별 학점(누락 시 통째로 사라지므로 반드시 편집 가능하게 둔다) */
+/* ① 선택슬롯 — 선택군별 학년/학기별 택수 + 학기별 학점(누락 시 통째로 사라지므로 반드시 편집 가능하게 둔다)
+   표로 바꿔 행=선택군, 열=학년·1학기(택N/학점)·2학기(택N/학점)로 놓는다. 헤더가 있으니
+   각 숫자가 무엇인지 분명해진다(설계 문서 ① 선택슬롯). */
 function renderSlots(){
   var slots = RULES.선택슬롯 || {};
-  var html = Object.keys(slots).map(function(name){
+  var names = Object.keys(slots);
+  if(!names.length){ $('#slotList').innerHTML = '<p class="st">선택슬롯이 없습니다.</p>'; return; }
+  var rows = names.map(function(name){
     var s = slots[name];
     var credit = s.학점 || {};
-    return '<div class="slot-row" data-name="'+esc(name)+'" style="background:var(--card);border:1.5px solid var(--rule);border-radius:8px;padding:10px;margin-bottom:8px">'+
-      '<div style="font-weight:600;margin-bottom:6px">'+esc(name)+'</div>'+
-      '<label>학년 <input class="slot-f" data-k="학년" type="number" value="'+esc(s.학년==null?'':s.학년)+'" style="width:50px"></label> '+
-      '<label>1학기 택 <input class="slot-f" data-k="1학기" type="number" value="'+esc(s['1학기']==null?0:s['1학기'])+'" style="width:50px"></label> '+
-      '<label>2학기 택 <input class="slot-f" data-k="2학기" type="number" value="'+esc(s['2학기']==null?0:s['2학기'])+'" style="width:50px"></label> '+
-      '<label>1학기 학점 <input class="slot-credit-f" data-k="1학기" type="number" value="'+esc(credit['1학기']==null?0:credit['1학기'])+'" style="width:50px"></label> '+
-      '<label>2학기 학점 <input class="slot-credit-f" data-k="2학기" type="number" value="'+esc(credit['2학기']==null?0:credit['2학기'])+'" style="width:50px"></label> '+
-      '<button type="button" class="btn ghost" data-remove-slot="'+esc(name)+'">삭제</button>'+
-      '</div>';
+    return '<tr class="slot-row" data-name="'+esc(name)+'">'+
+      '<td>'+esc(name)+'</td>'+
+      '<td><input class="slot-f" data-k="학년" type="number" value="'+esc(s.학년==null?'':s.학년)+'"></td>'+
+      '<td><input class="slot-f" data-k="1학기" type="number" value="'+esc(s['1학기']==null?0:s['1학기'])+'"></td>'+
+      '<td><input class="slot-credit-f" data-k="1학기" type="number" value="'+esc(credit['1학기']==null?0:credit['1학기'])+'"></td>'+
+      '<td><input class="slot-f" data-k="2학기" type="number" value="'+esc(s['2학기']==null?0:s['2학기'])+'"></td>'+
+      '<td><input class="slot-credit-f" data-k="2학기" type="number" value="'+esc(credit['2학기']==null?0:credit['2학기'])+'"></td>'+
+      '<td><button type="button" class="btn ghost" data-remove-slot="'+esc(name)+'">삭제</button></td>'+
+      '</tr>';
   }).join('');
-  $('#slotList').innerHTML = html || '<p class="st">선택슬롯이 없습니다.</p>';
+  $('#slotList').innerHTML =
+    '<table class="rule-table"><thead><tr>'+
+    '<th>선택군</th><th>학년</th><th>1학기 택</th><th>1학기 학점</th><th>2학기 택</th><th>2학기 학점</th><th></th>'+
+    '</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 $('#slotList').addEventListener('change', function(ev){
@@ -871,37 +1132,61 @@ $('#slotList').addEventListener('click', function(ev){
 });
 
 $('#slotAddBtn').addEventListener('click', function(){
-  var name = prompt('선택군 이름 (예: 선택군4)');
+  var name = prompt('선택군 이름 (예: 선택군4, 자율선택)');
   if(!name) return;
   if(!RULES.선택슬롯) RULES.선택슬롯 = {};
+  if(RULES.선택슬롯[name]){ alert('"'+name+'"은 이미 있는 선택군입니다.'); return; }
   RULES.선택슬롯[name] = { 학년: 3, '1학기': 0, '2학기': 0, 학점: { '1학기': 0, '2학기': 0 } };
   renderSlots();
 });
 
-/* ② 교과군 최소 이수 — 이름은 사람이 쓴 문구이므로 자동 생성으로 덮어쓰지 않고 직접 편집한다 */
+/* ② 교과군 최소 이수 — 계산용(교과군 칩 + 최소 숫자)과 표시용(학생 화면 문구)을 생김새부터 다르게 놓는다.
+   이름은 사람이 다듬은 문구이므로 자동 생성으로 덮어쓰지 않고, [문구 자동 만들기]를 눌렀을 때만 채운다. */
+function 자동문구_최소(r){
+  return (r.교과군||[]).join('·') + ' ' + (r.최소==null?0:r.최소) + '과목 이상';
+}
 function renderMinRules(){
   var list = (RULES.이수규칙 && RULES.이수규칙.교과군최소) || [];
+  var tiers = 교과군티어();
   var html = list.map(function(r, i){
-    return '<div class="min-row" data-idx="'+i+'" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px">'+
-      '<input class="min-f" data-k="이름" value="'+esc(r.이름||'')+'" style="width:220px" placeholder="이름(학생 화면에 표시될 문구)">'+
-      '<input class="min-f" data-k="교과군" value="'+esc((r.교과군||[]).join(','))+'" style="width:160px" placeholder="교과군(쉼표로 여러 개)">'+
-      '<span>최소</span>'+
-      '<input class="min-f" data-k="최소" type="number" value="'+esc(r.최소==null?'':r.최소)+'" style="width:50px">'+
-      '<span>과목</span>'+
-      '<button type="button" class="btn ghost" data-remove-min="'+i+'">삭제</button>'+
+    return '<div class="rule-sentence min-row" data-idx="'+i+'">'+
+      '<div class="rule-calc">'+
+      chipBoxHTML(tiers, r.교과군, '+ 교과군 추가')+
+      ' 교과에서 최소 <input class="min-f" data-k="최소" type="number" value="'+esc(r.최소==null?'':r.최소)+'"> 과목'+
+      '<button type="button" class="btn ghost" data-remove-min="'+i+'" style="margin-left:auto">삭제</button>'+
+      '</div>'+
+      '<div class="rule-display">'+
+      '<span class="lbl">학생에게 이렇게 보입니다</span>'+
+      '<input type="text" class="min-f" data-k="이름" value="'+esc(r.이름||'')+'">'+
+      '<button type="button" class="btn ghost" data-autoname-min="'+i+'">문구 자동 만들기</button>'+
+      '</div>'+
       '</div>';
   }).join('');
   $('#minList').innerHTML = html || '<p class="st">규칙이 없습니다.</p>';
 }
 
 $('#minList').addEventListener('change', function(ev){
-  if(!ev.target.classList.contains('min-f')) return;
-  var i = Number(ev.target.closest('.min-row').dataset.idx);
+  var row = ev.target.closest('.min-row');
+  if(!row) return;
+  var i = Number(row.dataset.idx);
   var r = RULES.이수규칙.교과군최소[i];
+  if(ev.target.classList.contains('chip-add-select')){
+    var v = ev.target.value;
+    if(!v) return;
+    if(v === CUSTOM_VALUE){
+      activateCustomInput(ev.target, function(custom){
+        if(custom) r.교과군 = (r.교과군||[]).concat([custom]);
+        renderMinRules();
+      }, '교과군 이름');
+      return;
+    }
+    r.교과군 = (r.교과군||[]).concat([v]);
+    renderMinRules();
+    return;
+  }
+  if(!ev.target.classList.contains('min-f')) return;
   var k = ev.target.dataset.k;
-  if(k === '교과군'){
-    r.교과군 = ev.target.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-  } else if(k === '최소'){
+  if(k === '최소'){
     applyNumOrRevert(ev.target.value, renderMinRules, function(n){ r.최소 = n; });
   } else if(k === '이름'){
     r.이름 = ev.target.value;
@@ -910,6 +1195,22 @@ $('#minList').addEventListener('change', function(ev){
 });
 
 $('#minList').addEventListener('click', function(ev){
+  var removeChip = ev.target.dataset.removeChip;
+  if(removeChip != null){
+    var row = ev.target.closest('.min-row');
+    var i = Number(row.dataset.idx);
+    var r = RULES.이수규칙.교과군최소[i];
+    r.교과군 = (r.교과군||[]).filter(function(_, idx){ return idx !== Number(removeChip); });
+    renderMinRules();
+    return;
+  }
+  var autoIdxStr = ev.target.dataset.autonameMin;
+  if(autoIdxStr != null){
+    var r2 = RULES.이수규칙.교과군최소[Number(autoIdxStr)];
+    r2.이름 = 자동문구_최소(r2);
+    renderMinRules();
+    return;
+  }
   var idxStr = ev.target.dataset.removeMin;
   if(idxStr == null) return;
   RULES.이수규칙.교과군최소.splice(Number(idxStr), 1);
@@ -920,19 +1221,58 @@ $('#minAddBtn').addEventListener('click', function(){
   if(!RULES.이수규칙) RULES.이수규칙 = {};
   if(!RULES.이수규칙.교과군최소) RULES.이수규칙.교과군최소 = [];
   // 새 규칙을 추가할 때만 초기값으로 자동 생성 문구를 넣어준다(이후 수정해도 자동 갱신되지 않음).
-  RULES.이수규칙.교과군최소.push({ 교과군: [], 최소: 1, 이름: '새 규칙 1과목 이상' });
+  var r = { 교과군: [], 최소: 1, 이름: '' };
+  r.이름 = 자동문구_최소(r);
+  RULES.이수규칙.교과군최소.push(r);
   renderMinRules();
 });
 
-/* ③ 교과군 최대 이수 — 역시 이름은 직접 편집 */
+/* ③ 교과군 최대 이수 — ②와 같은 계산용/표시용 구분. 역시 이름은 직접 편집, 자동 생성은 버튼으로만. */
+function 자동문구_최대(r){
+  return (r.교과군||[]).join('·') + ' 합계 ' + (r.최대==null?0:r.최대) + '과목 이하';
+}
 function renderMaxRule(){
   var r = (RULES.이수규칙 && RULES.이수규칙.교과군최대) || { 교과군: [], 최대: 0, 이름: '' };
+  var tiers = 교과군티어();
   $('#maxBox').innerHTML =
-    '<input id="maxName" value="'+esc(r.이름||'')+'" style="width:260px" placeholder="이름(학생 화면에 표시될 문구)"> '+
-    '<input id="maxSubjects" value="'+esc((r.교과군||[]).join(','))+'" style="width:180px" placeholder="교과군(쉼표로 구분)"> '+
-    '<span>합계 최대</span> <input id="maxCount" type="number" value="'+esc(r.최대==null?0:r.최대)+'" style="width:50px"> <span>과목</span>';
-  ['maxName','maxSubjects','maxCount'].forEach(function(id){
-    document.getElementById(id).addEventListener('change', updateMaxRule);
+    '<div class="rule-sentence">'+
+    '<div class="rule-calc">'+
+    chipBoxHTML(tiers, r.교과군, '+ 교과군 추가')+
+    ' 교과 합계 최대 <input id="maxCount" type="number" value="'+esc(r.최대==null?0:r.최대)+'"> 과목'+
+    '</div>'+
+    '<div class="rule-display">'+
+    '<span class="lbl">학생에게 이렇게 보입니다</span>'+
+    '<input type="text" id="maxName" value="'+esc(r.이름||'')+'">'+
+    '<button type="button" class="btn ghost" id="maxAutoNameBtn">문구 자동 만들기</button>'+
+    '</div>'+
+    '</div>';
+  $('#maxBox').querySelector('.chip-add-select').addEventListener('change', function(){
+    var v = this.value;
+    if(!v) return;
+    var target = RULES.이수규칙.교과군최대;
+    if(v === CUSTOM_VALUE){
+      activateCustomInput(this, function(custom){
+        if(custom) target.교과군 = (target.교과군||[]).concat([custom]);
+        renderMaxRule();
+      }, '교과군 이름');
+      return;
+    }
+    target.교과군 = (target.교과군||[]).concat([v]);
+    renderMaxRule();
+  });
+  Array.prototype.forEach.call($('#maxBox').querySelectorAll('[data-remove-chip]'), function(b){
+    b.onclick = function(){
+      var target = RULES.이수규칙.교과군최대;
+      target.교과군 = (target.교과군||[]).filter(function(_, idx){ return idx !== Number(b.dataset.removeChip); });
+      renderMaxRule();
+    };
+  });
+  document.getElementById('maxCount').addEventListener('change', updateMaxRule);
+  document.getElementById('maxName').addEventListener('change', updateMaxRule);
+  document.getElementById('maxAutoNameBtn').addEventListener('click', function(){
+    var target = RULES.이수규칙.교과군최대;
+    target.이름 = 자동문구_최대(target);
+    renderMaxRule();
   });
 }
 
@@ -940,29 +1280,66 @@ function updateMaxRule(){
   if(!RULES.이수규칙) RULES.이수규칙 = {};
   if(!RULES.이수규칙.교과군최대) RULES.이수규칙.교과군최대 = { 교과군: [], 최대: 0, 이름: '' };
   var target = RULES.이수규칙.교과군최대;
-  // 최대(숫자)만 비어있거나/음수/문자면 저장하지 않고 이 필드만 원복한다. 교과군/이름은 그대로 반영.
+  // 최대(숫자)만 비어있거나/음수/문자면 저장하지 않고 이 필드만 원복한다. 이름은 그대로 반영.
   applyNumOrRevert(document.getElementById('maxCount').value, renderMaxRule, function(n){
     // Object.assign으로 실제 in-place 수정 — 새 객체로 교체하면 이 UI가 모르는 하위 키가
     // 조용히 사라질 수 있으므로(I-3) 기존 객체를 유지한 채 알려진 키만 갱신한다.
     Object.assign(target, {
-      교과군: document.getElementById('maxSubjects').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
       이름: document.getElementById('maxName').value,
       최대: n
     });
   });
 }
 
-/* ④ 과학중점 전용 규칙 */
+/* ④ 과학중점 전용 규칙 — 각 줄에 무엇을 뜻하는지 한 줄 설명을 붙이고, 과목은 전부 고르게 한다(타자 금지).
+   과제연구: 이 코호트 개설과목 중 '과학과제 연구' 성격의 과목 하나를 드롭다운으로 고른다.
+   일반선택필수: '과학' 교과군의 개설과목을 체크박스로 늘어놓는다(설계 문서 예시가 물리학/화학/생명과학/지구과학). */
 function renderScienceRule(){
   var r = (RULES.이수규칙 && RULES.이수규칙.과학중점) || {};
+  var 과목티어들 = 과목티어();
+  var 과학과목 = 코호트과목목록By교과군('과학');
+  var need = r.일반선택필수 || [];
+  var checks = 과학과목.map(function(s){
+    return '<label><input type="checkbox" class="sci-check" value="'+esc(s)+'"'+(need.indexOf(s)!==-1?' checked':'')+'> '+esc(s)+'</label>';
+  }).join('');
+  // need 안에 과학 교과군 개설과목이 아닌 값(옛 데이터 등)이 있으면 별도 체크박스로 보존한다.
+  var extra = need.filter(function(s){ return 과학과목.indexOf(s)===-1; });
+  var extraChecks = extra.map(function(s){
+    return '<label><input type="checkbox" class="sci-check" value="'+esc(s)+'" checked> '+esc(s)+'</label>';
+  }).join('');
   $('#scienceBox').innerHTML =
-    '<div style="margin-bottom:6px">과제연구 필수: <input id="sciTask" value="'+esc(r.과제연구||'')+'" style="width:160px"></div>'+
-    '<div style="margin-bottom:6px">일반선택 필수(쉼표로 구분): <input id="sciGeneral" value="'+esc((r.일반선택필수||[]).join(','))+'" style="width:260px"></div>'+
-    '<div style="margin-bottom:6px">진로선택 심화 최소: <input id="sciDeep" type="number" value="'+esc(r.심화최소==null?0:r.심화최소)+'" style="width:50px"> 과목</div>'+
-    '<div>수학 최소: <input id="sciMath" type="number" value="'+esc(r.수학최소==null?0:r.수학최소)+'" style="width:50px"> 과목</div>';
-  ['sciTask','sciGeneral','sciDeep','sciMath'].forEach(function(id){
-    document.getElementById(id).addEventListener('change', updateScienceRule);
+    '<div class="sci-line">'+
+    '<p class="sci-desc">과학중점 학생은 이 과제연구를 반드시 들어야 합니다</p>'+
+    '<select id="sciTask">'+tieredSelectOptions(과목티어들, r.과제연구||'', '(고르세요)')+'</select>'+
+    '</div>'+
+    '<div class="sci-line">'+
+    '<p class="sci-desc">과학중점 학생은 이 과목들을 모두 들어야 합니다 (과학 교과군 개설과목)</p>'+
+    '<div class="sci-checks">'+checks+extraChecks+'</div>'+
+    '</div>'+
+    '<div class="sci-line">'+
+    '<p class="sci-desc">진로선택·융합선택 과학 과목을 최소 <input id="sciDeep" type="number" value="'+esc(r.심화최소==null?0:r.심화최소)+'"> 과목</p>'+
+    '</div>'+
+    '<div class="sci-line">'+
+    '<p class="sci-desc">수학 과목을 최소 <input id="sciMath" type="number" value="'+esc(r.수학최소==null?0:r.수학최소)+'"> 과목</p>'+
+    '</div>';
+  document.getElementById('sciTask').addEventListener('change', function(){
+    if(this.value === CUSTOM_VALUE){
+      var self = this;
+      activateCustomInput(this, function(custom){
+        if(!RULES.이수규칙) RULES.이수규칙 = {};
+        if(!RULES.이수규칙.과학중점) RULES.이수규칙.과학중점 = {};
+        RULES.이수규칙.과학중점.과제연구 = custom || null;
+        renderScienceRule();
+      }, '과목명');
+      return;
+    }
+    updateScienceRule();
   });
+  Array.prototype.forEach.call($('#scienceBox').querySelectorAll('.sci-check'), function(cb){
+    cb.addEventListener('change', updateScienceRule);
+  });
+  document.getElementById('sciDeep').addEventListener('change', updateScienceRule);
+  document.getElementById('sciMath').addEventListener('change', updateScienceRule);
 }
 
 function updateScienceRule(){
@@ -975,88 +1352,429 @@ function updateScienceRule(){
   var deepOk = String(deepRaw).trim() !== '' && !isNaN(deepN) && deepN >= 0;
   var mathOk = String(mathRaw).trim() !== '' && !isNaN(mathN) && mathN >= 0;
   if(!deepOk || !mathOk){ renderScienceRule(); return; }
+  var checked = Array.prototype.filter.call(
+    $('#scienceBox').querySelectorAll('.sci-check'), function(cb){ return cb.checked; }
+  ).map(function(cb){ return cb.value; });
   // Object.assign으로 실제 in-place 수정 — 새 객체로 교체하면 이 UI가 모르는 하위 키가
   // 조용히 사라질 수 있으므로(I-3) 기존 객체를 유지한 채 알려진 키만 갱신한다.
   Object.assign(target, {
-    과제연구: document.getElementById('sciTask').value,
-    일반선택필수: document.getElementById('sciGeneral').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
+    과제연구: document.getElementById('sciTask').value || null,
+    일반선택필수: checked,
     심화최소: deepN,
     수학최소: mathN
   });
 }
 
-/* ⑤ 선수과목 관계 */
-function renderPrereqs(){
+/* ⑤ 선수과목 관계 — [후속 과목 ▾] 을 들으려면 [선수 과목 ▾] 을 먼저 들어야 한다. 둘 다 드롭다운,
+   이 코호트 개설과목에서만 고른다(설계 문서 예시: 미적분Ⅱ ← 미적분Ⅰ).
+   RULES.선수과목은 {후속과목: [선수과목,...]} 맵이라 화면 쪽 편집은 배열로 스냅샷을 떠서
+   순서를 유지하고, change/click마다 이 배열 전체를 다시 맵으로 써서 RULES.선수과목을 교체한다.
+   (키 이름을 드롭다운으로 바꾸는 동안에도 행 순서·다른 행이 흔들리지 않도록 하기 위함이다.)
+   선수과목은 현재 데이터가 전부 "선수 과목 1개"이므로 드롭다운 하나로 편집한다(목록에 없는 값은 보존). */
+function 선수과목행목록(){
   var map = RULES.선수과목 || {};
-  var html = Object.keys(map).map(function(course){
-    return '<div class="prereq-row" data-course="'+esc(course)+'" style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'+
-      '<span style="min-width:100px">'+esc(course)+'</span><span>← 먼저:</span>'+
-      '<input class="prereq-f" value="'+esc((map[course]||[]).join(','))+'" style="width:180px">'+
-      '<button type="button" class="btn ghost" data-remove-prereq="'+esc(course)+'">삭제</button>'+
+  return Object.keys(map).map(function(course){ return { course: course, pre: map[course]||[] }; });
+}
+function 선수과목행목록_저장(rows){
+  var map = {};
+  rows.forEach(function(row){ map[row.course] = row.pre; });
+  RULES.선수과목 = map;
+}
+function renderPrereqs(){
+  var rows = 선수과목행목록();
+  var 과목티어들 = 과목티어();
+  var html = rows.map(function(row, i){
+    var pre = row.pre;
+    return '<div class="rule-sentence prereq-row" data-idx="'+i+'">'+
+      '<div class="rule-calc">'+
+      '<select class="prereq-course-f">'+tieredSelectOptions(과목티어들, row.course, '(과목 고르기)')+'</select>'+
+      '<span>을 들으려면</span>'+
+      '<select class="prereq-f">'+tieredSelectOptions(과목티어들, pre[0]||'', '(과목 고르기)')+'</select>'+
+      '<span>을 먼저 들어야 합니다</span>'+
+      '<button type="button" class="btn ghost" data-remove-prereq="'+i+'" style="margin-left:auto">삭제</button>'+
+      '</div>'+
+      (pre.length>1?'<p class="hint" style="margin:6px 0 0">그 외 선수과목: '+esc(pre.slice(1).join(', '))+' (여러 개는 이 화면에서 바꿀 수 없습니다. 필요하면 알려주세요)</p>':'')+
       '</div>';
   }).join('');
   $('#prereqList').innerHTML = html || '<p class="st">선수과목 관계가 없습니다.</p>';
 }
 
 $('#prereqList').addEventListener('change', function(ev){
-  if(!ev.target.classList.contains('prereq-f')) return;
-  var course = ev.target.closest('.prereq-row').dataset.course;
-  RULES.선수과목[course] = ev.target.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+  var row = ev.target.closest('.prereq-row');
+  if(!row) return;
+  var i = Number(row.dataset.idx);
+  var rows = 선수과목행목록();
+  if(ev.target.classList.contains('prereq-f')){
+    if(ev.target.value === CUSTOM_VALUE){
+      activateCustomInput(ev.target, function(custom){
+        var rest = rows[i].pre.slice(1);
+        rows[i].pre = [custom].concat(rest).filter(Boolean);
+        선수과목행목록_저장(rows);
+        renderPrereqs();
+      }, '과목명');
+      return;
+    }
+    var rest = rows[i].pre.slice(1);
+    rows[i].pre = [ev.target.value].concat(rest).filter(Boolean);
+    선수과목행목록_저장(rows);
+  } else if(ev.target.classList.contains('prereq-course-f')){
+    if(ev.target.value === CUSTOM_VALUE){
+      activateCustomInput(ev.target, function(custom){
+        rows[i].course = custom;
+        선수과목행목록_저장(rows);
+        renderPrereqs();
+      }, '과목명');
+      return;
+    }
+    rows[i].course = ev.target.value;
+    선수과목행목록_저장(rows);
+    renderPrereqs();
+  }
 });
 
 $('#prereqList').addEventListener('click', function(ev){
-  var course = ev.target.dataset.removePrereq;
-  if(!course) return;
-  delete RULES.선수과목[course];
+  var idxStr = ev.target.dataset.removePrereq;
+  if(idxStr == null) return;
+  var rows = 선수과목행목록();
+  rows.splice(Number(idxStr), 1);
+  선수과목행목록_저장(rows);
   renderPrereqs();
 });
 
 $('#prereqAddBtn').addEventListener('click', function(){
-  var course = prompt('과목명 (예: 미적분Ⅱ)');
-  if(!course) return;
   if(!RULES.선수과목) RULES.선수과목 = {};
-  RULES.선수과목[course] = [];
+  var rows = 선수과목행목록();
+  if(rows.some(function(r){ return !r.course; })){
+    alert('먼저 비어 있는 관계 줄의 과목을 골라 주세요.');
+    return;
+  }
+  rows.push({ course: '', pre: [] });
+  선수과목행목록_저장(rows);
   renderPrereqs();
 });
 
 /* ⑥ 유의사항 — 문자열 배열, 학생 화면에 그대로 표시되므로(app.js) 줄바꿈으로 구분되는 textarea로 편집 */
 function renderNotices(){
   var list = RULES.유의사항 || [];
-  $('#noticeBox').innerHTML = '<textarea id="noticeText" style="min-height:120px">'+esc(list.join('\n'))+'</textarea>';
+  $('#noticeBox').innerHTML =
+    '<label class="hint" style="display:block;margin-bottom:4px" for="noticeText">학생 화면에 이대로 표시됩니다. 한 줄에 하나씩</label>'+
+    '<textarea id="noticeText" style="min-height:120px">'+esc(list.join('\n'))+'</textarea>';
   document.getElementById('noticeText').addEventListener('change', function(){
     RULES.유의사항 = this.value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
   });
 }
 
-/* ⑦ 과정구분 — 예: ["일반","과학중점"]. 쉼표 구분 텍스트로 편집(이 파일의 다른 목록 필드와 동일한 방식) */
+/* ⑦ 과정구분 — 예: ["일반","과학중점"]. 편성표의 학기 표기(school_offerings.학기 = {일반:[..],과학중점:[..]})와
+   맞물려 있어 함부로 바꾸면 학기 정보가 어긋난다.
+   코디네이터 지시(3) — 편집 자체는 막지 않되, 이름을 바꾸면 무슨 일이 벌어지는지 그 자리에서 경고하고,
+   저장할 때 개설과목 school_offerings.학기의 옛 이름 키를 새 이름으로 함께 옮긴다(COURSE_TYPE_RENAMES에
+   쌓아 두고 실제 이전은 저장 시점에 한다 — 미리보기에서 "취소"를 누르면 아무 것도 바뀌지 않아야 하므로).
+   새 과정을 추가하면 기존 개설과목엔 그 키가 아직 없는 상태(=그 과정엔 미개설)가 되는 게 자연스러운
+   동작이라 그대로 둔다. 과정을 지우면 그 키를 학기에서도 지워야 하므로 확인을 받는다. */
+var COURSE_TYPE_RENAMES = [];   // [{from,to}] — 저장 시 school_offerings.학기 키 이전에 쓴다
+var COURSE_TYPE_DELETES = [];   // [name] — 저장 시 school_offerings.학기에서 그 키를 지운다
+
+function courseTypeAffectedCount(name){
+  return (SCHOOL||[]).filter(function(c){ return c.학기 && Object.prototype.hasOwnProperty.call(c.학기, name); }).length;
+}
+
 function renderCourseTypes(){
   var list = RULES.과정구분 || [];
-  $('#courseTypeBox').innerHTML = '<input id="courseTypeText" value="'+esc(list.join(','))+'" style="width:260px" placeholder="과정구분(쉼표로 구분, 예: 일반,과학중점)">';
-  document.getElementById('courseTypeText').addEventListener('change', function(){
-    RULES.과정구분 = this.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-  });
+  var rows = list.map(function(name, i){
+    var n = courseTypeAffectedCount(name);
+    return '<div class="rule-sentence course-type-row" data-idx="'+i+'" data-name="'+esc(name)+'">'+
+      '<div class="rule-calc">'+
+      '<input class="ct-name-f" type="text" value="'+esc(name)+'" style="width:140px">'+
+      '<span class="hint" style="margin:0">개설과목 '+n+'개가 이 이름을 씁니다</span>'+
+      '<button type="button" class="btn ghost" data-remove-ct="'+i+'" style="margin-left:auto">삭제</button>'+
+      '</div>'+
+      '</div>';
+  }).join('');
+  $('#courseTypeBox').innerHTML =
+    rows +
+    '<button type="button" class="btn ghost" id="ctAddBtn">+ 과정 추가</button>'+
+    '<p class="hint" id="ctWarn" style="display:none;color:var(--red)"></p>';
 }
+
+function ctShowWarn(msg){
+  var el = document.getElementById('ctWarn');
+  if(!el) return;
+  el.textContent = msg;
+  el.style.display = msg ? '' : 'none';
+}
+
+$('#courseTypeBox').addEventListener('change', function(ev){
+  if(!ev.target.classList.contains('ct-name-f')) return;
+  var row = ev.target.closest('.course-type-row');
+  var i = Number(row.dataset.idx);
+  var oldName = row.dataset.name;
+  var newName = ev.target.value.trim();
+  if(!newName){ renderCourseTypes(); return; }
+  if(newName === oldName) return;
+  if((RULES.과정구분||[]).indexOf(newName) !== -1){
+    alert('"'+newName+'"은 이미 있는 과정입니다.');
+    renderCourseTypes();
+    return;
+  }
+  var n = courseTypeAffectedCount(oldName);
+  if(n > 0 && !confirm('과정 이름을 "'+oldName+'" → "'+newName+'"으로 바꾸면 개설과목 '+n+'개의 학기 정보(이 과정에 몇 학기 열리는지)가 함께 "'+newName+'"으로 옮겨집니다. 계속할까요?')){
+    renderCourseTypes();
+    return;
+  }
+  RULES.과정구분[i] = newName;
+  // 같은 코호트 안에서 이전에 반대로 바꾼 이력이 있으면(오타 정정 등) 상쇄한다.
+  COURSE_TYPE_RENAMES = COURSE_TYPE_RENAMES.filter(function(r){ return r.to !== oldName; });
+  COURSE_TYPE_RENAMES.push({ from: oldName, to: newName });
+  renderCourseTypes();
+});
+
+$('#courseTypeBox').addEventListener('click', function(ev){
+  if(ev.target.id === 'ctAddBtn'){
+    var name = prompt('새 과정 이름 (예: 국제과정)');
+    if(!name) return;
+    name = name.trim();
+    if(!name) return;
+    if((RULES.과정구분||[]).indexOf(name) !== -1){ alert('"'+name+'"은 이미 있는 과정입니다.'); return; }
+    if(!RULES.과정구분) RULES.과정구분 = [];
+    RULES.과정구분.push(name);
+    renderCourseTypes();
+    return;
+  }
+  var idxStr = ev.target.dataset.removeCt;
+  if(idxStr == null) return;
+  var i = Number(idxStr);
+  var name = RULES.과정구분[i];
+  var n = courseTypeAffectedCount(name);
+  var warnMsg = n > 0
+    ? '"'+name+'" 과정을 지우면 개설과목 '+n+'개의 학기 정보가 모두 지워집니다. 계속할까요?'
+    : '"'+name+'" 과정을 지울까요?';
+  if(!confirm(warnMsg)) return;
+  RULES.과정구분.splice(i, 1);
+  if(n > 0) COURSE_TYPE_DELETES.push(name);
+  renderCourseTypes();
+});
 
 /* 전체 저장 — RULES 전체(5개 컬럼)를 그대로 update한다.
    렌더 함수들이 RULES를 in-place로 수정하므로, 이 UI가 다루지 않는 하위 필드도
-   RULES 안에 원본 그대로 남아있어 함께 저장된다(유실 없음). */
-$('#rulesSaveBtn').addEventListener('click', function(){
-  if(!RULES){ return; }
-  var msg = $('#rulesMsg');
-  msg.textContent = '저장하는 중…';
-  msg.className = 'st';
-  sb.from('school_rules').update({
+   RULES 안에 원본 그대로 남아있어 함께 저장된다(유실 없음).
+   저장 버튼을 누르면 바로 저장하지 않고, 무엇이 바뀌는지 보여준 뒤 [저장]을 눌러야 실제로 저장된다. */
+function rulesSavePayload(){
+  // 선수과목에 과목을 아직 고르지 않은 빈 줄(키='')이 남아 있으면 저장 대상에서 뺀다.
+  var 선수과목 = Object.assign({}, RULES.선수과목);
+  delete 선수과목[''];
+  return {
     이수규칙: RULES.이수규칙,
-    선수과목: RULES.선수과목,
+    선수과목: 선수과목,
     선택슬롯: RULES.선택슬롯,
     유의사항: RULES.유의사항,
     과정구분: RULES.과정구분
-  }).eq('cohort_id', CO._db_id).then(function(res){
-    if(res.error){ msg.textContent = '저장 실패: ' + res.error.message; msg.className = 'st bad'; return; }
-    msg.textContent = '저장 완료.';
-    msg.className = 'st good';
+  };
+}
+
+function openDiffModal(){ $('#diffModal').hidden = false; document.body.style.overflow = 'hidden'; }
+function closeDiffModal(){ $('#diffModal').hidden = true; document.body.style.overflow = ''; }
+Array.prototype.forEach.call(document.querySelectorAll('[data-close-diff]'), function(b){ b.onclick = closeDiffModal; });
+$('#diffCancelBtn').onclick = closeDiffModal;
+
+/* 원본(RULES_ORIGINAL)과 지금 저장될 값을 비교해 "이렇게 저장됩니다" 목록을 만든다.
+   설계 문서 예시 형식: "교과군 최소 이수 / 교양 1과목 이상 → 교양 2과목 이상 (최소 1 → 2)".
+   세밀한 필드별 하이라이트보다 "무엇이 바뀌는가"를 사람 말로 보여주는 것이 목적이므로,
+   같은 컬럼 안의 변화는 JSON 전/후를 견줘 사람이 읽을 수 있는 요약 줄로 만든다. */
+function buildRulesDiff(before, after){
+  var sections = [];
+
+  function eq(a, b){ return JSON.stringify(a) === JSON.stringify(b); }
+
+  // 선택슬롯
+  var slotLines = [];
+  var slotNames = Object.keys(Object.assign({}, before.선택슬롯, after.선택슬롯));
+  slotNames.forEach(function(name){
+    var b = before.선택슬롯 && before.선택슬롯[name];
+    var a = after.선택슬롯 && after.선택슬롯[name];
+    if(eq(b, a)) return;
+    if(b == null) slotLines.push('+ ' + name + ' (새로 추가)');
+    else if(a == null) slotLines.push('- ' + name + ' (삭제)');
+    else slotLines.push(name + ' 이(가) 바뀝니다');
   });
+  if(slotLines.length) sections.push({ title: '① 선택슬롯', lines: slotLines });
+
+  // 교과군 최소
+  var minLines = [];
+  var bMin = (before.이수규칙 && before.이수규칙.교과군최소) || [];
+  var aMin = (after.이수규칙 && after.이수규칙.교과군최소) || [];
+  var maxLen = Math.max(bMin.length, aMin.length);
+  for(var i=0;i<maxLen;i++){
+    var bm = bMin[i], am = aMin[i];
+    if(eq(bm, am)) continue;
+    if(bm == null) minLines.push('+ ' + (am.이름||'(이름 없음)') + ' (새로 추가)');
+    else if(am == null) minLines.push('- ' + (bm.이름||'(이름 없음)') + ' (삭제)');
+    else if(bm.이름 !== am.이름 || bm.최소 !== am.최소 || !eq(bm.교과군, am.교과군)){
+      minLines.push((bm.이름||'') + ' → ' + (am.이름||'') +
+        (bm.최소 !== am.최소 ? '  (최소 ' + bm.최소 + ' → ' + am.최소 + ')' : ''));
+    }
+  }
+  if(minLines.length) sections.push({ title: '② 교과군 최소 이수', lines: minLines });
+
+  // 교과군 최대
+  var bMax = (before.이수규칙 && before.이수규칙.교과군최대) || {};
+  var aMax = (after.이수규칙 && after.이수규칙.교과군최대) || {};
+  if(!eq(bMax, aMax)){
+    sections.push({ title: '③ 교과군 최대 이수', lines: [
+      (bMax.이름||'') + ' → ' + (aMax.이름||'') +
+      (bMax.최대 !== aMax.최대 ? '  (최대 ' + bMax.최대 + ' → ' + aMax.최대 + ')' : '')
+    ]});
+  }
+
+  // 과학중점
+  var bSci = (before.이수규칙 && before.이수규칙.과학중점) || {};
+  var aSci = (after.이수규칙 && after.이수규칙.과학중점) || {};
+  if(!eq(bSci, aSci)){
+    var sciLines = [];
+    if(bSci.과제연구 !== aSci.과제연구) sciLines.push('과제연구 필수: ' + (bSci.과제연구||'(없음)') + ' → ' + (aSci.과제연구||'(없음)'));
+    if(!eq(bSci.일반선택필수, aSci.일반선택필수)) sciLines.push('일반선택 필수: ' + (bSci.일반선택필수||[]).join(', ') + ' → ' + (aSci.일반선택필수||[]).join(', '));
+    if(bSci.심화최소 !== aSci.심화최소) sciLines.push('진로·융합 최소: ' + bSci.심화최소 + ' → ' + aSci.심화최소);
+    if(bSci.수학최소 !== aSci.수학최소) sciLines.push('수학 최소: ' + bSci.수학최소 + ' → ' + aSci.수학최소);
+    if(sciLines.length) sections.push({ title: '④ 과학중점 전용 규칙', lines: sciLines });
+  }
+
+  // 선수과목
+  var preLines = [];
+  var bPre = before.선수과목 || {}, aPre = after.선수과목 || {};
+  var preKeys = Object.keys(Object.assign({}, bPre, aPre));
+  preKeys.forEach(function(k){
+    if(eq(bPre[k], aPre[k])) return;
+    if(bPre[k] == null) preLines.push('+ ' + k + ' ← ' + (aPre[k]||[]).join(', ') + ' (새로 추가)');
+    else if(aPre[k] == null) preLines.push('- ' + k + ' ← ' + (bPre[k]||[]).join(', ') + ' (삭제)');
+    else preLines.push(k + ' ← ' + (bPre[k]||[]).join(', ') + ' → ' + (aPre[k]||[]).join(', '));
+  });
+  if(preLines.length) sections.push({ title: '⑤ 선수과목', lines: preLines });
+
+  // 유의사항
+  if(!eq(before.유의사항, after.유의사항)){
+    sections.push({ title: '⑥ 유의사항', lines: ['문구가 바뀝니다 (' + (before.유의사항||[]).length + '줄 → ' + (after.유의사항||[]).length + '줄)'] });
+  }
+
+  // 과정구분 — 이름 변경/삭제는 개설과목 학기 정보에 파급되므로 위험 표시(danger)로 눈에 띄게 보여준다(코디네이터 지시 4).
+  if(!eq(before.과정구분, after.과정구분) || COURSE_TYPE_RENAMES.length || COURSE_TYPE_DELETES.length){
+    var ctLines = [];
+    ctLines.push({ text: (before.과정구분||[]).join(', ') + ' → ' + (after.과정구분||[]).join(', ') });
+    COURSE_TYPE_RENAMES.forEach(function(r){
+      var n = courseTypeAffectedCount(r.to);   // 이름은 이미 RULES.과정구분에서 바뀌어 있으므로 to로 센다
+      ctLines.push({ text: '과정 "'+r.from+'" → "'+r.to+'" (개설과목 '+n+'개의 학기 정보가 함께 바뀝니다)', danger: true });
+    });
+    COURSE_TYPE_DELETES.forEach(function(name){
+      ctLines.push({ text: '과정 "'+name+'" 삭제 (개설과목의 학기 정보에서 이 과정이 지워집니다)', danger: true });
+    });
+    sections.push({ title: '⑦ 과정구분', lines: ctLines });
+  }
+
+  return sections;
+}
+
+$('#rulesSaveBtn').addEventListener('click', function(){
+  if(!RULES || !RULES_ORIGINAL) return;
+  var before = {
+    이수규칙: RULES_ORIGINAL.이수규칙, 선수과목: RULES_ORIGINAL.선수과목,
+    선택슬롯: RULES_ORIGINAL.선택슬롯, 유의사항: RULES_ORIGINAL.유의사항, 과정구분: RULES_ORIGINAL.과정구분
+  };
+  var after = rulesSavePayload();
+  var sections = buildRulesDiff(before, after);
+
+  if(!sections.length){
+    $('#diffBody').innerHTML = '<p>바뀐 것이 없습니다.</p>';
+    $('#diffConfirmBtn').hidden = true;
+    openDiffModal();
+    return;
+  }
+  $('#diffConfirmBtn').hidden = false;
+  $('#diffBody').innerHTML = sections.map(function(sec){
+    return '<h4>' + esc(sec.title) + '</h4>' +
+      sec.lines.map(function(l){
+        // lines는 문자열(일반 변경) 또는 {text,danger}(파급 변경, 코디네이터 지시 4) 둘 다 올 수 있다.
+        var text = (l && typeof l === 'object') ? l.text : l;
+        var danger = l && typeof l === 'object' && l.danger;
+        return '<div class="diff-item'+(danger?' danger':'')+'">' + esc(text) + '</div>';
+      }).join('');
+  }).join('');
+  openDiffModal();
+
+  $('#diffConfirmBtn').onclick = function(){
+    var msg = $('#rulesMsg');
+    msg.textContent = '저장하는 중…';
+    msg.className = 'st';
+    closeDiffModal();
+    var renames = COURSE_TYPE_RENAMES.slice(), deletes = COURSE_TYPE_DELETES.slice();
+    migrateCourseTypeKeys(renames, deletes)
+      .then(function(){
+        return sb.from('school_rules').update(after).eq('cohort_id', CO._db_id);
+      })
+      .then(function(res){
+        if(res.error){ msg.textContent = '저장 실패: ' + res.error.message; msg.className = 'st bad'; return; }
+        msg.textContent = '저장 완료.';
+        msg.className = 'st good';
+        RULES.선수과목 = after.선수과목;   // 빈 줄을 뺀 값으로 화면 상태도 맞춰둔다
+        RULES_ORIGINAL = JSON.parse(JSON.stringify(RULES));   // 다음 비교 기준을 갱신
+        COURSE_TYPE_RENAMES = [];
+        COURSE_TYPE_DELETES = [];
+        // 학기 키가 이전됐으니 이 코호트의 개설과목을 다시 불러와 SCHOOL/D.school.개설을 최신으로 맞춘다.
+        return sb.from('school_offerings').select('*').eq('cohort_id', CO._db_id).then(function(r){
+          if(r.error) return;
+          D.school.개설 = r.data.map(function(row){
+            return {
+              id:row.id, 과목:row.과목, 교과군:row.교과군, 유형:row.유형, 운영학점:row.운영학점,
+              선택군:row.선택군, 학년:row.학년, 학기:row.학기, 평가:row.평가, 수능:row.수능
+            };
+          });
+          var 대상 = CO.선택군 || [];
+          SCHOOL = D.school.개설.filter(function(c){
+            return c.선택군!=='지정' && c.학기 && (!대상.length || 대상.indexOf(c.선택군)!==-1);
+          });
+        });
+      })
+      .catch(function(e){
+        msg.textContent = '저장 실패: ' + e.message; msg.className = 'st bad';
+      });
+  };
 });
+
+/* 과정구분 이름 변경/삭제를 school_offerings.학기 JSONB에 반영한다(코디네이터 지시 3).
+   예: 과정구분에서 "과학중점" → "심화과정"으로 바꾸면, 이 코호트의 모든 학기 값 {"과학중점":[1,2]}를
+   {"심화과정":[1,2]}로 옮긴다. 삭제는 그 키를 통째로 지운다. 영향받는 행만 골라 update한다. */
+function migrateCourseTypeKeys(renames, deletes){
+  if(!renames.length && !deletes.length) return Promise.resolve();
+  return sb.from('school_offerings').select('id,학기').eq('cohort_id', CO._db_id).then(function(res){
+    if(res.error) throw new Error(res.error.message);
+    var updates = [];
+    res.data.forEach(function(row){
+      var 학기 = row.학기;
+      if(!학기) return;
+      var changed = false;
+      var next = Object.assign({}, 학기);
+      renames.forEach(function(r){
+        if(Object.prototype.hasOwnProperty.call(next, r.from)){
+          var val = next[r.from];
+          delete next[r.from];
+          next[r.to] = val;
+          changed = true;
+        }
+      });
+      deletes.forEach(function(name){
+        if(Object.prototype.hasOwnProperty.call(next, name)){
+          delete next[name];
+          changed = true;
+        }
+      });
+      if(changed) updates.push({ id: row.id, 학기: next });
+    });
+    if(!updates.length) return;
+    return Promise.all(updates.map(function(u){
+      return sb.from('school_offerings').update({ 학기: u.학기 }).eq('id', u.id);
+    })).then(function(results){
+      var failed = results.filter(function(r){ return r.error; });
+      if(failed.length) throw new Error('개설과목 학기 정보 이전 중 ' + failed.length + '건 실패: ' + failed[0].error.message);
+    });
+  });
+}
 
 /* 저장 전 되돌리기 — removeSlot/removePrereq/removeMin 등은 RULES를 즉시 변형하는데
    저장 전에는 취소할 방법이 없었다(I-2). DB에서 다시 조회해 RULES를 원본으로 되돌린다. */
@@ -1083,6 +1801,7 @@ $('#help2').onclick = openHelp;
 Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function(b){ b.onclick = closeHelp; });
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape' && !$('#modal').hidden) closeHelp();
+  if(e.key==='Escape' && !$('#diffModal').hidden) closeDiffModal();
 });
 
 $('#stage').onchange = refresh;
