@@ -411,6 +411,12 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
       <p class="hint" style="margin-top:0">편성표의 학기 표기와 맞물려 있습니다. 이름을 바꾸거나 지우면 그 영향(개설과목 몇 개가 바뀌는지)을 먼저 물어봅니다.</p>
       <div id="courseTypeBox"></div>
 
+      <h3 style="margin-top:22px">⑧ 자료 출처</h3>
+      <p class="hint" style="margin-top:0">학생 화면 편성표 창의 <strong>첫 줄</strong>에 그대로 나옵니다. 새 학년도를 만들면 본뜬 학년도의 문구가 따라오니, 연도가 맞는지 확인해 주세요.</p>
+      <input type="text" id="rulesSource" class="inp" style="width:100%;max-width:520px"
+             placeholder="예: 2026학년도 입학생 교육과정 편성표">
+      <p class="hint" id="rulesSourcePrev" style="margin-top:6px"></p>
+
       <button type="button" class="btn" id="rulesSaveBtn" style="margin-top:20px">이수규칙 전체 저장</button>
       <button type="button" class="btn ghost" id="rulesReloadBtn" style="margin-top:20px">다시 불러오기 (저장하지 않은 변경 취소)</button>
       <p class="st" id="rulesMsg"></p>
@@ -609,6 +615,13 @@ var RULES_ORIGINAL = null;   // pick()이 읽어온 시점의 깊은 복사본. 
 
 function key(과목,선택군,과정,학기){ return [과목,선택군,과정,학기].join('|'); }
 
+/* 이 학년도의 과정 이름들. 이수규칙 ⑦에서 고칠 수 있으므로 박아두면 안 된다.
+   학생 화면도 같은 값을 보고 편성표를 그린다. 아직 못 읽었을 때만 기본값을 쓴다. */
+function 과정들(){
+  return (RULES && RULES.과정구분 && RULES.과정구분.length)
+    ? RULES.과정구분 : ['일반','과학중점'];
+}
+
 /* 기존 폐강 파일 → 토글 상태로 펼치기 */
 function spread(closed){
   OFF = {};
@@ -616,9 +629,9 @@ function spread(closed){
     SCHOOL.forEach(function(c){
       if(c.과목!==x.과목) return;
       if(x.선택군 && c.선택군!==x.선택군) return;
-      var 과정들 = (x.과정&&x.과정.length)?x.과정:['일반','과학중점'];
+      var 대상과정 = (x.과정&&x.과정.length)?x.과정:과정들();
       var 학기들 = (x.학기&&x.학기.length)?x.학기:[1,2];
-      과정들.forEach(function(g){
+      대상과정.forEach(function(g){
         (c.학기[g]||[]).forEach(function(s){
           if(학기들.indexOf(s)!==-1) OFF[key(c.과목,c.선택군,g,s)] = true;
         });
@@ -631,7 +644,7 @@ function spread(closed){
 function collect(){
   var byCourse = {};
   SCHOOL.forEach(function(c){
-    ['일반','과학중점'].forEach(function(g){
+    과정들().forEach(function(g){
       (c.학기[g]||[]).forEach(function(s){
         if(!OFF[key(c.과목,c.선택군,g,s)]) return;
         var k = c.과목+'|'+c.선택군;
@@ -645,7 +658,7 @@ function collect(){
     var p = k.split('|'), 과목 = p[0], 선택군 = p[1], hit = byCourse[k];
     var c = SCHOOL.filter(function(x){ return x.과목===과목 && x.선택군===선택군; })[0];
     var 전체 = 0;
-    ['일반','과학중점'].forEach(function(g){ 전체 += (c.학기[g]||[]).length; });
+    과정들().forEach(function(g){ 전체 += (c.학기[g]||[]).length; });
 
     var rec = { 과목:과목, 선택군:선택군 };
     if(hit.length < 전체){
@@ -703,8 +716,9 @@ function render(){
   slots.forEach(function(sl){
     var rows = SCHOOL.filter(function(c){
       if(c.선택군!==sl.선택군) return false;
-      return (c.학기['일반']||[]).indexOf(sl.학기)!==-1 ||
-             (c.학기['과학중점']||[]).indexOf(sl.학기)!==-1;
+      return 과정들().some(function(g){
+        return (c.학기[g]||[]).indexOf(sl.학기)!==-1;
+      });
     });
     if(!rows.length) return;
 
@@ -717,7 +731,7 @@ function render(){
     gs.forEach(function(g){
       h += '<div class="sect"><p class="sect-k">'+esc(g)+'</p><div class="rowg">';
       rows.filter(function(c){return c.교과군===g}).forEach(function(c){
-        ['일반','과학중점'].forEach(function(course){
+        과정들().forEach(function(course){
           if((c.학기[course]||[]).indexOf(sl.학기)===-1) return;
           var both = (c.학기['일반']||[]).indexOf(sl.학기)!==-1 &&
                      (c.학기['과학중점']||[]).indexOf(sl.학기)!==-1;
@@ -739,8 +753,8 @@ function render(){
     b.onclick = function(){
       var p = b.dataset.k.split('|');
       var on = !OFF[b.dataset.k];
-      var 과정들 = b.dataset.both === '1' ? ['일반','과학중점'] : [p[2]];
-      과정들.forEach(function(g){
+      var 대상과정 = b.dataset.both === '1' ? 과정들() : [p[2]];
+      대상과정.forEach(function(g){
         var kk = key(p[0],p[1],g,p[3]);
         if(on) OFF[kk] = true; else delete OFF[kk];
       });
@@ -788,7 +802,9 @@ function pick(id){
     var closed = res[2].data.map(function(x){
       return { 과목:x.과목, 학기:x.학기, 사유:x.사유, 선택군:x.선택군, 과정:x.과정 };
     });
-    var latest = closed.reduce(function(a,x){ return (x.갱신일||'') > a ? x.갱신일 : a; }, '');
+    // 갱신일은 위 map 이 떼어냈으므로 원본에서 읽는다. 여기서 못 읽으면 입력칸이
+    // 늘 오늘 날짜가 되고, 저장할 때마다 원래 기준일이 오늘로 밀린다.
+    var latest = res[2].data.reduce(function(a,x){ return (x.갱신일||'') > a ? x.갱신일 : a; }, '');
     $('#date').value = latest || new Date().toISOString().slice(0,10);
     spread({ 폐강: closed });
     render();
@@ -1574,6 +1590,7 @@ function renderRules(){
   renderPrereqs();
   renderNotices();
   renderCourseTypes();
+  renderSource();
 }
 
 /* ① 선택슬롯 — 선택군별 학년/학기별 택수 + 학기별 학점(누락 시 통째로 사라지므로 반드시 편집 가능하게 둔다)
@@ -1973,6 +1990,20 @@ function courseTypeAffectedCount(name){
   return (SCHOOL||[]).filter(function(c){ return c.학기 && Object.prototype.hasOwnProperty.call(c.학기, name); }).length;
 }
 
+/* ⑧ 자료 출처 — 학생 화면 편성표 창 첫 줄에 그대로 나가는 한 줄. */
+function renderSource(){
+  var box = $('#rulesSource');
+  if(!box) return;
+  box.value = RULES.출처 || '';
+  box.oninput = function(){
+    RULES.출처 = box.value.trim();
+    $('#rulesSourcePrev').textContent = RULES.출처
+      ? '학생 화면에 이렇게 보입니다 — ' + RULES.출처
+      : '비워 두면 편성표 창 첫 줄이 빈칸이 됩니다.';
+  };
+  box.oninput();
+}
+
 function renderCourseTypes(){
   var list = RULES.과정구분 || [];
   var rows = list.map(function(name, i){
@@ -2062,7 +2093,8 @@ function rulesSavePayload(){
     선수과목: 선수과목,
     선택슬롯: RULES.선택슬롯,
     유의사항: RULES.유의사항,
-    과정구분: RULES.과정구분
+    과정구분: RULES.과정구분,
+    출처: RULES.출처
   };
 }
 
@@ -2161,6 +2193,13 @@ function buildRulesDiff(before, after){
       ctLines.push({ text: '과정 "'+name+'" 삭제 (개설과목의 학기 정보에서 이 과정이 지워집니다)', danger: true });
     });
     sections.push({ title: '⑦ 과정구분', lines: ctLines });
+  }
+
+  // 자료 출처 — 학생 화면 편성표 창 첫 줄에 그대로 나가므로 무엇이 바뀌는지 보인다.
+  if(!eq(before.출처, after.출처)){
+    sections.push({ title: '⑧ 자료 출처', lines: [
+      (before.출처 || '(비어 있음)') + ' → ' + (after.출처 || '(비어 있음)')
+    ] });
   }
 
   return sections;

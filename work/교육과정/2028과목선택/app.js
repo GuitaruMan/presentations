@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260905d';
+var VERSION = '20260905e';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -219,8 +219,17 @@ function loadCommon() {
 function 옮기지못한칸(원본행, 옮긴것, 무시할것, 어디) {
   if (!원본행) return;
   var 뺀다 = (무시할것 || []).concat(['id']);
+  // 이름을 바꿔 옮기는 칸도 있다(대학의 '이름' → 화면의 '대학'). 그래서 칸 이름만
+  // 보지 않고, 그 값이 어딘가에 실려 갔는지도 함께 본다. 둘 다 아닐 때만 알린다.
+  var 실린값 = [];
+  for (var 키 in 옮긴것) {
+    if (Object.prototype.hasOwnProperty.call(옮긴것, 키)) 실린값.push(옮긴것[키]);
+  }
   var 빠짐 = Object.keys(원본행).filter(function (k) {
-    return 뺀다.indexOf(k) === -1 && !(k in 옮긴것);
+    if (뺀다.indexOf(k) !== -1 || (k in 옮긴것)) return false;
+    var v = 원본행[k];
+    if (v === null || v === undefined || v === '') return false;  // 빈 값은 따질 것이 없다
+    return 실린값.indexOf(v) === -1;
   });
   if (빠짐.length && window.console && console.warn) {
     console.warn('[' + 어디 + '] 데이터베이스에는 있는데 화면이 안 쓰는 칸: ' +
@@ -257,8 +266,17 @@ function loadCohort(c) {
     };
     CLOSED = {
       폐강: res[2].data.map(function (x) {
-        return { 과목: x.과목, 학기: x.학기, 사유: x.사유, 갱신일: x.갱신일 };
-      })
+        // 선택군·과정은 applyClosed 가 "어디까지 폐강인가"를 가리는 데 쓴다.
+        // 빠뜨리면 한 선택군만 폐강한 것이 모든 선택군으로 번진다.
+        return {
+          과목: x.과목, 학기: x.학기, 사유: x.사유, 갱신일: x.갱신일,
+          선택군: x.선택군, 과정: x.과정
+        };
+      }),
+      // 푸터에 밝히는 개설 현황 기준일. 행마다 든 갱신일 가운데 가장 나중 것을 쓴다.
+      meta: { 갱신일: res[2].data.reduce(function (a, x) {
+        return (x.갱신일 || '') > a ? x.갱신일 : a;
+      }, '') }
     };
 
     // 옮기는 줄을 빠뜨린 칸이 있으면 알린다. 학기표기는 사람이 읽는 메모라 뺀다.
@@ -266,9 +284,13 @@ function loadCohort(c) {
     if (res[0].data[0]) {
       옮기지못한칸(res[0].data[0], D.school.개설[0], ['cohort_id'], 'school_offerings');
     }
-    if (res[2].data[0]) {
-      옮기지못한칸(res[2].data[0], CLOSED.폐강[0], ['cohort_id'], 'closed_subjects');
-    }
+    // 폐강이 0건이면 대조할 행이 없다. 그때가 오히려 위험하다 — 옮기는 줄을
+    // 빠뜨린 채 지내다 첫 폐강을 등록하는 순간 화면이 틀린다. 그래서 행이 없으면
+    // 아래 목록과 대조한다. 표에 칸을 늘리면 이 목록도 함께 늘려야 한다.
+    옮기지못한칸(res[2].data[0] ||
+      { 과목: 1, 학기: 1, 사유: 1, 갱신일: 1, 선택군: 1, 과정: 1 },
+      CLOSED.폐강[0] || { 과목: 1, 학기: 1, 사유: 1, 갱신일: 1, 선택군: 1, 과정: 1 },
+      ['cohort_id'], 'closed_subjects');
     applyClosed();
     buildSlots();
     prepare();
