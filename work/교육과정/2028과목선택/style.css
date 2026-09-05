@@ -358,6 +358,18 @@ body{
 .row-core .row-key{color:#8C4A31}
 .row-val{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:5px}
 
+/* 핵심·권장 묶음 제목 — 과목이 여러 교과에 걸치면 줄 라벨이 교과 이름으로
+   바뀌므로, 어느 묶음인지는 여기서 밝힌다. */
+.row-head{
+  margin:0 0 7px;font-size:12px;font-weight:700;letter-spacing:.02em;
+  color:var(--ink-soft);display:flex;align-items:baseline;gap:7px;
+}
+.row-head + .row{margin-top:0}
+.row-head-core{color:#8C4A31}
+.row-head-why{font-size:11px;font-weight:400;color:var(--faint);letter-spacing:0}
+/* 권장 묶음 제목은 핵심과 사이를 벌려 두 덩이가 갈라져 보이게 한다 */
+.row + .row-head{margin-top:13px}
+
 .sub{
   font-size:13.5px;padding:3px 10px;border-radius:12px 10px 13px 9px;
   background:var(--paper-deep);border:1px solid var(--rule);color:var(--ink);

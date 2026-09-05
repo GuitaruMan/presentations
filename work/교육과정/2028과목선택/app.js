@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260903a';
+var VERSION = '20260905d';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -133,15 +133,23 @@ function getJSON(name) {
    app.js 의 렌더링 코드는 이 모양을 그대로 기대하므로 여기서만 맞춰준다.
    meta(계열분류·교과군지정 등 전역 값)는 대학·모집단위별 값이 아니라 DB 스키마에
    컬럼이 없어 옮기지 못했다 — data/rec_meta.json(정적, 원본 meta 그대로)에서 따로 읽는다.
-   대학의 핵심권장구분(u.split) 필드도 같은 이유로 DB에 없어 이번엔 채우지 못한다
-   (경희대·동국대 카드에서 '핵심'/'권장' 두 줄로 안 나뉘고 '권장과목' 한 줄로만 보인다 — 표시만
-   달라질 뿐 과목 목록 자체는 정확하다). */
+   핵심권장구분은 뒤늦게 컬럼을 만들어 채웠다. 없던 동안 경희대 37곳과 동국대 51곳의
+   핵심과목이 화면에서 통째로 빠져 있었다 — cardHTML 이 이 값이 참일 때만 핵심 줄을
+   그리기 때문이다. '표시만 달라진다'고 적어 두었던 앞선 판단은 틀렸다. */
 function buildRecommendations(universities, units, meta) {
   var byUni = {};
   universities.forEach(function (u) {
     byUni[u.id] = {
       대학: u.이름, 출처: u.출처, 발표일: u.발표일, 제시범위: u.제시범위,
-      제시강도: u.제시강도, 강도근거: u.강도근거, 안내: u.안내, 모집단위: []
+      제시강도: u.제시강도, 강도근거: u.강도근거, 안내: u.안내,
+      // 이 대학이 두 갈래로 나눠 제시했는지. 경희대·동국대만 참이다.
+      // 이 값이 없으면 앞 갈래가 화면에서 통째로 빠진다(cardHTML 참조).
+      핵심권장구분: u.핵심권장구분,
+      // 갈래를 부르는 말은 대학마다 다르다. 경희대는 '핵심과목/권장과목',
+      // 동국대는 '역량 영역/소양 영역'이라 쓴다. 대학이 쓴 말을 그대로 보인다.
+      핵심이름: u.핵심이름, 권장이름: u.권장이름,
+      핵심설명: u.핵심설명, 권장설명: u.권장설명,
+      모집단위: []
     };
   });
   units.forEach(function (m) {
@@ -153,6 +161,18 @@ function buildRecommendations(universities, units, meta) {
       권역: m.권역, 지역: m.지역
     });
   });
+  // 옮기는 줄을 빠뜨린 칸이 있으면 알린다. 대학의 핵심권장구분을 빠뜨려
+  // 경희대·동국대의 앞 갈래가 통째로 사라진 적이 있다.
+  var 첫대학 = universities[0];
+  if (첫대학) {
+    옮기지못한칸(첫대학, byUni[첫대학.id], [], 'universities');
+  }
+  if (units[0]) {
+    var 첫모집 = byUni[units[0].university_id];
+    if (첫모집 && 첫모집.모집단위[0]) {
+      옮기지못한칸(units[0], 첫모집.모집단위[0], ['university_id', '이름'], 'admission_units');
+    }
+  }
   return { meta: meta, 대학: Object.keys(byUni).map(function (k) { return byUni[k]; }) };
 }
 
@@ -190,6 +210,24 @@ function loadCommon() {
   });
 }
 
+/* 데이터베이스가 준 칸 가운데 화면이 옮기지 않은 것이 있으면 알린다.
+
+   경희대·동국대의 핵심과목이 화면에서 통째로 빠져 있던 적이 있다. 대학의
+   핵심권장구분을 옮기는 줄을 빠뜨렸는데, 화면은 아무 말 없이 그 부분만
+   지운 채 멀쩡히 그려졌다. 편성표 출처도 같은 이유로 빈 줄이었다.
+   칸이 늘었는데 옮기는 줄을 잊으면 이렇게 조용히 사라진다. */
+function 옮기지못한칸(원본행, 옮긴것, 무시할것, 어디) {
+  if (!원본행) return;
+  var 뺀다 = (무시할것 || []).concat(['id']);
+  var 빠짐 = Object.keys(원본행).filter(function (k) {
+    return 뺀다.indexOf(k) === -1 && !(k in 옮긴것);
+  });
+  if (빠짐.length && window.console && console.warn) {
+    console.warn('[' + 어디 + '] 데이터베이스에는 있는데 화면이 안 쓰는 칸: ' +
+      빠짐.join(', ') + ' — 옮기는 줄을 빠뜨린 것은 아닌지 확인이 필요하다.');
+  }
+}
+
 /* 코호트별 자료 — 개설과목·이수규칙·폐강목록. 학년을 바꾸면 이 셋만 다시 읽는다. */
 function loadCohort(c) {
   COHORT = c;
@@ -206,7 +244,9 @@ function loadCohort(c) {
       meta: {
         이수규칙: res[1].data.이수규칙, 선수과목: res[1].data.선수과목,
         선택슬롯: res[1].data.선택슬롯, 유의사항: res[1].data.유의사항,
-        과정구분: res[1].data.과정구분
+        과정구분: res[1].data.과정구분,
+        // 편성표 창 첫 줄에 밝히는 자료 근거. 빠뜨리면 그 줄이 빈칸이 된다.
+        출처: res[1].data.출처
       },
       개설: res[0].data.map(function (r) {
         return {
@@ -220,6 +260,15 @@ function loadCohort(c) {
         return { 과목: x.과목, 학기: x.학기, 사유: x.사유, 갱신일: x.갱신일 };
       })
     };
+
+    // 옮기는 줄을 빠뜨린 칸이 있으면 알린다. 학기표기는 사람이 읽는 메모라 뺀다.
+    옮기지못한칸(res[1].data, D.school.meta, ['cohort_id', '학기표기'], 'school_rules');
+    if (res[0].data[0]) {
+      옮기지못한칸(res[0].data[0], D.school.개설[0], ['cohort_id'], 'school_offerings');
+    }
+    if (res[2].data[0]) {
+      옮기지못한칸(res[2].data[0], CLOSED.폐강[0], ['cohort_id'], 'closed_subjects');
+    }
     applyClosed();
     buildSlots();
     prepare();
@@ -282,6 +331,11 @@ function prepare() {
         grade: u.제시강도,
         gradeWhy: u.강도근거,
         split: u.핵심권장구분,
+        // 갈래를 부르는 말. 대학이 안 밝혔으면 흔히 쓰는 말로 채운다.
+        coreName: u.핵심이름 || '핵심과목',
+        recName: u.권장이름 || '권장과목',
+        coreWhy: u.핵심설명 || '',
+        recWhy: u.권장설명 || '',
         // 대학이 자료에 붙인 안내문·출처. 지금 화면에는 안 쓰지만
         // 자료에는 11개 대학 모두 들어 있다(설명서 '자료 출처'와 짝).
         source: u.출처,
@@ -593,11 +647,24 @@ function cardHTML(u) {
   var rec = u.rec.filter(inSchool);
   var off = u.all.filter(function (s) { return !inSchool(s); });
 
-  if (u.split && core.length) {
-    h += subRows('핵심', core, true);
+  /* 핵심과 권장을 나눠 제시한 대학(경희대·동국대)은 어느 쪽인지 늘 밝힌다.
+     과목이 여러 교과에 걸치면 subRows 가 줄마다 교과 이름을 달기 때문에,
+     묶음 제목을 따로 얹지 않으면 '핵심'이라는 말이 화면에서 사라진다.
+     핵심이 더 중요한 정보인데 오히려 더 자주 사라지던 문제를 막는다. */
+  var 나눔 = u.split && core.length;
+  if (나눔) {
+    h += '<p class="row-head row-head-core">' + esc(u.coreName) +
+      (u.coreWhy ? '<span class="row-head-why">' + esc(u.coreWhy) + '</span>' : '') + '</p>';
+    // 한 교과뿐이면 subRows 가 이 말을 그대로 줄 라벨로 쓴다.
+    // 대학이 쓰는 말을 짧게 줄여 넘긴다('역량 영역' → '역량').
+    h += subRows(짧게(u.coreName), core, true);
   }
   if (rec.length) {
-    h += subRows(u.split && core.length ? '권장' : '권장과목', rec, false);
+    if (나눔) {
+      h += '<p class="row-head">' + esc(u.recName) +
+        (u.recWhy ? '<span class="row-head-why">' + esc(u.recWhy) + '</span>' : '') + '</p>';
+    }
+    h += subRows(나눔 ? 짧게(u.recName) : '권장과목', rec, false);
   }
   u.cond.forEach(function (c) { h += condHTML(c); });
 
@@ -637,6 +704,12 @@ function subChip(s, core) {
    '미적분Ⅱ, 역학과 에너지, 전자기와 양자'가 한 줄에 뭉쳐 있으면
    무엇이 수학이고 무엇이 과학인지 학생이 읽어낼 수 없다.
    교과가 하나뿐이면 굳이 나누지 않는다(경북대처럼 일괄 제시한 경우). */
+/* 줄 라벨 칸은 좁다. '핵심과목'·'역량 영역'처럼 뒤에 붙는 흔한 말을 떼어
+   '핵심'·'역량'으로 줄인다. 뗄 것이 없으면 그대로 둔다. */
+function 짧게(말) {
+  return String(말 || '').replace(/\s*(과목|영역)$/, '') || String(말 || '');
+}
+
 function subRows(key, arr, core) {
   var 순서 = [];
   var 묶음 = {};
@@ -1030,12 +1103,12 @@ function summaryHTML(t, want) {
   h += '<div class="sum-list">';
   if (core.length && !조건이덮음) {
     h += '<div class="sum-row"><span class="sum-key">' +
-      (t.split && core.length ? '핵심과목' : '권장과목') + '</span><div class="sum-pills">' +
+      esc(t.split ? t.coreName : '권장과목') + '</span><div class="sum-pills">' +
       chips(core, 'sum-core') + '</div></div>';
   }
   if (rec.length && !조건이덮음) {
     h += '<div class="sum-row"><span class="sum-key">' +
-      '권장과목' + '</span><div class="sum-pills">' +
+      esc(t.split ? t.recName : '권장과목') + '</span><div class="sum-pills">' +
       chips(rec, 'sum-rec') + '</div></div>';
   }
   t.cond.forEach(function (c) {
