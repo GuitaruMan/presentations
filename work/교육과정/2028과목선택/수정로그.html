@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2028 과목 선택 안내 — 수정 로그</title>
+<style>
+  :root { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270; --ink-faint: #8b93a3;
+          --accent: #3a5ba0; --rule: #dfe3ea; --code-bg: #f0f2f6; --shadow: rgba(28,34,48,0.10);
+          --mark-bg: #eef2fa; --warn: #a8442a; --warn-bg: #fdf1ed; --ok: #2f6b47; --ok-bg: #eef6f1; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8;
+          --ink-faint: #7d8492; --accent: #7fa2e0; --rule: #333944; --code-bg: #171a21; --shadow: rgba(0,0,0,0.4);
+          --mark-bg: #1c2430; --warn: #e39177; --warn-bg: #2a1e1a; --ok: #7fc59b; --ok-bg: #1a2620; } }
+  :root[data-theme="dark"] { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8;
+          --ink-faint: #7d8492; --accent: #7fa2e0; --rule: #333944; --code-bg: #171a21; --shadow: rgba(0,0,0,0.4);
+          --mark-bg: #1c2430; --warn: #e39177; --warn-bg: #2a1e1a; --ok: #7fc59b; --ok-bg: #1a2620; }
+  :root[data-theme="light"] { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270;
+          --ink-faint: #8b93a3; --accent: #3a5ba0; --rule: #dfe3ea; --code-bg: #f0f2f6;
+          --shadow: rgba(28,34,48,0.10); --mark-bg: #eef2fa; --warn: #a8442a; --warn-bg: #fdf1ed;
+          --ok: #2f6b47; --ok-bg: #eef6f1; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+    display: flex; flex-direction: column; align-items: center; padding: 5vh 5vw 8vh;
+    word-break: keep-all; overflow-wrap: break-word; text-wrap: pretty; line-height: 1.75; }
+  .wrap { width: 100%; max-width: 860px; }
+  .top { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
+  a.back { color: var(--ink-soft); text-decoration: none; font-size: 0.9rem; }
+  a.back:hover { color: var(--accent); }
+
+  h1 { font-size: 1.85rem; margin: 0.4rem 0 0.5rem; line-height: 1.3; }
+  .subtitle { color: var(--ink-soft); font-size: 1rem; margin-bottom: 0.4rem; }
+  .meta { color: var(--ink-faint); font-size: 0.85rem; margin-bottom: 2.2rem;
+    padding-bottom: 1.4rem; border-bottom: 1px solid var(--rule); }
+
+  h2 { font-size: 1.3rem; margin: 3rem 0 0.4rem; padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent); display: inline-block; line-height: 1.35; }
+  h3 { font-size: 1.05rem; margin: 2rem 0 0.6rem; color: var(--ink); }
+  h4 { font-size: 0.95rem; margin: 1.4rem 0 0.4rem; color: var(--ink); }
+  p { margin: 0.9rem 0; color: var(--ink-soft); }
+  p.lead { color: var(--ink); }
+  ul, ol { margin: 0.9rem 0; padding-left: 1.3rem; color: var(--ink-soft); }
+  li { margin: 0.45rem 0; }
+  strong { color: var(--ink); }
+  code { background: var(--code-bg); padding: 0.12em 0.4em; border-radius: 4px;
+    font-family: "Consolas", "D2Coding", ui-monospace, monospace; font-size: 0.9em; color: var(--ink); }
+  pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px;
+    padding: 1rem 1.15rem; overflow-x: auto; margin: 1.1rem 0; }
+  pre code { background: none; padding: 0; font-size: 0.83rem; line-height: 1.65; display: block; }
+
+  /* 한 건의 수정 */
+  .entry { background: var(--card); border-radius: 10px; padding: 1.3rem 1.5rem;
+    margin: 1.2rem 0; box-shadow: 0 2px 8px var(--shadow); }
+  .entry > h4:first-child { margin-top: 0; }
+  .entry.bug { border-left: 4px solid var(--warn); }
+  .entry.add { border-left: 4px solid var(--accent); }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
+    padding: 0.15em 0.55em; border-radius: 4px; vertical-align: 0.15em; margin-right: 0.5rem; }
+  .tag.bug { background: var(--warn-bg); color: var(--warn); }
+  .tag.add { background: var(--mark-bg); color: var(--accent); }
+  .tag.chk { background: var(--ok-bg); color: var(--ok); }
+
+  .sym { background: var(--warn-bg); border-left: 3px solid var(--warn); border-radius: 0 6px 6px 0;
+    padding: 0.75rem 1rem; margin: 0.9rem 0; }
+  .sym .t { font-weight: 700; font-size: 0.82rem; color: var(--warn); margin-bottom: 0.3rem;
+    letter-spacing: 0.02em; }
+  .sym p { margin: 0; font-size: 0.94rem; color: var(--ink); }
+
+  .why { background: var(--bg); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0;
+    padding: 0.9rem 1.15rem; margin: 1rem 0; }
+  .why .t { font-weight: 700; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.3rem;
+    letter-spacing: 0.02em; }
+  .why p { margin: 0; font-size: 0.94rem; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.92rem; }
+  th, td { text-align: left; vertical-align: top; padding: 0.65rem 0.6rem; border-bottom: 1px solid var(--rule); }
+  thead th { color: var(--accent); border-bottom: 2px solid var(--accent); white-space: nowrap; }
+  tbody th { color: var(--ink); white-space: nowrap; font-weight: 600; }
+  td { color: var(--ink-soft); }
+  .tbl-wrap { overflow-x: auto; }
+
+  /* 날짜 묶음 */
+  .day { margin-top: 3.2rem; }
+  .day-h { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap;
+    border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; margin-bottom: 0.3rem; }
+  .day-h .d { font-size: 1.3rem; font-weight: 700; color: var(--ink); }
+  .day-h .s { font-size: 0.9rem; color: var(--ink-soft); }
+  .commits { font-size: 0.82rem; color: var(--ink-faint); margin: 0.5rem 0 1.2rem;
+    font-family: "Consolas", "D2Coding", ui-monospace, monospace; }
+  .commits span { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+
+  .toc { background: var(--card); border-radius: 10px; padding: 1.1rem 1.4rem;
+    box-shadow: 0 2px 8px var(--shadow); margin: 1.6rem 0 0; }
+  .toc h3 { margin: 0 0 0.6rem; font-size: 0.95rem; }
+  .toc ul { margin: 0; padding-left: 1.2rem; }
+  .toc a { color: var(--ink-soft); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+
+  .note { font-size: 0.88rem; color: var(--ink-faint); font-style: normal; }
+  hr.sep { border: 0; border-top: 1px solid var(--rule); margin: 2.4rem 0; }
+  .foot { margin-top: 4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule);
+    font-size: 0.85rem; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">&larr; 과목 선택 안내</a>
+    <a class="back" href="../../../index.html">홈으로</a>
+  </div>
+
+  <h1>2028 과목 선택 안내 — 수정 로그</h1>
+  <p class="subtitle">무엇을 왜 고쳤는지 날짜순으로 쌓는다. 새 항목은 맨 위에 넣는다.</p>
+  <p class="meta">
+    대상 사이트 <code>work/교육과정/2028과목선택/</code> ·
+    저장소 <code>GuitaruMan/presentations</code> (로컬 <code>E:\ForClaude\ForWeb</code>) ·
+    마지막 갱신 2026-09-05
+  </p>
+
+  <div class="toc">
+    <h3>이 문서를 쓰는 법</h3>
+    <ul>
+      <li>컴퓨터를 옮겨 다니며 작업하므로, <strong>무엇을 고쳤는지보다 왜 그랬는지</strong>를 남긴다. 코드만 보면 알 수 없는 것이 여기 있어야 한다.</li>
+      <li>같은 내용이 저장소 안 <code>work/교육과정/2028과목선택/작업로그.md</code> 에도 있다. 그쪽이 원본이고 이 페이지는 읽기 편하게 옮긴 것이다.</li>
+      <li>날짜 묶음 아래에 커밋 해시를 적어 두었다. <code>git show &lt;해시&gt;</code> 로 실제 변경을 볼 수 있다.</li>
+    </ul>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="day">
+    <div class="day-h">
+      <span class="d">2026-09-05</span>
+      <span class="s">사라졌던 핵심과목 · 같은 유형 전수 점검</span>
+    </div>
+    <p class="commits">
+      <span>45b0127 핵심과목 복구</span>
+      <span>12331df 같은 유형 3건</span>
+    </p>
+
+    <p class="lead">담당 교사가 화면에서 이상한 점을 찾아냈고, 파고들어 보니 <strong>같은 원인의 문제가 넷</strong>이었다.
+      데이터베이스로 옮기면서 칸을 빠뜨린 자리들이다.</p>
+
+    <div class="why">
+      <div class="t">이번 사고의 공통 원인</div>
+      <p>데이터베이스의 칸을 화면으로 <strong>옮기는 줄을 빠뜨리면</strong>, 그 값을 보고 판단하는
+        조건문이 늘 거짓이 된다. 그러면 그 기능이 <strong>오류 없이 조용히 사라진다.</strong>
+        화면은 멀쩡히 그려지므로 아무도 눈치채지 못한다.</p>
+    </div>
+
+    <h3>① 경희대·동국대의 핵심과목이 통째로 사라져 있었다</h3>
+
+    <div class="entry bug">
+      <h4><span class="tag bug">버그</span>핵심과목이 화면에 없다</h4>
+      <div class="sym">
+        <div class="t">담당 교사가 발견</div>
+        <p>"경희대에 진짜 권장과목만 나온다. 여기에는 핵심과목도 있어야지. 핵심이 더 중요한 건데."</p>
+      </div>
+      <p><code>universities.핵심권장구분</code> 칸을 이관에서 빠뜨렸다. 화면은 이 값으로
+        "핵심과 권장을 나눠 제시한 대학인가"를 판단하는데 늘 비어 있었으니, 조건이 항상 거짓이 되어
+        <strong>경희대 37곳·동국대 51곳의 핵심과목이 통째로 빠진 채</strong> 그려지고 있었다.</p>
+      <p class="note">더해서, 화면의 줄 라벨을 만드는 코드가 교과군이 둘 이상이면 라벨을 교과 이름으로
+        바꿔 버려 "핵심"이라는 말 자체가 사라지고 있었다. 묶음 제목을 따로 두어 해결했다.</p>
+      <div class="why">
+        <div class="t">앞서 내가 틀렸던 판단</div>
+        <p>이 부분 주석에 "표시만 달라질 뿐 과목 목록 자체는 정확하다"고 적어 두었으나 틀렸다.
+          <strong>목록 자체가 빠져 있었다.</strong> 화면에 안 보이는 것을 "표시 문제"로 넘겨짚으면 안 된다.</p>
+      </div>
+    </div>
+
+    <div class="entry add">
+      <h4><span class="tag add">개선</span>대학이 쓴 말을 그대로 보인다</h4>
+      <div class="sym">
+        <div class="t">담당 교사 지적</div>
+        <p>"핵심과목이 없는 학교는 그대로 권장이나, 대학이 사용한 용어가 떠야 한다."</p>
+      </div>
+      <p>동국대는 "역량 영역 / 소양 영역"이라 부르는데 화면에는 "핵심과목 / 권장과목"으로 나오고 있었다.
+        대학마다 제 말을 쓰도록 <code>핵심이름</code>·<code>권장이름</code>·<code>핵심설명</code>·<code>권장설명</code>
+        네 칸을 두었다.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>대학</th><th>앞 갈래</th><th>뒤 갈래</th></tr></thead>
+          <tbody>
+            <tr><th>경희대</th><td>핵심과목 <span class="note">(필수적 이수를 권장)</span></td>
+                <td>권장과목 <span class="note">(가급적 이수를 권장)</span></td></tr>
+            <tr><th>동국대</th><td>역량 영역 <span class="note">(일반선택 학습을 가급적 추천)</span></td>
+                <td>소양 영역 <span class="note">(관심이 있다면 추천)</span></td></tr>
+            <tr><th>나머지 12곳</th><td>—</td><td>권장과목</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>나누지 않은 대학은 예전처럼 "권장과목" 한 줄만 나온다. "편성표에 표시" 탭의 요약줄도 같은 말을 쓴다.</p>
+    </div>
+
+    <h3>② 같은 유형을 전수로 훑어 셋을 더 찾았다</h3>
+
+    <div class="entry bug">
+      <h4><span class="tag bug">버그</span>폐강이 엉뚱한 과목까지 지울 뻔했다 <span class="note">— 가장 위험했던 것</span></h4>
+      <p>폐강의 <code>선택군</code>·<code>과정</code>을 옮기지 않고 있었다. 화면은 이 둘로
+        "어디까지 폐강인가"를 가리는데 늘 비어 있었다.</p>
+      <div class="sym">
+        <div class="t">이렇게 될 뻔했다</div>
+        <p>관리자가 "미적분Ⅱ, <strong>선택군2·일반과정만</strong> 폐강"으로 저장하면 →
+          학생 화면에서는 <strong>선택군1의 미적분Ⅱ도, 과학중점의 미적분Ⅱ도 함께 사라짐</strong></p>
+      </div>
+      <p>관리자 화면은 저장을 제대로 하고 있었으므로 <strong>데이터베이스는 맞는데 학생 화면만 틀리는</strong>
+        모양이었다. 폐강 등록이 아직 0건이라 드러나지 않았을 뿐, <strong>올해 첫 폐강을 넣는 순간
+        나타났을 문제</strong>다.</p>
+      <div class="why">
+        <div class="t">왜 이제껏 못 찾았나</div>
+        <p>재발 방지 검사가 "행이 없으면 건너뛴다"로 되어 있었다. 정작 위험한 시점(폐강 0건)에
+          검사가 꺼져 있던 셈이다. 이제 0건이어도 기대하는 칸 목록과 대조한다.</p>
+      </div>
+    </div>
+
+    <div class="entry bug">
+      <h4><span class="tag bug">버그</span>푸터의 개설 현황 기준일이 영영 안 나오고 있었다</h4>
+      <p>화면이 <code>CLOSED.meta</code> 를 읽는데 그 자료구조를 만들지 않았다. 늘 비어 있으니
+        조건이 거짓이 되어 "· 개설 현황 2026-09-01" 부분이 붙지 않았다.
+        행마다 든 갱신일 가운데 가장 나중 것을 쓰도록 했다.</p>
+    </div>
+
+    <div class="entry bug">
+      <h4><span class="tag bug">버그</span>관리자 화면의 갱신일 칸이 늘 오늘 날짜였다</h4>
+      <p>갱신일을 떼어낸 배열에서 갱신일을 읽고 있었다. 그래서 저장할 때마다 원래 기준일이
+        오늘로 밀렸다. <strong>이력이 조용히 사라지던 자리</strong>다.</p>
+    </div>
+
+    <h3>③ 곁들여 고친 것</h3>
+
+    <div class="entry add">
+      <h4><span class="tag add">개선</span>과정 이름을 박아 쓰던 곳 여섯 군데</h4>
+      <p>관리자 화면이 <code>['일반','과학중점']</code> 을 코드에 박아 쓰고 있었다. 학생 화면은 이미
+        이수규칙의 과정구분을 읽고 있었으므로, <strong>과정 이름을 바꾸면 관리자 화면만 못 따라오는</strong>
+        어긋남이 생길 자리였다. 양쪽이 같은 곳을 보게 했다.</p>
+    </div>
+
+    <div class="entry add">
+      <h4><span class="tag add">개선</span>이수규칙에 ⑧ 자료 출처 칸을 만들었다</h4>
+      <p>학생 화면 편성표 창 <strong>첫 줄</strong>에 그대로 나가는 한 줄인데 고칠 자리가 없었다.
+        새 학년도를 만들면 본뜬 학년도의 연도 문구("2026학년도 입학생 기준")가 그대로 따라오던 것을
+        이제 손볼 수 있다.</p>
+      <p>입력하는 대로 아래에 "학생 화면에 이렇게 보입니다"가 뜨고, 저장 전 미리보기에도 바뀜이 나온다.</p>
+      <p class="note">이 칸(<code>school_rules.출처</code>) 역시 이관에서 빠져 편성표 창 첫 줄이
+        빈칸이었다. 값을 채웠다.</p>
+    </div>
+
+    <h3>④ 재발을 막는 장치</h3>
+
+    <div class="entry add">
+      <h4><span class="tag add">장치</span><code>옮기지못한칸()</code> — 콘솔 경고</h4>
+      <p>데이터베이스에는 있는데 화면이 안 쓰는 칸이 생기면 개발자 콘솔에 경고를 띄운다.
+        <code>universities</code>·<code>admission_units</code>·<code>school_rules</code>·<code>school_offerings</code>·<code>closed_subjects</code>
+        다섯 곳에 걸어 두었다.</p>
+      <p>이름을 바꿔 옮기는 칸(대학의 <code>이름</code> → 화면의 <code>대학</code>)을 누락으로 잘못 알리던 것도
+        고쳤다. <strong>헛알림이 잦으면 정작 진짜 누락을 흘려보내게 된다.</strong></p>
+      <div class="why">
+        <div class="t">이 검사가 닿지 않는 곳 — 기억해 둘 것</div>
+        <p>jsonb 안쪽의 하위 키(<code>조건</code>, <code>이수규칙</code>, <code>선택슬롯</code> 등)와,
+          데이터베이스에 아예 칸이 없는 값(<code>CLOSED.meta</code> 가 그랬다)은 못 잡는다.
+          <strong>칸을 늘릴 때는 옮기는 줄도 함께 늘렸는지 눈으로 확인하는 편이 안전하다.</strong></p>
+      </div>
+    </div>
+
+    <h3>확인한 것</h3>
+    <div class="entry">
+      <h4><span class="tag chk">검증</span>실제 브라우저로 확인</h4>
+      <ul>
+        <li>경희대(핵심과목/권장과목 + 설명), 동국대(역량 영역/소양 영역 + 설명), 서울대(권장과목만) 모두 정상</li>
+        <li>"독서 토론과 글쓰기"를 <strong>일반과정 1학기만</strong> 폐강 → 일반은 <code>[1,2]→[2]</code>,
+          과학중점은 <code>[1,2]</code> 그대로. 고치기 전이었다면 네 자리가 다 사라졌을 곳</li>
+        <li>검사 함수가 <strong>진짜 누락은 잡고</strong>, 이름 바꿔 옮긴 것과 빈 값은 넘어가는 것</li>
+        <li>출처 칸이 값을 읽고, 저장 전 미리보기에 "옛 문구 → 새 문구"가 뜨는 것</li>
+        <li>콘솔 오류·경고 없음</li>
+      </ul>
+      <p class="note">데이터베이스는 조회만 했고 고치지 않았다. 출처 칸 시험도 값을 되돌린 뒤 저장하지 않았다.</p>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="day">
+    <div class="day-h">
+      <span class="d">2026-09-01 ~ 09-05</span>
+      <span class="s">데이터베이스 이원화와 관리자 화면 재설계</span>
+    </div>
+    <p class="commits">
+      <span>7f6099f 설계</span><span>fa139f9 학생화면 DB전환</span>
+      <span>e6cb706 로그인</span><span>ed59d76 Supabase 직접쓰기</span>
+      <span>2795993 교육과정 편집</span><span>8860b84 이수규칙 빌더</span>
+      <span>782eed2~5960743 관리자 재설계</span><span>666ed4d 오류 한국어화</span>
+    </p>
+
+    <p class="lead">"매년 권장과목이 바뀌고 학교 교육과정이 바뀌어도 유지보수가 쉬웠으면 좋겠다"는
+      요구에서 시작했다. <strong>조회 화면과 자료를 갈라</strong>, 자료는 데이터베이스에 두고
+      화면은 그것을 읽기만 하게 했다.</p>
+
+    <h3>무엇이 어떻게 바뀌었나</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th></th><th>전</th><th>후</th></tr></thead>
+        <tbody>
+          <tr><th>자료</th><td>정적 JSON 파일 8개</td><td>Supabase 표 7개</td></tr>
+          <tr><th>고치는 법</th><td>파일을 고쳐 다시 올림</td><td>관리자 화면에서 바로 고침</td></tr>
+          <tr><th>잠금</th><td>깃헙 토큰</td><td>로그인 + 행 수준 보안(RLS)</td></tr>
+          <tr><th>학년도 구분</th><td>파일 이름으로</td><td>코호트로 (추가·삭제 가능)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">표 7개 — <code>universities</code>(대학), <code>admission_units</code>(모집단위),
+      <code>subjects</code>(과목 마스터), <code>school_cohorts</code>(학년도),
+      <code>school_offerings</code>(개설과목), <code>school_rules</code>(이수규칙),
+      <code>closed_subjects</code>(폐강).</p>
+
+    <h3>관리자 화면을 쓰는 사람 중심으로 다시 짰다</h3>
+    <div class="entry">
+      <div class="sym">
+        <div class="t">담당 교사 지적 — 재설계의 계기</div>
+        <p>"이름 쪽이 뭔지 모르겠다. 칸 구분이 명확하지 않고 그냥 칸 두 개인데 너는 나한테 이름 쪽이라고 한다.
+          내가 보기엔 둘 다 이름이다. <strong>다분히 AI가 자기가 사용할 때 오류 안 나는 것만 생각한 부분이다.</strong>"</p>
+      </div>
+      <ul>
+        <li><strong>로그인하면 학년도를 먼저 고른다.</strong> 탭마다 고르게 두면 옮길 때마다 확인해야 하고
+          탭 사이가 어긋날 여지가 생긴다.</li>
+        <li><strong>과목 이름을 타자로 치지 않는다.</strong> 전부 드롭다운이다 —
+          이 학년도 → 다른 학년도 → 마스터 → <code>+ 직접 입력…</code> 순으로 좁혀 고른다.
+          이름이 달라서 생기는 오류가 없어진다.</li>
+        <li><strong>계산에 쓰는 칸과 학생에게 보이는 문구를 생김새부터 갈랐다.</strong>
+          교과군 규칙이 <code>[기술·가정/정보 ✕] [+ 교과군 추가 ▾] 교과에서 최소 [1] 과목</code> 한 줄로 읽힌다.</li>
+        <li><strong>저장하기 전에 무엇이 바뀌는지 보여준다.</strong> 안 바꾸고 누르면 "바뀐 것이 없습니다".</li>
+        <li>정렬·필터를 붙였다. 헤더를 누르면 정렬되고 <code>원래 순서로</code> 로 돌아온다.</li>
+        <li>새 학년도 만들기 / 졸업 학년도 지우기. 지우기에는 <strong>안전장치 넷</strong>을 걸었다 —
+          학생 화면에 보이는 중이면 잠금 → 지워질 개수 안내 → 이름 직접 입력 → 자동 백업 내려받기.</li>
+      </ul>
+    </div>
+
+    <h3>그 밖에</h3>
+    <ul>
+      <li><strong>평가와 수능은 다른 축이다.</strong> 상대·절대·석차 미기재·성취 3단계는 <em>하나를 고르는</em>
+        것이고, 수능 출제 여부는 <em>따로 켜고 끄는</em> 것이다. 같은 줄에 두어 헷갈리던 것을 갈랐다.</li>
+      <li><strong>1학기·2학기를 따로 고른다.</strong> 같은 과목이 두 학기에 모두 열리는 경우가 있다.</li>
+      <li>서버가 돌려주는 영어 오류를 한국어로 바꿨다 — 시계 오차, 로그인 만료, 자격 증명 오류,
+        연결 실패, 권한 없음. 모르는 오류는 원문을 그대로 보인다.</li>
+    </ul>
+
+    <div class="why">
+      <div class="t">겪은 일 — 코드 문제가 아니었던 것</div>
+      <p>로그인이 <code>JWT issued at future</code> 로 막힌 적이 있다. 이 컴퓨터 시계가 서버보다
+        8초 앞서 있어 방금 발급한 토큰을 서버가 미래의 것으로 본 것이었다. 시계를 맞추자 바로 풀렸다.
+        <strong>이 일로 오류 메시지를 한국어로 바꾸게 됐다</strong> — 영어 원문만 보고는 무슨 일인지 알 수 없다.</p>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="day">
+    <div class="day-h">
+      <span class="d">2026-08-28 ~ 08-29</span>
+      <span class="s">대학 확충 · 권역 필터 · 서울대 누락 사고</span>
+    </div>
+    <p class="commits">
+      <span>b0d385c 대학 36곳 추가</span><span>c652726 빈 모집단위 정리</span>
+      <span>6e4a43b 나눠 제시한 것 나눠 보이기</span><span>4518bd6 서울대 권역 복구</span>
+    </p>
+
+    <div class="entry bug">
+      <h4><span class="tag bug">사고</span>권역을 고르면 서울대가 사라졌다</h4>
+      <div class="sym">
+        <div class="t">담당 교사가 발견</div>
+        <p>"권역을 비워둔 상태에서는 서울대가 뜨는데, 수도권으로 지정하면 서울대가 없다."</p>
+      </div>
+      <p>서울대 자료를 만드는 빌더에 <code>권역</code>·<code>지역</code> 을 넣지 않아
+        <strong>43개 모집단위가 권역 필터에서 통째로 빠졌다.</strong> 빌더에 두 줄을 더해 다시 만들었다.</p>
+      <p class="note">뒤에 경기대·연세대 빌더에도 같은 누락이 있는 것을 찾아 고쳤다 —
+        그대로 두었다면 다시 만들 때 63개 모집단위가 사라졌을 것이다.</p>
+    </div>
+
+    <h4>그 밖에 남겨둘 판단</h4>
+    <ul>
+      <li><strong>서울대는 엑셀이 확정본이다.</strong> PDF와 대조하다 학과 10곳이 없는 것을 발견해
+        추가했다가 되돌렸다. 담당 교사가 직접 풀어 정리한 자료는 <em>옮겨 적다 만 것이 아니라
+        판단이 끝난 결과</em>다. 정리본에 없으면 대상이 아니라는 뜻이다.</li>
+      <li>엑셀에서 <strong>단과대학 열과 학과 열을 함께 읽어야 한다.</strong> 학과 열을 빠뜨리면
+        광운대 28개 학과가 전부 "전자정보공과대학" 하나로 뭉개진다.</li>
+      <li>캠퍼스가 갈리는 6곳(강원대 춘천/삼척, 전남대 광주/여수, 건국대 글로컬, 단국대 천안)은
+        본교와 권장과목이 달라 <strong>별개 대학 항목</strong>으로 두었다.</li>
+      <li>과목 마스터에 없는 이름 30여 개는 <strong>임의로 만들지 않고</strong> 빼되
+        <code>비고</code> 에 원문을 남겼다.</li>
+    </ul>
+  </div>
+
+  <hr class="sep">
+
+  <h2>계속 기억해야 할 것</h2>
+  <div class="entry">
+    <ul>
+      <li><strong>화면을 고쳤으면 캐시 버전을 올린다.</strong> <code>app.js</code> 의 <code>VERSION</code> 과
+        <code>index.html</code> 의 <code>?v=</code> 를 <em>함께</em> 올려야 한다.
+        안 올리면 학생 브라우저가 옛 파일을 계속 쓴다.</li>
+      <li><strong>학생 자료는 서버로 가지 않는다.</strong> 고른 과목은 브라우저와 주소창에만 있다.
+        개인정보를 서버에 올리지 않기 위한 설계다.</li>
+      <li><strong>관리자 화면의 잠금은 Supabase 로그인이다.</strong> 화면에 박힌 키는 공개돼도 안전한 것이고,
+        실제 잠금은 로그인과 행 수준 보안이다 — 누구나 읽을 수 있고, 쓰기는 로그인한 사람만 된다.</li>
+      <li><strong>폐강은 편성표와 분리한다.</strong> 편성표(계획)는 입학 때 한 번 만들고 그대로 두고,
+        정정기간마다 바뀌는 것은 폐강 목록 하나뿐이다.</li>
+      <li><strong>데이터베이스에 칸을 늘리면 화면으로 옮기는 줄도 함께 늘린다.</strong>
+        빠뜨리면 오류 없이 그 기능만 사라진다 — 2026-09-05에 이것으로 넷을 겪었다.</li>
+    </ul>
+  </div>
+
+  <h2>아직 남은 일</h2>
+  <div class="entry">
+    <ul>
+      <li><strong>안드로이드·iOS 앱.</strong> 데이터베이스 이원화가 끝났으니 착수할 수 있다. 방식 미정.</li>
+      <li><strong>학생이 고른 과목 공유하기</strong> — 메일이나 메신저로 보낼 수 있게. "나중에 따로" 하기로 함.</li>
+      <li><strong>남은 정적 JSON 정리.</strong> 데이터베이스로 옮겨 쓰이지 않게 된 파일 6개
+        (<code>recommendations.json</code> 576KB 등). 며칠 써 보고 판단하기로 보류.
+        <code>help_content.json</code>·<code>rec_meta.json</code> 은 계속 쓴다.</li>
+    </ul>
+  </div>
+
+  <p class="foot">
+    원본 로그는 저장소의 <code>work/교육과정/2028과목선택/작업로그.md</code> 에 있다.
+    설계 문서는 <code>docs/superpowers/specs/</code> 아래.
+  </p>
+
+</div>
+</body>
+</html>
