@@ -129,7 +129,7 @@
   .emotion ul { list-style: none; }
   .emotion li {
     font-size: clamp(0.82rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66;
-    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+    color: var(--ink-soft); padding-left: 1.35em; position: relative;
   }
   .emotion li + li { margin-top: 0.55em; }
   .emotion li::before { content: "\2014"; position: absolute; left: 0; color: var(--ink-faint); }
@@ -189,6 +189,14 @@
     border-left: 0.28em solid var(--rule); padding: 0.5em 0.72em; margin-bottom: 0.8em; color: var(--ink);
   }
   .c3 p.cite + p { margin-top: 0; }
+
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 1.0cqw 2.6cqw; }
+  .gl { display: flex; gap: 0.9cqw; align-items: baseline; padding-bottom: 0.62em; border-bottom: 1px solid var(--rule); }
+  .gl .gw {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.86rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); width: 5.6em; flex-shrink: 0;
+  }
+  .gl .gd { font-size: clamp(0.76rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs))); line-height: 1.6; color: var(--ink-soft); }
 
   .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
   .step { display: flex; gap: 1.2rem; align-items: flex-start; }
@@ -284,9 +292,8 @@
       <span>공통국어2 &middot; 3. 글로 읽는 세상, 세상을 움직이는 글</span>
       <span>1학년 &middot; 1차시</span>
     </div>
-    <div class="page-num">1 / 25</div>
+    <div class="page-num">1 / 28</div>
   </section>
-
   <!-- 2 -->
   <section class="slide" style="--fs:1.43;">
     <h2 class="slide-title">학습 목표</h2>
@@ -300,21 +307,9 @@
         <p>&lsquo;집&rsquo;이라는 같은 화제를 서로 다른 형식과 관점으로 다룬 세 편의 글을 읽는다. <strong style="color:var(--key);">&#9312;번 목표</strong>에 집중하는 시간이다</p>
       </div>
     </div>
-    <div class="page-num">2 / 25</div>
+    <div class="page-num">2 / 28</div>
   </section>
-
   <!-- 3 -->
-  <section class="slide">
-    <h2 class="slide-title">삶과 연관 짓기</h2>
-    <div class="body-area" style="align-items:center; text-align:center;">
-      <div class="lead" style="font-family:'Gowun Batang',serif; font-size:clamp(1.3rem, 3.3cqw, 3.96rem); color:var(--ink); line-height:1.6;">
-        &ldquo;친구들과 함께 책을 읽고<br>이야기를 나눠 본 적이 있나요?&rdquo;
-      </div>
-    </div>
-    <div class="page-num">3 / 25</div>
-  </section>
-
-  <!-- 4 -->
   <section class="slide" style="--fs:1.27;">
     <h2 class="slide-title">기초 개념 짚고 가기</h2>
     <div class="body-area">
@@ -329,95 +324,149 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">4 / 25</div>
+    <div class="page-num">3 / 28</div>
   </section>
-
+  <!-- 4 -->
+  <section class="slide">
+    <h2 class="slide-title">삶과 연관 짓기</h2>
+    <div class="body-area" style="align-items:center; text-align:center;">
+      <div class="lead" style="font-family:'Gowun Batang',serif; font-size:clamp(1.3rem, 3.3cqw, 3.96rem); color:var(--ink); line-height:1.6;">
+        &ldquo;친구들과 함께 책을 읽고<br>이야기를 나눠 본 적이 있나요?&rdquo;
+      </div>
+    </div>
+    <div class="page-num">4 / 28</div>
+  </section>
   <!-- 5 -->
-  <section class="slide" style="--fs:1.23;">
+  <section class="slide" style="--fs:1.14;">
     <h2 class="slide-title">오늘 읽을 세 편의 글</h2>
     <div class="body-area">
       <table class="cmp-table">
         <thead><tr><th style="width:3.5em;">&nbsp;</th><th>제목 &middot; 글쓴이</th><th style="width:8em;">갈래</th></tr></thead>
         <tbody>
-          <tr><th>&#12910;</th><td>&lt;그 시절 우리들의 집&gt; &middot; 공선옥</td><td>현대 수필</td></tr>
-          <tr><th>&#12911;</th><td>&lt;아파트는 어떻게 우리의 몸과 마음을 지배하는가?&gt; &middot; 김홍재</td><td>설명문</td></tr>
-          <tr><th>&#12912;</th><td>&lt;해외도 &lsquo;주거 걱정&rsquo;은 마찬가지&hellip;&hellip; 어떤 점이 다를까?&gt;</td><td>뉴스</td></tr>
+          <tr><th>&#12910;</th><td>&#12296;그 시절 우리들의 집&#12297; &middot; 공선옥</td><td>현대 수필</td></tr>
+          <tr><th>&#12911;</th><td>&#12296;아파트는 어떻게 우리의 몸과 마음을 지배하는가?&#12297; &middot; 김홍재</td><td>설명문</td></tr>
+          <tr><th>&#12912;</th><td>&#12296;해외도 &lsquo;주거 걱정&rsquo;은 마찬가지&hellip;&hellip; 어떤 점이 다를까?&#12297;</td><td>텔레비전 뉴스</td></tr>
         </tbody>
       </table>
       <div class="emotion" style="margin-top:1.6cqw;">
         <div class="etag">읽기 목적</div>
         <ul>
-          <li>이 단원에서는 <strong>&lsquo;내가 살고 싶은 집&rsquo;</strong>이라는 글을 쓰기 위해 세 편의 글과 자료를 읽는다</li>
+          <li>이 단원에서는 <strong>&lsquo;내가 살고 싶은 집&rsquo;을 주제로</strong> 글을 쓰기 위해 &lsquo;집&rsquo;에 관한 글과 자료를 읽는다</li>
+          <li>&#12912;는 화면과 자막, 도표가 함께 쓰인 <strong>복합 양식</strong> 영상 자료다</li>
         </ul>
       </div>
     </div>
-    <div class="page-num">5 / 25</div>
+    <div class="page-num">5 / 28</div>
   </section>
-
   <!-- 6 -->
-  <section class="slide tight" style="--fs:1.22;">
+  <section class="slide tight" style="--fs:0.98;">
     <h2 class="slide-title">&#12910; 그 시절 우리들의 집 &middot; 처음</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>아낙이 텃밭에서 딴 찬거리로 저녁상을 차리고, 토담집 안방 바닥에 짚을 깔고 아이를 낳을 준비를 한다. 아낙이 아이를 낳자 남편은 첫국밥을 끓이고, 금줄을 단다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;그러고 나서 아이를 낳을 채비를 하기 시작했다. 물을 데워 놓고 끓는 물에 아기 탯줄 자를 가위를 소독하고 미역도 담가 놓고 안방 바닥에 짚을 깔고 그 위에 드러누웠다.&rdquo;</p>
-        <span class="src">&mdash; 교과서 120쪽 17~20행</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul>
-          <li>집에서 홀로 출산을 준비하는 아낙의 모습이 오늘날과 사뭇 다르다. 출산을 특별한 행사가 아니라 <strong>자연스러운 일상의 한 부분</strong>으로 여기고 있음을 보여 준다</li>
-        </ul>
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">120쪽 4행~121쪽 6행</span></div>
+          <p class="lead">저녁 어스름, 보리쌀을 안치던 아낙이 산기를 느낀다. 서두르지 않고 밥을 안친 뒤 텃밭에서 가지와 오이, 호박을 따다 저녁상을 차리고, 물을 데워 가위를 소독하고는 안방 바닥에 짚을 깔고 눕는다. 장에서 술 한잔 걸치고 돌아온 남편은 갓 태어난 아기의 울음소리를 듣고 첫국밥을 끓인 뒤, 사립문에 숯과 고추를 끼운 금줄을 맨다. 그의 넷째 아들이 태어나던 날 밤이다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;그러고 나서 아이 낳을 채비를 하기 시작했다. 물을 데워 놓고 끓는 물에 아기 탯줄 자를 가위를 소독하고 미역도 담가 놓고 안방 바닥에 짚을 깔고 그 위에 드러누웠다.&rdquo;</p>
+            <span class="src">&mdash; 교과서 120쪽 17~20행</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul>
+            <li>집에서 홀로 출산을 준비하는 모습이 오늘날과 사뭇 다르다. 출산을 특별한 행사가 아니라 <strong>자연스러운 일상의 한 부분</strong>으로 여기고 있다</li>
+            <li>물음 &mdash; &lsquo;그&rsquo;의 부모님에게 이 토담집은 어떤 의미가 있는 집이었을까?</li>
+          </ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="page-num">6 / 25</div>
+    <div class="page-num">6 / 28</div>
   </section>
-
   <!-- 7 -->
-  <section class="slide tight" style="--fs:1.19;">
+  <section class="slide tight" style="--fs:1.0;">
     <h2 class="slide-title">&#12910; 그 시절 우리들의 집 &middot; 중간</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>아낙과 그의 남편, 즉 &lsquo;그&rsquo;의 부모가 신접살림을 나면서 마을 사람들의 도움을 받아 직접 토담집을 짓는다. &lsquo;그&rsquo;와 형제들은 그곳에서 유년 시절을 보내며 오래도록 간직할 추억을 쌓는다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;그는 그 집의 봄 여름 가을 겨울과&hellip;&hellip; 몹시 힘들고 고달픈 도시에서의&hellip;&hellip; 마음속의 보석처럼 소중한 그 추억들을 끄집어내 보고는 했다.&rdquo;</p>
-        <span class="src">&mdash; 교과서 122쪽 1~7행</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul>
-          <li>자연과 조화를 이루는 토담집에서 자란 추억이 삭막한 도시에서 살아가는 <strong>버팀목</strong>이 되어 준다. &lsquo;나&rsquo; 대신 &lsquo;그&rsquo;라는 3인칭 시점으로 이야기를 전달한다</li>
-        </ul>
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">121쪽 7행~122쪽 16행</span></div>
+          <p class="lead">어머니는 그 토담집에서 팔 남매를 낳았다. 집은 부모가 신접살림을 나면서 손수 지은 것으로, 마을 남정네들이 흙을 이겨 지붕을 올리고 아낙들은 음식을 만들었다. 그와 형제들은 노란 흙벽과 노란 초가지붕의 그 집에서 나고 자라며 사계절을 온몸으로 겪었고, 석양의 북새를 보고 비설거지를 하거나 비 온 저녁 지렁이가 우는 것을 아는 등 자연에 감춰진 비밀을 하나씩 깨달아 갔다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;그 집은 그 집 아이들에게 작은 우주였다.&hellip;&hellip; 냄새와 소리와 맛과 색깔과 형태들이 그 집에서는 선명했다.&hellip;&hellip; 자연이 그러한 것처럼 사람들의 삶이 명료했다.&rdquo;</p>
+            <span class="src">&mdash; 교과서 122쪽</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul>
+            <li>그 추억은 훗날 고달픈 도시 생활을 버티게 하는 <strong>버팀목</strong>이 된다. &lsquo;나&rsquo; 대신 &lsquo;그&rsquo;라는 3인칭 시점으로 자신의 이야기를 전달한다</li>
+            <li>물음 &mdash; &lsquo;그&rsquo;와 형제들이 토담집에서 깨달은 자연의 비밀들은 무엇이었을까?</li>
+          </ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="page-num">7 / 25</div>
+    <div class="page-num">7 / 28</div>
   </section>
-
   <!-- 8 -->
-  <section class="slide tight" style="--fs:1.22;">
+  <section class="slide tight" style="--fs:1.13;">
     <h2 class="slide-title">&#12910; 그 시절 우리들의 집 &middot; 끝</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>토담집을 떠나 도시의 아파트에서 살게 된 &lsquo;그&rsquo;와 그곳에서 태어난 &lsquo;그&rsquo;의 아이는 자연과 단절된 삶을 살아간다. &lsquo;그&rsquo;의 어머니는 팔 남매를 낳고 길렀던 토담집에서 죽음을 맞는다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;이제 그 집을 떠난 그에게는 모든 것이 불분명하다&hellip;&hellip; 우리는 오늘 밤도 쓸쓸한 집으로 돌아간다.&rdquo;</p>
-        <span class="src">&mdash; 교과서 123쪽 1~18행</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul>
-          <li>명료했던 과거 토담집의 삶과 인공적이고 불분명한 오늘날 아파트의 삶을 <strong>대조</strong>한다. 마지막 문장은 병원에서 나고 죽는 현대인의 모습을 함축한다</li>
-        </ul>
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">123쪽 1~18행</span></div>
+          <p class="lead">그 집을 떠난 그에게는 아침과 저녁도, 사계절도, 오감도 불분명하다. 병원에서 태어나 아파트에서 자란 그의 아이는 여름에 긴팔을, 겨울에 반팔을 입고 수박이 어느 계절 과일인지도 모른다. 어머니의 부음을 듣고 찾아간 노란 집에서, 조그마해질 대로 조그마해진 어머니는 자기 아이들을 낳던 바로 그 자리에 누워 있었다. 안주인이 떠난 뒤 그 집에서는 더 이상 탄생도 죽음도 일어나지 않는다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;더 이상의 탄생과 죽음이 없는 우리들의 집은 쓸쓸하다. 우리는 오늘 밤도 쓸쓸한 집으로 돌아들 간다.&rdquo;</p>
+            <span class="src">&mdash; 공선옥, 《자운영 꽃밭에서 나는 울었네》 &middot; 교과서 123쪽 끝</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul>
+            <li>명료했던 토담집의 삶과 불분명한 아파트의 삶을 <strong>대조</strong>한다. 마지막에 &lsquo;그&rsquo;가 &lsquo;우리&rsquo;로 바뀌면서 개인의 경험이 우리 모두의 이야기로 넓어진다</li>
+          </ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="page-num">8 / 25</div>
+    <div class="page-num">8 / 28</div>
   </section>
-
   <!-- 9 -->
+  <section class="slide" style="--fs:1.42;">
+    <h2 class="slide-title">&#12296;그 시절 우리들의 집&#12297; 낱말 풀이</h2>
+    <div class="body-area">
+      <div class="gloss">
+        <div class="gl"><span class="gw">토담집</span><span class="gd">흙담만 쌓아 그 위에 지붕을 덮어 지은 집</span></div>
+        <div class="gl"><span class="gw">신접살림</span><span class="gd">처음으로 차린 살림살이</span></div>
+        <div class="gl"><span class="gw">첫국밥</span><span class="gd">아이를 낳은 뒤에 산모가 처음으로 먹는 국과 밥</span></div>
+        <div class="gl"><span class="gw">성주</span><span class="gd">집을 지키는 신. 가신 가운데 맨 윗자리를 차지한다</span></div>
+        <div class="gl"><span class="gw">북새</span><span class="gd">&lsquo;노을&rsquo;의 방언</span></div>
+        <div class="gl"><span class="gw">비설거지</span><span class="gd">비에 맞으면 안 되는 물건을 치우거나 덮는 일</span></div>
+        <div class="gl"><span class="gw">부음</span><span class="gd">사람이 죽었다는 것을 알리는 말이나 글</span></div>
+        <div class="gl"><span class="gw">조왕신</span><span class="gd">부엌을 맡는다는 신</span></div>
+      </div>
+    </div>
+    <div class="page-num">9 / 28</div>
+  </section>
+  <!-- 10 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">&#12910; 작가 소개 &middot; 공선옥</h2>
+    <div class="body-area">
+      <div class="def-box">
+        <div class="dt">공선옥 (1963~) &middot; 소설가</div>
+        <p>우리 사회에서 소외된 이웃과 가난을 현실적으로 다룬 작품을 많이 썼다. 대표작으로 소설집 《명랑한 밤길》, 장편 소설 《유랑 가족》 등이 있다</p>
+      </div>
+    </div>
+    <div class="page-num">10 / 28</div>
+  </section>
+  <!-- 11 -->
   <section class="slide" style="--fs:1.17;">
     <h2 class="slide-title">&#12910; 제재 개관</h2>
     <div class="body-area">
@@ -433,10 +482,9 @@
         <li><span class="n">&#9314;</span>마지막 부분에서 시점을 &lsquo;그&rsquo;에서 &lsquo;우리&rsquo;로 바꿔 개인적 경험을 보편적 차원으로 확장함</li>
       </ul>
     </div>
-    <div class="page-num">9 / 25</div>
+    <div class="page-num">11 / 28</div>
   </section>
-
-  <!-- 10 -->
+  <!-- 12 -->
   <section class="slide" style="--fs:1.5;">
     <h2 class="slide-title">&#12910; 핵심 강의 &middot; 토담집과 아파트</h2>
     <div class="body-area">
@@ -449,80 +497,135 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">10 / 25</div>
+    <div class="page-num">12 / 28</div>
   </section>
-
-  <!-- 11 -->
-  <section class="slide" style="--fs:1.5;">
-    <h2 class="slide-title">&#12910; 작가 소개 &middot; 공선옥</h2>
-    <div class="body-area">
-      <div class="def-box">
-        <div class="dt">공선옥 (1963~) &middot; 소설가</div>
-        <p>우리 사회에서 소외된 이웃과 가난을 현실적으로 다룬 작품을 많이 썼다. 대표작으로 소설집 《명랑한 밤길》, 장편 소설 《유랑 가족》 등이 있다</p>
-      </div>
-    </div>
-    <div class="page-num">11 / 25</div>
-  </section>
-
-  <!-- 12 -->
-  <section class="slide tight" style="--fs:1.23;">
+  <!-- 13 -->
+  <section class="slide tight" style="--fs:1.09;">
     <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 서론</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>건축물에서 중요한 것은 외관이 아니라 사람들이 실제로 생활하는 내부 공간이다. 최근 지어지는 아파트들이 화려한 외관만큼 실속 있는 주거 공간을 제공하는지 고민해 봐야 한다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;하나의 건물을 만든다는 것은 하나의 인생을 만들어 내는 것이다.&rdquo;&hellip;&hellip; 겉으로 보이는 껍데기는 이 내부 알맹이를 만들어 내기 위한 매개체로 생각하는 것이 타당합니다.</p>
-        <span class="src">&mdash; 건축가 루이스 칸의 말을 인용, 교과서 124쪽</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul><li>유명한 건축가의 말을 인용해, 공간이 그곳에서 생활하는 사람에게 큰 영향을 준다는 점을 강조한다</li></ul>
-      </div>
-    </div>
-    <div class="page-num">12 / 25</div>
-  </section>
-
-  <!-- 13 -->
-  <section class="slide tight" style="--fs:1.17;">
-    <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 본론</h2>
-    <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>고층 공간에서 거주하는 사람에게는 필연적으로 스트레스가 생기고, 이것이 만성화되면 혈압과 혈당이 상승하는 등의 문제가 생길 수 있다. 고층 주거 공간은 신체적&middot;정신적 영향을 모두 미친다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;스트레스를 받으면 교감 신경계가 활성화되고 부신 피질에서 코르티솔이 분비됩니다.&rdquo;&hellip;&hellip; 만성화되면 혈압과 혈당이 상승하며 심신이 피로해지고 면역 체계가 제 기능을 하지 못하게 됩니다.</p>
-        <span class="src">&mdash; 교과서 124~126쪽</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul><li>고층 주거 공간이 몸과 마음에 부정적 영향을 미치는 원인을 높이&middot;기압&middot;진동으로 나누어 설명하고, 연구 결과를 인용해 뒷받침한다</li></ul>
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">124쪽 3~15행</span></div>
+          <p class="lead">글쓴이는 건축가 루이스 칸의 말로 글을 연다. 사람은 사는 공간으로부터 지대한 영향을 받는다는 뜻이다. 흔히 건축이라 하면 건물의 높이나 모양을 떠올리지만, 정작 중요한 것은 사람들이 날마다 몸을 두는 내부 공간이라고 말한다. 요새 아파트는 기술 차원에서 아름답고 튼튼하지만, 화려한 겉모습만큼 알맹이도 실속이 있는지 묻는다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;하나의 건물을 만든다는 것은 하나의 인생을 만들어 내는 것이다.&rdquo;&hellip;&hellip; 겉으로 보이는 껍데기는 바로 이 내부 알맹이를 만들어 내기 위한 매개체로 생각하는 것이 타당합니다.</p>
+            <span class="src">&mdash; 교과서 124쪽 3~10행</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul><li>유명한 건축가의 말을 앞세워 공간이 사람에게 큰 영향을 준다는 전제를 세우고, 글 전체의 질문을 던진다</li></ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="page-num">13 / 25</div>
+    <div class="page-num">13 / 28</div>
   </section>
-
   <!-- 14 -->
-  <section class="slide tight" style="--fs:1.12;">
+  <section class="slide tight" style="--fs:1.0;">
+    <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 본론 (1)</h2>
+    <div class="body-area">
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">124쪽 16행~125쪽 7행</span></div>
+          <p class="lead">아파트는 한정된 토지에 더 많은 사람을 수용하려는 주거 양식이라 &lsquo;고밀&rsquo;과 &lsquo;고층&rsquo;이라는 두 속성을 지닌다. 모르는 사람들과 부대끼며 살아야 하고, 고층은 전에 없던 인공적인 방식이라 그 안에서 사는 사람에게는 필연적으로 스트레스가 생긴다. 스트레스를 느끼면 시상 하부가 호르몬(CRH)을 내보내 교감 신경계가 활성화되고, 이것이 뇌하수체를 자극해 ACTH가 나오면 부신 피질에서 코르티솔이 분비된다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;스트레스 상황이 만성화되면 혈압과 혈당이 상승하며 심신이 피로하게 되고 면역 체계가 제 기능을 하지 못하는 등 부작용이 생깁니다.&rdquo;</p>
+            <span class="src">&mdash; 교과서 125쪽</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul><li>코르티솔은 원래 스트레스를 이겨 내도록 돕는 호르몬이지만, 지속적으로 분비되면 도리어 몸을 상하게 한다는 점을 과학적으로 설명한다</li>
+            <li>물음 &mdash; 스트레스는 우리에게 어떤 영향을 줄까?</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">14 / 28</div>
+  </section>
+  <!-- 15 -->
+  <section class="slide tight" style="--fs:1.0;">
+    <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 본론 (2)</h2>
+    <div class="body-area">
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">125쪽 8행~126쪽 16행</span></div>
+          <p class="lead">고층이 불편한 가장 큰 까닭은 높이다. 땅을 딛고 살던 사람이 높은 곳에서 아래를 내려다보면 흥분하여 공포감을 느끼며, 노약자는 쉽게 적응하지 못해 스트레스가 쌓인다. 10미터마다 1.3헥토파스칼씩 낮아지는 기압은 편두통과 귀울림, 멀미, 생리 불순을 부르고, 강풍이 만드는 미세한 진동은 잠재적 불안감을 남긴다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;고층에 거주하는 사람들이 저층에 거주하는 사람들보다 더 높은 비율로 불안하고 우울하며 공격성을 보인다는 것입니다.&rdquo;</p>
+            <span class="src">&mdash; 교과서 126쪽</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul><li>원인을 높이&middot;기압&middot;진동으로 나누어 설명하고, 1970년대부터 이어진 서양의 연구 결과를 들어 정신 건강에 미치는 영향까지 짚는다</li>
+            <li>물음 &mdash; 고층 주거 공간이 사람에게 스트레스를 유발하는 까닭은 무엇일까?</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">15 / 28</div>
+  </section>
+  <!-- 16 -->
+  <section class="slide tight" style="--fs:0.92;">
     <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 결론</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>일본은 고층 아파트가 정신 건강에 미치는 영향을 고려해 6세 미만의 아이가 고층 공영 주택에 거주하지 못하게 규제한다. 우리나라는 고층&middot;저층 거주자의 정신 건강에 유의미한 차이가 없다고 한다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;2019년에 진행된 국내 연구에 따르면&hellip;&hellip; 자부심이 생리적 반응을 이기기도 한다니 무척 흥미로운 결과입니다.&rdquo;</p>
-        <span class="src">&mdash; 교과서 126~127쪽</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul><li>고층이 &lsquo;로열층&rsquo;이라는 사회적 인식이 거주자에게 자부심을 느끼게 해, 두 집단의 정신 건강 사이에 유의미한 차이가 없었던 것으로 해석한다</li></ul>
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">126쪽 17행~127쪽 4행</span></div>
+          <p class="lead">고층 주거 공간은 몸에 부담을 줄 뿐 아니라 정신 건강에도 부정적인 영향을 미친다. 그래서 일본에서는 저소득층이라도 6세 미만의 아이가 있는 가정은 고층 공영 주택에 살 수 없도록 한다. 그런데 2019년 국내 연구에서는 고층 거주자와 저층 거주자의 정신 건강에 유의미한 차이가 없었다고 한다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;고층이 &lsquo;로열층&rsquo;으로 인식되면서 거주자에게 자부심을 주어서 고층 주거 환경이 주는 부정적인 영향을 상쇄하기 때문으로 보았습니다. 자부심이 생리적 반응을 이기기도 한다니 무척 흥미로운 결과입니다.&rdquo;</p>
+            <span class="src">&mdash; 김홍재, 《아파트 속 과학》 &middot; 교과서 127쪽</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul><li>자기 설명과 어긋나는 국내 연구 결과까지 함께 실었다. 사회적 인식이 생리적 반응을 누를 수도 있다는 여지를 남긴 셈이다</li>
+            <li>물음 &mdash; 일본은 왜 6세 미만 아이가 있는 가정의 고층 거주를 막았을까?</li></ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="page-num">14 / 25</div>
+    <div class="page-num">16 / 28</div>
   </section>
-
-  <!-- 15 -->
-  <section class="slide" style="--fs:1.35;">
+  <!-- 17 -->
+  <section class="slide" style="--fs:1.38;">
+    <h2 class="slide-title">&#12296;아파트는 어떻게&hellip;&#12297; 낱말 풀이</h2>
+    <div class="body-area">
+      <div class="gloss">
+        <div class="gl"><span class="gw">교감 신경계</span><span class="gd">긴장&middot;공포&middot;흥분을 느꼈을 때 신체를 활성화시키는 방향으로 작용하는 신경 계통</span></div>
+        <div class="gl"><span class="gw">부교감 신경계</span><span class="gd">신체의 활동과 기능을 억제하는 방향으로 작용하는 신경 계통</span></div>
+        <div class="gl"><span class="gw">부신 피질</span><span class="gd">콩팥 위에 있는 &lsquo;부신&rsquo;의 바깥 부분. 코르티솔로 스트레스 반응을 조절한다</span></div>
+        <div class="gl"><span class="gw">혈류</span><span class="gd">피의 흐름</span></div>
+        <div class="gl"><span class="gw">공영 주택</span><span class="gd">지방 공공 단체가 지어 싸게 팔거나 빌려주는 집</span></div>
+        <div class="gl"><span class="gw">상쇄하다</span><span class="gd">상반되는 것끼리 서로 영향을 주어 효과가 없어지게 만들다</span></div>
+      </div>
+    </div>
+    <div class="page-num">17 / 28</div>
+  </section>
+  <!-- 18 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">&#12911; 작가 소개 &middot; 김홍재</h2>
+    <div class="body-area">
+      <div class="def-box">
+        <div class="dt">김홍재 (1975~) &middot; 과학 칼럼니스트</div>
+        <p>한국과학창의재단이 발행하는 《사이언스타임즈》의 편집장을 역임했으며, 어려운 과학 기술을 일반인이 이해하기 쉽게 풀어 쓴 글을 쓰고 있다</p>
+      </div>
+    </div>
+    <div class="page-num">18 / 28</div>
+  </section>
+  <!-- 19 -->
+  <section class="slide" style="--fs:1.17;">
     <h2 class="slide-title">&#12911; 제재 개관</h2>
     <div class="body-area">
       <table class="info-table" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -534,12 +637,12 @@
       <ul class="num-list">
         <li><span class="n">&#9312;</span>아파트 거주에 따른 스트레스 반응 시스템의 작용을 과학적으로 설명함</li>
         <li><span class="n">&#9313;</span>전문가의 말, 연구 결과, 해외 사례 등을 인용하여 정보의 신뢰성을 높임</li>
+        <li><span class="n">&#9314;</span>그림을 제시하여 전문적인 내용에 대한 이해를 도움</li>
       </ul>
     </div>
-    <div class="page-num">15 / 25</div>
+    <div class="page-num">19 / 28</div>
   </section>
-
-  <!-- 16 -->
+  <!-- 20 -->
   <section class="slide" style="--fs:1.5;">
     <h2 class="slide-title">&#12911; 핵심 강의 &middot; 고층 주거의 영향</h2>
     <div class="body-area">
@@ -550,84 +653,86 @@
         </div>
         <div class="c3">
           <h3>정신적 증상</h3>
-          <p>불안감, 우울, 공격성</p>
+          <p>공포감, 불안감, 우울, 공격성</p>
         </div>
       </div>
     </div>
-    <div class="page-num">16 / 25</div>
+    <div class="page-num">20 / 28</div>
   </section>
-
-  <!-- 17 -->
-  <section class="slide" style="--fs:1.5;">
-    <h2 class="slide-title">&#12911; 작가 소개 &middot; 김홍재</h2>
-    <div class="body-area">
-      <div class="def-box">
-        <div class="dt">김홍재 (1975~) &middot; 과학 칼럼니스트</div>
-        <p>한국과학창의재단이 발행하는 《사이언스타임즈》의 편집장을 역임했으며, 어려운 과학 기술을 일반인이 이해하기 쉽게 풀어 쓴 글을 쓰고 있다</p>
-      </div>
-    </div>
-    <div class="page-num">17 / 25</div>
-  </section>
-
-  <!-- 18 -->
-  <section class="slide tight" style="--fs:1.22;">
+  <!-- 21 -->
+  <section class="slide tight" style="--fs:1.23;">
     <h2 class="slide-title">&#12912; 해외도 &lsquo;주거 걱정&rsquo;은&hellip; &middot; 처음</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>설문 조사 결과 신혼부부가 가족계획을 세울 때 가장 먼저 고려하는 것이 안정적 주거 환경이었다. 청년과 신혼부부에게 주거 문제가 큰 벽임을 알 수 있다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;주거 문제가 해결되면 우리 사회의 많은 부분이 한결 쉽게 풀릴지도 모르겠습니다.&rdquo;&hellip;&hellip; 청년과 신혼부부가 일반 가구보다 임대료와 대출금 부담을 더 크게 느낀다는 조사 결과도 있었습니다.</p>
-        <span class="src">&mdash; 《더 뉴스》(2023. 2. 17.), 교과서 128쪽</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul><li>신혼부부와 청년을 대상으로 한 설문 조사 결과를 제시하며 주거 불안정성이 우리 사회 여러 부분에 부정적 영향을 미친다는 점을 보여 준다</li></ul>
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리</div>
+          <p class="lead">2년 전 신혼부부에게 가족계획을 세울 때 무엇을 가장 먼저 고려하는지 물었더니, 40.6퍼센트가 안정적 주거 환경을 꼽았다. 가계 경제와 고용 상태(22.8%), 자녀 양육&middot;교육비(22.1%)가 뒤를 이었다. 결국 경제적 부담이 크고 그중에서도 집 문제가 가장 높은 벽이었던 셈이다. 청년과 신혼부부가 일반 가구보다 임대료와 대출금 부담을 더 크게 느낀다는 조사 결과도 있다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;주거 문제가 해결되면 우리 사회의 많은 부분이 한결 쉽게 풀릴지도 모르겠습니다.&rdquo;</p>
+            <span class="src">&mdash; 교과서 128쪽 첫머리 &middot; 설문은 한국보건사회연구원(2021)</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul><li>설문 조사 수치를 앞세워, 주거 문제가 개인의 사정이 아니라 <strong>사회 전체의 문제</strong>임을 먼저 보여 준다</li></ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="page-num">18 / 25</div>
+    <div class="page-num">21 / 28</div>
   </section>
-
-  <!-- 19 -->
-  <section class="slide tight" style="--fs:1.21;">
+  <!-- 22 -->
+  <section class="slide tight" style="--fs:0.98;">
     <h2 class="slide-title">&#12912; 해외도 &lsquo;주거 걱정&rsquo;은&hellip; &middot; 중간</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>우리나라는 청년에게 시세보다 저렴한 임대 주택인 &lsquo;청년 주택&rsquo;을 지원한다. 일본, 싱가포르, 독일도 각 나라의 상황에 맞게 청년 대상 주거 지원 정책을 시행한다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;일본은 도시보다 지방이 인구 감소 문제를 겪다 보니 적극적으로 공공 임대 주택을 지원하고 있습니다.&rdquo;&hellip;&hellip; 홋카이도 미카사시는 그 지역 안에서만 쓸 수 있는 상품권으로 임대료 일부를 보전해 줍니다.</p>
-        <span class="src">&mdash; 교과서 128~129쪽</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul><li>일본&middot;싱가포르&middot;독일 등 해외 각국이 자기 상황에 맞게 청년 주거를 지원하는 사례를 소개한다</li></ul>
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리</div>
+          <p class="lead">전문가들은 주택 마련 부담이 청년들의 결혼 기피와 출산 포기로 이어진다고 진단한다. 우리나라는 한국토지주택공사와 서울주택도시공사가 시세보다 싸게 공급하는 &lsquo;청년 주택&rsquo;을 두고, 지방 자치 단체마다 별도의 지원 정책도 있다. 일본은 인구가 줄어드는 지방을 중심으로 공공 임대를 지원하고 주택 수당을 취업 프로그램과 연계하며, 싱가포르는 신혼부부에게 분양 우선권과 집값의 80퍼센트까지 대출을 주고 부모&middot;조부모 집 2킬로미터 안의 주택에도 우선권을 주며, 독일은 1인 가구 청년에게 사회 주택을 우선 공급하고 18~27세에게는 일자리 주선(알선)과 난방비 보조를 함께 지원한다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;홋카이도의 미카사시는 그 지역 안에서만 쓸 수 있는 상품권으로 주택 임대료 일부를 보전해 줍니다. 주거 지원과 동시에 지역 안에서 돈이 돌게 해 지역 경제에도 활력을 불어넣겠다는 의도입니다.&rdquo;</p>
+            <span class="src">&mdash; 교과서 129쪽</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul><li>나라마다 사정이 다르지만, 주거 지원을 <strong>일자리&middot;가족&middot;지역 경제</strong>와 묶어서 푼다는 점이 같다</li></ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="page-num">19 / 25</div>
+    <div class="page-num">22 / 28</div>
   </section>
-
-  <!-- 20 -->
-  <section class="slide tight" style="--fs:1.15;">
+  <!-- 23 -->
+  <section class="slide tight" style="--fs:1.28;">
     <h2 class="slide-title">&#12912; 해외도 &lsquo;주거 걱정&rsquo;은&hellip; &middot; 끝</h2>
     <div class="body-area">
-      <div class="def-box" style="margin-bottom:1.3cqw;">
-        <p>다른 나라의 사례를 통해 우리나라에도 생애 주기를 고려한 종합적인 청년 주거 지원 정책이 필요함을 알 수 있다</p>
-      </div>
-      <div class="verse quote">
-        <p>&ldquo;다른 나라의 사례를 보니, 단순한 지원의 형태가 아닌 생애 주기 차원의 복합적인 고려가 있다는 것을 확인할 수 있었습니다.&rdquo;&hellip;&hellip; 더 종합적인 지원 정책을 통해 청년들의 주거 걱정이 한결 가벼워지면 좋겠습니다.</p>
-        <span class="src">&mdash; 교과서 129쪽</span>
-      </div>
-      <div class="emotion" style="margin-top:1.3cqw;">
-        <div class="etag">감상</div>
-        <ul><li>생애 주기 차원의 복합적인 고려가 이루어지는 해외 사례를 바탕으로 우리 정책이 나아갈 방향을 제언한다</li></ul>
+      <div class="cols wide-left">
+        <div>
+          <div class="col-head">줄거리</div>
+          <p class="lead">다른 나라의 사례를 보면 단순한 지원이 아니라 생애 주기 차원의 복합적인 고려가 있다. 해외 사례를 조사한 한국부동산원도 수도권 청년과 저소득층의 주거 문제가 심각한 만큼 일자리와 연계한 임대 주택 공급이 필요하다고 제언했다. 기자는 더 종합적인 지원 정책으로 청년들의 주거 걱정이 가벼워지기를 바라며 보도를 맺는다</p>
+        </div>
+        <div>
+          <div class="col-head">이 대목</div>
+          <div class="verse quote">
+            <p>&ldquo;더 종합적인 지원 정책을 통해 청년들의 주거 걱정이 한결 가벼워지면 좋겠습니다.&rdquo;</p>
+            <span class="src">&mdash; 《더 뉴스》(2023. 2. 17.), 교과서 129쪽 끝</span>
+          </div>
+          <div class="emotion" style="margin-top:1.2cqw;">
+          <div class="etag">감상</div>
+          <ul><li>해외 사례와 견주어 우리 주거 정책이 나아가야 할 방향을 제언하며 마무리한다</li></ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="page-num">20 / 25</div>
+    <div class="page-num">23 / 28</div>
   </section>
-
-  <!-- 21 -->
-  <section class="slide" style="--fs:1.35;">
+  <!-- 24 -->
+  <section class="slide" style="--fs:1.36;">
     <h2 class="slide-title">&#12912; 제재 개관</h2>
     <div class="body-area">
       <table class="info-table" style="flex:0 0 auto;margin-bottom:1.6cqw;">
@@ -641,10 +746,9 @@
         <li><span class="n">&#9313;</span>다양한 해외 사례를 들어 주거 정책이 나아가야 할 방향을 제시함</li>
       </ul>
     </div>
-    <div class="page-num">21 / 25</div>
+    <div class="page-num">24 / 28</div>
   </section>
-
-  <!-- 22 -->
+  <!-- 25 -->
   <section class="slide" style="--fs:1.5;">
     <h2 class="slide-title">&#12912; 핵심 강의 &middot; 청년 주거 지원이 필요한 까닭</h2>
     <div class="body-area">
@@ -657,10 +761,9 @@
         <ul><li>주택 마련에 대한 부담이 청년들의 <strong>결혼 기피와 출산 포기</strong>로 이어질 수 있으므로, 국가 차원의 청년 주거 지원이 필요하다</li></ul>
       </div>
     </div>
-    <div class="page-num">22 / 25</div>
+    <div class="page-num">25 / 28</div>
   </section>
-
-  <!-- 23 -->
+  <!-- 26 -->
   <section class="slide" style="--fs:1.4;">
     <h2 class="slide-title">세 편의 글, 다시 보기</h2>
     <div class="body-area">
@@ -671,38 +774,36 @@
       </div>
       <div class="emotion">
         <div class="etag">다음 시간</div>
-        <ul><li>세 편의 글을 통합적으로 읽고 평가하며, &lsquo;내가 살고 싶은 집&rsquo;에 대한 나의 생각을 정리합니다</li></ul>
+        <ul><li>세 편의 <strong>형식과 관점</strong>을 견주어 보고, 읽기 목적에 맞는 정보를 골라 평가하며, &lsquo;내가 살고 싶은 집&rsquo;에 대한 나의 견해를 세웁니다</li></ul>
       </div>
     </div>
-    <div class="page-num">23 / 25</div>
+    <div class="page-num">26 / 28</div>
   </section>
-
-  <!-- 24 -->
+  <!-- 27 -->
   <section class="slide" style="--fs:1.36;">
     <h2 class="slide-title">확인 문제</h2>
     <div class="body-area">
       <ul class="num-list">
-        <li><span class="n">1</span>&lt;그 시절 우리들의 집&gt;은 &lsquo;나&rsquo; 대신 &lsquo;( )&rsquo;라는 3인칭 시점을 사용해 이야기를 전달한다</li>
-        <li><span class="n">2</span>&lt;아파트는 어떻게&hellip;&gt;는 고층 주거 공간이 몸과 마음에 미치는 영향을 ( )적 근거를 들어 설명하는 글이다</li>
+        <li><span class="n">1</span>&#12296;그 시절 우리들의 집&#12297;은 &lsquo;나&rsquo; 대신 &lsquo;( )&rsquo;라는 3인칭 시점을 사용해 이야기를 전달한다</li>
+        <li><span class="n">2</span>&#12296;아파트는 어떻게&hellip;&#12297;는 고층 주거 공간이 몸과 마음에 미치는 영향을 ( )적 근거를 들어 설명하는 글이다</li>
         <li><span class="n">3</span>일본은 고층 아파트가 정신 건강에 미치는 영향을 고려해 ( )세 미만의 아이가 고층 공영 주택에 거주하지 못하도록 규제한다</li>
-        <li><span class="n">4</span>&lt;해외도 &lsquo;주거 걱정&rsquo;은&hellip;&gt;은 해외 청년 주거 지원 정책의 공통점으로 ( ) 차원의 복합적인 고려가 있음을 제시한다</li>
+        <li><span class="n">4</span>&#12296;해외도 &lsquo;주거 걱정&rsquo;은&hellip;&#12297;은 해외 청년 주거 지원 정책의 공통점으로 ( ) 차원의 복합적인 고려가 있음을 제시한다</li>
       </ul>
     </div>
-    <div class="page-num">24 / 25</div>
+    <div class="page-num">27 / 28</div>
   </section>
-
-  <!-- 25 -->
+  <!-- 28 -->
   <section class="slide" style="--fs:1.36;">
     <h2 class="slide-title">확인 문제 &middot; 정답</h2>
     <div class="body-area">
       <ul class="num-list">
-        <li><span class="n">1</span>&lt;그 시절 우리들의 집&gt;은 &lsquo;나&rsquo; 대신 &lsquo;<strong style="color:var(--key);">그</strong>&rsquo;라는 3인칭 시점을 사용해 이야기를 전달한다</li>
-        <li><span class="n">2</span>&lt;아파트는 어떻게&hellip;&gt;는 고층 주거 공간이 몸과 마음에 미치는 영향을 <strong style="color:var(--key);">과학</strong>적 근거를 들어 설명하는 글이다</li>
+        <li><span class="n">1</span>&#12296;그 시절 우리들의 집&#12297;은 &lsquo;나&rsquo; 대신 &lsquo;<strong style="color:var(--key);">그</strong>&rsquo;라는 3인칭 시점을 사용해 이야기를 전달한다</li>
+        <li><span class="n">2</span>&#12296;아파트는 어떻게&hellip;&#12297;는 고층 주거 공간이 몸과 마음에 미치는 영향을 <strong style="color:var(--key);">과학</strong>적 근거를 들어 설명하는 글이다</li>
         <li><span class="n">3</span>일본은 고층 아파트가 정신 건강에 미치는 영향을 고려해 <strong style="color:var(--key);">6</strong>세 미만의 아이가 고층 공영 주택에 거주하지 못하도록 규제한다</li>
-        <li><span class="n">4</span>&lt;해외도 &lsquo;주거 걱정&rsquo;은&hellip;&gt;은 해외 청년 주거 지원 정책의 공통점으로 <strong style="color:var(--key);">생애 주기</strong> 차원의 복합적인 고려가 있음을 제시한다</li>
+        <li><span class="n">4</span>&#12296;해외도 &lsquo;주거 걱정&rsquo;은&hellip;&#12297;은 해외 청년 주거 지원 정책의 공통점으로 <strong style="color:var(--key);">생애 주기</strong> 차원의 복합적인 고려가 있음을 제시한다</li>
       </ul>
     </div>
-    <div class="page-num">25 / 25</div>
+    <div class="page-num">28 / 28</div>
   </section>
 
 </div>
