@@ -8,59 +8,61 @@
   @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
 
   :root {
-    --fs: 1;
-    --paper: #f5f1f8;
-    --paper-edge: #ddd2ea;
-    --ink: #241f2e;
-    --ink-soft: #564d63;
-    --ink-faint: #948aa0;
-    --key: #5b3a7a;
-    --key-soft: #8567a3;
-    --rule: #ddd2ea;
-    --card: #fbf9fd;
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f4f1f7;
+    --paper-edge: #ddd6e6;
+    --ink: #231e2b;
+    --ink-soft: #574d63;
+    --ink-faint: #948aa2;
+    --key: #573a78;
+    --key-soft: #8f74ab;
+    --rule: #d8cfe4;
+    --card: #fbf9fc;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body {
-    background: #1c1526;
+    background: #1d1728;
     font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
     color: var(--ink);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     min-height: 100vh; padding: 2vh 2vw;
     word-break: keep-all; overflow-wrap: break-word;
-    text-wrap: pretty; letter-spacing: -0.015em;
+    text-wrap: pretty; letter-spacing: -0.012em;
   }
 
   .nav-top {
     position: fixed; top: 0; left: 0; right: 0;
     display: flex; justify-content: space-between; align-items: center;
     padding: 0.7rem 1.2rem; font-size: 0.82rem;
-    background: rgba(28,21,38,0.94); z-index: 50;
+    background: rgba(29,23,40,0.94); z-index: 50;
   }
-  .nav-top a { color: #c9bcda; text-decoration: none; margin-right: 1rem; }
-  .nav-top a:hover { color: #f0e8f7; }
-  .nav-meta { color: #a698bb; font-size: 0.78rem; }
+  .nav-top a { color: #c6b9d6; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #efe7f6; }
+  .nav-meta { color: #a294b6; font-size: 0.78rem; }
 
   .stage {
     container-type: inline-size;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
     --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
     width: var(--stage-w); aspect-ratio: 16 / 9;
     background: var(--paper);
     background-image:
-      radial-gradient(ellipse at 18% 6%, rgba(255,255,255,0.85) 0%, transparent 58%),
-      radial-gradient(ellipse at 84% 96%, rgba(91,58,122,0.14) 0%, transparent 62%);
+      radial-gradient(ellipse at 15% 8%, rgba(255,255,255,0.75) 0%, transparent 58%),
+      radial-gradient(ellipse at 86% 92%, rgba(87,58,120,0.16) 0%, transparent 60%);
     border: 1px solid var(--paper-edge);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
-    padding: calc(var(--stage-w) * 0.042) calc(var(--stage-w) * 0.05);
+    padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
   }
-  /* 우측 상단 — 펼쳐진 책 모티프. 세 편의 글을 함께 읽는다는 이 소단원의 성격을 담았다 */
+  /* 우측 상단 — 펼쳐진 책 */
   .stage::before {
-    content: ""; position: absolute; top: 10%; right: -2%;
-    width: 22%; height: 62%; pointer-events: none; opacity: 0.09;
-    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%235b3a7a'><path stroke-width='3' d='M100 40 C70 22 40 20 18 30 V150 C40 140 70 142 100 158 C130 142 160 140 182 150 V30 C160 20 130 22 100 40 Z'/><path stroke-width='2' d='M100 40 V158'/><path stroke-width='1.4' d='M32 50 H82 M32 66 H82 M32 82 H82 M32 98 H82 M118 50 H168 M118 66 H168 M118 82 H160 M118 98 H168'/></g></svg>");
+    content: ""; position: absolute; top: 4%; right: -3%;
+    width: 21%; height: 46%; pointer-events: none; opacity: 0.085;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 180'><g fill='none' stroke='%23573a78' stroke-linecap='round'><path stroke-width='3' d='M100 34 C72 17 42 15 20 25 V139 C42 129 72 131 100 148 C128 131 158 129 180 139 V25 C158 15 128 17 100 34 Z'/><path stroke-width='2' d='M100 34 V148'/><path stroke-width='1.3' d='M33 45 H84 M33 61 H84 M33 77 H84 M33 93 H76 M116 45 H167 M116 61 H167 M116 77 H159 M116 93 H167'/></g></svg>");
   }
   .stage > .slide { position: relative; z-index: 1; }
 
@@ -70,180 +72,217 @@
 
   h1.title-main {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.9rem, 5.1cqw, 6.12rem); line-height: 1.22; letter-spacing: -0.01em;
+    font-size: clamp(1.9rem, 4.9cqw, 5.88rem); line-height: 1.2; letter-spacing: -0.01em;
   }
   h2.slide-title {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.45rem, 3.85cqw, 4.62rem); line-height: 1.2;
-    display: block; margin-bottom: 2.3cqw; flex-shrink: 0;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.55cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.15cqw solid var(--ink);
+    align-self: flex-start; flex-shrink: 0;
+  }
+  h2.slide-title .qm {
+    font-family: "Noto Sans KR", sans-serif; font-weight: 400;
+    font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
+    margin-left: 0.8em; vertical-align: 0.18em;
   }
   .kicker {
     font-family: "Gowun Batang", serif; color: var(--key);
-    font-size: clamp(0.85rem, 1.95cqw, 2.34rem); letter-spacing: 0.3em;
-    margin-bottom: 1.8cqw;
+    font-size: clamp(0.8rem, 1.68cqw, 2.02rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
   }
-  .lead { font-size: clamp(1rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); color: var(--ink-soft); line-height: 1.75; }
+  .lead { font-size: clamp(1rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); color: var(--ink-soft); line-height: 1.8; }
 
   .cover { justify-content: center; align-items: flex-start; }
-  .cover .rule { width: 7cqw; height: 0.3cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
-  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1.1rem, 2.7cqw, 3.24rem); color: var(--ink-soft); }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.5cqw, 3rem); color: var(--ink-soft); }
   .cover .foot {
-    position: absolute; left: 0; right: 0; bottom: 1.5cqw;
+    position: absolute; left: 0; right: 0; bottom: 1.4cqw;
     display: flex; justify-content: space-between;
-    font-size: clamp(0.75rem, 1.6cqw, 1.92rem); color: var(--ink-faint);
+    font-size: clamp(0.72rem, 1.46cqw, 1.76rem); color: var(--ink-faint);
     border-top: 1px solid var(--rule); padding-top: 1.1cqw;
   }
   .cover .page-num { display: none; }
 
   .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.4%; flex: 1; min-height: 0; }
-  .cols.wide-left { grid-template-columns: 1.35fr 1fr; }
-  .cols.wide-right { grid-template-columns: 1fr 1.35fr; }
-  .col-head {
-    font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.95rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs)));
-    color: var(--key); margin-bottom: 1.1cqw;
-    padding-bottom: 0.5cqw; border-bottom: 0.1cqw solid var(--rule);
-  }
 
-  .verse {
+  /* ── 줄글 ─────────────────────────────────────────────
+     지문의 흐름을 옮긴 본문. 인용구와 한 결로 읽히도록 명조로 두고
+     한 칸에 몰지 않고 전폭으로 편다. 좁은 칸에 넣으면 자간이 벌어진다. */
+  .story-head {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.38em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+  }
+  .story-head .rng { font-family: "Noto Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story {
     font-family: "Gowun Batang", "Noto Serif KR", serif;
-    font-size: clamp(1rem, calc(2.5cqw * var(--fs)), calc(3.0rem * var(--fs)));
-    line-height: 1.78; letter-spacing: 0.005em;
+    font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
+    line-height: 1.88; color: var(--ink); text-align: justify;
   }
-  .verse .hl { color: var(--key); font-weight: 700; -webkit-text-stroke: 0.022em currentColor; }
-  .verse p + p { margin-top: 1.1cqw; }
-  .verse.quote { font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.62; }
-  .src {
-    display: block; margin-top: 0.9cqw;
-    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.68rem, calc(1.42cqw * var(--fs)), calc(1.7rem * var(--fs)));
-    color: var(--ink-faint); letter-spacing: 0.04em;
+  .story + .story { margin-top: 0.55em; }
+
+  /* 원문을 그대로 옮긴 줄. 본문 글꼴에 옅은 바탕과 왼쪽 선만 더한다 */
+  .cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
+    line-height: 1.86; color: var(--ink);
+    background: rgba(87,58,120,0.05);
+    border-left: 0.26em solid var(--rule);
+    padding: 0.65em 0.9em;
+  }
+  .cite .attr {
+    display: block; margin-top: 0.42em;
+    font-family: "Noto Sans KR", sans-serif; font-size: 0.68em;
+    color: var(--ink-faint); letter-spacing: 0.03em;
   }
 
-  .emotion { margin-top: auto; background: var(--card); border-left: 0.36cqw solid var(--key); padding: 1.3cqw 1.7cqw; }
+  .emotion {
+    background: var(--card); border-left: 0.32cqw solid var(--key);
+    padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+  }
   .emotion .etag {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); color: var(--key);
-    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
   }
   .emotion ul { list-style: none; }
   .emotion li {
-    font-size: clamp(0.82rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66;
-    color: var(--ink-soft); padding-left: 1.35em; position: relative;
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76;
+    color: var(--ink-soft); padding-left: 1.2em; position: relative;
   }
-  .emotion li + li { margin-top: 0.55em; }
-  .emotion li::before { content: "\2014"; position: absolute; left: 0; color: var(--ink-faint); }
-  .body-area > .emotion { margin-bottom: 3.6cqw; flex: 0 0 auto; }
+  .emotion li + li { margin-top: 0.45em; }
+  .emotion li::before { content: "\2022"; position: absolute; left: 0.15em; color: var(--key-soft); }
+  .emotion li.q { color: var(--ink); }
+  .emotion li.q::before { content: "?"; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); left: 0; }
+  .emotion strong { color: var(--key); }
 
   .info-table { width: 100%; border-collapse: collapse; }
   .info-table th, .info-table td {
     text-align: left; vertical-align: top;
-    padding: 0.62em 0.5em; border-bottom: 1px solid var(--rule);
-    font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.6;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
   }
-  .info-table th { width: 4.8em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table th { width: 4.2em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
   .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
 
   .cmp-table { width: 100%; border-collapse: collapse; }
   .cmp-table th, .cmp-table td {
     text-align: left; vertical-align: top;
-    padding: 0.55em 0.45em; border-bottom: 1px solid var(--rule);
-    font-size: clamp(0.76rem, calc(1.78cqw * var(--fs)), calc(2.14rem * var(--fs))); line-height: 1.6;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.7;
   }
   .cmp-table thead th {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
-    border-bottom: 0.18cqw solid var(--key); font-size: clamp(0.8rem, calc(1.88cqw * var(--fs)), calc(2.26rem * var(--fs)));
+    border-bottom: 0.15cqw solid var(--key); font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
   }
-  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 9em; background: var(--card); }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 4.6em; background: var(--card); }
   .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table strong { color: var(--key); }
+  .cmp-table caption {
+    caption-side: top; text-align: left; color: var(--ink-soft);
+    font-size: clamp(0.8rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs)));
+    padding-bottom: 0.6em;
+  }
 
   .num-list { list-style: none; }
   .num-list li {
-    font-size: clamp(0.88rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); line-height: 1.68;
-    padding-left: 3.0cqw; position: relative; margin-bottom: 0.75em;
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.76;
+    padding-left: 1.7em; position: relative; margin-bottom: 0.62em;
   }
   .num-list li:last-child { margin-bottom: 0; }
-  .num-list li .n { position: absolute; left: 0; top: 0.05em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); font-size: 1.05em; }
+  .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
+  .num-list strong { color: var(--key); }
 
-  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.5cqw 1.8cqw; }
-  .def-box + .def-box { margin-top: 1.2cqw; }
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw; }
   .def-box .dt {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
-    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
-    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
   }
-  .def-box p { font-size: clamp(0.86rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; color: var(--ink-soft); }
+  .def-box p { font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); line-height: 1.82; color: var(--ink-soft); }
+  .def-box strong { color: var(--key); }
 
-  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
-  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
-  .c3 { background: var(--card); border-top: 0.28cqw solid var(--key); padding: 1.6cqw 1.5cqw; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw; }
   .c3 h3 {
-    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
-    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
   }
   .c3 .word { color: var(--key); }
-  .c3 p { font-size: clamp(0.8rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
-  .c3 p + p { margin-top: 0.72em; }
-  .c3 p.cite {
-    font-family: "Gowun Batang", "Noto Serif KR", serif; background: rgba(0,0,0,0.04);
-    border-left: 0.28em solid var(--rule); padding: 0.5em 0.72em; margin-bottom: 0.8em; color: var(--ink);
-  }
-  .c3 p.cite + p { margin-top: 0; }
+  .c3 p { font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .c3 strong { color: var(--key); }
 
-  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 1.0cqw 2.6cqw; }
-  .gl { display: flex; gap: 0.9cqw; align-items: baseline; padding-bottom: 0.62em; border-bottom: 1px solid var(--rule); }
+  /* 어휘 풀이 */
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8cqw 2.2cqw; }
+  .gl { display: flex; gap: 0.85cqw; align-items: baseline; padding-bottom: 0.52em; border-bottom: 1px solid var(--rule); }
   .gl .gw {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
-    font-size: clamp(0.86rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); width: 5.6em; flex-shrink: 0;
+    font-size: clamp(0.9rem, calc(2.08cqw * var(--fs)), calc(2.5rem * var(--fs))); width: 5em; flex-shrink: 0;
   }
-  .gl .gd { font-size: clamp(0.76rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs))); line-height: 1.6; color: var(--ink-soft); }
+  .gl .gd { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
 
-  .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
-  .step { display: flex; gap: 1.2rem; align-items: flex-start; }
-  .step .sn {
-    font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); color: var(--key);
-    width: 2.2em; flex-shrink: 0; padding-top: 0.05em;
+  /* 스트레스 반응 단계 */
+  .flow { display: flex; align-items: stretch; gap: 0.7cqw; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
+    padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
   }
-  .step .sbody { flex: 1; padding-bottom: 0.85em; border-bottom: 1px solid var(--rule); }
-  .step:last-child .sbody { border-bottom: none; }
-  .step h3 { font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); margin-bottom: 0.35em; }
-  .step p { font-size: clamp(0.8rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); margin-bottom: 0.42em;
+  }
+  .flow-step .desc { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+  .flow-arrow { display: flex; align-items: center; color: var(--key-soft); font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); }
 
-  .act-badge {
-    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
-    background: var(--key); color: var(--paper);
-    font-size: clamp(0.74rem, calc(1.6cqw * var(--fs)), calc(1.92rem * var(--fs))); letter-spacing: 0.06em;
-    padding: 0.3em 1.1em; margin-bottom: 1.0cqw;
-  }
-  .act-q {
+  /* 확인 문제 */
+  .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .quiz-guide { font-size: clamp(0.9rem, calc(1.96cqw * var(--fs)), calc(2.35rem * var(--fs))); color: var(--ink-soft); margin-bottom: 1.5cqw; }
+  .quiz-q {
     font-family: "Gowun Batang", serif;
-    font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); line-height: 1.66;
-    color: var(--ink); margin-bottom: 1.4cqw;
+    font-size: clamp(1.05rem, calc(2.6cqw * var(--fs)), calc(3.12rem * var(--fs))); line-height: 1.8;
+    padding: 2.0cqw 2.3cqw; background: var(--card); border: 1px solid var(--rule);
   }
+  .blank {
+    display: inline-block; min-width: 5em; text-align: center;
+    color: var(--key); border-bottom: 2px solid var(--key); font-weight: 700;
+  }
+  .answer-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.3rem, calc(3.4cqw * var(--fs)), calc(4.08rem * var(--fs))); color: var(--paper);
+    background: var(--key); padding: 0.45rem 1.7rem; margin-bottom: 1.8cqw;
+  }
+  .answer-desc {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.88; color: var(--ink-soft);
+    max-width: 44em;
+  }
+  .answer-desc strong { color: var(--key); }
 
-  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5cqw; }
-  .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.35cqw; }
+  .srow { display: flex; gap: 1.8cqw; align-items: baseline; }
   .srow .skey {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
-    font-size: clamp(0.92rem, calc(2.25cqw * var(--fs)), calc(2.7rem * var(--fs))); width: 5.6em; flex-shrink: 0; text-align: right;
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); width: 4.4em; flex-shrink: 0; text-align: right;
   }
-  .srow .sval { flex: 1; font-size: clamp(0.84rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; }
+  .srow .sval { flex: 1; font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.78; }
+  .srow .sval strong { color: var(--key); }
 
   .page-num {
-    position: absolute; right: 0; bottom: -3.1cqw;
-    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.35cqw, 1.62rem);
+    position: absolute; right: 0; bottom: -2.7cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.32cqw, 1.58rem);
     color: var(--ink-faint); letter-spacing: 0.08em;
   }
   .cover .page-num { display: none; }
-  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #c9bcda; font-size: 0.86rem; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #c6b9d6; font-size: 0.86rem; }
   .controls button {
-    background: #402c56; color: #f0e8f7; border: 1px solid #5f4680;
+    background: #3d2b54; color: #efe7f6; border: 1px solid #5c447c;
     padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
   }
-  .controls button:hover { background: #4f3868; }
+  .controls button:hover { background: #4c3567; }
   .controls button:disabled { opacity: 0.35; cursor: default; }
-  .hint { color: #9788ab; font-size: 0.78rem; }
+  .hint { color: #9585ab; font-size: 0.78rem; }
 
   body:fullscreen { padding: 0; justify-content: center; background: #000; }
   body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
@@ -255,19 +294,25 @@
   }
 
   @media (max-width: 720px) {
-    .cols, .cards3, .cards2 { grid-template-columns: 1fr; gap: 1rem; }
+    .cards2, .gloss { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
     .stage { aspect-ratio: auto; min-height: 78vh; }
   }
 
-  /* 내용이 많아 자리가 빠듯한 슬라이드 — 여백만 줄이고 글자 크기는 지킨다 */
-  .slide.tight .def-box .dt, .slide.tight .emotion .etag { margin-bottom: 0.4em; padding-bottom: 0.28em; }
-  .slide.tight .c3 h3 { margin-bottom: 0.4em; padding-bottom: 0.3em; }
-  .slide.tight .emotion li + li { margin-top: 0.34em; }
-  .slide.tight .c3 p + p { margin-top: 0.5em; }
-  .slide.tight .num-list li { margin-bottom: 0.5em; }
-  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.45em 0.45em; }
-  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.4em 0.4em; }
-  .slide.tight .step .sbody { padding-bottom: 0.6em; }
+  /* 내용이 많아 자리가 빠듯한 장 — 여백만 줄이고 글자 크기는 지킨다 */
+  .slide.tight .story { line-height: 1.74; }
+  .slide.tight .emotion { padding: 0.95cqw 1.35cqw; }
+  .slide.tight .emotion .etag { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .emotion li + li { margin-top: 0.28em; }
+  .slide.tight .story-head { margin-bottom: 0.42em; padding-bottom: 0.26em; }
+  .slide.tight .cite { padding: 0.5em 0.75em; }
+  .slide.tight .c3 { padding: 1.1cqw 1.2cqw; }
+  .slide.tight .c3 h3 { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .gl { padding-bottom: 0.38em; }
+  .slide.tight .num-list li { margin-bottom: 0.4em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.42em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.42em 0.42em; }
 </style>
 </head>
 <body>
@@ -287,523 +332,540 @@
     <div class="kicker">읽 　 기</div>
     <h1 class="title-main">주제 통합적 읽기와<br>사회적 독서</h1>
     <div class="rule"></div>
-    <div class="sub">세 편의 글, 하나의 화제 &lsquo;집&rsquo;</div>
+    <div class="sub">&lsquo;집&rsquo;을 화제로 한 세 편의 글</div>
     <div class="foot">
       <span>공통국어2 &middot; 3. 글로 읽는 세상, 세상을 움직이는 글</span>
       <span>1학년 &middot; 1차시</span>
     </div>
-    <div class="page-num">1 / 28</div>
+    <div class="page-num">1 / 32</div>
   </section>
+
   <!-- 2 -->
-  <section class="slide" style="--fs:1.43;">
+  <section class="slide" style="--fs:1.41;">
     <h2 class="slide-title">학습 목표</h2>
     <div class="body-area">
-      <ul class="num-list" style="flex:0 0 auto;margin-bottom:1.8cqw;">
-        <li><span class="n">&#9312;</span>동일한 화제의 글이나 자료라도 서로 다른 관점과 형식으로 표현됨을 이해하며 읽기 목적을 고려하여 글이나 자료를 주제 통합적으로 읽는다</li>
-        <li><span class="n">&#9313;</span>의미 있는 사회적 독서 활동에 참여함으로써 타인과 교류하고 다양한 지식이나 정보, 삶에 대한 가치관 등을 이해하는 태도를 지닌다</li>
+      <ul class="num-list" style="margin-bottom:1.6cqw;">
+        <li><span class="n">1</span>동일한 화제의 글이나 자료라도 서로 다른 관점과 형식으로 표현됨을 이해하며, 읽기 목적을 고려하여 글이나 자료를 주제 통합적으로 읽는다.</li>
+        <li><span class="n">2</span>의미 있는 사회적 독서 활동에 참여함으로써 타인과 교류하고 다양한 지식이나 정보, 삶에 대한 가치관 등을 이해하는 태도를 지닌다.</li>
       </ul>
-      <div class="def-box">
-        <div class="dt">1차시에 할 일</div>
-        <p>&lsquo;집&rsquo;이라는 같은 화제를 서로 다른 형식과 관점으로 다룬 세 편의 글을 읽는다. <strong style="color:var(--key);">&#9312;번 목표</strong>에 집중하는 시간이다</p>
+      <div class="emotion">
+        <div class="etag">1차시에 할 일</div>
+        <ul><li>&lsquo;집&rsquo;이라는 같은 화제를 서로 다른 형식과 관점으로 다룬 세 편의 글을 읽는다. 1번 목표에 해당하는 시간이다.</li></ul>
       </div>
     </div>
-    <div class="page-num">2 / 28</div>
+    <div class="page-num">2 / 32</div>
   </section>
+
   <!-- 3 -->
-  <section class="slide" style="--fs:1.27;">
-    <h2 class="slide-title">기초 개념 짚고 가기</h2>
+  <section class="slide" style="--fs:1.34;">
+    <h2 class="slide-title">기초 개념 짚고 가기<span class="qm">교과서 118쪽</span></h2>
     <div class="body-area">
-      <table class="info-table" style="flex:0 0 auto;margin-bottom:1.8cqw;">
-        <tr><th>주제 통합적<br>읽기</th><td>같은 화제를 다룬 여러 글을 읽고 화제를 비판적&middot;통합적으로 이해하여 자신의 관점을 재구성하는 것</td></tr>
-        <tr><th>사회적 독서<br>활동</th><td>다른 사람과 함께 책을 읽고 독서 결과를 공유함으로써 정보를 나누고 다양한 가치관을 이해하는 것</td></tr>
-      </table>
+      <div class="cards2" style="margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">주제 통합적 읽기</span></h3>
+          <p>같은 화제를 다룬 여러 글을 읽고 화제를 비판적&middot;통합적으로 이해하여 자신의 관점을 재구성하는 것.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">사회적 독서 활동</span></h3>
+          <p>다른 사람과 함께 책을 읽고 독서 결과를 공유함으로써 정보를 나누고 다양한 가치관을 이해하는 것.</p>
+        </div>
+      </div>
       <div class="emotion">
-        <div class="etag">오늘의 예</div>
+        <div class="etag">이 소단원의 두 활동</div>
         <ul>
-          <li>이제 읽을 세 편의 글은 모두 <strong>&lsquo;집&rsquo;</strong>이라는 같은 화제를 다루지만, 수필&middot;설명문&middot;뉴스로 형식이 다르고 그 화제를 바라보는 관점도 다르다</li>
+          <li>활동 1은 읽기 목적을 고려한 주제 통합적 읽기로, 1차시와 2차시에 한다.</li>
+          <li>활동 2는 사회적 독서 활동에 참여하기로, 교과서 134쪽부터 다룬다.</li>
         </ul>
       </div>
     </div>
-    <div class="page-num">3 / 28</div>
+    <div class="page-num">3 / 32</div>
   </section>
+
   <!-- 4 -->
   <section class="slide">
-    <h2 class="slide-title">삶과 연관 짓기</h2>
-    <div class="body-area" style="align-items:center; text-align:center;">
-      <div class="lead" style="font-family:'Gowun Batang',serif; font-size:clamp(1.3rem, 3.3cqw, 3.96rem); color:var(--ink); line-height:1.6;">
-        &ldquo;친구들과 함께 책을 읽고<br>이야기를 나눠 본 적이 있나요?&rdquo;
-      </div>
+    <h2 class="slide-title">삶과 연관 짓기<span class="qm">교과서 119쪽</span></h2>
+    <div class="body-area" style="justify-content:center;">
+      <p style="font-family:'Gowun Batang',serif; font-weight:700; font-size:clamp(1.3rem,3.5cqw,4.2rem); line-height:1.55; color:var(--ink); text-align:center;">
+        친구들과 함께 책을 읽고<br>이야기를 나눠 본 적이 있나요?
+      </p>
+      <p class="lead" style="text-align:center; margin-top:2.4cqw;">그 경험에서 얻은 보람이나 의미를 떠올려 이야기해 보자.</p>
     </div>
-    <div class="page-num">4 / 28</div>
+    <div class="page-num">4 / 32</div>
   </section>
+
   <!-- 5 -->
-  <section class="slide" style="--fs:1.14;">
+  <section class="slide" style="--fs:1.11;">
     <h2 class="slide-title">오늘 읽을 세 편의 글</h2>
     <div class="body-area">
-      <table class="cmp-table">
-        <thead><tr><th style="width:3.5em;">&nbsp;</th><th>제목 &middot; 글쓴이</th><th style="width:8em;">갈래</th></tr></thead>
+      <table class="cmp-table" style="margin-bottom:1.5cqw;">
+        <thead><tr><th style="width:2.2em;">&nbsp;</th><th>제목과 글쓴이</th><th style="width:7.4em;">형식</th></tr></thead>
         <tbody>
           <tr><th>&#12910;</th><td>&#12296;그 시절 우리들의 집&#12297; &middot; 공선옥</td><td>현대 수필</td></tr>
           <tr><th>&#12911;</th><td>&#12296;아파트는 어떻게 우리의 몸과 마음을 지배하는가?&#12297; &middot; 김홍재</td><td>설명문</td></tr>
           <tr><th>&#12912;</th><td>&#12296;해외도 &lsquo;주거 걱정&rsquo;은 마찬가지&hellip;&hellip; 어떤 점이 다를까?&#12297;</td><td>텔레비전 뉴스</td></tr>
         </tbody>
       </table>
-      <div class="emotion" style="margin-top:1.6cqw;">
+      <div class="emotion">
         <div class="etag">읽기 목적</div>
         <ul>
-          <li>이 단원에서는 <strong>&lsquo;내가 살고 싶은 집&rsquo;을 주제로</strong> 글을 쓰기 위해 &lsquo;집&rsquo;에 관한 글과 자료를 읽는다</li>
-          <li>&#12912;는 화면과 자막, 도표가 함께 쓰인 <strong>복합 양식</strong> 영상 자료다</li>
+          <li>이 단원에서는 &lsquo;내가 살고 싶은 집&rsquo;을 주제로 하여 글을 쓰기 위해 &lsquo;집&rsquo;에 관한 글과 자료를 읽는다.</li>
+          <li>&#12912;는 기자의 말과 화면의 자막, 설문 도표가 함께 뜻을 만드는 복합 양식 자료다.</li>
         </ul>
       </div>
     </div>
-    <div class="page-num">5 / 28</div>
+    <div class="page-num">5 / 32</div>
   </section>
+
   <!-- 6 -->
-  <section class="slide tight" style="--fs:0.98;">
-    <h2 class="slide-title">&#12910; 그 시절 우리들의 집 &middot; 처음</h2>
+  <section class="slide" style="--fs:1.35;">
+    <h2 class="slide-title">&#12910; 제재 안내</h2>
     <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">120쪽 4행~121쪽 6행</span></div>
-          <p class="lead">저녁 어스름, 보리쌀을 안치던 아낙이 산기를 느낀다. 서두르지 않고 밥을 안친 뒤 텃밭에서 가지와 오이, 호박을 따다 저녁상을 차리고, 물을 데워 가위를 소독하고는 안방 바닥에 짚을 깔고 눕는다. 장에서 술 한잔 걸치고 돌아온 남편은 갓 태어난 아기의 울음소리를 듣고 첫국밥을 끓인 뒤, 사립문에 숯과 고추를 끼운 금줄을 맨다. 그의 넷째 아들이 태어나던 날 밤이다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;그러고 나서 아이 낳을 채비를 하기 시작했다. 물을 데워 놓고 끓는 물에 아기 탯줄 자를 가위를 소독하고 미역도 담가 놓고 안방 바닥에 짚을 깔고 그 위에 드러누웠다.&rdquo;</p>
-            <span class="src">&mdash; 교과서 120쪽 17~20행</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul>
-            <li>집에서 홀로 출산을 준비하는 모습이 오늘날과 사뭇 다르다. 출산을 특별한 행사가 아니라 <strong>자연스러운 일상의 한 부분</strong>으로 여기고 있다</li>
-            <li>물음 &mdash; &lsquo;그&rsquo;의 부모님에게 이 토담집은 어떤 의미가 있는 집이었을까?</li>
-          </ul>
-          </div>
-        </div>
+      <div class="def-box" style="margin-bottom:1.5cqw;">
+        <div class="dt">&#12296;그 시절 우리들의 집&#12297;을 고른 까닭</div>
+        <p>과거의 토담집과 오늘날의 아파트, 그리고 그 안에서 성장한 &lsquo;그&rsquo;와 &lsquo;그&rsquo;의 아이의 삶을 대조하여 보여 주는 수필이다. 현대인에게 집의 가치와 의미를 되새겨 보게 한다.</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">글쓴이 &middot; 공선옥 (1963~　)</div>
+        <ul><li>소설가. 우리 사회에서 소외된 이웃과 가난을 현실적으로 다룬 작품을 많이 썼다. 대표작으로는 소설집 《명랑한 밤길》, 장편 소설 《유랑 가족》 등이 있다.</li></ul>
       </div>
     </div>
-    <div class="page-num">6 / 28</div>
+    <div class="page-num">6 / 32</div>
   </section>
+
   <!-- 7 -->
-  <section class="slide tight" style="--fs:1.0;">
-    <h2 class="slide-title">&#12910; 그 시절 우리들의 집 &middot; 중간</h2>
+  <section class="slide" style="--fs:1.05;">
+    <h2 class="slide-title">&#12910; 처음 &middot; 토담집에서의 출산</h2>
     <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">121쪽 7행~122쪽 16행</span></div>
-          <p class="lead">어머니는 그 토담집에서 팔 남매를 낳았다. 집은 부모가 신접살림을 나면서 손수 지은 것으로, 마을 남정네들이 흙을 이겨 지붕을 올리고 아낙들은 음식을 만들었다. 그와 형제들은 노란 흙벽과 노란 초가지붕의 그 집에서 나고 자라며 사계절을 온몸으로 겪었고, 석양의 북새를 보고 비설거지를 하거나 비 온 저녁 지렁이가 우는 것을 아는 등 자연에 감춰진 비밀을 하나씩 깨달아 갔다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;그 집은 그 집 아이들에게 작은 우주였다.&hellip;&hellip; 냄새와 소리와 맛과 색깔과 형태들이 그 집에서는 선명했다.&hellip;&hellip; 자연이 그러한 것처럼 사람들의 삶이 명료했다.&rdquo;</p>
-            <span class="src">&mdash; 교과서 122쪽</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul>
-            <li>그 추억은 훗날 고달픈 도시 생활을 버티게 하는 <strong>버팀목</strong>이 된다. &lsquo;나&rsquo; 대신 &lsquo;그&rsquo;라는 3인칭 시점으로 자신의 이야기를 전달한다</li>
-            <li>물음 &mdash; &lsquo;그&rsquo;와 형제들이 토담집에서 깨달은 자연의 비밀들은 무엇이었을까?</li>
-          </ul>
-          </div>
-        </div>
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 120쪽 4행 ~ 121쪽 6행</span></div>
+      <p class="story">저녁 어스름에 보리쌀을 안치던 아낙이 산기를 느낀다. 아낙은 서두르지 않고 저녁상을 차려 낸 뒤에야 아이 낳을 채비를 시작한다. 물을 데우고 가위를 소독하고 안방 바닥에 짚을 깔고 눕는다. 술 한잔 걸친 남편이 사립문을 들어설 때 갓 태어난 아기의 울음소리가 들려온다. 남편은 첫국밥을 끓여 아내에게 들여놓아 주고, 사립문에 숯과 붉은 고추를 끼운 새끼줄을 매단다.</p>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul><li>아낙이 집에서 홀로 출산을 준비하는 과정이 제시되어 있다. 집에서 아이를 낳는 모습이 현대와 사뭇 다르며, 출산을 특별한 행사가 아니라 자연스러운 일상의 한 부분으로 여기고 있음을 확인할 수 있다.</li></ul>
       </div>
     </div>
-    <div class="page-num">7 / 28</div>
+    <div class="page-num">7 / 32</div>
   </section>
+
   <!-- 8 -->
-  <section class="slide tight" style="--fs:1.13;">
-    <h2 class="slide-title">&#12910; 그 시절 우리들의 집 &middot; 끝</h2>
+  <section class="slide" style="--fs:1.22;">
+    <h2 class="slide-title">&#12910; 처음 &middot; 이 대목</h2>
     <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">123쪽 1~18행</span></div>
-          <p class="lead">그 집을 떠난 그에게는 아침과 저녁도, 사계절도, 오감도 불분명하다. 병원에서 태어나 아파트에서 자란 그의 아이는 여름에 긴팔을, 겨울에 반팔을 입고 수박이 어느 계절 과일인지도 모른다. 어머니의 부음을 듣고 찾아간 노란 집에서, 조그마해질 대로 조그마해진 어머니는 자기 아이들을 낳던 바로 그 자리에 누워 있었다. 안주인이 떠난 뒤 그 집에서는 더 이상 탄생도 죽음도 일어나지 않는다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;더 이상의 탄생과 죽음이 없는 우리들의 집은 쓸쓸하다. 우리는 오늘 밤도 쓸쓸한 집으로 돌아들 간다.&rdquo;</p>
-            <span class="src">&mdash; 공선옥, 《자운영 꽃밭에서 나는 울었네》 &middot; 교과서 123쪽 끝</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul>
-            <li>명료했던 토담집의 삶과 불분명한 아파트의 삶을 <strong>대조</strong>한다. 마지막에 &lsquo;그&rsquo;가 &lsquo;우리&rsquo;로 바뀌면서 개인의 경험이 우리 모두의 이야기로 넓어진다</li>
-          </ul>
-          </div>
-        </div>
+      <p class="cite">그러고 나서 아이 낳을 채비를 하기 시작했다. 물을 데워 놓고 끓는 물에 아기 탯줄 자를 가위를 소독하고 미역도 담가 놓고 안방 바닥에 짚을 깔고 그 위에 드러누웠다.<span class="attr">교과서 120쪽 17~20행</span></p>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">살펴볼 것</div>
+        <ul>
+          <li>낳을 채비를 저녁상 차리는 일 바로 다음에 나란히 적었다. 집이 곧 아이를 낳는 자리였던 시절의 생활이 드러난다.</li>
+          <li class="q">&lsquo;그&rsquo;의 부모님에게 이 토담집은 어떤 의미가 있는 집이었을까?</li>
+        </ul>
       </div>
     </div>
-    <div class="page-num">8 / 28</div>
+    <div class="page-num">8 / 32</div>
   </section>
+
   <!-- 9 -->
-  <section class="slide" style="--fs:1.42;">
-    <h2 class="slide-title">&#12296;그 시절 우리들의 집&#12297; 낱말 풀이</h2>
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">&#12910; 중간 &middot; 토담집의 유래와 유년의 추억</h2>
+    <div class="body-area">
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 121쪽 7행 ~ 122쪽 16행</span></div>
+      <p class="story">어머니는 그 토담집에서 팔 남매를 낳았다. 집은 부모가 신접살림을 나면서 손수 지은 것으로, 마을 남정네들은 집 짓는 일을 돕고 아낙들은 음식을 만들었다. 그와 형제들은 바로 그 집에서 나고 그 집에서 컸다. 석양의 북새를 보고 비설거지를 하거나 비 온 저녁에 지렁이가 우는 것을 알아 가며, 자연 속에 감춰진 비밀들을 깨달아 갔다.</p>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul><li>&lsquo;그&rsquo;와 형제들이 태어나고 자란 토담집을 부모가 손수 지었음을 보여 준다. 또한 이 작품의 서술자가 &lsquo;나&rsquo;라는 1인칭 시점 대신 &lsquo;그&rsquo;라는 3인칭 시점을 사용하여 자신의 이야기를 전달하고 있음을 알 수 있다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">9 / 32</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" style="--fs:0.98;">
+    <h2 class="slide-title">&#12910; 중간 &middot; 이 대목</h2>
+    <div class="body-area">
+      <p class="cite">그 집은 그 집 아이들에게 작은 우주였다. 그곳에는 많은 비밀이 있었다. 자연 속에는 눈에 보이는 것 말고도 눈에 보이지 않는 무한한 비밀이 감춰져 있었다.<span class="attr">교과서 122쪽 8~10행</span></p>
+      <p class="cite" style="margin-top:1.0cqw;">냄새와 소리와 맛과 색깔과 형태들이 그 집에서는 선명했다. 모든 것이 말이다. &hellip;&hellip; 자연이 그러한 것처럼 사람들의 삶이 명료했다.<span class="attr">교과서 122쪽 13~16행</span></p>
+      <div class="emotion" style="margin-top:1.3cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul>
+          <li>유년 시절 그 집에서 쌓은 추억이 &lsquo;그&rsquo;가 삭막한 도시에서 살아가는 데 버팀목이 되어 줌을 보여 준다.</li>
+          <li class="q">&lsquo;그&rsquo;와 형제들이 토담집에서 깨달은 자연의 비밀들은 무엇이었을까?</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">10 / 32</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" style="--fs:1.1;">
+    <h2 class="slide-title">&#12910; 끝 &middot; 탄생과 죽음이 없는 아파트</h2>
+    <div class="body-area">
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 123쪽 1~18행</span></div>
+      <p class="story">그 집을 떠난 그에게는 아침과 저녁이, 사계절이, 오감이 모두 불분명하다. 병원에서 태어나 아파트에서 자란 그의 아이는 여름에 긴팔 옷을 입고 겨울에 반팔 옷을 입으며, 수박이 어느 계절의 과일인지도 분간하지 못한다. 어머니의 부음을 듣고 찾아간 노란 집에서, 조그마해질 대로 조그마해진 어머니는 자신의 아이들을 낳았던 그 자리에 몸을 부려 놓고 있었다.</p>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul><li>유년 시절의 &lsquo;그&rsquo;와 &lsquo;그&rsquo;의 아이를 비교하여, 모든 것이 명료했던 과거 토담집에서의 삶과 인공적이고 모든 것이 불분명한 오늘날 아파트에서의 삶을 대조하고 있다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">11 / 32</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" style="--fs:1.13;">
+    <h2 class="slide-title">&#12910; 끝 &middot; 이 대목</h2>
+    <div class="body-area">
+      <p class="cite">우리들의 어머니의 죽음과 함께 조왕신과 성주신이 살지 않는 우리들의 집은 이제 적막하다. 더 이상의 탄생과 죽음이 없는 우리들의 집은 쓸쓸하다. 우리는 오늘 밤도 쓸쓸한 집으로 돌아들 간다.<span class="attr">공선옥, 《자운영 꽃밭에서 나는 울었네》 &middot; 교과서 123쪽 16~18행</span></p>
+      <div class="emotion" style="margin-top:1.4cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul>
+          <li>이 작품의 마지막 문장은 병원에서 태어나고 죽는 현대인의 모습을 함축하여 우리 삶을 성찰하게 한다.</li>
+          <li>줄곧 &lsquo;그&rsquo;로 서술하던 시점을 여기서 &lsquo;우리&rsquo;로 바꾸어, 개인적 경험을 보편적 차원으로 확장하였다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">12 / 32</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide tight" style="--fs:1.07;">
+    <h2 class="slide-title">&#12910; 어휘 풀이</h2>
     <div class="body-area">
       <div class="gloss">
+        <div class="gl"><span class="gw">돌확</span><span class="gd">돌로 만든 조그만 절구</span></div>
+        <div class="gl"><span class="gw">산기(産氣)</span><span class="gd">달이 찬 임신부가 아이를 낳으려는 기미</span></div>
+        <div class="gl"><span class="gw">채비</span><span class="gd">어떤 일에 필요한 물건이나 자세를 미리 갖추어 차림</span></div>
+        <div class="gl"><span class="gw">첫국밥</span><span class="gd">아이를 낳은 뒤에 산모가 처음으로 먹는 국과 밥</span></div>
         <div class="gl"><span class="gw">토담집</span><span class="gd">흙담만 쌓아 그 위에 지붕을 덮어 지은 집</span></div>
         <div class="gl"><span class="gw">신접살림</span><span class="gd">처음으로 차린 살림살이</span></div>
-        <div class="gl"><span class="gw">첫국밥</span><span class="gd">아이를 낳은 뒤에 산모가 처음으로 먹는 국과 밥</span></div>
-        <div class="gl"><span class="gw">성주</span><span class="gd">집을 지키는 신. 가신 가운데 맨 윗자리를 차지한다</span></div>
-        <div class="gl"><span class="gw">북새</span><span class="gd">&lsquo;노을&rsquo;의 방언</span></div>
+        <div class="gl"><span class="gw">성주(城主)</span><span class="gd">집의 건물을 수호하며 가신(家神) 가운데 맨 윗자리를 차지하는 신</span></div>
+        <div class="gl"><span class="gw">송판(松板)</span><span class="gd">소나무를 켜서 만든 널빤지</span></div>
+        <div class="gl"><span class="gw">북새</span><span class="gd">&lsquo;노을&rsquo;의 방언. 해 질 녘에 온 세상이 붉은빛으로 보이는 현상</span></div>
         <div class="gl"><span class="gw">비설거지</span><span class="gd">비에 맞으면 안 되는 물건을 치우거나 덮는 일</span></div>
-        <div class="gl"><span class="gw">부음</span><span class="gd">사람이 죽었다는 것을 알리는 말이나 글</span></div>
-        <div class="gl"><span class="gw">조왕신</span><span class="gd">부엌을 맡는다는 신</span></div>
+        <div class="gl"><span class="gw">부음(訃音)</span><span class="gd">사람이 죽었다는 것을 알리는 말이나 글</span></div>
+        <div class="gl"><span class="gw">조왕신</span><span class="gd">부엌을 맡는다는 신. 모든 길흉을 판단한다고 한다</span></div>
       </div>
     </div>
-    <div class="page-num">9 / 28</div>
+    <div class="page-num">13 / 32</div>
   </section>
-  <!-- 10 -->
-  <section class="slide" style="--fs:1.5;">
-    <h2 class="slide-title">&#12910; 작가 소개 &middot; 공선옥</h2>
-    <div class="body-area">
-      <div class="def-box">
-        <div class="dt">공선옥 (1963~) &middot; 소설가</div>
-        <p>우리 사회에서 소외된 이웃과 가난을 현실적으로 다룬 작품을 많이 썼다. 대표작으로 소설집 《명랑한 밤길》, 장편 소설 《유랑 가족》 등이 있다</p>
-      </div>
-    </div>
-    <div class="page-num">10 / 28</div>
-  </section>
-  <!-- 11 -->
-  <section class="slide" style="--fs:1.17;">
+
+  <!-- 14 -->
+  <section class="slide" style="--fs:1.1;">
     <h2 class="slide-title">&#12910; 제재 개관</h2>
     <div class="body-area">
-      <table class="info-table" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+      <table class="info-table" style="margin-bottom:1.4cqw;">
         <tr><th>갈래</th><td>현대 수필</td></tr>
         <tr><th>성격</th><td>회고적, 사색적, 체험적, 감상적</td></tr>
         <tr><th>제재</th><td>토담집</td></tr>
         <tr><th>주제</th><td>토담집에서의 자연 친화적인 삶에 대한 그리움</td></tr>
       </table>
       <ul class="num-list">
-        <li><span class="n">&#9312;</span>3인칭 시점을 사용하여 &lsquo;그&rsquo;의 이야기를 서술함</li>
-        <li><span class="n">&#9313;</span>일화를 통해 흥미를 유발하고 과거와 현재를 대비하여 주제를 부각함</li>
-        <li><span class="n">&#9314;</span>마지막 부분에서 시점을 &lsquo;그&rsquo;에서 &lsquo;우리&rsquo;로 바꿔 개인적 경험을 보편적 차원으로 확장함</li>
+        <li><span class="n">1</span>수필임에도 3인칭 시점을 사용하여 &lsquo;그&rsquo;의 이야기를 서술함.</li>
+        <li><span class="n">2</span>일화를 통해 독자의 흥미를 유발하고 과거와 현재를 대비하여 주제를 부각함.</li>
+        <li><span class="n">3</span>끝부분에서 글의 시점을 &lsquo;그&rsquo;에서 &lsquo;우리&rsquo;로 변화시켜 개인적 경험을 보편적 차원으로 확장함.</li>
       </ul>
     </div>
-    <div class="page-num">11 / 28</div>
+    <div class="page-num">14 / 32</div>
   </section>
-  <!-- 12 -->
-  <section class="slide" style="--fs:1.5;">
-    <h2 class="slide-title">&#12910; 핵심 강의 &middot; 토담집과 아파트</h2>
+
+  <!-- 15 -->
+  <section class="slide" style="--fs:1.46;">
+    <h2 class="slide-title">&#12910; 핵심 강의 &middot; 토담집과 아파트의 대조</h2>
     <div class="body-area">
       <table class="cmp-table">
-        <thead><tr><th style="width:6em;">&nbsp;</th><th>토담집</th><th>아파트</th></tr></thead>
+        <thead><tr><th style="width:4em;">&nbsp;</th><th>토담집</th><th>아파트</th></tr></thead>
         <tbody>
           <tr><th>시간</th><td>시간과 계절이 명료한 공간</td><td>시간과 계절이 불분명한 공간</td></tr>
           <tr><th>자연</th><td>오감으로 자연을 느낄 수 있는 공간</td><td>자연과 단절된 인위적인 공간</td></tr>
-          <tr><th>삶</th><td>탄생&middot;성장&middot;죽음을 함께하는 복합적인 공간</td><td>탄생&middot;성장&middot;죽음과 분리된 주거만을 위한 공간</td></tr>
+          <tr><th>삶</th><td>사람의 탄생과 성장, 죽음을 함께하는 복합적인 공간</td><td>탄생과 성장, 죽음과 분리된 주거만을 위한 공간</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="page-num">12 / 28</div>
+    <div class="page-num">15 / 32</div>
   </section>
-  <!-- 13 -->
-  <section class="slide tight" style="--fs:1.09;">
-    <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 서론</h2>
-    <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">124쪽 3~15행</span></div>
-          <p class="lead">글쓴이는 건축가 루이스 칸의 말로 글을 연다. 사람은 사는 공간으로부터 지대한 영향을 받는다는 뜻이다. 흔히 건축이라 하면 건물의 높이나 모양을 떠올리지만, 정작 중요한 것은 사람들이 날마다 몸을 두는 내부 공간이라고 말한다. 요새 아파트는 기술 차원에서 아름답고 튼튼하지만, 화려한 겉모습만큼 알맹이도 실속이 있는지 묻는다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;하나의 건물을 만든다는 것은 하나의 인생을 만들어 내는 것이다.&rdquo;&hellip;&hellip; 겉으로 보이는 껍데기는 바로 이 내부 알맹이를 만들어 내기 위한 매개체로 생각하는 것이 타당합니다.</p>
-            <span class="src">&mdash; 교과서 124쪽 3~10행</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul><li>유명한 건축가의 말을 앞세워 공간이 사람에게 큰 영향을 준다는 전제를 세우고, 글 전체의 질문을 던진다</li></ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="page-num">13 / 28</div>
-  </section>
-  <!-- 14 -->
-  <section class="slide tight" style="--fs:1.0;">
-    <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 본론 (1)</h2>
-    <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">124쪽 16행~125쪽 7행</span></div>
-          <p class="lead">아파트는 한정된 토지에 더 많은 사람을 수용하려는 주거 양식이라 &lsquo;고밀&rsquo;과 &lsquo;고층&rsquo;이라는 두 속성을 지닌다. 모르는 사람들과 부대끼며 살아야 하고, 고층은 전에 없던 인공적인 방식이라 그 안에서 사는 사람에게는 필연적으로 스트레스가 생긴다. 스트레스를 느끼면 시상 하부가 호르몬(CRH)을 내보내 교감 신경계가 활성화되고, 이것이 뇌하수체를 자극해 ACTH가 나오면 부신 피질에서 코르티솔이 분비된다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;스트레스 상황이 만성화되면 혈압과 혈당이 상승하며 심신이 피로하게 되고 면역 체계가 제 기능을 하지 못하는 등 부작용이 생깁니다.&rdquo;</p>
-            <span class="src">&mdash; 교과서 125쪽</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul><li>코르티솔은 원래 스트레스를 이겨 내도록 돕는 호르몬이지만, 지속적으로 분비되면 도리어 몸을 상하게 한다는 점을 과학적으로 설명한다</li>
-            <li>물음 &mdash; 스트레스는 우리에게 어떤 영향을 줄까?</li></ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="page-num">14 / 28</div>
-  </section>
-  <!-- 15 -->
-  <section class="slide tight" style="--fs:1.0;">
-    <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 본론 (2)</h2>
-    <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">125쪽 8행~126쪽 16행</span></div>
-          <p class="lead">고층이 불편한 가장 큰 까닭은 높이다. 땅을 딛고 살던 사람이 높은 곳에서 아래를 내려다보면 흥분하여 공포감을 느끼며, 노약자는 쉽게 적응하지 못해 스트레스가 쌓인다. 10미터마다 1.3헥토파스칼씩 낮아지는 기압은 편두통과 귀울림, 멀미, 생리 불순을 부르고, 강풍이 만드는 미세한 진동은 잠재적 불안감을 남긴다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;고층에 거주하는 사람들이 저층에 거주하는 사람들보다 더 높은 비율로 불안하고 우울하며 공격성을 보인다는 것입니다.&rdquo;</p>
-            <span class="src">&mdash; 교과서 126쪽</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul><li>원인을 높이&middot;기압&middot;진동으로 나누어 설명하고, 1970년대부터 이어진 서양의 연구 결과를 들어 정신 건강에 미치는 영향까지 짚는다</li>
-            <li>물음 &mdash; 고층 주거 공간이 사람에게 스트레스를 유발하는 까닭은 무엇일까?</li></ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="page-num">15 / 28</div>
-  </section>
+
   <!-- 16 -->
-  <section class="slide tight" style="--fs:0.92;">
-    <h2 class="slide-title">&#12911; 아파트는 어떻게&hellip; &middot; 결론</h2>
+  <section class="slide" style="--fs:1.32;">
+    <h2 class="slide-title">&#12911; 제재 안내</h2>
     <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리 <span style="color:var(--ink-faint);font-weight:400;">126쪽 17행~127쪽 4행</span></div>
-          <p class="lead">고층 주거 공간은 몸에 부담을 줄 뿐 아니라 정신 건강에도 부정적인 영향을 미친다. 그래서 일본에서는 저소득층이라도 6세 미만의 아이가 있는 가정은 고층 공영 주택에 살 수 없도록 한다. 그런데 2019년 국내 연구에서는 고층 거주자와 저층 거주자의 정신 건강에 유의미한 차이가 없었다고 한다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;고층이 &lsquo;로열층&rsquo;으로 인식되면서 거주자에게 자부심을 주어서 고층 주거 환경이 주는 부정적인 영향을 상쇄하기 때문으로 보았습니다. 자부심이 생리적 반응을 이기기도 한다니 무척 흥미로운 결과입니다.&rdquo;</p>
-            <span class="src">&mdash; 김홍재, 《아파트 속 과학》 &middot; 교과서 127쪽</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul><li>자기 설명과 어긋나는 국내 연구 결과까지 함께 실었다. 사회적 인식이 생리적 반응을 누를 수도 있다는 여지를 남긴 셈이다</li>
-            <li>물음 &mdash; 일본은 왜 6세 미만 아이가 있는 가정의 고층 거주를 막았을까?</li></ul>
-          </div>
-        </div>
+      <div class="def-box" style="margin-bottom:1.5cqw;">
+        <div class="dt">&#12296;아파트는 어떻게 우리의 몸과 마음을 지배하는가?&#12297;를 고른 까닭</div>
+        <p>고층 아파트라는 주거 형태가 유발하는 스트레스와 그로 인한 신체적&middot;정신적 반응을 과학적으로 설명하는 글이다. 집이 사람의 몸과 마음에 영향을 준다는 사실을 바탕으로 하여 몸과 마음에 좋은 집은 무엇일지 생각해 보게 한다.</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">글쓴이 &middot; 김홍재 (1975~　)</div>
+        <ul><li>과학 칼럼니스트. 한국과학창의재단이 발행하는 《사이언스타임즈》의 편집장을 역임했으며, 어려운 과학 기술을 일반인이 이해하기 쉽게 도와주는 글을 쓰고 있다.</li></ul>
       </div>
     </div>
-    <div class="page-num">16 / 28</div>
+    <div class="page-num">16 / 32</div>
   </section>
+
   <!-- 17 -->
-  <section class="slide" style="--fs:1.38;">
-    <h2 class="slide-title">&#12296;아파트는 어떻게&hellip;&#12297; 낱말 풀이</h2>
+  <section class="slide" style="--fs:1.17;">
+    <h2 class="slide-title">&#12911; 서론 &middot; 공간이 미치는 영향에 대한 의문</h2>
+    <div class="body-area">
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 124쪽 3~15행</span></div>
+      <p class="story">글쓴이는 건축가 루이스 칸의 말을 인용하며 글을 시작한다. 사람은 사는 공간으로부터 지대한 영향을 받는다는 뜻이다. 흔히 건축이라 하면 건물의 높이나 모양을 떠올리기 쉽지만, 실제로 중요한 것은 사람들이 일상적으로 접하는 내부 공간이다. 요새 세워지는 아파트들은 아름답고 튼튼하지만, 화려한 겉모습만큼 알맹이도 실속이 있는지 물으며 본론으로 들어간다.</p>
+      <p class="cite" style="margin-top:1.4cqw;">하나의 건물을 만든다는 것은 하나의 인생을 만들어 내는 것이다.<span class="attr">건축가 루이스 칸의 말 &middot; 교과서 124쪽 3~4행</span></p>
+    </div>
+    <div class="page-num">17 / 32</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" style="--fs:0.97;">
+    <h2 class="slide-title">&#12911; 본론 (1) &middot; 스트레스에 대한 신체의 반응</h2>
+    <div class="body-area">
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 124쪽 16행 ~ 125쪽 7행</span></div>
+      <p class="story">아파트는 한정된 토지에 더 많은 사람을 수용하려는 목적에서 발달한 주거 양식이기에, 필연적으로 고밀과 고층이라는 두 속성을 갖게 된다. 고밀은 잘 모르는 사람들과 부대끼며 살아가야 한다는 뜻이고, 고층은 기존에는 존재하지 않았던 인공적인 주거 방식이다. 그래서 그 안에서 살아갈 때 사람의 마음에는 필연적으로 스트레스가 생긴다.</p>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul>
+          <li>스트레스를 느끼면 시상 하부에서 호르몬이 분비되어 교감 신경계가 활성화되고, 불안정한 상황이 계속되면 부신 피질에서 코르티솔이 분비된다.</li>
+          <li>코르티솔은 원래 스트레스를 극복하게 돕는 호르몬이지만, 만성화되면 혈압과 혈당이 상승하며 심신이 피로하게 되고 면역 체계가 제 기능을 하지 못한다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">18 / 32</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide tight" style="--fs:1.16;">
+    <h2 class="slide-title">&#12911; 스트레스 반응 시스템<span class="qm">교과서 125쪽 그림</span></h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.4cqw;">
+        <div class="flow-step"><div class="emo">시상 하부</div><div class="desc">부신 피질 자극 호르몬 분비 호르몬(CRH)을 분비한다</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">뇌하수체</div><div class="desc">자극을 받아 부신 피질 자극 호르몬(ACTH)을 분비한다</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">부신 피질</div><div class="desc">코르티솔을 분비하여 스트레스를 극복하게 돕는다</div></div>
+      </div>
+      <div class="emotion">
+        <div class="etag">만성 스트레스가 미치는 영향</div>
+        <ul>
+          <li>신경계에는 두통과 불안, 공황 장애, 우울증이 나타나고, 심혈관계에는 높은 심박 수와 고혈압, 고지혈증이 나타난다.</li>
+          <li>위에는 구토와 속 쓰림, 복통이, 췌장에는 당뇨가, 장에는 설사와 변비가, 생식기계에는 생리 불순이 나타난다.</li>
+          <li class="q">스트레스는 우리에게 어떤 영향을 줄까?</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">19 / 32</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">&#12911; 본론 (2) &middot; 높이와 기압, 진동</h2>
+    <div class="body-area">
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 125쪽 8행 ~ 126쪽 16행</span></div>
+      <p class="story">고층 주거 공간이 불편한 가장 큰 까닭은 높이 때문이다. 땅을 접하며 살아온 사람이 높은 곳에서 밑을 내려다보면 심리적으로 흥분하여 추락에 대한 두려움이 생기고, 노약자는 적응하기 쉽지 않아 스트레스가 축적된다. 기압도 영향을 미친다. 지면에서 10미터씩 올라갈 때마다 기압은 1.3헥토파스칼씩 낮아져 편두통이나 귀울림, 멀미를 일으킬 수 있다.</p>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul><li>부정적인 영향을 미치는 원인을 높이와 낮은 압력, 미세한 진동으로 나누어 설명하고, 고층에 거주하는 사람들이 불안과 우울을 느낄 가능성이 크다는 연구 결과를 인용하여 내용을 뒷받침하고 있다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">20 / 32</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide" style="--fs:1.19;">
+    <h2 class="slide-title">&#12911; 본론 (2) &middot; 이 대목</h2>
+    <div class="body-area">
+      <p class="cite">고층 주거 공간이 증가하면서 서양에서는 1970년대부터 다양한 연구가 진행되었는데, 상당수 연구 결과가 고층 주거 공간이 정신 건강에 악영향을 미친다고 경고하였습니다.<span class="attr">교과서 126쪽 13~15행</span></p>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">살펴볼 것</div>
+        <ul>
+          <li>전문가의 말과 수치, 연구 결과를 잇달아 인용하여 정보의 신뢰성을 높이는 것이 이 글의 방식이다.</li>
+          <li class="q">고층 주거 공간이 사람에게 스트레스를 유발하는 까닭은 무엇일까?</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">21 / 32</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" style="--fs:1.11;">
+    <h2 class="slide-title">&#12911; 결론 &middot; 규제 사례와 국내 연구 결과</h2>
+    <div class="body-area">
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 126쪽 17행 ~ 127쪽 4행</span></div>
+      <p class="story">고층 주거 공간은 인체에 부담을 안길 뿐만 아니라 정신 건강에도 부정적인 영향을 미친다. 그래서 일본에서는 저소득층이라도 6세 미만의 아이가 있는 가정은 고층 공영 주택에 거주할 수 없도록 하고 있다. 그러나 2019년에 진행된 국내 연구에 따르면 우리나라에서는 고층 거주자와 저층 거주자의 정신 건강에 유의미한 차이가 없었다고 한다.</p>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul><li>연구자는 그 까닭을 고층이 &lsquo;로열층&rsquo;으로 인식되면서 거주자에게 자부심을 주어, 고층 주거 환경이 주는 부정적인 영향을 상쇄하기 때문으로 보았다. 자부심이 생리적 반응을 이기기도 한다는 것이다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">22 / 32</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide tight" style="--fs:1.22;">
+    <h2 class="slide-title">&#12911; 어휘 풀이</h2>
     <div class="body-area">
       <div class="gloss">
-        <div class="gl"><span class="gw">교감 신경계</span><span class="gd">긴장&middot;공포&middot;흥분을 느꼈을 때 신체를 활성화시키는 방향으로 작용하는 신경 계통</span></div>
-        <div class="gl"><span class="gw">부교감 신경계</span><span class="gd">신체의 활동과 기능을 억제하는 방향으로 작용하는 신경 계통</span></div>
-        <div class="gl"><span class="gw">부신 피질</span><span class="gd">콩팥 위에 있는 &lsquo;부신&rsquo;의 바깥 부분. 코르티솔로 스트레스 반응을 조절한다</span></div>
+        <div class="gl"><span class="gw">루이스 칸</span><span class="gd">러시아 출신의 미국 건축가. 방글라데시 국회 의사당이 최고의 역작으로 꼽힌다</span></div>
+        <div class="gl"><span class="gw">교감 신경계</span><span class="gd">긴장과 공포, 흥분 등을 느꼈을 때 신체를 활성화시키는 방향으로 작용하는 신경 계통</span></div>
+        <div class="gl"><span class="gw">부교감 신경계</span><span class="gd">신체의 활동과 기능을 억제하는 방향으로 작용하는 자율 신경 계통</span></div>
+        <div class="gl"><span class="gw">부신 피질</span><span class="gd">콩팥 위에 있는 내분비샘인 &lsquo;부신&rsquo;의 바깥 부분. 스트레스 반응을 조절한다</span></div>
         <div class="gl"><span class="gw">혈류</span><span class="gd">피의 흐름</span></div>
-        <div class="gl"><span class="gw">공영 주택</span><span class="gd">지방 공공 단체가 지어 싸게 팔거나 빌려주는 집</span></div>
-        <div class="gl"><span class="gw">상쇄하다</span><span class="gd">상반되는 것끼리 서로 영향을 주어 효과가 없어지게 만들다</span></div>
+        <div class="gl"><span class="gw">공영 주택</span><span class="gd">지방 공공 단체에서 건설하여 국민에게 싸게 팔거나 빌려주는 집</span></div>
+        <div class="gl"><span class="gw">상쇄하기</span><span class="gd">상반되는 것에 서로 영향을 주어 효과가 없어지게 만들기</span></div>
       </div>
     </div>
-    <div class="page-num">17 / 28</div>
+    <div class="page-num">23 / 32</div>
   </section>
-  <!-- 18 -->
-  <section class="slide" style="--fs:1.5;">
-    <h2 class="slide-title">&#12911; 작가 소개 &middot; 김홍재</h2>
-    <div class="body-area">
-      <div class="def-box">
-        <div class="dt">김홍재 (1975~) &middot; 과학 칼럼니스트</div>
-        <p>한국과학창의재단이 발행하는 《사이언스타임즈》의 편집장을 역임했으며, 어려운 과학 기술을 일반인이 이해하기 쉽게 풀어 쓴 글을 쓰고 있다</p>
-      </div>
-    </div>
-    <div class="page-num">18 / 28</div>
-  </section>
-  <!-- 19 -->
-  <section class="slide" style="--fs:1.17;">
+
+  <!-- 24 -->
+  <section class="slide" style="--fs:1.1;">
     <h2 class="slide-title">&#12911; 제재 개관</h2>
     <div class="body-area">
-      <table class="info-table" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+      <table class="info-table" style="margin-bottom:1.4cqw;">
         <tr><th>갈래</th><td>설명문</td></tr>
         <tr><th>성격</th><td>설명적, 논리적, 과학적</td></tr>
         <tr><th>제재</th><td>고층 아파트</td></tr>
         <tr><th>주제</th><td>고층 주거 공간이 사람의 신체와 정신에 미치는 부정적 영향</td></tr>
       </table>
       <ul class="num-list">
-        <li><span class="n">&#9312;</span>아파트 거주에 따른 스트레스 반응 시스템의 작용을 과학적으로 설명함</li>
-        <li><span class="n">&#9313;</span>전문가의 말, 연구 결과, 해외 사례 등을 인용하여 정보의 신뢰성을 높임</li>
-        <li><span class="n">&#9314;</span>그림을 제시하여 전문적인 내용에 대한 이해를 도움</li>
+        <li><span class="n">1</span>아파트 거주에 따른 스트레스 반응 시스템의 작용을 과학적으로 설명함.</li>
+        <li><span class="n">2</span>전문가의 말, 연구 결과, 해외 사례 등을 인용하여 정보의 신뢰성을 높임.</li>
+        <li><span class="n">3</span>그림을 제시하여 전문적 내용에 대한 이해를 도움.</li>
       </ul>
     </div>
-    <div class="page-num">19 / 28</div>
+    <div class="page-num">24 / 32</div>
   </section>
-  <!-- 20 -->
-  <section class="slide" style="--fs:1.5;">
-    <h2 class="slide-title">&#12911; 핵심 강의 &middot; 고층 주거의 영향</h2>
+
+  <!-- 25 -->
+  <section class="slide" style="--fs:1.39;">
+    <h2 class="slide-title">&#12911; 핵심 강의 &middot; 고층 아파트에서 나타나는 증상</h2>
     <div class="body-area">
-      <div class="cards2">
+      <div class="cards2" style="margin-bottom:1.5cqw;">
         <div class="c3">
-          <h3>신체적 증상</h3>
-          <p>혈압&middot;혈당 상승, 피로, 면역 체계 약화, 편두통, 귀울림, 멀미, 생리 불순, 현기증</p>
+          <h3><span class="word">신체적 증상</span></h3>
+          <p>혈압과 혈당 상승, 피로, 면역 체계 이상, 편두통, 귀울림, 멀미, 생리 불순, 현기증</p>
         </div>
         <div class="c3">
-          <h3>정신적 증상</h3>
-          <p>공포감, 불안감, 우울, 공격성</p>
+          <h3><span class="word">정신적 증상</span></h3>
+          <p>공포감, 불안감, 우울감, 공격성</p>
         </div>
       </div>
+      <div class="emotion">
+        <div class="etag">두 나라의 다른 결론</div>
+        <ul><li class="q">일본은 왜 6세 미만의 아이가 있는 가정의 고층 거주를 막았을까? 우리나라의 연구 결과는 왜 달랐을까?</li></ul>
+      </div>
     </div>
-    <div class="page-num">20 / 28</div>
+    <div class="page-num">25 / 32</div>
   </section>
-  <!-- 21 -->
-  <section class="slide tight" style="--fs:1.23;">
-    <h2 class="slide-title">&#12912; 해외도 &lsquo;주거 걱정&rsquo;은&hellip; &middot; 처음</h2>
+
+  <!-- 26 -->
+  <section class="slide" style="--fs:1.35;">
+    <h2 class="slide-title">&#12912; 제재 안내</h2>
     <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리</div>
-          <p class="lead">2년 전 신혼부부에게 가족계획을 세울 때 무엇을 가장 먼저 고려하는지 물었더니, 40.6퍼센트가 안정적 주거 환경을 꼽았다. 가계 경제와 고용 상태(22.8%), 자녀 양육&middot;교육비(22.1%)가 뒤를 이었다. 결국 경제적 부담이 크고 그중에서도 집 문제가 가장 높은 벽이었던 셈이다. 청년과 신혼부부가 일반 가구보다 임대료와 대출금 부담을 더 크게 느낀다는 조사 결과도 있다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;주거 문제가 해결되면 우리 사회의 많은 부분이 한결 쉽게 풀릴지도 모르겠습니다.&rdquo;</p>
-            <span class="src">&mdash; 교과서 128쪽 첫머리 &middot; 설문은 한국보건사회연구원(2021)</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul><li>설문 조사 수치를 앞세워, 주거 문제가 개인의 사정이 아니라 <strong>사회 전체의 문제</strong>임을 먼저 보여 준다</li></ul>
-          </div>
-        </div>
+      <div class="def-box" style="margin-bottom:1.5cqw;">
+        <div class="dt">&#12296;해외도 &lsquo;주거 걱정&rsquo;은 마찬가지&hellip;&hellip; 어떤 점이 다를까?&#12297;를 고른 까닭</div>
+        <p>청년들의 부담을 덜어 주기 위한 국내외 주거 지원 정책을 주제로 한 영상 뉴스로, 복합 양식이 잘 드러나는 자료다. 주거비 부담이 결혼 기피와 출산 포기로 이어짐을 알고 우리 사회의 주거 문제를 생각해 보게 한다.</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">복합 양식 자료</div>
+        <ul><li>기자의 말과 화면의 자막, 설문 도표, 현지 영상이 함께 뜻을 만든다. 글만으로 이루어진 &#12910;와 &#12911;과 형식이 다른 까닭이다.</li></ul>
       </div>
     </div>
-    <div class="page-num">21 / 28</div>
+    <div class="page-num">26 / 32</div>
   </section>
-  <!-- 22 -->
-  <section class="slide tight" style="--fs:0.98;">
-    <h2 class="slide-title">&#12912; 해외도 &lsquo;주거 걱정&rsquo;은&hellip; &middot; 중간</h2>
+
+  <!-- 27 -->
+  <section class="slide" style="--fs:1.2;">
+    <h2 class="slide-title">&#12912; 처음 &middot; 청년 주거 문제 해결의 필요성</h2>
     <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리</div>
-          <p class="lead">전문가들은 주택 마련 부담이 청년들의 결혼 기피와 출산 포기로 이어진다고 진단한다. 우리나라는 한국토지주택공사와 서울주택도시공사가 시세보다 싸게 공급하는 &lsquo;청년 주택&rsquo;을 두고, 지방 자치 단체마다 별도의 지원 정책도 있다. 일본은 인구가 줄어드는 지방을 중심으로 공공 임대를 지원하고 주택 수당을 취업 프로그램과 연계하며, 싱가포르는 신혼부부에게 분양 우선권과 집값의 80퍼센트까지 대출을 주고 부모&middot;조부모 집 2킬로미터 안의 주택에도 우선권을 주며, 독일은 1인 가구 청년에게 사회 주택을 우선 공급하고 18~27세에게는 일자리 주선(알선)과 난방비 보조를 함께 지원한다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;홋카이도의 미카사시는 그 지역 안에서만 쓸 수 있는 상품권으로 주택 임대료 일부를 보전해 줍니다. 주거 지원과 동시에 지역 안에서 돈이 돌게 해 지역 경제에도 활력을 불어넣겠다는 의도입니다.&rdquo;</p>
-            <span class="src">&mdash; 교과서 129쪽</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul><li>나라마다 사정이 다르지만, 주거 지원을 <strong>일자리&middot;가족&middot;지역 경제</strong>와 묶어서 푼다는 점이 같다</li></ul>
-          </div>
-        </div>
-      </div>
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 128쪽</span></div>
+      <p class="story">기자는 주거 문제가 해결되면 우리 사회의 많은 부분이 한결 쉽게 풀릴지도 모른다는 말로 보도를 시작한다. 2년 전 신혼부부들에게 가족계획을 세울 때 무엇을 가장 먼저 고려하는지 물었더니 40퍼센트 정도가 안정적 주거 환경을 꼽았다. 청년과 신혼부부가 일반 가구보다 임대료와 대출금 부담을 더 크게 느낀다는 조사 결과도 있었다.</p>
+      <table class="cmp-table" style="margin-top:1.3cqw;">
+        <caption>신혼부부, 가족계획 세울 때 우선 고려하는 부분은? (한국보건사회연구원, 2021)</caption>
+        <tbody><tr>
+          <td><strong>안정적 주거 환경 40.6%</strong></td>
+          <td>가계 경제 및 고용 상태 22.8%</td>
+          <td>자녀 양육&middot;교육비 22.1%</td>
+        </tr></tbody>
+      </table>
     </div>
-    <div class="page-num">22 / 28</div>
+    <div class="page-num">27 / 32</div>
   </section>
-  <!-- 23 -->
-  <section class="slide tight" style="--fs:1.28;">
-    <h2 class="slide-title">&#12912; 해외도 &lsquo;주거 걱정&rsquo;은&hellip; &middot; 끝</h2>
+
+  <!-- 28 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">&#12912; 중간 (1) &middot; 우리나라와 일본</h2>
     <div class="body-area">
-      <div class="cols wide-left">
-        <div>
-          <div class="col-head">줄거리</div>
-          <p class="lead">다른 나라의 사례를 보면 단순한 지원이 아니라 생애 주기 차원의 복합적인 고려가 있다. 해외 사례를 조사한 한국부동산원도 수도권 청년과 저소득층의 주거 문제가 심각한 만큼 일자리와 연계한 임대 주택 공급이 필요하다고 제언했다. 기자는 더 종합적인 지원 정책으로 청년들의 주거 걱정이 가벼워지기를 바라며 보도를 맺는다</p>
-        </div>
-        <div>
-          <div class="col-head">이 대목</div>
-          <div class="verse quote">
-            <p>&ldquo;더 종합적인 지원 정책을 통해 청년들의 주거 걱정이 한결 가벼워지면 좋겠습니다.&rdquo;</p>
-            <span class="src">&mdash; 《더 뉴스》(2023. 2. 17.), 교과서 129쪽 끝</span>
-          </div>
-          <div class="emotion" style="margin-top:1.2cqw;">
-          <div class="etag">감상</div>
-          <ul><li>해외 사례와 견주어 우리 주거 정책이 나아가야 할 방향을 제언하며 마무리한다</li></ul>
-          </div>
-        </div>
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 128쪽 ~ 129쪽</span></div>
+      <p class="story">전문가들은 주택 마련에 대한 경제적 부담이 청년들의 결혼 기피와 출산 포기로 이어진다고 진단한다. 국가 차원의 주거 지원 정책이 중요한 이유다. 우리나라의 대표적인 정책은 &lsquo;청년 주택&rsquo;으로, 한국토지주택공사나 서울주택도시공사가 주택을 사서 청년들에게 시세보다 저렴하게 공급하는 임대 주택이다.</p>
+      <p class="story">일본은 지방이 인구 감소로 문제를 겪다 보니 공공 임대 주택을 적극 지원한다. 홋카이도의 미카사시는 그 지역에서만 쓸 수 있는 상품권으로 임대료 일부를 보전해 준다. 또 실직으로 주거가 불안한 청년에게 주택 수당을 지원하면서, 도덕적 해이를 막기 위해 취업 프로그램과 연계한다.</p>
+    </div>
+    <div class="page-num">28 / 32</div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide" style="--fs:1.03;">
+    <h2 class="slide-title">&#12912; 중간 (2) &middot; 싱가포르와 독일</h2>
+    <div class="body-area">
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 129쪽</span></div>
+      <p class="story">싱가포르는 출생률 저하를 해결하기 위해 신혼부부에게 공공 주택 분양 우선권을 주고 집값의 80퍼센트까지 대출해 준다. 눈에 띄는 것은 부모나 조부모 집으로부터 2킬로미터 안에 있는 주택에 대해 근거리 거주자에게 분양 우선권을 준다는 점인데, 가족 공동체를 보호하기 위해서라고 한다.</p>
+      <p class="story">독일은 주거공간지원법에 따라 1인 가구 청년에게 사회 주택을 우선 공급한다. 특히 18세에서 27세 청년에게는 거처 마련과 취업 알선, 난방비 보조 등을 연계해 지원한다.</p>
+      <div class="emotion" style="margin-top:1.4cqw;">
+        <div class="etag">구절 풀이</div>
+        <ul><li>청년 주거와 지역 경제, 일자리 문제를 연계하는 일본의 사례와 가족 공동체 보호를 위한 싱가포르의 사례, 1인 가구 청년을 지원하는 독일의 사례를 나란히 소개하고 있다.</li></ul>
       </div>
     </div>
-    <div class="page-num">23 / 28</div>
+    <div class="page-num">29 / 32</div>
   </section>
-  <!-- 24 -->
-  <section class="slide" style="--fs:1.36;">
+
+  <!-- 30 -->
+  <section class="slide" style="--fs:1.26;">
+    <h2 class="slide-title">&#12912; 끝 &middot; 종합적인 주거 지원 정책의 필요성</h2>
+    <div class="body-area">
+      <div class="story-head"><span>줄거리</span><span class="rng">교과서 129쪽</span></div>
+      <p class="story">다른 나라의 사례를 보니 단순한 지원의 형태가 아닌 생애 주기 차원의 복합적인 고려가 있다는 것을 확인할 수 있었다. 해외 사례를 조사한 한국부동산원은 수도권 청년과 저소득층의 주거 문제가 심각한 만큼 일자리와 연계한 임대 주택 공급이 필요하다고 제언하기도 했다.</p>
+      <p class="cite" style="margin-top:1.4cqw;">더 종합적인 지원 정책을 통해 청년들의 주거 걱정이 한결 가벼워지면 좋겠습니다.<span class="attr">《더 뉴스》(2023. 2. 17.) &middot; 교과서 129쪽 끝</span></p>
+    </div>
+    <div class="page-num">30 / 32</div>
+  </section>
+
+  <!-- 31 -->
+  <section class="slide" style="--fs:1.28;">
     <h2 class="slide-title">&#12912; 제재 개관</h2>
     <div class="body-area">
-      <table class="info-table" style="flex:0 0 auto;margin-bottom:1.6cqw;">
+      <table class="info-table" style="margin-bottom:1.4cqw;">
         <tr><th>갈래</th><td>뉴스</td></tr>
         <tr><th>성격</th><td>설명적, 예시적, 인과적, 설득적</td></tr>
         <tr><th>제재</th><td>세계 각국의 청년 주거 지원 정책</td></tr>
         <tr><th>주제</th><td>청년 주거 부담을 덜기 위한 종합적인 청년 주거 지원 정책의 필요성</td></tr>
       </table>
       <ul class="num-list">
-        <li><span class="n">&#9312;</span>설문 조사 결과를 제시하여 주거 문제의 심각성을 부각함</li>
-        <li><span class="n">&#9313;</span>다양한 해외 사례를 들어 주거 정책이 나아가야 할 방향을 제시함</li>
+        <li><span class="n">1</span>설문 조사 결과를 제시하여 주거 문제의 심각성을 부각함.</li>
+        <li><span class="n">2</span>다양한 해외 사례를 들어 주거 정책이 나아가야 할 방향을 제시함.</li>
       </ul>
     </div>
-    <div class="page-num">24 / 28</div>
+    <div class="page-num">31 / 32</div>
   </section>
-  <!-- 25 -->
-  <section class="slide" style="--fs:1.5;">
-    <h2 class="slide-title">&#12912; 핵심 강의 &middot; 청년 주거 지원이 필요한 까닭</h2>
-    <div class="body-area">
-      <ul class="num-list" style="flex:0 0 auto;margin-bottom:1.6cqw;">
-        <li><span class="n">&#9312;</span>신혼부부가 가족계획을 세울 때 안정적 주거 환경을 가장 먼저 고려함</li>
-        <li><span class="n">&#9313;</span>청년과 신혼부부가 일반 가구보다 임대료와 대출금 부담을 더 크게 느낌</li>
-      </ul>
-      <div class="emotion">
-        <div class="etag">결론</div>
-        <ul><li>주택 마련에 대한 부담이 청년들의 <strong>결혼 기피와 출산 포기</strong>로 이어질 수 있으므로, 국가 차원의 청년 주거 지원이 필요하다</li></ul>
-      </div>
-    </div>
-    <div class="page-num">25 / 28</div>
-  </section>
-  <!-- 26 -->
-  <section class="slide" style="--fs:1.4;">
-    <h2 class="slide-title">세 편의 글, 다시 보기</h2>
+
+  <!-- 32 -->
+  <section class="slide" style="--fs:1.19;">
+    <h2 class="slide-title">1차시 핵심 정리</h2>
     <div class="body-area">
       <div class="summary-list">
-        <div class="srow"><div class="skey">&#12910; 수필</div><div class="sval">토담집 &mdash; 탄생부터 죽음까지 삶의 전 과정을 함께하는 추억의 공간</div></div>
-        <div class="srow"><div class="skey">&#12911; 설명문</div><div class="sval">고층 아파트 &mdash; 몸과 마음에 미치는 영향을 과학적 근거로 설명</div></div>
-        <div class="srow"><div class="skey">&#12912; 뉴스</div><div class="sval">해외 청년 주거 정책 &mdash; 생애 주기를 고려한 종합적 지원의 필요성</div></div>
+        <div class="srow">
+          <div class="skey">화제</div>
+          <div class="sval">&lsquo;집&rsquo; 하나를 두고 형식과 관점이 다른 세 편을 읽었다. 수필, 설명문, 텔레비전 뉴스다.</div>
+        </div>
+        <div class="srow">
+          <div class="skey">&#12910;</div>
+          <div class="sval">토담집에서의 자연 친화적인 삶에 대한 그리움. 3인칭 시점, 과거와 현재의 대비, 끝부분의 시점 변화가 특징이다.</div>
+        </div>
+        <div class="srow">
+          <div class="skey">&#12911;</div>
+          <div class="sval">고층 주거 공간이 신체와 정신에 미치는 부정적 영향. 스트레스 반응을 과학적으로 설명하고 연구 결과와 그림을 함께 실었다.</div>
+        </div>
+        <div class="srow">
+          <div class="skey">&#12912;</div>
+          <div class="sval">청년 주거 부담을 덜기 위한 종합적인 정책의 필요성. 설문 조사 결과와 네 나라의 사례를 근거로 삼았다.</div>
+        </div>
+        <div class="srow">
+          <div class="skey">다음 시간</div>
+          <div class="sval">세 편의 형식과 관점을 견주고, 읽기 목적에 맞는 정보를 골라 평가하여 &lsquo;내가 살고 싶은 집&rsquo;에 대한 견해를 세웁니다.</div>
+        </div>
       </div>
-      <div class="emotion">
-        <div class="etag">다음 시간</div>
-        <ul><li>세 편의 <strong>형식과 관점</strong>을 견주어 보고, 읽기 목적에 맞는 정보를 골라 평가하며, &lsquo;내가 살고 싶은 집&rsquo;에 대한 나의 견해를 세웁니다</li></ul>
-      </div>
     </div>
-    <div class="page-num">26 / 28</div>
-  </section>
-  <!-- 27 -->
-  <section class="slide" style="--fs:1.36;">
-    <h2 class="slide-title">확인 문제</h2>
-    <div class="body-area">
-      <ul class="num-list">
-        <li><span class="n">1</span>&#12296;그 시절 우리들의 집&#12297;은 &lsquo;나&rsquo; 대신 &lsquo;( )&rsquo;라는 3인칭 시점을 사용해 이야기를 전달한다</li>
-        <li><span class="n">2</span>&#12296;아파트는 어떻게&hellip;&#12297;는 고층 주거 공간이 몸과 마음에 미치는 영향을 ( )적 근거를 들어 설명하는 글이다</li>
-        <li><span class="n">3</span>일본은 고층 아파트가 정신 건강에 미치는 영향을 고려해 ( )세 미만의 아이가 고층 공영 주택에 거주하지 못하도록 규제한다</li>
-        <li><span class="n">4</span>&#12296;해외도 &lsquo;주거 걱정&rsquo;은&hellip;&#12297;은 해외 청년 주거 지원 정책의 공통점으로 ( ) 차원의 복합적인 고려가 있음을 제시한다</li>
-      </ul>
-    </div>
-    <div class="page-num">27 / 28</div>
-  </section>
-  <!-- 28 -->
-  <section class="slide" style="--fs:1.36;">
-    <h2 class="slide-title">확인 문제 &middot; 정답</h2>
-    <div class="body-area">
-      <ul class="num-list">
-        <li><span class="n">1</span>&#12296;그 시절 우리들의 집&#12297;은 &lsquo;나&rsquo; 대신 &lsquo;<strong style="color:var(--key);">그</strong>&rsquo;라는 3인칭 시점을 사용해 이야기를 전달한다</li>
-        <li><span class="n">2</span>&#12296;아파트는 어떻게&hellip;&#12297;는 고층 주거 공간이 몸과 마음에 미치는 영향을 <strong style="color:var(--key);">과학</strong>적 근거를 들어 설명하는 글이다</li>
-        <li><span class="n">3</span>일본은 고층 아파트가 정신 건강에 미치는 영향을 고려해 <strong style="color:var(--key);">6</strong>세 미만의 아이가 고층 공영 주택에 거주하지 못하도록 규제한다</li>
-        <li><span class="n">4</span>&#12296;해외도 &lsquo;주거 걱정&rsquo;은&hellip;&#12297;은 해외 청년 주거 지원 정책의 공통점으로 <strong style="color:var(--key);">생애 주기</strong> 차원의 복합적인 고려가 있음을 제시한다</li>
-      </ul>
-    </div>
-    <div class="page-num">28 / 28</div>
+    <div class="page-num">32 / 32</div>
   </section>
 
 </div>
@@ -813,7 +875,7 @@
   <span id="counter">1 / 1</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
-  <span class="hint">방향키&middot;스페이스&middot;클릭으로 이동 &middot; F 전체화면</span>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
 </div>
 
 <script>

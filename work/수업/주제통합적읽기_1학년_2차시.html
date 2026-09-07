@@ -73,15 +73,17 @@
   }
   h2.slide-title {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.45rem, 3.85cqw, 4.62rem); line-height: 1.2;
-    display: block; margin-bottom: 2.3cqw; flex-shrink: 0;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.55cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.15cqw solid var(--ink);
+    align-self: flex-start; flex-shrink: 0;
   }
   .kicker {
     font-family: "Gowun Batang", serif; color: var(--key);
     font-size: clamp(0.85rem, 1.95cqw, 2.34rem); letter-spacing: 0.3em;
     margin-bottom: 1.8cqw;
   }
-  .lead { font-size: clamp(1rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); color: var(--ink-soft); line-height: 1.75; }
+  .lead { font-size: clamp(1rem, calc(2.41cqw * var(--fs)), calc(2.89rem * var(--fs))); color: var(--ink-soft); line-height: 1.75; }
 
   .cover { justify-content: center; align-items: flex-start; }
   .cover .rule { width: 7cqw; height: 0.3cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
@@ -99,26 +101,26 @@
 
   .verse {
     font-family: "Gowun Batang", "Noto Serif KR", serif;
-    font-size: clamp(1rem, calc(2.5cqw * var(--fs)), calc(3.0rem * var(--fs)));
+    font-size: clamp(1rem, calc(2.80cqw * var(--fs)), calc(3.36rem * var(--fs)));
     line-height: 1.78; letter-spacing: 0.005em;
   }
-  .verse.quote { font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.68; }
+  .verse.quote { font-size: clamp(0.85rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs))); line-height: 1.68; }
   .verse p + p { margin-top: 0.8em; }
   .src {
     display: block; margin-top: 0.9cqw;
-    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.68rem, calc(1.42cqw * var(--fs)), calc(1.7rem * var(--fs)));
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.68rem, calc(1.59cqw * var(--fs)), calc(1.90rem * var(--fs)));
     color: var(--ink-faint); letter-spacing: 0.04em;
   }
 
   .emotion { margin-top: auto; background: var(--card); border-left: 0.36cqw solid var(--key); padding: 1.3cqw 1.7cqw; }
   .emotion .etag {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); color: var(--key);
+    font-size: clamp(0.95rem, calc(2.35cqw * var(--fs)), calc(2.82rem * var(--fs))); color: var(--key);
     margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
   }
   .emotion ul { list-style: none; }
   .emotion li {
-    font-size: clamp(0.82rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66;
+    font-size: clamp(0.82rem, calc(2.04cqw * var(--fs)), calc(2.44rem * var(--fs))); line-height: 1.66;
     color: var(--ink-soft); padding-left: 1.35em; position: relative;
   }
   .emotion li + li { margin-top: 0.55em; }
@@ -129,7 +131,7 @@
   .info-table th, .info-table td {
     text-align: left; vertical-align: top;
     padding: 0.62em 0.5em; border-bottom: 1px solid var(--rule);
-    font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.6;
+    font-size: clamp(0.85rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs))); line-height: 1.6;
   }
   .info-table th { width: 4.8em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
   .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
@@ -138,11 +140,11 @@
   .cmp-table th, .cmp-table td {
     text-align: left; vertical-align: top;
     padding: 0.55em 0.45em; border-bottom: 1px solid var(--rule);
-    font-size: clamp(0.76rem, calc(1.78cqw * var(--fs)), calc(2.14rem * var(--fs))); line-height: 1.6;
+    font-size: clamp(0.76rem, calc(1.99cqw * var(--fs)), calc(2.40rem * var(--fs))); line-height: 1.6;
   }
   .cmp-table thead th {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
-    border-bottom: 0.18cqw solid var(--key); font-size: clamp(0.8rem, calc(1.88cqw * var(--fs)), calc(2.26rem * var(--fs)));
+    border-bottom: 0.18cqw solid var(--key); font-size: clamp(0.8rem, calc(2.11cqw * var(--fs)), calc(2.53rem * var(--fs)));
   }
   .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 7em; background: var(--card); }
   .cmp-table tr:last-child td { border-bottom: none; }
@@ -150,7 +152,7 @@
 
   .num-list { list-style: none; }
   .num-list li {
-    font-size: clamp(0.88rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); line-height: 1.68;
+    font-size: clamp(0.88rem, calc(2.30cqw * var(--fs)), calc(2.76rem * var(--fs))); line-height: 1.68;
     padding-left: 3.0cqw; position: relative; margin-bottom: 0.75em;
   }
   .num-list li:last-child { margin-bottom: 0; }
@@ -160,51 +162,51 @@
   .def-box + .def-box { margin-top: 1.2cqw; }
   .def-box .dt {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
-    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+    font-size: clamp(0.95rem, calc(2.35cqw * var(--fs)), calc(2.82rem * var(--fs)));
     margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
   }
-  .def-box p { font-size: clamp(0.86rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; color: var(--ink-soft); }
+  .def-box p { font-size: clamp(0.86rem, calc(2.22cqw * var(--fs)), calc(2.67rem * var(--fs))); line-height: 1.72; color: var(--ink-soft); }
   .def-box p + p { margin-top: 0.7em; }
 
   .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
   .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
   .c3 { background: var(--card); border-top: 0.28cqw solid var(--key); padding: 1.6cqw 1.5cqw; }
   .c3 h3 {
-    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.41cqw * var(--fs)), calc(2.89rem * var(--fs)));
     margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
   }
   .c3 .word { color: var(--key); }
-  .c3 p { font-size: clamp(0.8rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+  .c3 p { font-size: clamp(0.8rem, calc(2.07cqw * var(--fs)), calc(2.49rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
   .c3 p + p { margin-top: 0.72em; }
 
   .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
   .step { display: flex; gap: 1.2rem; align-items: flex-start; }
   .step .sn {
     font-family: "Gowun Batang", serif; font-weight: 700;
-    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); color: var(--key);
+    font-size: clamp(1.05rem, calc(2.74cqw * var(--fs)), calc(3.29rem * var(--fs))); color: var(--key);
     width: 2.2em; flex-shrink: 0; padding-top: 0.05em;
   }
   .step .sbody { flex: 1; padding-bottom: 0.85em; border-bottom: 1px solid var(--rule); }
   .step:last-child .sbody { border-bottom: none; }
-  .step h3 { font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); margin-bottom: 0.35em; }
-  .step p { font-size: clamp(0.8rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+  .step h3 { font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.41cqw * var(--fs)), calc(2.89rem * var(--fs))); margin-bottom: 0.35em; }
+  .step p { font-size: clamp(0.8rem, calc(2.04cqw * var(--fs)), calc(2.44rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
 
   .act-badge {
     display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
     background: var(--key); color: var(--paper);
-    font-size: clamp(0.74rem, calc(1.6cqw * var(--fs)), calc(1.92rem * var(--fs))); letter-spacing: 0.06em;
+    font-size: clamp(0.74rem, calc(1.79cqw * var(--fs)), calc(2.15rem * var(--fs))); letter-spacing: 0.06em;
     padding: 0.3em 1.1em; margin-bottom: 1.0cqw; align-self: flex-start;
   }
   .act-q {
     font-family: "Gowun Batang", serif;
-    font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); line-height: 1.66;
+    font-size: clamp(0.95rem, calc(2.41cqw * var(--fs)), calc(2.89rem * var(--fs))); line-height: 1.66;
     color: var(--ink); margin-bottom: 1.4cqw;
   }
   .fill-flow { display: flex; flex-direction: column; gap: 1.1cqw; }
   .fill-row {
     background: var(--card); border: 1px solid var(--rule); border-left: 0.32cqw solid var(--key);
     padding: 1.05cqw 1.5cqw;
-    font-size: clamp(0.88rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.66;
+    font-size: clamp(0.88rem, calc(2.22cqw * var(--fs)), calc(2.67rem * var(--fs))); line-height: 1.66;
   }
   .fill-row .lbl { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); margin-right: 0.7em; }
   .fill-row .blank { color: var(--ink-faint); }
@@ -214,9 +216,9 @@
   .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
   .srow .skey {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
-    font-size: clamp(0.92rem, calc(2.25cqw * var(--fs)), calc(2.7rem * var(--fs))); width: 5.6em; flex-shrink: 0; text-align: right;
+    font-size: clamp(0.92rem, calc(2.52cqw * var(--fs)), calc(3.02rem * var(--fs))); width: 5.6em; flex-shrink: 0; text-align: right;
   }
-  .srow .sval { flex: 1; font-size: clamp(0.84rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; }
+  .srow .sval { flex: 1; font-size: clamp(0.84rem, calc(2.22cqw * var(--fs)), calc(2.67rem * var(--fs))); line-height: 1.72; }
 
   .page-num {
     position: absolute; right: 0; bottom: -3.1cqw;
@@ -283,7 +285,7 @@
   </section>
 
   <!-- 2 -->
-  <section class="slide" style="--fs:1.28;">
+  <section class="slide" style="--fs:1.17;">
     <h2 class="slide-title">학습 목표</h2>
     <div class="body-area">
       <ul class="num-list" style="flex:0 0 auto;margin-bottom:1.8cqw;">
@@ -312,7 +314,7 @@
   </section>
 
   <!-- 4 -->
-  <section class="slide tight" style="--fs:1.31;">
+  <section class="slide tight" style="--fs:1.2;">
     <h2 class="slide-title">오늘의 순서</h2>
     <div class="body-area">
       <div class="steps">
@@ -326,7 +328,7 @@
   </section>
 
   <!-- 5 -->
-  <section class="slide" style="--fs:1.35;">
+  <section class="slide" style="--fs:1.24;">
     <h2 class="slide-title">활동 1 &middot; (1) 토담집의 의미</h2>
     <div class="body-area">
       <div class="act-badge">&#12910; 그 시절 우리들의 집</div>
@@ -344,7 +346,7 @@
   </section>
 
   <!-- 6 -->
-  <section class="slide" style="--fs:1.5;">
+  <section class="slide" style="--fs:1.43;">
     <h2 class="slide-title">활동 1 &middot; (1) 풀이</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.4cqw;">
@@ -360,7 +362,7 @@
   </section>
 
   <!-- 7 -->
-  <section class="slide" style="--fs:1.44;">
+  <section class="slide" style="--fs:1.31;">
     <h2 class="slide-title">활동 1 &middot; (2) 고층 주거 공간의 영향</h2>
     <div class="body-area">
       <div class="act-badge">&#12911; 아파트는 어떻게&hellip;</div>
@@ -380,7 +382,7 @@
   </section>
 
   <!-- 8 -->
-  <section class="slide" style="--fs:1.5;">
+  <section class="slide" style="--fs:1.48;">
     <h2 class="slide-title">활동 1 &middot; (2) 풀이</h2>
     <div class="body-area">
       <table class="cmp-table">
@@ -398,7 +400,7 @@
   </section>
 
   <!-- 9 -->
-  <section class="slide" style="--fs:1.39;">
+  <section class="slide" style="--fs:1.26;">
     <h2 class="slide-title">활동 1 &middot; (3) 다른 나라의 청년 주거 정책</h2>
     <div class="body-area">
       <div class="act-badge">&#12912; 해외도 &lsquo;주거 걱정&rsquo;은&hellip;</div>
@@ -416,7 +418,7 @@
   </section>
 
   <!-- 10 -->
-  <section class="slide tight" style="--fs:1.39;">
+  <section class="slide tight" style="--fs:1.26;">
     <h2 class="slide-title">활동 1 &middot; (3) 풀이</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.4cqw;">
@@ -435,7 +437,7 @@
   </section>
 
   <!-- 11 -->
-  <section class="slide" style="--fs:1.43;">
+  <section class="slide" style="--fs:1.3;">
     <h2 class="slide-title">활동 2 &middot; (1) 형식과 관점 비교하기</h2>
     <div class="body-area">
       <div class="act-q">&#12910;~&#12912;의 형식과 화제에 대한 관점을 비교해 보자.</div>
@@ -452,7 +454,7 @@
   </section>
 
   <!-- 12 -->
-  <section class="slide tight" style="--fs:1.09;">
+  <section class="slide tight" style="--fs:1.0;">
     <h2 class="slide-title">활동 2 &middot; (1) 풀이</h2>
     <div class="body-area">
       <table class="cmp-table">
@@ -486,7 +488,7 @@
   </section>
 
   <!-- 14 -->
-  <section class="slide tight" style="--fs:1.37;">
+  <section class="slide tight" style="--fs:1.26;">
     <h2 class="slide-title">활동 2 &middot; (2) 풀이</h2>
     <div class="body-area">
       <div class="cards3">
@@ -533,7 +535,7 @@
   </section>
 
   <!-- 17 -->
-  <section class="slide tight" style="--fs:1.41;">
+  <section class="slide tight" style="--fs:1.3;">
     <h2 class="slide-title">활동 3 &middot; (2) 견해를 표현하는 글 &middot; 앞부분</h2>
     <div class="body-area">
       <div class="verse quote">
@@ -545,7 +547,7 @@
   </section>
 
   <!-- 18 -->
-  <section class="slide tight" style="--fs:1.3;">
+  <section class="slide tight" style="--fs:1.18;">
     <h2 class="slide-title">활동 3 &middot; (2) 견해를 표현하는 글 &middot; 뒷부분</h2>
     <div class="body-area">
       <div class="verse quote" style="margin-bottom:1.4cqw;">
@@ -576,7 +578,7 @@
   </section>
 
   <!-- 20 -->
-  <section class="slide tight" style="--fs:1.44;">
+  <section class="slide tight" style="--fs:1.3;">
     <h2 class="slide-title">참고 &middot; &lsquo;주제 통합적 읽기&rsquo;라는 말</h2>
     <div class="body-area">
       <div class="def-box" style="margin-bottom:1.4cqw;">
@@ -606,7 +608,7 @@
   </section>
 
   <!-- 22 -->
-  <section class="slide" style="--fs:1.2;">
+  <section class="slide" style="--fs:1.09;">
     <h2 class="slide-title">활동 4 &middot; (2) 자료 찾아 비판적으로 읽기</h2>
     <div class="body-area">
       <div class="act-q">화제와 관련하여 다양한 글이나 자료를 찾고, 이들을 비교&middot;분석하며 비판적으로 읽어 보자.</div>
@@ -624,7 +626,7 @@
   </section>
 
   <!-- 23 -->
-  <section class="slide tight" style="--fs:1.21;">
+  <section class="slide tight" style="--fs:1.11;">
     <h2 class="slide-title">활동 4 &middot; (2) 예시 &middot; 화제 &lsquo;사랑&rsquo;</h2>
     <div class="body-area">
       <div class="act-q" style="margin-bottom:1.1cqw;">읽기 목적 &mdash; &lsquo;사랑이란 무엇인가?&rsquo;를 주제로 발표 구성하기</div>
@@ -641,7 +643,7 @@
   </section>
 
   <!-- 24 -->
-  <section class="slide" style="--fs:1.29;">
+  <section class="slide" style="--fs:1.17;">
     <h2 class="slide-title">활동 4 &middot; (3) 견해 재구성하기</h2>
     <div class="body-area">
       <div class="act-q">읽기 목적을 고려하여 유의미한 정보를 선별하고, 화제에 대한 견해를 재구성해 보자.</div>
@@ -683,7 +685,7 @@
   </section>
 
   <!-- 27 -->
-  <section class="slide" style="--fs:1.5;">
+  <section class="slide" style="--fs:1.46;">
     <h2 class="slide-title">확인 문제</h2>
     <div class="body-area">
       <ul class="num-list">
@@ -697,7 +699,7 @@
   </section>
 
   <!-- 28 -->
-  <section class="slide" style="--fs:1.5;">
+  <section class="slide" style="--fs:1.41;">
     <h2 class="slide-title">확인 문제 &middot; 정답</h2>
     <div class="body-area">
       <ul class="num-list">
