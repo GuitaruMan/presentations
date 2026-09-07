@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주제 통합적 읽기와 사회적 독서 (1학년-2차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --fs: 1;
+    --paper: #f5f1f8;
+    --paper-edge: #ddd2ea;
+    --ink: #241f2e;
+    --ink-soft: #564d63;
+    --ink-faint: #948aa0;
+    --key: #5b3a7a;
+    --key-soft: #8567a3;
+    --rule: #ddd2ea;
+    --card: #fbf9fd;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #1c1526;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.015em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(28,21,38,0.94); z-index: 50;
+  }
+  .nav-top a { color: #c9bcda; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #f0e8f7; }
+  .nav-meta { color: #a698bb; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 18% 6%, rgba(255,255,255,0.85) 0%, transparent 58%),
+      radial-gradient(ellipse at 84% 96%, rgba(91,58,122,0.14) 0%, transparent 62%);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.042) calc(var(--stage-w) * 0.05);
+  }
+  .stage::before {
+    content: ""; position: absolute; top: 10%; right: -2%;
+    width: 22%; height: 62%; pointer-events: none; opacity: 0.09;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%235b3a7a'><path stroke-width='3' d='M100 40 C70 22 40 20 18 30 V150 C40 140 70 142 100 158 C130 142 160 140 182 150 V30 C160 20 130 22 100 40 Z'/><path stroke-width='2' d='M100 40 V158'/><path stroke-width='1.4' d='M32 50 H82 M32 66 H82 M32 82 H82 M32 98 H82 M118 50 H168 M118 66 H168 M118 82 H160 M118 98 H168'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 5.1cqw, 6.12rem); line-height: 1.22; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.45rem, 3.85cqw, 4.62rem); line-height: 1.2;
+    display: block; margin-bottom: 2.3cqw; flex-shrink: 0;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.85rem, 1.95cqw, 2.34rem); letter-spacing: 0.3em;
+    margin-bottom: 1.8cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); color: var(--ink-soft); line-height: 1.75; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 7cqw; height: 0.3cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1.1rem, 2.7cqw, 3.24rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.5cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.75rem, 1.6cqw, 1.92rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3.4%; flex: 1; min-height: 0; }
+
+  .verse {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1rem, calc(2.5cqw * var(--fs)), calc(3.0rem * var(--fs)));
+    line-height: 1.78; letter-spacing: 0.005em;
+  }
+  .verse.quote { font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.68; }
+  .verse p + p { margin-top: 0.8em; }
+  .src {
+    display: block; margin-top: 0.9cqw;
+    font-family: "Noto Sans KR", sans-serif; font-size: clamp(0.68rem, calc(1.42cqw * var(--fs)), calc(1.7rem * var(--fs)));
+    color: var(--ink-faint); letter-spacing: 0.04em;
+  }
+
+  .emotion { margin-top: auto; background: var(--card); border-left: 0.36cqw solid var(--key); padding: 1.3cqw 1.7cqw; }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.82rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.66;
+    color: var(--ink-soft); padding-left: 1.8cqw; position: relative;
+  }
+  .emotion li + li { margin-top: 0.55em; }
+  .emotion li::before { content: "\2014"; position: absolute; left: 0; color: var(--ink-faint); }
+  .body-area > .emotion { margin-bottom: 3.6cqw; flex: 0 0 auto; }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.62em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.85rem, calc(1.95cqw * var(--fs)), calc(2.34rem * var(--fs))); line-height: 1.6;
+  }
+  .info-table th { width: 4.8em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.55em 0.45em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.76rem, calc(1.78cqw * var(--fs)), calc(2.14rem * var(--fs))); line-height: 1.6;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.18cqw solid var(--key); font-size: clamp(0.8rem, calc(1.88cqw * var(--fs)), calc(2.26rem * var(--fs)));
+  }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 7em; background: var(--card); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table .blank { color: var(--ink-faint); }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.88rem, calc(2.05cqw * var(--fs)), calc(2.46rem * var(--fs))); line-height: 1.68;
+    padding-left: 3.0cqw; position: relative; margin-bottom: 0.75em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n { position: absolute; left: 0; top: 0.05em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); font-size: 1.05em; }
+
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.5cqw 1.8cqw; }
+  .def-box + .def-box { margin-top: 1.2cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.86rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; color: var(--ink-soft); }
+  .def-box p + p { margin-top: 0.7em; }
+
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8cqw; min-height: 0; }
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.2cqw; min-height: 0; }
+  .c3 { background: var(--card); border-top: 0.28cqw solid var(--key); padding: 1.6cqw 1.5cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.42em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.8rem, calc(1.85cqw * var(--fs)), calc(2.22rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.72em; }
+
+  .steps { display: flex; flex-direction: column; gap: 1.4cqw; flex: 1; justify-content: center; }
+  .step { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .step .sn {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.05rem, calc(2.45cqw * var(--fs)), calc(2.94rem * var(--fs))); color: var(--key);
+    width: 2.2em; flex-shrink: 0; padding-top: 0.05em;
+  }
+  .step .sbody { flex: 1; padding-bottom: 0.85em; border-bottom: 1px solid var(--rule); }
+  .step:last-child .sbody { border-bottom: none; }
+  .step h3 { font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); margin-bottom: 0.35em; }
+  .step p { font-size: clamp(0.8rem, calc(1.82cqw * var(--fs)), calc(2.18rem * var(--fs))); line-height: 1.68; color: var(--ink-soft); }
+
+  .act-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    background: var(--key); color: var(--paper);
+    font-size: clamp(0.74rem, calc(1.6cqw * var(--fs)), calc(1.92rem * var(--fs))); letter-spacing: 0.06em;
+    padding: 0.3em 1.1em; margin-bottom: 1.0cqw; align-self: flex-start;
+  }
+  .act-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, calc(2.15cqw * var(--fs)), calc(2.58rem * var(--fs))); line-height: 1.66;
+    color: var(--ink); margin-bottom: 1.4cqw;
+  }
+  .fill-flow { display: flex; flex-direction: column; gap: 1.1cqw; }
+  .fill-row {
+    background: var(--card); border: 1px solid var(--rule); border-left: 0.32cqw solid var(--key);
+    padding: 1.05cqw 1.5cqw;
+    font-size: clamp(0.88rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.66;
+  }
+  .fill-row .lbl { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); margin-right: 0.7em; }
+  .fill-row .blank { color: var(--ink-faint); }
+  .fill-row .res { color: var(--key); font-weight: 700; }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5cqw; }
+  .srow { display: flex; gap: 2.1cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.25cqw * var(--fs)), calc(2.7rem * var(--fs))); width: 5.6em; flex-shrink: 0; text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.84rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.72; }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -3.1cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.35cqw, 1.62rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #c9bcda; font-size: 0.86rem; }
+  .controls button {
+    background: #402c56; color: #f0e8f7; border: 1px solid #5f4680;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #4f3868; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #9788ab; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w); height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cols, .cards3, .cards2 { grid-template-columns: 1fr; gap: 1rem; }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  .slide.tight .def-box .dt, .slide.tight .emotion .etag { margin-bottom: 0.4em; padding-bottom: 0.28em; }
+  .slide.tight .c3 h3 { margin-bottom: 0.4em; padding-bottom: 0.3em; }
+  .slide.tight .emotion li + li { margin-top: 0.34em; }
+  .slide.tight .c3 p + p { margin-top: 0.5em; }
+  .slide.tight .num-list li { margin-bottom: 0.5em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.45em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.4em 0.4em; }
+  .slide.tight .step .sbody { padding-bottom: 0.6em; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_1학년.html">&larr; 1학년</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">주제 통합적 읽기와 사회적 독서 &middot; 1학년 2차시 &middot; 업데이트 2026. 9. 7.</div>
+</div>
+
+<div class="stage" id="stage">
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">읽 　 기</div>
+    <h1 class="title-main">세 편의 글을<br>통합적으로 읽기</h1>
+    <div class="rule"></div>
+    <div class="sub">비교하고 평가하여 내 견해 세우기</div>
+    <div class="foot">
+      <span>공통국어2 &middot; 3. 글로 읽는 세상, 세상을 움직이는 글</span>
+      <span>1학년 &middot; 2차시</span>
+    </div>
+    <div class="page-num">1 / 24</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" style="--fs:1.43;">
+    <h2 class="slide-title">학습 목표</h2>
+    <div class="body-area">
+      <ul class="num-list" style="flex:0 0 auto;margin-bottom:1.8cqw;">
+        <li><span class="n">&#9312;</span>동일한 화제의 글이나 자료라도 서로 다른 관점과 형식으로 표현됨을 이해하며 읽기 목적을 고려하여 글이나 자료를 주제 통합적으로 읽는다</li>
+        <li><span class="n">&#9313;</span>의미 있는 사회적 독서 활동에 참여함으로써 타인과 교류하고 다양한 지식이나 정보, 삶에 대한 가치관 등을 이해하는 태도를 지닌다</li>
+      </ul>
+      <div class="def-box">
+        <div class="dt">2차시에 할 일</div>
+        <p>지난 시간에 읽은 세 편의 글을 견주어 보고, 읽기 목적에 맞는 정보를 골라 평가한 뒤 <strong style="color:var(--key);">&lsquo;내가 살고 싶은 집&rsquo;</strong>에 대한 나의 견해를 세운다</p>
+      </div>
+    </div>
+    <div class="page-num">2 / 24</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">지난 시간에 읽은 글</h2>
+    <div class="body-area">
+      <div class="summary-list">
+        <div class="srow"><div class="skey">&#12910; 수필</div><div class="sval">&lt;그 시절 우리들의 집&gt; &middot; 공선옥 &mdash; 토담집에서의 자연 친화적 삶에 대한 그리움</div></div>
+        <div class="srow"><div class="skey">&#12911; 설명문</div><div class="sval">&lt;아파트는 어떻게 우리의 몸과 마음을 지배하는가?&gt; &middot; 김홍재 &mdash; 고층 주거 공간이 신체와 정신에 미치는 부정적 영향</div></div>
+        <div class="srow"><div class="skey">&#12912; 뉴스</div><div class="sval">&lt;해외도 &lsquo;주거 걱정&rsquo;은 마찬가지&hellip;&hellip;&gt; &mdash; 종합적인 청년 주거 지원 정책의 필요성</div></div>
+      </div>
+    </div>
+    <div class="page-num">3 / 24</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide tight" style="--fs:1.31;">
+    <h2 class="slide-title">오늘의 순서</h2>
+    <div class="body-area">
+      <div class="steps">
+        <div class="step"><div class="sn">1</div><div class="sbody"><h3>내용 파악하기</h3><p>&#12910;&#12911;&#12912;의 중심 내용을 각각 정리한다</p></div></div>
+        <div class="step"><div class="sn">2</div><div class="sbody"><h3>비교하고 평가하기</h3><p>세 글의 형식과 관점을 견주고, 읽기 목적에 맞는 정보를 골라 평가한다</p></div></div>
+        <div class="step"><div class="sn">3</div><div class="sbody"><h3>견해 재구성하기</h3><p>&lsquo;내가 살고 싶은 집&rsquo;에 대한 나의 견해를 세우고 글로 쓴다</p></div></div>
+        <div class="step"><div class="sn">4</div><div class="sbody"><h3>새로운 화제로 해 보기</h3><p>스스로 화제와 읽기 목적을 정해 주제 통합적 읽기를 실천한다</p></div></div>
+      </div>
+    </div>
+    <div class="page-num">4 / 24</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" style="--fs:1.35;">
+    <h2 class="slide-title">활동 1 &middot; (1) 토담집의 의미</h2>
+    <div class="body-area">
+      <div class="act-badge">&#12910; 그 시절 우리들의 집</div>
+      <div class="act-q">&#12910;에 드러난 토담집과 관련된 경험을 정리해 보고, &lsquo;그&rsquo;에게 토담집이 어떤 의미인지 말해 보자.</div>
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <tbody>
+          <tr><th>탄생</th><td class="blank">?</td></tr>
+          <tr><th>성장</th><td class="blank">?</td></tr>
+          <tr><th>죽음</th><td>어머니가 돌아가심</td></tr>
+        </tbody>
+      </table>
+      <div class="fill-row"><span class="lbl">&rarr;</span>&lsquo;그&rsquo;에게 토담집은 <span class="blank">(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</span> 공간이다</div>
+    </div>
+    <div class="page-num">5 / 24</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">활동 1 &middot; (1) 풀이</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <tbody>
+          <tr><th>탄생</th><td>&lsquo;그&rsquo;와 형제들이 태어남</td></tr>
+          <tr><th>성장</th><td>&lsquo;그&rsquo;와 형제들이 자연 속에서 성장함</td></tr>
+          <tr><th>죽음</th><td>어머니가 돌아가심</td></tr>
+        </tbody>
+      </table>
+      <div class="fill-row"><span class="lbl">&rarr;</span>&lsquo;그&rsquo;에게 토담집은 <span class="res">고달픈 도시 생활을 버티게 하는 추억의</span> 공간이자, <span class="res">탄생부터 죽음까지 삶의 전 과정이 담겨 있는 복합적인</span> 공간이다</div>
+    </div>
+    <div class="page-num">6 / 24</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" style="--fs:1.44;">
+    <h2 class="slide-title">활동 1 &middot; (2) 고층 주거 공간의 영향</h2>
+    <div class="body-area">
+      <div class="act-badge">&#12911; 아파트는 어떻게&hellip;</div>
+      <div class="act-q">&#12911;에서 고층 주거 공간이 거주자에게 미칠 수 있는 영향을 찾아 정리해 보자.</div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:8em;">높이가 미치는 영향</th><th>기압이 미치는 영향</th><th>진동이 미치는 영향</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>심리적으로 흥분하여 공포감을 느낌</td>
+            <td>뇌혈관의 혈류가 변화해 편두통이 생길 수 있음<br><span class="blank">?</span></td>
+            <td class="blank">?<br>?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">7 / 24</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">활동 1 &middot; (2) 풀이</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:8em;">높이가 미치는 영향</th><th>기압이 미치는 영향</th><th>진동이 미치는 영향</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>심리적으로 흥분하여 공포감을 느낌</td>
+            <td>뇌혈관의 혈류가 변화해 편두통이 생길 수 있음<br>저혈압 증세가 있으면 귀울림이나 멀미를 느끼며, 여성은 생리 불순&middot;현기증을 겪기도 함</td>
+            <td>미세한 진동에 대한 잠재적 불안감을 느낌<br>강한 바람에 건물이 흔들리면 뱃멀미 같은 증상이 나타날 수 있음</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">8 / 24</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" style="--fs:1.4;">
+    <h2 class="slide-title">활동 1 &middot; (3) 다른 나라의 청년 주거 정책</h2>
+    <div class="body-area">
+      <div class="act-badge">&#12912; 해외도 &lsquo;주거 걱정&rsquo;은&hellip;</div>
+      <div class="act-q">&#12912;에 나타난 다른 나라의 청년 주거 지원 정책을 정리하고 공통점을 말해 보자.</div>
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>일본</th><td>청년 주택 수당 제도를 취업 프로그램과 연계함</td></tr>
+          <tr><th>싱가포르</th><td class="blank">?</td></tr>
+          <tr><th>독일</th><td class="blank">?</td></tr>
+          <tr><th>공통점</th><td class="blank">?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">9 / 24</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide tight" style="--fs:1.4;">
+    <h2 class="slide-title">활동 1 &middot; (3) 풀이</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <tbody>
+          <tr><th>일본</th><td>청년 주택 수당 제도를 취업 프로그램과 연계함</td></tr>
+          <tr><th>싱가포르</th><td>신혼부부에게 공공 주택 분양 우선권을 주고 집값의 80퍼센트까지 대출해 주며, 부모나 조부모 집 근처의 주택에 분양 우선권을 줌</td></tr>
+          <tr><th>독일</th><td>1인 가구 청년에게 사회 주택을 우선 공급하고, 18~27세 청년에게 거처 마련과 취업 알선, 난방비 보조 등을 연계해 지원함</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">공통점</div>
+        <ul><li>단순한 지원의 형태가 아니라 <strong>생애 주기를 고려한 복합적인 차원</strong>에서 이루어지고 있다</li></ul>
+      </div>
+    </div>
+    <div class="page-num">10 / 24</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" style="--fs:1.43;">
+    <h2 class="slide-title">활동 2 &middot; (1) 형식과 관점 비교하기</h2>
+    <div class="body-area">
+      <div class="act-q">&#12910;~&#12912;의 형식과 화제에 대한 관점을 비교해 보자.</div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:5em;">&nbsp;</th><th>형식</th><th>화제에 대한 관점</th></tr></thead>
+        <tbody>
+          <tr><th>&#12910;</th><td class="blank">?</td><td class="blank">?</td></tr>
+          <tr><th>&#12911;</th><td>정보를 전달하는 글</td><td class="blank">?</td></tr>
+          <tr><th>&#12912;</th><td class="blank">?</td><td>주거 지원 정책이 생애 주기를 고려한 복합적인 차원에서 이루어져야 한다고 화제를 사회적 관점에서 다루고 있음</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">11 / 24</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide tight" style="--fs:1.36;">
+    <h2 class="slide-title">활동 2 &middot; (1) 풀이</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:5em;">&nbsp;</th><th style="width:9em;">형식</th><th>화제에 대한 관점</th></tr></thead>
+        <tbody>
+          <tr><th>&#12910;</th><td>수필</td><td>집은 추억이 서린 공간이자, 탄생부터 죽음까지 삶의 전 과정을 함께하는 공간이어야 한다고 화제를 <strong>정서적 관점</strong>에서 다루고 있음</td></tr>
+          <tr><th>&#12911;</th><td>정보를 전달하는 글</td><td>집이 그곳에 사는 사람의 몸과 마음에 미치는 다양한 영향을 소개하며 화제를 <strong>과학적 관점</strong>에서 다루고 있음</td></tr>
+          <tr><th>&#12912;</th><td>텔레비전 뉴스</td><td>주거 지원 정책이 생애 주기를 고려한 복합적인 차원에서 이루어져야 한다고 화제를 <strong>사회적 관점</strong>에서 다루고 있음</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">12 / 24</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">활동 2 &middot; (2) 정보 평가의 기준</h2>
+    <div class="body-area">
+      <div class="act-q">&#12910;~&#12912;에서 &lsquo;내가 살고 싶은 집&rsquo;에 대한 글을 쓸 때 활용할 수 있는 정보를 골라, 다음 기준에 따라 평가해 보자.</div>
+      <ul class="num-list">
+        <li><span class="n">&#9312;</span>정보가 타당하고 믿을 만한가?</li>
+        <li><span class="n">&#9313;</span>정보 간에 상충하거나 모순되는 점은 없는가?</li>
+        <li><span class="n">&#9314;</span>정보가 특정 입장에 지나치게 편향되지는 않았는가?</li>
+      </ul>
+    </div>
+    <div class="page-num">13 / 24</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide tight" style="--fs:1.37;">
+    <h2 class="slide-title">활동 2 &middot; (2) 풀이</h2>
+    <div class="body-area">
+      <div class="cards3">
+        <div class="c3">
+          <h3><span class="word">&#12910;</span> 타당성 부족</h3>
+          <p>아파트에서 생활하면 계절과 시간이 불분명해진다는 정보는, 최근 자연 친화적이고 공동체를 고려한 공간이 확충된 아파트가 많아지고 있다는 점에서 타당성이 부족하다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">&#12911;</span> 신뢰성 부족</h3>
+          <p>고층 주거 공간의 부정적 영향과 관련해 제시한 연구는 언제, 누구에 의해 이루어진 어떤 연구인지 밝히지 않아 신뢰성이 부족하다</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">&#12912;</span> 신뢰성 있음</h3>
+          <p>신혼부부가 주거 문제에 큰 부담을 느낀다는 정보는 구체적인 설문 조사 결과로 뒷받침되고 있어 신뢰할 만하다</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">14 / 24</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" style="--fs:1.34;">
+    <h2 class="slide-title">활동 3 &middot; (1) &lsquo;집&rsquo;에 대한 관점 세우기</h2>
+    <div class="body-area">
+      <div class="act-q">&#12910;~&#12912;에서 공감되는 부분이나 나와 생각이 다른 부분을 이야기해 보고, &lsquo;집&rsquo;에 대한 관점을 세워 보자.</div>
+      <div class="def-box">
+        <div class="dt">예시</div>
+        <p>나는 관리하기에 편리하고 안전한 공동 주택에 살고 싶다. 하지만 고층 아파트에 살면서 스트레스를 느끼고 싶지는 않다. 그래서 공동 주택이지만 저층이고, 녹지가 많고, 외부로 개방되어 있어서 사람들이 자유롭게 어울리며 추억을 쌓을 수 있는 집이 좋겠다. 무엇보다 가족들과 함께, 또는 근처에 모여 살면서 가족 공동체의 따스함을 느끼고 싶다</p>
+      </div>
+    </div>
+    <div class="page-num">15 / 24</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide tight" style="--fs:1.41;">
+    <h2 class="slide-title">활동 3 &middot; (2) 견해를 표현하는 글 &middot; 앞부분</h2>
+    <div class="body-area">
+      <div class="verse quote">
+        <p>건축가 루이스 칸은 하나의 건물을 만드는 것이 곧 하나의 인생을 만들어 내는 것이라고 말했다. 우리가 사는 공간이 우리에게 미치는 영향이 얼마나 큰지 생각해 보게 하는 말이다. 그러므로 어떤 집에 살고 싶은지에 관해 이야기하려면 먼저 내 삶을 어떻게 건강하고 행복하게 꾸려 나갈지를 생각해 보아야 한다.</p>
+        <p>나는 신체적&middot;정신적으로 건강하고 행복해지기 위해서 자연, 특히 땅을 가까이 할 수 있는 집에 살고 싶다. 고층 아파트에 살다 보면 편두통이나 귀울림과 같은 질병과 불안, 우울 등을 겪을 수도 있기 때문이다. 반면 집 주변의 녹지에서 이웃 주민들과 함께 어울리며 아침과 저녁의 향기를 느낄 수 있는 저층의 집이라면, 그 속에서 수많은 아름다운 추억들을 쌓아 갈 수 있을 것이다.</p>
+      </div>
+    </div>
+    <div class="page-num">16 / 24</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide tight" style="--fs:1.31;">
+    <h2 class="slide-title">활동 3 &middot; (2) 견해를 표현하는 글 &middot; 뒷부분</h2>
+    <div class="body-area">
+      <div class="verse quote" style="margin-bottom:1.4cqw;">
+        <p>또한 가족들과 함께할 수 있는 집에서 살고 싶다. 물론 과거처럼 온 가족이 한집에 살기는 어려울 수도 있다. 하지만 부모님, 형제자매들과 한동네에 모여 산다면 어떨까? 실제로 싱가포르는 부모나 조부모의 집으로부터 2킬로미터 안에 있는 주택에 대해 분양 우선권을 주는 주거 지원 정책이 있다고 한다. 우리나라에도 이와 같이 가족 공동체를 보호하는 주거 지원 정책이 생긴다면, 가족들과 가까이에 모여 사는 것도 실현 불가능한 꿈은 아닐 것이다.</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">세 글이 어떻게 쓰였나</div>
+        <ul>
+          <li>&#12911;의 과학적 근거로 저층을 택한 까닭을 밝히고, &#12910;의 정서적 관점으로 추억을 말하고, &#12912;의 싱가포르 사례로 제안을 뒷받침했다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">17 / 24</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide tight" style="--fs:1.5;">
+    <h2 class="slide-title">참고 &middot; &lsquo;주제 통합적 읽기&rsquo;라는 말</h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.4cqw;">
+        <p>영어로는 <strong>syntopical reading</strong>. &lsquo;함께&rsquo;를 뜻하는 <strong>syn-</strong>과 &lsquo;화제&middot;주제&rsquo;를 뜻하는 <strong>topic</strong>이 합쳐진 말로, 주제나 화제를 통합한다는 뜻이다. 아들러와 도렌이 제안한 개념이다</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">읽기의 마지막 단계</div>
+        <ul>
+          <li>기초적인 읽기 &rarr; 살펴보기 &rarr; 분석하며 읽기 &rarr; <strong>주제 통합적 읽기</strong>. 앞의 세 수준을 거친 뒤 이를 종합하여 수행하는 가장 높은 수준의 읽기로 여겨진다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">18 / 24</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">활동 4 &middot; 새로운 화제로 해 보기</h2>
+    <div class="body-area">
+      <div class="act-q">화제와 읽기 목적을 정하고, 관련된 다양한 글이나 자료를 찾아 비교&middot;분석하며 읽어 보자.</div>
+      <div class="fill-flow">
+        <div class="fill-row"><span class="lbl">화제</span><span class="blank">내가 관심 있는 주제 하나</span></div>
+        <div class="fill-row"><span class="lbl">읽기 목적</span><span class="blank">정보 소개하기 &middot; 견해 주장하기 &middot; 정서 표현하기 &hellip;</span></div>
+        <div class="fill-row"><span class="lbl">자료</span><span class="blank">유형이 서로 다른 글과 자료를 세 편 이상 &mdash; 영상&middot;강의도 자료가 된다</span></div>
+      </div>
+    </div>
+    <div class="page-num">19 / 24</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide tight" style="--fs:1.28;">
+    <h2 class="slide-title">활동 4 &middot; 예시 &middot; 화제 &lsquo;사랑&rsquo;</h2>
+    <div class="body-area">
+      <div class="act-q" style="margin-bottom:1.1cqw;">읽기 목적 &mdash; &lsquo;사랑이란 무엇인가?&rsquo;를 주제로 발표 구성하기</div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:6em;">유형</th><th style="width:11em;">제목 &middot; 글쓴이</th><th>다루고 있는 내용</th></tr></thead>
+        <tbody>
+          <tr><th>소설</th><td>&lt;이생규장전&gt; &middot; 김시습</td><td>죽음마저 초월한 이생과 최랑의 사랑 이야기를 다루고 있다</td></tr>
+          <tr><th>설명문</th><td>《운명의 과학》 &middot; 한나 크리츨로우</td><td>사랑은 인간의 심부 뇌 기능에 의해 결정되는, 유전자에 새겨진 무의식적 행동이라는 내용을 다루고 있다</td></tr>
+          <tr><th>강의 자료</th><td>&lt;위대한 수업: 사랑의 사회학&gt; &middot; 에바 일루즈</td><td>자본주의의 등장으로 낭만적 사랑이 시작되었지만, 자본주의가 심화되며 나타난 개인화로 오히려 낭만적 사랑이 해체되고 있다는 내용을 다루고 있다</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">20 / 24</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide" style="--fs:1.12;">
+    <h2 class="slide-title">주제 통합적 읽기의 방법</h2>
+    <div class="body-area">
+      <div class="steps">
+        <div class="step"><div class="sn">1</div><div class="sbody"><h3>화제와 읽기 목적 정하기</h3></div></div>
+        <div class="step"><div class="sn">2</div><div class="sbody"><h3>화제에 관한 다양한 글과 자료 찾기</h3></div></div>
+        <div class="step"><div class="sn">3</div><div class="sbody"><h3>글과 자료를 비교&middot;분석하며 비판적으로 읽기</h3></div></div>
+        <div class="step"><div class="sn">4</div><div class="sbody"><h3>읽기 목적을 고려하여 자신의 견해 재구성하기</h3></div></div>
+      </div>
+    </div>
+    <div class="page-num">21 / 24</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" style="--fs:1.2;">
+    <h2 class="slide-title">주제 통합적 읽기의 의의</h2>
+    <div class="body-area">
+      <div class="def-box">
+        <p>화제를 중심으로 여러 글과 자료의 관점을 비교하고 내용을 비판적으로 종합하면서, 글을 <strong style="color:var(--key);">폭넓고 깊게</strong> 읽는 경험을 할 수 있다</p>
+      </div>
+    </div>
+    <div class="page-num">22 / 24</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">확인 문제</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>주제 통합적 읽기를 하려면 먼저 ( )와/과 읽기 목적을 정해야 한다</li>
+        <li><span class="n">2</span>여러 글과 자료의 관점을 비교하고 내용을 ( )적으로 종합하며 읽는다</li>
+        <li><span class="n">3</span>&#12910;&#12911;&#12912;는 모두 &lsquo;집&rsquo;이라는 같은 화제를 각각 정서적&middot;( )적&middot;사회적 관점에서 다룬다</li>
+        <li><span class="n">4</span>고른 정보는 타당한지, 서로 ( )하거나 모순되지 않는지, 특정 입장에 편향되지 않았는지를 기준으로 평가한다</li>
+      </ul>
+    </div>
+    <div class="page-num">23 / 24</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide" style="--fs:1.5;">
+    <h2 class="slide-title">확인 문제 &middot; 정답</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>주제 통합적 읽기를 하려면 먼저 <strong style="color:var(--key);">화제</strong>와/과 읽기 목적을 정해야 한다</li>
+        <li><span class="n">2</span>여러 글과 자료의 관점을 비교하고 내용을 <strong style="color:var(--key);">비판</strong>적으로 종합하며 읽는다</li>
+        <li><span class="n">3</span>&#12910;&#12911;&#12912;는 모두 &lsquo;집&rsquo;이라는 같은 화제를 각각 정서적&middot;<strong style="color:var(--key);">과학</strong>적&middot;사회적 관점에서 다룬다</li>
+        <li><span class="n">4</span>고른 정보는 타당한지, 서로 <strong style="color:var(--key);">상충</strong>하거나 모순되지 않는지, 특정 입장에 편향되지 않았는지를 기준으로 평가한다</li>
+      </ul>
+    </div>
+    <div class="page-num">24 / 24</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 1</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키&middot;스페이스&middot;클릭으로 이동 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+  let syncingHash = false;
+
+  function updateButtons() {
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+  }
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() { if (idx < slides.length - 1) show(idx + 1); }
+  function prev() { if (idx > 0) show(idx - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+  function toggleFullscreen() {
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.body.requestFullscreen().catch(() => {}); }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
