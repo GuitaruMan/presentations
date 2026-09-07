@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 독서, 어떻게 읽을 것인가 (방과후-1차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f2f4f7;
+    --paper-edge: #d6dce4;
+    --ink: #1a222b;
+    --ink-soft: #4c5865;
+    --ink-faint: #8b96a3;
+    --key: #1c5675;
+    --key-soft: #5c8ba6;
+    --rule: #ccd6de;
+    --card: #f9fbfc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #101a22;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.012em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,26,34,0.94); z-index: 50;
+  }
+  .nav-top a { color: #b4c6d2; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #e6eff4; }
+  .nav-meta { color: #90a3b0; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 15% 8%, rgba(255,255,255,0.8) 0%, transparent 58%),
+      radial-gradient(ellipse at 86% 92%, rgba(28,86,117,0.14) 0%, transparent 60%);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
+  }
+  /* 우측 상단 — 문단 덩어리와 첫 줄 */
+  .stage::before {
+    content: ""; position: absolute; top: 5%; right: -2%;
+    width: 19%; height: 44%; pointer-events: none; opacity: 0.10;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%231c5675' stroke-linecap='round'><path stroke-width='6' d='M18 18 H150'/><path stroke-width='2.2' d='M18 38 H182 M18 54 H182 M18 70 H126'/><path stroke-width='6' d='M18 100 H150'/><path stroke-width='2.2' d='M18 120 H182 M18 136 H182 M18 152 H108'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.9cqw, 5.88rem); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.55cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.15cqw solid var(--ink);
+    align-self: flex-start; flex-shrink: 0;
+  }
+  h2.slide-title .qm {
+    font-family: "Noto Sans KR", sans-serif; font-weight: 400;
+    font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
+    margin-left: 0.8em; vertical-align: 0.18em;
+  }
+  h2.slide-title .ans-chip {
+    font-family: "Noto Sans KR", sans-serif; font-weight: 700;
+    font-size: 0.46em; color: var(--paper); background: var(--key);
+    padding: 0.18em 0.7em; margin-left: 0.8em; vertical-align: 0.22em;
+    letter-spacing: 0.04em;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.8rem, 1.68cqw, 2.02rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); color: var(--ink-soft); line-height: 1.8; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.5cqw, 3rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.4cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.46cqw, 1.76rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+
+  /* 줄글 — 설명을 이어서 하는 본문 */
+  .story-head {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.38em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+  }
+  .story-head .rng { font-family: "Noto Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
+    line-height: 1.88; color: var(--ink); text-align: justify;
+  }
+  .story + .story { margin-top: 0.55em; }
+
+  /* 기출 지문을 그대로 옮긴 자리 */
+  .cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
+    line-height: 1.86; color: var(--ink);
+    background: rgba(28,86,117,0.05);
+    border-left: 0.26em solid var(--rule);
+    padding: 0.65em 0.9em;
+  }
+  .cite .attr {
+    display: block; margin-top: 0.42em;
+    font-family: "Noto Sans KR", sans-serif; font-size: 0.68em;
+    color: var(--ink-faint); letter-spacing: 0.03em;
+  }
+  /* 지문 안에서 눈여겨볼 대목 — 색을 바꾸지 않고 획만 더한다 */
+  .cite .hl, .story .hl { -webkit-text-stroke: 0.022em currentColor; color: var(--key); }
+  .cite .dim { color: var(--ink-faint); }
+
+  .emotion {
+    background: var(--card); border-left: 0.32cqw solid var(--key);
+    padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76;
+    color: var(--ink-soft); padding-left: 1.2em; position: relative;
+  }
+  .emotion li + li { margin-top: 0.45em; }
+  .emotion li::before { content: "\2022"; position: absolute; left: 0.15em; color: var(--key-soft); }
+  .emotion li.q { color: var(--ink); }
+  .emotion li.q::before { content: "?"; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); left: 0; }
+  .emotion strong { color: var(--key); }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+  }
+  .info-table th { width: 5.4em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.7;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.15cqw solid var(--key); font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+  }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 5.2em; background: var(--card); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table strong { color: var(--key); }
+  .cmp-table caption {
+    caption-side: top; text-align: left; color: var(--ink-soft);
+    font-size: clamp(0.8rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs)));
+    padding-bottom: 0.6em;
+  }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.76;
+    padding-left: 1.7em; position: relative; margin-bottom: 0.62em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
+  .num-list strong { color: var(--key); }
+
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); line-height: 1.82; color: var(--ink-soft); }
+  .def-box strong { color: var(--key); }
+
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.45em; }
+  .c3 strong { color: var(--key); }
+
+  /* 문단 흐름도 */
+  .flow { display: flex; align-items: stretch; gap: 0.7cqw; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
+    padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); margin-bottom: 0.42em;
+  }
+  .flow-step .desc { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+  .flow-arrow { display: flex; align-items: center; color: var(--key-soft); font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); }
+
+  /* 문단 첫 문장만 이어 읽기 */
+  .plines { display: flex; flex-direction: column; gap: 0.62em; }
+  .pline {
+    display: flex; gap: 0.9em; align-items: baseline;
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.5em;
+  }
+  .pline:last-child { border-bottom: none; }
+  .pline .pn {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    width: 3.4em; flex-shrink: 0; white-space: nowrap;
+  }
+  .pline .pt {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    line-height: 1.72; color: var(--ink);
+  }
+
+  /* 단계 공개 — opacity로만 숨겨 자리를 미리 잡아 둔다 */
+  .reveal { opacity: 0; transition: opacity .25s ease; }
+  .reveal.shown { opacity: 1; }
+
+  .quiz-list {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(2.6cqw * var(--fs)); flex: 1;
+  }
+  .body-area > .quiz-list { margin-bottom: 3.0cqw; }
+  .qq {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: max(1rem, calc(2.5cqw * var(--fs))); line-height: 1.6;
+    padding-left: calc(3.4cqw * var(--fs)); position: relative;
+  }
+  .qq .qn { position: absolute; left: 0; top: 0; color: var(--key); font-size: 1.05em; }
+  .qans {
+    margin: calc(1.0cqw * var(--fs)) 0 0 calc(3.4cqw * var(--fs));
+    background: var(--card); border-left: 0.34cqw solid var(--key);
+    padding: calc(1.1cqw * var(--fs)) calc(1.6cqw * var(--fs));
+    font-size: max(0.9rem, calc(2.1cqw * var(--fs))); line-height: 1.76; color: var(--ink-soft);
+  }
+  .qans .tag {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    margin-right: 0.7em;
+  }
+  .qans strong { color: var(--key); }
+
+  /* 정답 해설 */
+  .ans-banner {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.1rem, calc(2.9cqw * var(--fs)), calc(3.48rem * var(--fs))); color: var(--paper);
+    background: var(--key); padding: 0.3em 1.2em; margin-bottom: 1.3cqw; align-self: flex-start;
+  }
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
+  .evi .ev { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.25cqw 1.4cqw; }
+  .evi .ev h4 {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.45em; padding-bottom: 0.3em; border-bottom: 1px solid var(--rule);
+  }
+  .evi .ev p { font-size: clamp(0.88rem, calc(1.98cqw * var(--fs)), calc(2.38rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .evi .ev strong { color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -2.7cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.32cqw, 1.58rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #b4c6d2; font-size: 0.86rem; }
+  .controls button {
+    background: #23404f; color: #e6eff4; border: 1px solid #3c5f72;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2d5064; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #869aa7; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w); height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cards2, .cards3, .evi { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* 자리가 빠듯한 장 — 여백만 줄이고 글자 크기는 지킨다 */
+  .slide.tight .story { line-height: 1.74; }
+  .slide.tight .cite { line-height: 1.72; padding: 0.5em 0.75em; }
+  .slide.tight .emotion { padding: 0.95cqw 1.35cqw; }
+  .slide.tight .emotion .etag { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .emotion li + li { margin-top: 0.28em; }
+  .slide.tight .story-head { margin-bottom: 0.42em; padding-bottom: 0.26em; }
+  .slide.tight .c3 { padding: 1.1cqw 1.2cqw; }
+  .slide.tight .c3 h3 { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .num-list li { margin-bottom: 0.4em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.42em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.42em 0.42em; }
+  .slide.tight .pline { padding-bottom: 0.38em; }
+  .slide.tight .plines { gap: 0.44em; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_방과후.html">&larr; 방과후</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">수능 독서, 어떻게 읽을 것인가 &middot; 방과후 1차시 &middot; 업데이트 2026. 9. 7.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">방 과 후 　 독 서</div>
+    <h1 class="title-main">수능 독서,<br>어떻게 읽을 것인가</h1>
+    <div class="rule"></div>
+    <div class="sub">사실적 독해와 추론적 독해 &middot; 문단 단위 읽기</div>
+    <div class="foot">
+      <span>2026 &middot; 2025 &middot; 2023학년도 수능 국어 독서</span>
+      <span>방과후 &middot; 1차시 (2시간)</span>
+    </div>
+    <div class="page-num">1 / 35</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide tight" style="--fs:1.14;">
+    <h2 class="slide-title">오늘 할 일</h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.5cqw;">
+        <tr><th>1부</th><td>사실적 독해와 추론적 독해가 어떻게 다르고, 수능은 그 둘을 어떻게 나누어 묻는가</td></tr>
+        <tr><th>2부</th><td>인문 &middot; 사회 &middot; 과학 기술, 분야에 따라 무엇을 따라가며 읽어야 하는가</td></tr>
+        <tr><th>3부</th><td>문단의 중심 문장을 찾고, 그것으로 다음 문단과 글 전체의 짜임을 잡는 연습</td></tr>
+        <tr><th>4부</th><td>2023학년도 수능 4&#12316;9번을 실제로 풀고, 문항마다 근거가 된 대목을 확인</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">예시로 쓰는 지문</div>
+        <ul><li>지문 전체를 읽지 않는다. 읽는 방법이 드러나는 한두 문단만 가져와 그 자리에서 무엇을 어떻게 보는지 확인한다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">2 / 35</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" style="--fs:1.33;">
+    <h2 class="slide-title">교육과정이 말하는 독해<span class="qm">독서와 작문 [12독작01-03]</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.4cqw;">
+        글에 드러난 정보를 정확하게 파악하는 <span class="hl">사실적 독해</span> 능력을 기르고, 글에 명시적으로 드러나지 않은 정보를 학습자의 배경지식 및 경험을 활용하거나 문맥을 고려하여 파악하는 <span class="hl">추론적 독해</span> 능력을 기르기 위해 설정하였다.
+        <span class="attr">2022 개정 교육과정 &middot; 독서와 작문 성취기준 해설</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">두 능력을 가르는 말</div>
+        <ul>
+          <li><strong>드러난</strong> 정보를 정확하게 &mdash; 사실적 독해</li>
+          <li><strong>드러나지 않은</strong> 정보를 문맥을 고려하여 &mdash; 추론적 독해</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">3 / 35</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide tight" style="--fs:1.07;">
+    <h2 class="slide-title">각각 무엇을 익히는가<span class="qm">성취기준 해설</span></h2>
+    <div class="body-area">
+      <div class="cards2">
+        <div class="c3">
+          <h3><span class="word">사실적 독해</span></h3>
+          <p>단어 &middot; 문장 &middot; 문단의 내용 파악하기</p>
+          <p>각 문단 사이의 관계 파악하기</p>
+          <p>글의 구조나 내용의 전개 방식 파악하기</p>
+          <p>내용의 중요도 평가하기, 중심 내용 파악하기</p>
+          <p>중심 내용과 세부 내용 구분하기, 요약하기</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">추론적 독해</span></h3>
+          <p>필자의 의도나 목적 파악하기</p>
+          <p>숨겨진 내용 추론하기</p>
+          <p>생략된 내용 예측하기</p>
+          <p>인물의 특성이나 장면의 분위기 추측하기</p>
+        </div>
+      </div>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">오늘 3부에서 다룰 것</div>
+        <ul><li>왼쪽 목록의 앞 세 줄, 곧 문단의 내용 &middot; 문단 사이의 관계 &middot; 글의 구조가 3부의 내용이다. 사실적 독해의 뼈대에 해당한다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">4 / 35</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide tight" style="--fs:1.10;">
+    <h2 class="slide-title">수능은 이 둘을 나누어 묻는다</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <thead><tr><th style="width:6.2em;">발문</th><th>요구하는 것</th></tr></thead>
+        <tbody>
+          <tr><th>사실적</th><td>윗글의 내용과 일치하는 것은 &middot; 윗글을 통해 알 수 있는 내용은 &middot; ㉠에 대한 이해로 적절한 것은</td></tr>
+          <tr><th>추론적</th><td>윗글에서 추론한 내용으로 &middot; 윗글을 바탕으로 &lt;보기&gt;를 이해한 내용으로 &middot; ㉯를 반박하기 위한 말로</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">발문이 갈리는 자리</div>
+        <ul>
+          <li>&lsquo;일치&rsquo;와 &lsquo;알 수 있는&rsquo;은 지문에 <strong>쓰여 있는 문장</strong>으로 판정한다.</li>
+          <li>&lsquo;추론&rsquo;과 &lsquo;&lt;보기&gt;&rsquo;는 쓰여 있는 문장을 <strong>새 상황에 적용</strong>해야 판정된다. 지문에 그대로 있는 문장을 찾으려 하면 답이 나오지 않는다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 35</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide tight" style="--fs:1.10;">
+    <h2 class="slide-title">예시로 쓸 지문<span class="qm">2026학년도 수능 10&#12316;13번 1문단</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.3cqw;">
+        열팽창이란 물체의 온도 변화에 따라 그 길이, 부피가 변화하는 현상을 말한다. 그중 길이의 변화를 수치화한 것이 <span class="hl">선형 열팽창 계수</span>인데, 이는 온도 변화에 따른 길이 변화율을 온도 변화량으로 나눈 값이다. 여기에서 길이 변화율은 길이의 변화량을 처음 길이로 나누어 얻는 값이며, 변화량이란 나중 값에서 처음 값을 뺀 것이다. <span class="hl">대부분의 물질은 선형 열팽창 계수가 양수이며</span> 물질마다 그 값이 다르다. 합금인 인바(invar)와 순수한 금속인 알루미늄은 선형 열팽창 계수가 양수인 물질이며 인바는 알루미늄에 비해 매우 작은 선형 열팽창 계수를 갖는다.
+      </div>
+      <div class="emotion">
+        <div class="etag">이 문단이 준 것</div>
+        <ul>
+          <li>계수의 정의(길이 변화율 &divide; 온도 변화량)와, 대부분의 물질이 양수라는 사실.</li>
+          <li>계수가 <strong>음수</strong>인 물질이 어떻게 되는지는 쓰지 않았다. 이 자리가 뒤에서 추론 문항이 된다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">6 / 35</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">사실적 독해로 푸는 문항<span class="ans-chip">10번 정답 &#9315;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        &#9315; 서로 다른 물질을 두께가 같은 두 층으로 접합해 만든 띠의 온도를 올릴 때, 띠의 두께가 얇을수록 휨이 빨리 완료된다.
+        <span class="attr">발문: 윗글의 내용과 일치하는 것은?</span>
+      </div>
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        <span class="dim">[5문단]</span> 반응 완료 시간은 온도를 올리기 시작한 시점부터 띠의 끝이 최대 이동 거리에 도달하기까지의 시간이고, <span class="hl">띠의 두께가 얇을수록 짧다.</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">판정</div>
+        <ul><li>&lsquo;반응 완료 시간이 짧다&rsquo;를 &lsquo;휨이 빨리 완료된다&rsquo;로 바꿔 놓았을 뿐, 5문단 문장 하나로 확인이 끝난다. <strong>대응하는 문장을 찾으면 답이 결정된다.</strong></li></ul>
+      </div>
+    </div>
+    <div class="page-num">7 / 35</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide tight" style="--fs:1.13;">
+    <h2 class="slide-title">추론적 독해로 푸는 문항 &#9312;<span class="qm">11번 &#9312;은 적절한 추론</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.1cqw;">
+        &#9312; 선형 열팽창 계수가 음수인 물질에 열을 가하면 길이가 줄어든다.
+        <span class="attr">발문: 윗글에서 추론한 내용으로 적절하지 않은 것은?</span>
+      </div>
+      <div class="story" style="margin-bottom:1.1cqw;">
+        지문 어디에도 &lsquo;계수가 음수면 길이가 줄어든다&rsquo;는 문장은 없다. 1문단의 정의로 되돌아가야 한다. 계수는 길이 변화율을 온도 변화량으로 나눈 값이다. 열을 가하면 온도 변화량은 양수이므로, 그 몫인 계수가 음수이려면 길이 변화율이 음수여야 한다. 길이가 줄어든다는 뜻이다.
+      </div>
+      <div class="emotion">
+        <div class="etag">추론이 일어난 자리</div>
+        <ul><li>정의를 <strong>거꾸로 적용</strong>했다. 지문이 다룬 것은 계수가 양수인 경우뿐이지만, 정의 자체는 음수인 경우에도 그대로 성립한다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">8 / 35</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide tight" style="--fs:1.21;">
+    <h2 class="slide-title">추론적 독해로 푸는 문항 &#9314;<span class="ans-chip">11번 정답 &#9314;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.0cqw;">
+        &#9314; 두 물질을 접합하여 두 층으로 이루어진 띠를 만들고 <span class="hl">온도를 내리면</span> 선형 열팽창 계수가 작은 물질 쪽으로 휜다.
+      </div>
+      <div class="cite" style="margin-bottom:1.0cqw;">
+        <span class="dim">[2문단]</span> Q가 P보다 선형 열팽창 계수가 크다면 <span class="hl">온도를 올렸을 때</span> Q층은 P층보다 더 팽창하려고 한다. 그러나 두 층이 접합되어 있어 독립적인 팽창이 억제되므로, 띠가 <span class="hl">P층 쪽으로</span> 원의 호 형태로 휘면서 팽창한 후 그 상태를 유지한다.
+      </div>
+      <div class="emotion">
+        <div class="etag">판정</div>
+        <ul><li>지문은 온도를 <strong>올린</strong> 경우만 말했다. 내리면 계수가 큰 Q층이 더 많이 줄어들므로 띠는 Q층 쪽, 곧 <strong>계수가 큰</strong> 물질 쪽으로 휜다. 방향이 반대다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">9 / 35</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" style="--fs:1.16;">
+    <h2 class="slide-title">그래서 읽는 태도가 달라진다</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.4em;">&nbsp;</th><th>사실적 독해</th><th>추론적 독해</th></tr></thead>
+        <tbody>
+          <tr><th>보는 것</th><td>지문에 쓰인 문장</td><td>정의 &middot; 조건 &middot; 인과의 <strong>관계</strong></td></tr>
+          <tr><th>하는 일</th><td>선택지와 지문 문장을 맞대어 본다</td><td>지문의 관계를 새 조건에 넣어 본다</td></tr>
+          <tr><th>틀리는 자리</th><td>대상이나 범위가 바뀐 것을 놓친다</td><td>지문에 없는 말이라서 그냥 넘긴다</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">읽을 때 해 둘 일</div>
+        <ul><li>정의가 나오면 그 자리에 표시해 둔다. 사실적 문항은 그 문장을 그대로 쓰고, 추론 문항은 그 문장을 뒤집거나 새 조건에 넣어 쓴다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">10 / 35</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">분야마다 다른 성취기준<span class="qm">독서와 작문</span></h2>
+    <div class="body-area">
+      <ul class="num-list" style="margin-bottom:1.4cqw;">
+        <li><span class="n">&#9312;</span><strong>[12독작01-07] 인문 &middot; 예술</strong> &mdash; 글에 담긴 인문학적 세계관 파악하기, 삶과 예술의 문제를 대하는 <strong>필자의 관점</strong> 파악하기, 필자의 관점을 비판적으로 이해하기</li>
+        <li><span class="n">&#9313;</span><strong>[12독작01-09] 과학 &middot; 기술</strong> &mdash; 원리나 지식을 다룬 글에서 정보를 효과적으로 파악하기, 글의 <strong>구조와 전개 방식</strong> 파악하기</li>
+        <li><span class="n">&#9314;</span><strong>[12독작01-13] 주제 통합</strong> &mdash; 같은 주제에 대해 다양한 관점을 지닌 글을 <strong>비교 &middot; 대조</strong>하면서 분석하기, 학습 목적을 고려하여 내용 요약하기</li>
+      </ul>
+      <div class="emotion">
+        <div class="etag">읽는 법이 갈리는 이유</div>
+        <ul><li>같은 지문이라도 인문은 <strong>누가 무엇을 주장하는가</strong>, 과학 기술은 <strong>무엇이 무엇을 어떻게 만드는가</strong>를 따라가게 되어 있다. 교육과정도 분야를 나누어 기준을 두었다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">11 / 35</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide tight" style="--fs:1.08;">
+    <h2 class="slide-title">인문 &mdash; 동의하는 대목과 반대하는 대목<span class="qm">2026학년도 수능 14&#12316;17번</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        스트로슨은 <span class="hl">자아를 인식하는 방식이 경험적 인식의 방식과 구별된다는 칸트의 견해에 동의하지만</span>, 복수의 주관이 동일한 인격으로 인식된다고 가정하는 것은 철학적 상상에 불과하다고 <span class="hl">칸트를 비판한다.</span> 인격의 문제에서 신체를 간과한 칸트와 달리, 스트로슨은 인격을 의식과 신체의 복합체로 본다.
+        <span class="attr">2026학년도 수능 5문단</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">인문 지문의 표지</div>
+        <ul>
+          <li>&lsquo;동의하지만&rsquo;, &lsquo;&#12316;와 달리&rsquo;, &lsquo;비판한다&rsquo;가 한 문단에 함께 나온다. 뒷사람은 앞사람을 <strong>통째로 부정하지 않는다.</strong></li>
+          <li>그래서 인문은 학자 이름 옆에 <strong>동의 &middot; 반대</strong>를 갈라 적어야 한다. 이름과 주장만 이어 적으면 이 구분이 지워진다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">12 / 35</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" style="--fs:1.15;">
+    <h2 class="slide-title">읽으면서 만들어 둘 표<span class="qm">2026학년도 수능 14&#12316;17번</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.2em;">&nbsp;</th><th>자아 인식은 경험에서 나오는가</th><th>인격 동일성의 기준</th></tr></thead>
+        <tbody>
+          <tr><th>칸트</th><td>아니다. 자기의식은 인식의 조건일 뿐이다</td><td>동일한 인격을 <strong>가정</strong>해야 생각이 가능하다</td></tr>
+          <tr><th>스트로슨</th><td>그렇다. 경험적 인식에서 추상화된다</td><td>시공간적 세계에서의 <strong>경험</strong></td></tr>
+          <tr><th>롱게네스</th><td>아니다. 그것 없이는 경험적 인식도 없다</td><td>자신의 것이라 인식하는 <strong>신체</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.4cqw;">
+        <div class="etag">이 표가 답하는 문항</div>
+        <ul><li>14번은 &lsquo;스트로슨에 따르면 자기의식은 인식을 가능하게 하는 조건이다&rsquo;를 오답으로 두었다. 그것은 칸트의 견해이고 스트로슨은 그 견해를 잘못이라고 했다. 칸에 넣어 두면 바로 갈린다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">13 / 35</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide tight" style="--fs:1.13;">
+    <h2 class="slide-title">사회 &mdash; 요건과 효과, 그리고 예외<span class="qm">2023학년도 수능 10&#12316;13번</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        법령의 조문은 대개 &lsquo;<span class="hl">A에 해당하면 B를 해야 한다.</span>&rsquo;처럼 요건과 효과로 구성된 조건문으로 규정된다. 하지만 그 요건이나 효과가 항상 일의적인 것은 아니다. 법조문에는 구체적 상황을 고려해야 그 상황에 맞는 진정한 의미가 파악되는 <span class="hl">불확정 개념</span>이 사용될 수 있기 때문이다.
+        <span class="attr">2023학년도 수능 1문단</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">사회 지문에서 따라갈 것</div>
+        <ul>
+          <li>이 지문은 위약금을 <strong>손해 배상 예정액</strong>과 <strong>위약벌</strong>로 가르고, 무엇이 증명되었느냐에 따라 결과를 다르게 둔다.</li>
+          <li>&lsquo;&#12316;한 경우&rsquo;, &lsquo;증명되지 못하면&rsquo;, &lsquo;그러나&rsquo;, &lsquo;다만&rsquo; 같은 말이 갈림길이다. 이 말에 표시하고 갈래를 그리면 문항이 요구하는 사례 판단이 그 그림 위에서 끝난다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">14 / 35</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide tight" style="--fs:1.17;">
+    <h2 class="slide-title">과학 기술 &mdash; 구성 요소와 과정<span class="qm">2025학년도 수능 10&#12316;13번 1문단</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        확산 모델의 기본 발상은, 원본 이미지에 노이즈를 점진적으로 추가하였다가 그 노이즈를 다시 제거해 나가면 원본 이미지를 복원할 수 있다는 것이다. <span class="dim">&hellip;</span> 확산 모델은 <span class="hl">노이즈 생성기, 이미지 연산기, 노이즈 예측기로 구성되며, 순확산 과정과 역확산 과정 순으로 작동한다.</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">1문단 마지막 문장의 구실</div>
+        <ul>
+          <li>부품 셋과 과정 둘을 미리 세어 준다. 이 문장을 읽은 뒤에는 <strong>남은 문단이 무엇을 다룰지</strong>가 대체로 정해진다.</li>
+          <li>과학 기술 지문에서 이런 문장을 만나면 거기서 한 번 멈추고, 뒤에 올 항목을 손가락으로 세어 둔다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">15 / 35</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" style="--fs:1.19;">
+    <h2 class="slide-title">분야에 따라 무엇을 따라가는가</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.6em;">분야</th><th>따라가는 것</th><th>표시할 말</th></tr></thead>
+        <tbody>
+          <tr><th>인문</th><td>누가 무엇을 주장하고, 어디까지 동의하는가</td><td>동의하지만, &#12316;와 달리, 반박</td></tr>
+          <tr><th>사회</th><td>어떤 요건이면 어떤 효과인가, 예외는 무엇인가</td><td>&#12316;한 경우, 다만, 그러나</td></tr>
+          <tr><th>과학 기술</th><td>무엇이 무엇을 어떻게 만드는가, 순서는 어떠한가</td><td>&#12316;이란, &#12316;로 구성되며, 이때</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.5cqw;">
+        <div class="etag">공통점</div>
+        <ul><li>셋 다 문단이 바뀌는 자리에서 무엇이 바뀌는지를 본다. 3부에서 그 자리를 잡는 연습을 한다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">16 / 35</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide" style="--fs:1.19;">
+    <h2 class="slide-title">문단 하나는 생각 하나</h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.5cqw;">
+        <div class="dt">중심 문장</div>
+        <p>한 문단이 말하려는 바를 한 문장으로 담고 있는 문장. 나머지 문장은 그것을 <strong>풀이하거나, 예를 들거나, 조건을 붙이는</strong> 일을 한다.</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">왜 중심 문장부터 잡는가</div>
+        <ul>
+          <li>문단마다 중심 문장을 하나씩 세우면 글 전체가 문장 대여섯 개로 줄어든다. 이것이 &lsquo;글의 구조 파악하기&rsquo;다.</li>
+          <li>문항의 선택지는 대개 이 대여섯 문장 중 하나를 손댄 것이다. 어느 문단으로 돌아가야 하는지가 바로 정해진다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">17 / 35</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" style="--fs:1.24;">
+    <h2 class="slide-title">중심 문장이 놓이는 자리</h2>
+    <div class="body-area">
+      <div class="cards3" style="margin-bottom:1.5cqw;">
+        <div class="c3">
+          <h3><span class="word">첫 문장</span></h3>
+          <p>&lsquo;&#12316;이란 &#12316;이다&rsquo;, &lsquo;&#12316;은 &#12316;하는 과정이다&rsquo;로 시작하고 뒤에서 풀이한다. 수능 독서에서 가장 흔하다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">끝 문장</span></h3>
+          <p>사례나 조건을 늘어놓은 뒤 &lsquo;따라서&rsquo;, &lsquo;이렇듯&rsquo;으로 묶는다. 마지막 문단에 자주 온다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">전환 뒤</span></h3>
+          <p>&lsquo;그러나&rsquo;, &lsquo;한편&rsquo;, &lsquo;반면&rsquo; 다음 문장이 중심이 된다. 앞의 내용은 그것을 세우기 위한 발판이다.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">먼저 보는 곳</div>
+        <ul><li>문단의 첫 문장을 읽고, 그 문장이 뒤를 <strong>거느리는지</strong> 확인한다. 거느리지 않으면 &lsquo;그러나&rsquo;나 &lsquo;따라서&rsquo;를 찾아 그 뒤를 본다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">18 / 35</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide tight" style="--fs:1.06;">
+    <h2 class="slide-title">연습 &#9312; &middot; 이 문단의 중심 문장은<span class="qm">2025학년도 수능 2문단</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.1cqw;">
+        순확산 과정은 이미지에 노이즈를 추가하면서 노이즈 예측기를 학습시키는 과정이다. 첫 단계에서는, 노이즈 생성기에서 노이즈를 만든 후 이미지 연산기가 이 노이즈를 원본 이미지에 더해서 노이즈가 포함된 확산 이미지를 출력한다. 다음 단계부터는 노이즈 생성기에서 만든 노이즈를 이전 단계에서 출력된 확산 이미지에 더한다. 이러한 단계를 충분히 반복하면 최종적으로 노이즈 이미지가 출력된다.
+      </div>
+      <div class="qans reveal" style="margin-left:0;">
+        <span class="tag">중심 문장</span>첫 문장이다. &lsquo;노이즈를 추가하면서 노이즈 예측기를 학습시키는 과정&rsquo;이라는 정의를 두고, 뒤 세 문장은 그 과정을 첫 단계 &rarr; 다음 단계 &rarr; 반복의 순서로 풀어 놓았다.
+      </div>
+      <div class="qans reveal" style="margin-left:0; margin-top:1.0cqw;">
+        <span class="tag">덧붙일 것</span>정의 안에 &lsquo;추가&rsquo;와 &lsquo;학습&rsquo; 두 가지가 들어 있다. 뒤 문장들은 &lsquo;추가&rsquo;만 풀이했으므로 &lsquo;학습&rsquo;은 이 문단 뒤쪽이나 다음 문단에서 나온다.
+      </div>
+    </div>
+    <div class="page-num">19 / 35</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide tight" style="--fs:1.16;">
+    <h2 class="slide-title">연습 &#9313; &middot; 이 문단의 중심 문장은<span class="qm">2025학년도 수능 3문단</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.1cqw;">
+        노이즈 예측기의 학습 방법은 기계 학습 중에서 지도 학습에 해당한다. 지도 학습은 학습 데이터에 정답이 주어져 출력과 정답의 차이가 작아지도록 모델을 학습시키는 방법이다. 노이즈 예측기를 학습시킬 때는 노이즈 생성기에서 만들어 넣어 준 노이즈가 정답에 해당하며 이 노이즈와 예측된 노이즈 사이의 차이가 작아지도록 학습시킨다.
+      </div>
+      <div class="qans reveal" style="margin-left:0;">
+        <span class="tag">중심 문장</span>역시 첫 문장이다. 둘째 문장은 &lsquo;지도 학습&rsquo;이라는 말을 풀이하고, 셋째 문장은 그 풀이를 이 글의 대상에 되짚어 적용한다.
+      </div>
+      <div class="qans reveal" style="margin-left:0; margin-top:1.0cqw;">
+        <span class="tag">문단 관계</span>앞 문단 첫 문장이 예고한 &lsquo;학습&rsquo;이 여기서 다뤄졌다. 2문단과 3문단은 나란히 놓인 것이 아니라 <strong>예고와 이행</strong>의 관계다.
+      </div>
+    </div>
+    <div class="page-num">20 / 35</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide tight" style="--fs:1.45;">
+    <h2 class="slide-title">연습 &#9314; &middot; 다음에 올 내용 예측하기</h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.3cqw;">
+        확산 모델은 노이즈 생성기, 이미지 연산기, 노이즈 예측기로 구성되며, 순확산 과정과 역확산 과정 순으로 작동한다.
+        <span class="attr">2025학년도 수능 1문단 마지막 문장</span>
+      </div>
+      <div class="quiz-list" style="flex:0 0 auto;">
+        <div class="qq reveal"><span class="qn">?</span>이 문장을 읽은 뒤, 뒤에 올 문단은 무엇을 다룰 것 같은가?</div>
+      </div>
+    </div>
+    <div class="page-num">21 / 35</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide tight" style="--fs:1.15;">
+    <h2 class="slide-title">예측한 것과 실제 문단<span class="qm">2025학년도 수능 2&#12316;5문단 첫 문장</span></h2>
+    <div class="body-area">
+      <div class="plines" style="margin-bottom:1.3cqw;">
+        <div class="pline"><span class="pn">2문단</span><span class="pt">순확산 과정은 이미지에 노이즈를 추가하면서 노이즈 예측기를 학습시키는 과정이다.</span></div>
+        <div class="pline"><span class="pn">3문단</span><span class="pt">노이즈 예측기의 학습 방법은 기계 학습 중에서 지도 학습에 해당한다.</span></div>
+        <div class="pline"><span class="pn">4문단</span><span class="pt">역확산 과정은 노이즈 이미지에서 노이즈를 제거하여 원본 이미지를 복원하는 과정이다.</span></div>
+        <div class="pline"><span class="pn">5문단</span><span class="pt">한편, 많은 종류의 이미지를 학습시킨 후 &#12316; 역확산 과정에서 이미지를 선택하여 생성할 수 있다.</span></div>
+      </div>
+      <div class="emotion">
+        <div class="etag">확인</div>
+        <ul>
+          <li>1문단이 예고한 두 과정이 2문단과 4문단의 첫 문장으로 그대로 나왔다. 3문단은 2문단이 남겨 둔 &lsquo;학습&rsquo;을 받는다.</li>
+          <li>5문단은 &lsquo;한편&rsquo;으로 시작한다. 예고에 없던 <strong>덧붙임</strong>이라는 뜻이다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">22 / 35</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide" style="--fs:1.37;">
+    <h2 class="slide-title">2025학년도 10번은 이것을 물었다<span class="ans-chip">정답 &#9314;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.3cqw;">
+        학생이 윗글을 읽은 방법으로 적절하지 않은 것은?<br>
+        &#9314; 확산 모델에서 노이즈의 중요성을 파악하고, 사용되는 <span class="hl">노이즈의 종류가 모델의 성능에 미치는 영향</span>을 이해하며 읽었다.
+      </div>
+      <div class="emotion">
+        <div class="etag">판정</div>
+        <ul><li>노이즈의 종류가 성능에 미치는 영향은 이 글에 없다. 나머지 선택지는 모두 앞에서 정리한 첫 문장들, 곧 구성 요소 &middot; 두 과정 &middot; 지도 학습 &middot; 잠재 표현을 가리킨다. <strong>문단 첫 문장을 모아 두면 그대로 답이 나오는 문항</strong>이다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">23 / 35</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide" style="--fs:1.33;">
+    <h2 class="slide-title">문단과 문단은 어떻게 이어지는가</h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.5cqw;">
+        <div class="flow-step">
+          <div class="emo">정의 &rarr; 풀이</div>
+          <div class="desc">앞 문단이 개념을 세우고 뒤 문단이 그 부분을 나누어 설명한다</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo">원리 &rarr; 적용</div>
+          <div class="desc">앞의 원리를 사례나 장치에 넣어 본다. &lt;보기&gt; 문항이 여기서 나온다</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo">주장 &rarr; 반박</div>
+          <div class="desc">뒷사람이 앞사람의 일부에만 동의하고 나머지를 문제 삼는다</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo">시기별 전개</div>
+          <div class="desc">같은 대상을 17세기 &middot; 18세기 &middot; 19세기로 나누어 늘어놓는다</div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">확인하는 법</div>
+        <ul><li>새 문단의 첫 문장을 읽고 &lsquo;앞 문단과 무엇이 달라졌는가&rsquo;를 한 마디로 말해 본다. 대상이 달라졌는지, 시기가 달라졌는지, 말하는 사람이 달라졌는지.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">24 / 35</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide tight" style="--fs:1.08;">
+    <h2 class="slide-title">첫 문장만 이어 읽어 보기<span class="qm">2026학년도 수능 4&#12316;9번 (나)</span></h2>
+    <div class="body-area">
+      <div class="plines" style="margin-bottom:1.3cqw;">
+        <div class="pline"><span class="pn">1문단</span><span class="pt">보증이란 채무자가 채무를 이행하지 않으면 그 채무를 다른 사람이 대신 이행하기로 하는 것이다.</span></div>
+        <div class="pline"><span class="pn">2문단</span><span class="pt">보증 계약에 대해서는 보증인 보호를 위하여 법적 규제가 적용된다.</span></div>
+        <div class="pline"><span class="pn">3문단</span><span class="pt">채권자가 &#12316; 곧바로 보증인에게만 보증 채무의 이행을 청구한 경우, 보증인은 &#12316; 이행을 거절할 수 있는 권리가 있다.</span></div>
+        <div class="pline"><span class="pn">4문단</span><span class="pt">연대 보증인에게도 &#12302;보증인 보호를 위한 특별법&#12303;이 적용되는지가 문제 되는데, 어떤 해석 방법을 따르느냐에 따라 결론이 달라질 수 있다.</span></div>
+      </div>
+      <div class="emotion">
+        <div class="etag">네 문장으로 잡히는 짜임</div>
+        <ul><li>개념 &rarr; 보호 규제 &rarr; 보증인의 권리와 그 포기 &rarr; 남은 쟁점. 4문단 첫 문장이 &lsquo;문제 되는데&rsquo;로 끝나는 것은 <strong>답을 정해 주지 않겠다</strong>는 뜻이고, 실제로 8번 &#9316;가 그 자리를 물었다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">25 / 35</div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide" style="--fs:1.33;">
+    <h2 class="slide-title">읽는 순서 정리</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>문단의 <strong>첫 문장</strong>을 읽고, 그 문단이 무엇을 하겠다는 것인지 한 마디로 잡는다.</li>
+        <li><span class="n">2</span>나머지 문장이 그 말을 <strong>풀이하는지, 조건을 붙이는지, 뒤집는지</strong>를 본다. 뒤집으면 중심 문장은 뒤쪽에 있다.</li>
+        <li><span class="n">3</span>문단이 끝나면 <strong>앞 문단과의 관계</strong>를 한 마디로 붙인다. 예고와 이행, 원리와 적용, 주장과 반박.</li>
+        <li><span class="n">4</span>정의와 조건이 나온 자리에는 표시를 해 둔다. 추론 문항과 &lt;보기&gt; 문항이 그 자리로 돌아온다.</li>
+      </ul>
+    </div>
+    <div class="page-num">26 / 35</div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide tight" style="--fs:1.19;">
+    <h2 class="slide-title">실전 &middot; 2023학년도 수능 4&#12316;9번</h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.4cqw;">
+        <tr><th>(가)</th><td>유서(類書)의 특성과 의의</td></tr>
+        <tr><th>(나)</th><td>조선 후기 유서 편찬에서 서학의 수용 양상</td></tr>
+        <tr><th>구성</th><td>같은 화제를 다룬 두 글을 묶은 주제 통합 지문. 6문항 13점</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">읽기 전에</div>
+        <ul>
+          <li>(가)는 유서라는 <strong>갈래 자체</strong>를 설명하고, (나)는 그 유서에 서학이 <strong>어떻게 들어왔는지</strong>를 시기별로 다룬다.</li>
+          <li>따라서 (가)에서 세운 개념이 (나)의 각 인물을 재는 잣대가 된다. 6번과 8번이 그 잣대를 그대로 쓴다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">27 / 35</div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide" style="--fs:1.23;">
+    <h2 class="slide-title">푸는 동안 할 일</h2>
+    <div class="body-area">
+      <ul class="num-list" style="margin-bottom:1.4cqw;">
+        <li><span class="n">1</span>(가)의 문단마다 중심 문장에 밑줄. 특히 <strong>중국의 유서 &middot; 조선의 유서 &middot; 실학자의 유서</strong>가 어느 문단에서 갈리는지 표시한다.</li>
+        <li><span class="n">2</span>(나)는 이수광 &middot; 이익 &middot; 이규경 옆에 <strong>서학을 어떻게 다뤘는지</strong>를 한 마디씩 적는다.</li>
+        <li><span class="n">3</span>4번은 두 글의 전개 방식을 묻는다. 지문을 다 읽은 직후, 문단 첫 문장을 훑으며 판정한다.</li>
+      </ul>
+      <div class="emotion">
+        <div class="etag">시간</div>
+        <ul><li>읽기 7분, 6문항 12분. 다 푼 뒤 자신 없는 문항 번호에 표시해 두었다가 해설 때 그 문항을 먼저 본다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">28 / 35</div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide" style="--fs:1.42;">
+    <h2 class="slide-title">정답 &middot; 4번<span class="ans-chip">&#9315;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        &#9315; (가)는 유서의 특성과 의의를 설명하였고, (나)는 유서 편찬에서 특정 학문의 수용 양상을 시기별로 소개하였다.
+      </div>
+      <div class="evi">
+        <div class="ev">
+          <h4>(가)의 근거</h4>
+          <p>1문단에서 유서의 개념과 성격을 밝히고, 마지막 문단에서 실학자들의 유서가 <strong>새로운 지식의 축적과 확산을 촉진</strong>했다는 의의를 적었다.</p>
+        </div>
+        <div class="ev">
+          <h4>(나)의 근거</h4>
+          <p>17세기 이수광, 18세기 이익, 19세기 이규경 순으로 문단이 나뉜다. <strong>시기별</strong>이라는 말이 문단 첫머리에 그대로 있다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">29 / 35</div>
+  </section>
+
+  <!-- 30 -->
+  <section class="slide tight" style="--fs:1.45;">
+    <h2 class="slide-title">정답 &middot; 5번<span class="ans-chip">&#9316;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        &#9316; 중국에서는 주로 서적에서 발췌한 내용을 <span class="hl">비교하고 해석을 덧붙여</span> 유서를 편찬하였다.
+      </div>
+      <div class="evi">
+        <div class="ev">
+          <h4>지문</h4>
+          <p>(가) 1문단은 유서가 &lsquo;필요한 부분을 뽑아 배열할 뿐 <strong>상호 비교하거나 편찬자의 해석을 가하지 않았다</strong>&rsquo;고 했다.</p>
+        </div>
+        <div class="ev">
+          <h4>판정</h4>
+          <p>비교와 해석을 더한 것은 (가) 3문단의 <strong>조선 후기 실학자들</strong>이다. 대상을 바꿔 놓은 선택지다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">30 / 35</div>
+  </section>
+
+  <!-- 31 -->
+  <section class="slide tight" style="--fs:1.43;">
+    <h2 class="slide-title">정답 &middot; 6번<span class="ans-chip">&#9314;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.1cqw;">
+        &#9314; 평가를 더하는 저술로서 ㉮의 성격은, ㉡에서 <span class="hl">중국 학문의 진보성을 확인하고자</span> 서학을 활용한 것에서 나타난다.
+      </div>
+      <div class="evi">
+        <div class="ev">
+          <h4>지문</h4>
+          <p>(나) 마지막 문단에서 이규경은 <strong>서학 중국 원류설</strong>을 반영한 중국의 연구서를 활용해, 중화 관념을 벗어나지 않으면서 서학을 받아들였다.</p>
+        </div>
+        <div class="ev">
+          <h4>판정</h4>
+          <p>목적이 뒤바뀌었다. 중국 학문의 진보성을 <strong>확인하려고</strong> 서학을 쓴 것이 아니라, 서학의 부담을 덜려고 중국화한 서학을 쓴 것이다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">31 / 35</div>
+  </section>
+
+  <!-- 32 -->
+  <section class="slide" style="--fs:1.42;">
+    <h2 class="slide-title">정답 &middot; 7번<span class="ans-chip">&#9313;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        &#9313; 주자학에 매몰되어 세상의 여러 이치를 연구하지 않는 것은 널리 배우고 익히는 앎의 바른 방법이 아닐 것이다.
+      </div>
+      <div class="evi">
+        <div class="ev">
+          <h4>㉯의 비판</h4>
+          <p>심성 수양에 절실하지 않고 주자학이 아닌 것이 뒤섞여 순수하지 않다는 것.</p>
+        </div>
+        <div class="ev">
+          <h4>이수광의 자리</h4>
+          <p>(나) 2문단은 이수광이 <strong>주자학뿐 아니라 다른 학문에도 열린 태도</strong>였다고 했다. 그 태도를 근거로 삼아야 반박이 된다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">32 / 35</div>
+  </section>
+
+  <!-- 33 -->
+  <section class="slide tight" style="--fs:1.31;">
+    <h2 class="slide-title">정답 &middot; 8번<span class="ans-chip">&#9316;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.1cqw;">
+        &#9316; 중국을 문명의 척도로 받아들였던 (나)의 &#12302;오주연문장전산고&#12303;와 달리 <span class="hl">중화 관념에 구애되지 않고</span> 중국의 현실과 조선의 현실을 비교한 내용이 확인되겠군.
+      </div>
+      <div class="evi">
+        <div class="ev">
+          <h4>&lt;보기&gt;</h4>
+          <p>&#12302;임원경제지&#12303;에는 <strong>서학 중국 원류설</strong>과 중국과 비교한 조선의 현실이 함께 반영되었다.</p>
+        </div>
+        <div class="ev">
+          <h4>판정</h4>
+          <p>서학 중국 원류설을 받아들였다면 중화 관념을 벗어난 것이 아니다. &#12302;오주연문장전산고&#12303;와 <strong>같은</strong> 자리에 있다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">33 / 35</div>
+  </section>
+
+  <!-- 34 -->
+  <section class="slide" style="--fs:1.45;">
+    <h2 class="slide-title">정답 &middot; 9번<span class="ans-chip">&#9313;</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        &#9313; &#9427; <span class="dim">주자학의 지식을</span> <span class="hl">이어받는</span> &rarr; 계몽(啓蒙)하는
+      </div>
+      <div class="evi">
+        <div class="ev">
+          <h4>뜻</h4>
+          <p>계몽하다는 <strong>지식수준이 낮거나 인습에 젖은 사람을 가르쳐서 깨우치다</strong>라는 뜻이다. 가르치는 쪽의 행위다.</p>
+        </div>
+        <div class="ev">
+          <h4>문맥</h4>
+          <p>&#9427;는 앞 세대의 지식을 <strong>물려받는</strong> 자리이므로 계승(繼承)하다가 맞다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">34 / 35</div>
+  </section>
+
+  <!-- 35 -->
+  <section class="slide tight" style="--fs:1.24;">
+    <h2 class="slide-title">여섯 문항이 물은 것</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:4.2em;">문항</th><th>물은 것</th><th style="width:6.4em;">독해 유형</th></tr></thead>
+        <tbody>
+          <tr><th>4번</th><td>두 글의 전개 방식</td><td>사실적</td></tr>
+          <tr><th>5번</th><td>[A]의 세부 내용</td><td>사실적</td></tr>
+          <tr><th>6번</th><td>(가)의 기준으로 (나)의 사례를 재기</td><td>추론적</td></tr>
+          <tr><th>7번</th><td>비판에 대한 반박 구성</td><td>추론적</td></tr>
+          <tr><th>8번</th><td>&lt;보기&gt;의 새 사례 적용</td><td>추론적</td></tr>
+          <tr><th>9번</th><td>문맥에 맞는 단어 바꿔 쓰기</td><td>어휘</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">35 / 35</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 35</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  // 슬라이드 안에서 하나씩 띄울 요소들
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  // showAllSteps: 뒤로 돌아갈 때는 그 슬라이드의 단계가 모두 드러난 상태로 들어간다
+  function show(n, showAllSteps) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
