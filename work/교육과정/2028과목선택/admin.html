@@ -655,8 +655,13 @@ function 과정들(){
 }
 
 /* 기존 폐강 파일 → 토글 상태로 펼치기 */
+/* 데이터베이스에 이미 저장되어 있는 폐강. 한 번 폐강한 것은 계속 폐강이므로,
+   이것을 해제하려 하면 실수인지 먼저 묻는다(스위치 클릭 처리 참조). */
+var 저장된폐강 = {};
+
 function spread(closed){
   OFF = {};
+  저장된폐강 = {};
   ((closed&&closed.폐강)||[]).forEach(function(x){
     SCHOOL.forEach(function(c){
       if(c.과목!==x.과목) return;
@@ -665,7 +670,10 @@ function spread(closed){
       var 학기들 = (x.학기&&x.학기.length)?x.학기:[1,2];
       대상과정.forEach(function(g){
         (c.학기[g]||[]).forEach(function(s){
-          if(학기들.indexOf(s)!==-1) OFF[key(c.과목,c.선택군,g,s)] = true;
+          if(학기들.indexOf(s)!==-1){
+            OFF[key(c.과목,c.선택군,g,s)] = true;
+            저장된폐강[key(c.과목,c.선택군,g,s)] = true;
+          }
         });
       });
     });
@@ -788,6 +796,17 @@ function render(){
       var p = b.dataset.k.split('|');
       var on = !OFF[b.dataset.k];
       var 대상과정 = b.dataset.both === '1' ? 과정들() : [p[2]];
+
+      // 한 번 폐강한 과목은 계속 폐강이다. 이미 저장된 것을 끄려 하면 실수인지 묻는다.
+      // (학생이 그 과목을 못 담는 채로 신청을 마쳤을 수 있어, 되살리면 앞뒤가 어긋난다.)
+      if(!on){
+        var 저장된것 = 대상과정.some(function(g){
+          return 저장된폐강[key(p[0],p[1],g,p[3])];
+        });
+        if(저장된것 && !confirm('"'+p[0]+'"('+p[1]+' '+p[3]+'학기)은(는) 이미 폐강으로 저장된 과목입니다.' +
+            '\n\n' +
+            '폐강을 되돌리면 학생 화면에 다시 열린 것으로 보입니다. 정말 해제할까요?')) return;
+      }
       대상과정.forEach(function(g){
         var kk = key(p[0],p[1],g,p[3]);
         if(on) OFF[kk] = true; else delete OFF[kk];

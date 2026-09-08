@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260908c';
+var VERSION = '20260908d';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
