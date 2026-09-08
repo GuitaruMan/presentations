@@ -44,6 +44,19 @@ select,input[type=text],input[type=date]{
 .btn:disabled{opacity:.5;cursor:default}
 .btn.ghost{background:#fff;color:var(--teal)}
 .btn.ghost:hover{background:var(--teal-w)}
+/* 단계 고르기 — 셋 중 하나만 눌린다. 학생 화면 머리말에 그대로 나가는 값이다. */
+.seg-label{font-size:13px;color:var(--soft);font-weight:600}
+.seg{display:inline-flex;border:1.5px solid var(--rule);border-radius:9px;overflow:hidden}
+.seg-b{
+  font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+  padding:7px 13px;border:0;background:#fff;color:var(--soft);
+  border-right:1.5px solid var(--rule);
+}
+.seg-b:last-child{border-right:0}
+.seg-b:hover{background:var(--teal-w)}
+.seg-b[aria-pressed="true"]{background:var(--teal);color:#fff}
+.seg-b[aria-pressed="true"]:hover{filter:brightness(1.08);background:var(--teal)}
+
 .count{margin-left:auto;font-size:13px;color:var(--soft)}
 .count b{color:var(--red);font-variant-numeric:tabular-nums}
 
@@ -99,7 +112,7 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 /* 반영 */
 .pub{border-top:1.5px solid var(--teal)}
 .pubrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.st{font-size:12.5px;color:var(--soft);margin:10px 0 0}
+.st{font-size:12.5px;color:var(--soft);margin:10px 0 0;white-space:pre-line}
 .st.good{color:var(--teal);font-weight:600}
 .st.bad{color:var(--red);font-weight:600}
 
@@ -307,12 +320,12 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
     <div id="panelClosed">
 
     <div class="bar">
-      <label for="stage">단계</label>
-      <select id="stage">
-        <option value="신청 전">신청 전</option>
-        <option value="1차 정정 전">1차 정정 전</option>
-        <option value="2차 정정 전">2차 정정 전</option>
-      </select>
+      <span class="seg-label">단계</span>
+      <div class="seg" id="stage" role="group" aria-label="지금 어느 기간인지">
+        <button type="button" class="seg-b" data-stage="선택과목 신청">선택과목 신청</button>
+        <button type="button" class="seg-b" data-stage="1차 정정">1차 정정</button>
+        <button type="button" class="seg-b" data-stage="2차 정정">2차 정정</button>
+      </div>
       <label for="date">갱신일</label>
       <input type="date" id="date">
       <button type="button" class="btn ghost" id="help">? 사용법</button>
@@ -582,6 +595,13 @@ function 오류설명(err){
   if(/row-level security|42501/i.test(m)){
     return '권한이 없습니다. 로그인이 풀렸을 수 있으니 새로고침한 뒤 다시 로그인해 주세요.';
   }
+  // 데이터베이스에 아직 칸이 없을 때. 화면 기능을 늘리면서 칸 추가를 빠뜨리면 난다.
+  var 칸 = m.match(/Could not find the '([^']+)' column of '([^']+)'/);
+  if(칸){
+    return '데이터베이스에 "' + 칸[1] + '" 칸이 아직 없습니다(' + 칸[2] + ' 표).' +
+           '\n' +
+           'Supabase 대시보드 → SQL Editor 에서 칸을 추가한 뒤 다시 시도해 주세요.';
+  }
   return m;   // 알려진 것이 아니면 원문을 그대로 보여 준다
 }
 
@@ -614,6 +634,18 @@ var RULES = null;   // school_rules 원본 행(id, cohort_id 포함) 전체. 이
 var RULES_ORIGINAL = null;   // pick()이 읽어온 시점의 깊은 복사본. 저장 전 미리보기의 비교 기준.
 
 function key(과목,선택군,과정,학기){ return [과목,선택군,과정,학기].join('|'); }
+
+/* 단계 — 셋 중 하나만 눌린다. 다시 누르면 해제되어 아무것도 안 고른 상태가 된다
+   (그러면 학생 화면 머리말에 기간이 안 나온다). */
+function 단계값(){
+  var on = document.querySelector('#stage .seg-b[aria-pressed="true"]');
+  return on ? on.dataset.stage : '';
+}
+function 단계설정(v){
+  Array.prototype.forEach.call(document.querySelectorAll('#stage .seg-b'), function(b){
+    b.setAttribute('aria-pressed', b.dataset.stage === v ? 'true' : 'false');
+  });
+}
 
 /* 이 학년도의 과정 이름들. 이수규칙 ⑦에서 고칠 수 있으므로 박아두면 안 된다.
    학생 화면도 같은 값을 보고 편성표를 그린다. 아직 못 읽었을 때만 기본값을 쓴다. */
@@ -679,7 +711,7 @@ function build(){
     meta: {
       코호트: CO.id,
       갱신일: $('#date').value || '',
-      단계: $('#stage').value || '',
+      단계: 단계값(),
       설명: '학생 신청 결과 폐강된 과목. 여기 적힌 과목은 학생 화면에서 사라진다.',
       만든곳: 'admin.html'
     },
@@ -770,6 +802,7 @@ function render(){
 function pick(id){
   CO = D.cohorts.목록.filter(function(c){return c.id===id})[0];
   $('#editingCohortName').textContent = CO.제목;
+  단계설정(CO.단계 || '');
   Promise.all([
     sb.from('school_offerings').select('*').eq('cohort_id', CO._db_id),
     sb.from('school_rules').select('*').eq('cohort_id', CO._db_id).single(),
@@ -833,7 +866,9 @@ function loadCohorts(){
     var list = res[0].data.map(function(c){
       return {
         id: c.코호트id, 입학연도: c.입학연도, 대상: c.대상, 제목: c.제목,
-        설명: c.설명, 선택군: c.선택군, 노출: c.노출, _db_id: c.id
+        설명: c.설명, 선택군: c.선택군, 노출: c.노출, _db_id: c.id,
+        // 지금이 어느 기간인지. 학생 화면 머리말에 그대로 나간다.
+        단계: c.단계
       };
     });   // 관리자는 숨긴 코호트도 손볼 수 있어야 한다
     D.cohorts = { 목록: list };
@@ -1146,7 +1181,14 @@ function pushNow(){
   say('저장하는 중…');
   $('#push').disabled = true;
 
-  sb.from('closed_subjects').delete().eq('cohort_id', cohortDbId)
+  // 단계는 폐강 목록이 아니라 학년도에 딸린 값이다. 폐강이 0건이어도 저장되어야
+  // 학생 화면 머리말에 기간이 나온다.
+  sb.from('school_cohorts').update({ 단계: 단계값() || null }).eq('id', cohortDbId)
+    .then(function(up){
+      if(up.error) throw new Error(up.error.message);
+      CO.단계 = 단계값();
+      return sb.from('closed_subjects').delete().eq('cohort_id', cohortDbId);
+    })
     .then(function(del){
       if(del.error) throw new Error(del.error.message);
       var payload = closedList.map(function(x){
@@ -1164,7 +1206,7 @@ function pushNow(){
       say('저장 완료. 학생 화면을 새로고침하면 바로 반영됩니다.', 'good');
     })
     .catch(function(e){
-      say('저장 실패: ' + e.message, 'bad');
+      say('저장 실패: ' + 오류설명(e), 'bad');
     })
     .finally(function(){
       $('#push').disabled = false;
@@ -2342,7 +2384,13 @@ document.addEventListener('keydown', function(e){
   if(e.key==='Escape' && !$('#deleteCohortModal').hidden) closeDeleteCohortModal();
 });
 
-$('#stage').onchange = refresh;
+/* 단계 버튼 — 하나만 눌리게 하고, 누른 것을 또 누르면 해제한다. */
+Array.prototype.forEach.call(document.querySelectorAll('#stage .seg-b'), function(b){
+  b.onclick = function(){
+    단계설정(b.getAttribute('aria-pressed') === 'true' ? '' : b.dataset.stage);
+    refresh();
+  };
+});
 $('#date').onchange = refresh;
 $('#clear').onclick = function(){ OFF = {}; render(); };
 $('#push').onclick = pushNow;

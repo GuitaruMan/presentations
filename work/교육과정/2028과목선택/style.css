@@ -470,6 +470,9 @@ body{
 .ev-석차미기재    {background:#DCEAF3;color:#2F5670}
 .ev-성취3단계    {background:#F5DFE2;color:#71404A}
 .ev-이수여부     {background:#DFEBDC;color:#3E5C3A}
+/* 폐강 — 다른 배지가 '어떻게 평가하나'를 말하는 것과 달리 '열리지 않는다'는
+   뜻이라, 눈에 띄되 경고로 읽히도록 붉은 계열을 쓴다. */
+.ev-폐강        {background:#F2D9D4;color:#8C3A28}
 
 /* 담긴 과목은 배경이 짙어지므로 배지도 함께 뒤집는다 */
 button.my-pill.on .pill-eval{background:rgba(255,255,255,.22);color:#fff}
@@ -477,6 +480,13 @@ button.my-pill.on .pill-eval{background:rgba(255,255,255,.22);color:#fff}
    고를 수 없다는 것이 먼저 보이도록 흐리게 둔다. */
 .my-pill.pill-lock{opacity:.45}
 .my-pill.pill-lock:hover{opacity:.7}
+
+/* 폐강된 과목 — 흐리게 하고 이름에 취소선을 그어 한눈에 알아보게 한다.
+   목록에서 없애지 않는 이유는 학생이 '왜 사라졌지'를 묻지 않게 하기 위해서다. */
+.pill.pill-closed{opacity:.5;text-decoration:line-through;text-decoration-color:rgba(140,58,40,.5)}
+.pill.pill-closed:hover{opacity:.75}
+.pill.pill-closed .pill-type,
+.pill.pill-closed .pill-eval{text-decoration:none;display:inline-block}
 
 /* 범례 */
 .eval-legend{
@@ -497,6 +507,7 @@ p.subj-eval.ev-석차미기재    {background:#DCEAF3;color:#2F5670}
 p.subj-eval.ev-성취3단계    {background:#F5DFE2;color:#71404A}
 p.subj-eval.ev-이수여부     {background:#DFEBDC;color:#3E5C3A}
 p.subj-eval.ev-상대절대     {background:var(--paper-deep);color:var(--ink-soft)}
+p.subj-eval.ev-폐강        {background:#F2D9D4;color:#8C3A28}
 
 /* 선수과목 — 안 들어도 신청 자체가 막히지는 않지만, 대학이 사실상
    인정하지 않으므로 강하게 표시한다 (화면 문구는 '강력 권장') */
@@ -858,3 +869,15 @@ button.my-pill.on::after{content:'✓';margin-left:6px;font-size:11px}
 .site-top .site-updated{margin-right:auto;color:var(--ink-faint)}
 .site-top a{color:var(--ink-faint);text-decoration:none}
 .site-top a:hover{color:var(--teal);text-decoration:underline}
+
+/* 머리말의 기간 표시 — 지금이 신청 기간인지 정정 기간인지.
+   학생이 가장 먼저 알아야 할 것이라 제목 바로 옆에 붙인다. */
+.brand-stage{
+  display:inline-block;margin-left:11px;padding:3px 11px;
+  border-radius:999px;background:var(--apricot);color:#fff;
+  font-size:.5em;font-weight:700;letter-spacing:.02em;vertical-align:middle;
+  white-space:nowrap;
+}
+@media (max-width:620px){
+  .brand-stage{display:block;margin:7px 0 0;font-size:.62em}
+}

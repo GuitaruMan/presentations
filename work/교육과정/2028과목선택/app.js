@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260908a';
+var VERSION = '20260908b';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -184,6 +184,9 @@ function buildCohorts(rows) {
       return {
         id: c.코호트id, 입학연도: c.입학연도, 대상: c.대상, 제목: c.제목,
         설명: c.설명, 선택군: c.선택군, 노출: c.노출,
+        // 지금이 어느 기간인지 — 머리말에 "과목 선택 안내 — 1차 정정"처럼 나온다.
+        // 비어 있으면 아무것도 붙이지 않는다.
+        단계: c.단계,
         _db_id: c.id   // loadCohort 에서 school_offerings/rules 를 이어 조회할 때 쓴다
       };
     })
@@ -297,11 +300,15 @@ function loadCohort(c) {
   });
 }
 
-/* 폐강 반영 — 편성표에서 해당 학기·과정의 개설 표시를 지운다.
-   원본 파일은 그대로 두고 메모리에서만 걷어낸다. */
+/* 폐강 반영 — 과목을 목록에서 빼지 않고 '폐강' 표시를 붙인다.
+   학생이 "내가 고르려던 그 과목이 폐강됐구나"를 알아야 하므로, 없애 버리면
+   왜 사라졌는지 알 길이 없다. 담는 것만 막고 보이기는 그대로 둔다.
+
+   c.폐강      — 폐강 사유(표시용). 없으면 null.
+   c.폐강학기  — {과정: [학기…]} 어느 칸이 폐강인지. 한 학기만 폐강일 수 있다. */
 function applyClosed() {
   var list = (CLOSED && CLOSED.폐강) || [];
-  D.school.개설.forEach(function (c) { c.폐강 = null; });
+  D.school.개설.forEach(function (c) { c.폐강 = null; c.폐강학기 = null; });
   if (!list.length) return;
 
   list.forEach(function (x) {
@@ -310,19 +317,37 @@ function applyClosed() {
       if (x.선택군 && c.선택군 !== x.선택군) return;
       var 과정들 = x.과정 && x.과정.length ? x.과정 : courses();
       var 학기들 = x.학기 && x.학기.length ? x.학기 : [1, 2];
+      if (!c.폐강학기) c.폐강학기 = {};
       과정들.forEach(function (g) {
         if (!c.학기 || !c.학기[g]) return;
-        c.학기[g] = c.학기[g].filter(function (s) { return 학기들.indexOf(s) === -1; });
+        var 닫힌것 = c.학기[g].filter(function (s) { return 학기들.indexOf(s) !== -1; });
+        if (!닫힌것.length) return;
+        c.폐강학기[g] = (c.폐강학기[g] || []).concat(닫힌것);
       });
-      c.폐강 = x.사유 || '폐강';
+      if (Object.keys(c.폐강학기).length) c.폐강 = x.사유 || '폐강';
+      else c.폐강학기 = null;
     });
   });
+}
 
-  // 어느 과정에서도 열리지 않게 된 과목은 목록에서 뺀다
-  D.school.개설 = D.school.개설.filter(function (c) {
-    if (c.선택군 === '지정' || !c.학기) return true;
-    return courses().some(function (g) { return (c.학기[g] || []).length; });
+/* 이 과목이 그 과정·학기에 폐강인가. 편성표 칸마다 묻는다. */
+function 폐강인가(c, 과정, 학기) {
+  if (!c || !c.폐강학기) return false;
+  var l = c.폐강학기[과정];
+  return !!l && l.indexOf(학기) !== -1;
+}
+
+/* 이 과목이 열리는 모든 칸이 폐강인가 — 과목 단위로 막을지 판단할 때 쓴다. */
+function 통째폐강인가(c) {
+  if (!c || !c.폐강 || !c.학기) return false;
+  var 열린칸 = 0, 닫힌칸 = 0;
+  courses().forEach(function (g) {
+    (c.학기[g] || []).forEach(function (s) {
+      열린칸++;
+      if (폐강인가(c, g, s)) 닫힌칸++;
+    });
   });
+  return 열린칸 > 0 && 열린칸 === 닫힌칸;
 }
 
 /* 이 학년도의 과정 목록. 학교가 과정을 늘리거나 이름을 바꿔도
@@ -1198,9 +1223,13 @@ function slotHTML(slot, want) {
       // 이 탭에서는 수능 출제과목만 표시한다. 편성표를 훑는 자리라
       // 다른 평가 유형까지 붙이면 표가 어수선해진다.
       var 수능 = satMark(c);
-      return '<button type="button" class="pill ' + cls + '" data-subject="' + esc(c.과목) +
+      // 이 슬롯(과정·학기)에서 폐강인지 칸 단위로 본다. 한 학기만 폐강일 수 있다.
+      var 닫힘 = 폐강인가(c, state.course, slot.학기);
+      var 폐강 = 닫힘 ? closedMark(c, state.course, slot.학기) : '';
+      return '<button type="button" class="pill ' + cls + (닫힘 ? ' pill-closed' : '') +
+        '" data-subject="' + esc(c.과목) +
         '" title="' + esc(c.과목) + ' 자세히 보기">' + esc(c.과목) +
-        '<span class="pill-type">' + esc(tag) + '</span>' + 수능 + '</button>';
+        '<span class="pill-type">' + esc(tag) + '</span>' + 수능 + 폐강 + '</button>';
     }).join('');
     h += '</div></div>';
   });
@@ -1245,7 +1274,9 @@ function courseIn(name, slot) {
    수능 출제 여부는 성적방식과 무관한 별개의 축이라 여기 포함하지 않는다(SAT_MARK 참조) —
    상대절대이면서 수능과목인 경우도 있어, 한 과목에 두 배지가 동시에 붙을 수 있다. */
 var EVAL_MARK = {
-  석차미기재: { 약칭: '석차 미기재', 설명: '상대평가 석차 등급을 기재하지 않는 과목' },
+  // 석차 미기재는 배지를 붙이지 않는다(bare:true) — 담당 교사 판단.
+  // 과목 설명 창에서는 그대로 밝힌다.
+  석차미기재: { 약칭: '', 설명: '상대평가 석차 등급을 기재하지 않는 과목', bare: true },
   성취3단계: { 약칭: '성취 3단계', 설명: '성취도 3단계(A·B·C)로 평가하는 과목' },
   이수여부: { 약칭: '이수', 설명: '이수 여부만 기재하는 과목' },
   // 가장 흔한 경우라 목록에서는 배지를 붙이지 않는다(bare:true).
@@ -1266,6 +1297,15 @@ function evalMark(c) {
     EVAL_ICON[c.평가] + ' ' + esc(m.약칭) + '</span>';
 }
 
+/* 폐강 배지 — 수능 배지와 같은 자리에 붙는다.
+   과목을 없애지 않고 표시로 알리기 위한 것이다(applyClosed 참조). */
+function closedMark(c, 과정, 학기) {
+  var 닫힘 = (과정 == null) ? 통째폐강인가(c) : 폐강인가(c, 과정, 학기);
+  if (!닫힘) return '';
+  var 설명 = (c.폐강 && c.폐강 !== '폐강') ? c.폐강 : '신청 결과 열리지 않는 과목';
+  return '<span class="pill-eval ev-폐강" title="' + esc(설명) + '">✕ 폐강</span>';
+}
+
 /* 수능 출제 여부 — 성적방식과 독립된 별개의 배지. c.수능(boolean)로 판정한다. */
 var SAT_MARK = { 설명: '대학수학능력시험 출제과목' };
 var SAT_ICON = '◎';
@@ -1281,12 +1321,10 @@ function satMark(c) {
 function evalLegend() {
   var 있는유형 = {};
   var 수능있음 = false;
-  var 평가없음있음 = false;   // 평가(성적방식)가 null인 과목이 하나라도 있는지
   D.school.개설.forEach(function (c) {
     if (c.선택군 === '지정') return;
     if (EVAL_MARK[c.평가] && !EVAL_MARK[c.평가].bare) 있는유형[c.평가] = true;
     if (c.수능) 수능있음 = true;
-    if (c.평가 == null) 평가없음있음 = true;
   });
   var keys = Object.keys(EVAL_MARK).filter(function (k) { return 있는유형[k]; });
   if (!keys.length && !수능있음) return '';
@@ -1300,13 +1338,11 @@ function evalLegend() {
       esc(SAT_MARK.설명) + '</span>');
   }
 
-  // '표시가 없으면 상대절대'라고 단정하면 안 된다 — 평가가 null인 과목(성적 산출
-  // 방식이 아직 정리되지 않은 과목)도 배지가 없기는 마찬가지라 학생이 잘못 읽는다.
-  var 안내문 = 평가없음있음
-    ? '<span>' + EVAL_ICON.상대절대 + ' 표시가 없는 과목은 성적 산출 방식이 아직 ' +
-      '정리되지 않았거나, ' + esc(EVAL_MARK.상대절대.설명) + '입니다.</span>'
-    : '<span>' + EVAL_ICON.상대절대 + ' 표시가 없으면 ' +
-      esc(EVAL_MARK.상대절대.설명) + '입니다.</span>';
+  // 배지가 없는 과목이 한 종류가 아니다 — 상대절대, 석차 미기재, 그리고 성적 산출
+  // 방식이 아직 정리되지 않은 것(평가 null)까지 섞인다. '표시가 없으면 상대절대'라고
+  // 단정하면 학생이 잘못 읽으므로, 과목을 눌러 확인하라고 안내한다.
+  var 안내문 = '<span>' + EVAL_ICON.상대절대 +
+    ' 표시가 없는 과목의 성적 산출 방식은 과목을 눌러 확인해 주세요.</span>';
 
   return '<div class="eval-legend"><span>표시 안내</span>' + items.join('') +
     안내문 + '</div>';
@@ -1486,6 +1522,15 @@ function toggleCart(name, key) {
   }
 
   var slot = SLOTS.filter(function (s) { return s.key === key; })[0];
+
+  // 폐강된 과목은 담을 수 없다. 열리지 않는 과목을 담아 두면 계획이 어긋난다.
+  var 대상 = slot && D.school.개설.filter(function (c) {
+    return c.과목 === name && offeredIn(c, slot);
+  })[0];
+  if (대상 && 폐강인가(대상, state.course, slot.학기)) {
+    flash('‘' + name + '’은(는) 폐강되어 열리지 않습니다.', true);
+    return;
+  }
 
   // 같은 과목이 2·3학년에 모두 열려도 이수는 한 번뿐이다.
   // 양쪽에 담으면 이수 조건을 채운 것처럼 잘못 세어진다.
@@ -1681,16 +1726,20 @@ function renderMy() {
         var on = picked.indexOf(c.과목) !== -1;
         // Ⅰ 을 담지 않으면 Ⅱ 는 담을 수 없다. 눌러도 안내만 나오므로 흐리게 보여 준다.
         var 잠김 = !on && mustNeed(c.과목).filter(function (p) { return !cartHas(p); });
+        // 폐강도 같은 방식으로 막는다 — 없애지 않고 흐리게 두어 왜 못 고르는지 알린다.
+        var 닫힘 = 폐강인가(c, state.course, s.학기);
         var cls = 'pill my-pill' + (on ? ' on' : '') +
-                  (잠김 && 잠김.length ? ' pill-lock' : '');
-        var 도움말 = 잠김 && 잠김.length
-          ? 따옴표(잠김) + '을(를) 먼저 담아야 합니다'
-          : c.과목 + ' 담기';
+                  (닫힘 ? ' pill-lock pill-closed' : (잠김 && 잠김.length ? ' pill-lock' : ''));
+        var 도움말 = 닫힘
+          ? '폐강되어 열리지 않는 과목입니다'
+          : (잠김 && 잠김.length
+              ? 따옴표(잠김) + '을(를) 먼저 담아야 합니다'
+              : c.과목 + ' 담기');
         return '<button type="button" class="' + cls + '" data-add="' + esc(c.과목) +
           '" data-slot="' + s.key + '" aria-pressed="' + on + '"' +
           ' title="' + esc(도움말) + '">' +
           esc(c.과목) + '<span class="pill-type">' + esc(c.유형) + '</span>' +
-          evalMark(c) + satMark(c) + '</button>';
+          evalMark(c) + satMark(c) + closedMark(c, state.course, s.학기) + '</button>';
       }).join('');
       h += '</div></div>';
     });
@@ -1763,6 +1812,24 @@ function openSubject(name) {
     h += '<p class="subj-eval ev-수능">' +
       '<span class="subj-eval-icon" aria-hidden="true">' + SAT_ICON + '</span>' +
       esc(SAT_MARK.설명) + '입니다.</p>';
+  }
+
+  // 폐강 — 어느 학기가 닫혔는지 밝힌다. 한 학기만 폐강일 수 있다.
+  var 닫힌것 = scs.filter(function (c) { return c.폐강; });
+  if (닫힌것.length) {
+    var 어디 = [];
+    닫힌것.forEach(function (c) {
+      courses().forEach(function (g) {
+        (c.폐강학기 && c.폐강학기[g] || []).forEach(function (sem) {
+          var 말 = c.선택군 + ' ' + sem + '학기';
+          if (어디.indexOf(말) === -1) 어디.push(말);
+        });
+      });
+    });
+    h += '<p class="subj-eval ev-폐강">' +
+      '<span class="subj-eval-icon" aria-hidden="true">✕</span>' +
+      (어디.length ? esc(어디.join(', ')) + '는 ' : '') +
+      '신청 결과 <b>폐강</b>되어 열리지 않습니다.</p>';
   }
 
   // 선수과목 — 먼저 들어야 하는 과목이 있으면 알려 준다
@@ -2024,6 +2091,7 @@ function enterCohort(c) {
     $('#cohort-tag').hidden = false;
     $('#tool-curriculum').hidden = false;
     $('#cohort-name').textContent = c.입학연도 + '학년도 입학 · ' + c.대상;
+    기간표시(c.단계);
 
     buildFilters();
     renderUniv();
@@ -2048,7 +2116,12 @@ function dropClosedFromCart() {
   SLOTS.forEach(function (s) {
     var arr = cartOf(s.key);
     state.cart[s.key] = arr.filter(function (n) {
-      var ok = !!courseIn(n, s);
+      // 편성표에서 아예 빠진 과목이거나, 남아 있어도 이 칸이 폐강이면 뺀다.
+      // 폐강 과목은 이제 목록에 남으므로 존재 확인만으로는 걸러지지 않는다.
+      var rec = D.school.개설.filter(function (c) {
+        return c.과목 === n && offeredIn(c, s);
+      })[0];
+      var ok = !!rec && !폐강인가(rec, state.course, s.학기);
       if (!ok) gone.push(n + ' (' + s.이름 + ')');
       return ok;
     });
@@ -2080,6 +2153,17 @@ function stampFoot() {
          (CLOSED.meta.단계 ? ' (' + CLOSED.meta.단계 + ')' : '');
   }
   $('#stamp').textContent = t + ' · 출처: 각 대학 발표 원문';
+}
+
+/* 머리말의 기간 표시 — "과목 선택 안내 — 1차 정정"처럼 제목 옆에 붙는다.
+   관리자 화면에서 고른 단계가 그대로 온다. 아무것도 안 골랐으면 붙이지 않는다.
+   학생이 지금이 신청 기간인지 정정 기간인지 알아야 하므로 가장 눈에 띄는 자리에 둔다. */
+function 기간표시(단계) {
+  var el = $('#brand-stage');
+  if (!el) return;
+  var v = String(단계 || '').trim();
+  el.textContent = v;
+  el.hidden = !v;
 }
 
 /* 상단 업데이트 날짜 — dates.json 은 GitHub Actions 가 각 파일의
