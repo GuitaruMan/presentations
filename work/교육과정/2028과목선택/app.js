@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260908b';
+var VERSION = '20260908c';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1612,6 +1612,142 @@ function saveCart() {
   history.replaceState(null, '', '?' + p.toString() + location.hash);
 }
 
+/* ── 파일로 저장하고 다시 불러오기 ────────────────────
+   브라우저 자동 저장은 그 기기·그 브라우저에만 남는다. 기기를 바꾸거나
+   기록을 지우면 사라지므로, 파일로 손에 쥘 수 있게 한다.
+
+   어느 기간에 고른 것인지도 함께 담는다. 신청 때 낸 것과 정정 때 낸 것을
+   나중에 구분할 수 있어야 하기 때문이다. */
+
+var 저장형식 = '2028-과목선택';
+var 저장판 = 1;
+
+function 저장꾸러미() {
+  var 고른것 = {};
+  SLOTS.forEach(function (s) {
+    var arr = cartOf(s.key);
+    if (arr.length) 고른것[s.key] = arr.slice();
+  });
+
+  // 사람이 파일을 열어 봐도 알아볼 수 있게 슬롯 이름을 함께 적는다.
+  var 보기좋게 = [];
+  SLOTS.forEach(function (s) {
+    var arr = cartOf(s.key);
+    if (arr.length) 보기좋게.push({ 자리: s.이름, 과목: arr.slice() });
+  });
+
+  return {
+    형식: 저장형식,
+    판: 저장판,
+    저장시각: new Date().toISOString(),
+    학년도: COHORT ? COHORT.id : '',
+    학년도이름: COHORT ? COHORT.제목 : '',
+    // 지금이 어느 기간인지. 관리자 화면에서 정한 값을 그대로 옮긴다.
+    기간: (COHORT && COHORT.단계) || '',
+    과정: state.course,
+    담은과목: 고른것,
+    한눈에: 보기좋게
+  };
+}
+
+/* 파일 이름 — 학생이 여러 번 저장해도 서로 덮이지 않게 기간과 날짜를 넣는다. */
+function 저장파일이름() {
+  var d = new Date();
+  var 두자리 = function (n) { return (n < 10 ? '0' : '') + n; };
+  var 날짜 = d.getFullYear() + '-' + 두자리(d.getMonth() + 1) + '-' + 두자리(d.getDate());
+  var 기간 = (COHORT && COHORT.단계) ? COHORT.단계.replace(/\s+/g, '') : '';
+  return ['과목선택', 기간, 날짜].filter(Boolean).join('_') + '.json';
+}
+
+function 파일로저장() {
+  var 담은수 = SLOTS.reduce(function (n, s) { return n + cartOf(s.key).length; }, 0);
+  if (!담은수) {
+    flash('담은 과목이 없습니다. 과목을 고른 뒤에 저장해 주세요.', true);
+    return;
+  }
+  var 글 = JSON.stringify(저장꾸러미(), null, 2);
+  var blob = new Blob([글], { type: 'application/json;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 저장파일이름();
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  // 곧바로 지우면 브라우저가 내려받기를 마치기 전에 끊길 수 있다.
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+
+  var 기간말 = (COHORT && COHORT.단계) ? '(' + COHORT.단계 + ') ' : '';
+  flash('담은 과목 ' + 담은수 + '개를 파일로 저장했습니다 ' + 기간말 + '— ' + 저장파일이름());
+}
+
+/* 불러오기 — 파일을 골라 그때 담았던 과목을 되살린다.
+   지금 담아 둔 것이 있으면 덮어쓰기 전에 먼저 묻는다. */
+function 파일에서불러오기(file) {
+  var reader = new FileReader();
+  reader.onload = function () {
+    var 꾸러미;
+    try {
+      꾸러미 = JSON.parse(reader.result);
+    } catch (e) {
+      flash('이 파일은 읽을 수 없습니다. 저장할 때 받은 파일이 맞는지 확인해 주세요.', true);
+      return;
+    }
+    if (!꾸러미 || 꾸러미.형식 !== 저장형식) {
+      flash('이 페이지에서 저장한 파일이 아닙니다.', true);
+      return;
+    }
+    if (꾸러미.학년도 && COHORT && 꾸러미.학년도 !== COHORT.id) {
+      flash('다른 학년도(' + (꾸러미.학년도이름 || 꾸러미.학년도) + ')에서 저장한 파일입니다. ' +
+            '위쪽에서 학년도를 바꾼 뒤 다시 불러와 주세요.', true);
+      return;
+    }
+
+    var 지금담은수 = SLOTS.reduce(function (n, s) { return n + cartOf(s.key).length; }, 0);
+    if (지금담은수 && !confirm('지금 담아 둔 ' + 지금담은수 + '개 과목을 지우고 ' +
+        '파일의 내용으로 바꿉니다. 계속할까요?')) return;
+
+    // 과정 먼저 맞춘다 — 과정에 따라 열리는 과목이 다르다.
+    var cs = courses();
+    if (꾸러미.과정 && cs.indexOf(꾸러미.과정) !== -1) state.course = 꾸러미.과정;
+
+    // 지금 편성표에 없거나 폐강된 과목은 되살리지 않고 따로 알린다.
+    var 담김 = 0, 뺀것 = [];
+    state.cart = {};
+    SLOTS.forEach(function (s) {
+      var 목록 = (꾸러미.담은과목 || {})[s.key] || [];
+      var 남길것 = [];
+      목록.forEach(function (n) {
+        var rec = D.school.개설.filter(function (c) {
+          return c.과목 === n && offeredIn(c, s);
+        })[0];
+        if (!rec) { 뺀것.push(n + ' (' + s.이름 + ' — 지금은 열리지 않음)'); return; }
+        if (폐강인가(rec, state.course, s.학기)) {
+          뺀것.push(n + ' (' + s.이름 + ' — 폐강)'); return;
+        }
+        남길것.push(n); 담김++;
+      });
+      state.cart[s.key] = 남길것;
+    });
+
+    saveCart();
+    renderMy();
+
+    var 말 = '파일에서 ' + 담김 + '개 과목을 불러왔습니다';
+    if (꾸러미.기간) 말 += ' (' + 꾸러미.기간 + '에 저장한 것)';
+    if (뺀것.length) {
+      말 += '. 다음은 빼고 담았습니다 — ' + 뺀것.join(', ');
+      flash(말, true);
+    } else {
+      flash(말 + '.');
+    }
+  };
+  reader.onerror = function () {
+    flash('파일을 읽지 못했습니다.', true);
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
 /* 저장된 담기 목록 읽기 — URL이 있으면 그쪽을 우선한다 */
 function readCart() {
   var p = new URLSearchParams(location.search);
@@ -2188,6 +2324,16 @@ loadCommon().then(function () {
   bind();
   $('#my-reset').onclick = function () {
     state.cart = {}; saveCart(); renderMy();
+  };
+
+  // 파일로 저장·불러오기 — 기기를 바꾸거나 제출해야 할 때 쓴다.
+  $('#my-save').onclick = function () { 파일로저장(); };
+  $('#my-load').onclick = function () { $('#my-file-input').click(); };
+  $('#my-file-input').onchange = function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (f) 파일에서불러오기(f);
+    // 같은 파일을 다시 골라도 onchange 가 돌도록 비워 둔다.
+    e.target.value = '';
   };
   $('#cohort-tag').onclick = function () { showGate(); };
 

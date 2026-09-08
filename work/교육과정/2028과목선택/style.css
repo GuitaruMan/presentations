@@ -271,6 +271,19 @@ body{
 }
 .reset:hover{color:var(--ink);border-bottom-color:var(--ink)}
 
+/* 파일로 저장·불러오기 — 담기 목록을 손에 쥘 수 있게 하는 자리라
+   '모두 비우기'(글자 링크)보다 앞에 두고 버튼답게 보이게 한다. */
+.my-file{display:flex;flex-direction:column;gap:7px;margin:18px 0 16px}
+.btn-save,.btn-load{
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;
+  padding:9px 12px;border-radius:9px;text-align:center;
+  border:1.5px solid var(--teal);
+}
+.btn-save{background:var(--teal);color:#fff}
+.btn-save:hover{filter:brightness(1.07)}
+.btn-load{background:var(--paper-card);color:var(--teal)}
+.btn-load:hover{background:var(--teal-wash)}
+
 .pane-note{font-size:12.5px;color:var(--ink-faint);line-height:1.6;margin:16px 0 0}
 
 .count{font-size:13px;color:var(--ink-soft);margin:0 0 16px}

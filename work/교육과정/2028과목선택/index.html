@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>2028 과목 선택 안내</title>
 <meta name="description" content="2028학년도 대학별 권장과목과 우리 학교 편성표를 함께 보는 과목 선택 안내">
-<link rel="stylesheet" href="style.css?v=20260908b">
+<link rel="stylesheet" href="style.css?v=20260908c">
 </head>
 <body>
 
@@ -161,9 +161,16 @@
 
         <div id="my-status"></div>
 
+        <div class="my-file">
+          <button type="button" class="btn-save" id="my-save">고른 과목 저장하기</button>
+          <button type="button" class="btn-load" id="my-load">저장한 파일 불러오기</button>
+          <input type="file" id="my-file-input" accept=".json,application/json" hidden>
+        </div>
+
         <button type="button" class="reset" id="my-reset">담은 과목 모두 비우기</button>
         <p class="pane-note">고른 과목은 이 기기에 저장됩니다.
-          주소를 복사해 두면 다른 기기에서도 그대로 열립니다.</p>
+          주소를 복사해 두면 다른 기기에서도 그대로 열립니다.<br>
+          기기를 바꾸거나 제출해야 한다면 <b>저장하기</b>로 파일을 받아 두세요.</p>
       </aside>
 
       <div class="pane-result">
@@ -195,9 +202,9 @@
 
 <div class="loading" id="loading">자료를 불러오는 중입니다…</div>
 
-<script src="logic.js?v=20260908b"></script>
+<script src="logic.js?v=20260908c"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260908b"></script>
+<script src="app.js?v=20260908c"></script>
 </body>
 </html>
