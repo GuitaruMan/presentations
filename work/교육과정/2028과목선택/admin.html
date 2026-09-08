@@ -662,9 +662,11 @@ function collect(){
 
     var rec = { 과목:과목, 선택군:선택군 };
     if(hit.length < 전체){
-      var 과정들 = hit.map(function(h){return h.과정}).filter(function(v,i,a){return a.indexOf(v)===i});
+      // 이름을 과정들로 두면 위쪽에서 부르는 과정들() 함수를 가린다(var 는 함수 전체로
+      // 끌어올려진다). 그러면 이 함수가 첫 줄에서 죽어 폐강이 저장되지 않는다.
+      var 고른과정 = hit.map(function(h){return h.과정}).filter(function(v,i,a){return a.indexOf(v)===i});
       var 학기들 = hit.map(function(h){return h.학기}).filter(function(v,i,a){return a.indexOf(v)===i}).sort();
-      if(과정들.length===1) rec.과정 = 과정들;
+      if(고른과정.length===1) rec.과정 = 고른과정;
       rec.학기 = 학기들;
     }
     out.push(rec);
