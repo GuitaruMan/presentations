@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>수능 독서, 어떻게 읽을 것인가 (방과후-1차시)</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap');
 
   :root {
     --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
-    --paper: #f2f4f7;
-    --paper-edge: #d6dce4;
-    --ink: #1a222b;
-    --ink-soft: #4c5865;
-    --ink-faint: #8b96a3;
+    --paper: #f4f3f0;
+    --paper-edge: #e2ddd6;
+    --ink: #23262b;
+    --ink-soft: #55585e;
+    --ink-faint: #979490;
     --key: #1c5675;
     --key-soft: #5c8ba6;
-    --rule: #ccd6de;
-    --card: #f9fbfc;
+    --rule: #ded9d2;
+    --card: #fbfaf8;
     --warn: #b0392c;
     --warn-bg: #fbefed;
     --warn-line: #e6c2bd;
@@ -26,8 +26,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body {
-    background: #101a22;
-    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    background: #1b1f24;
+    font-family: "IBM Plex Sans KR", "Malgun Gothic", sans-serif;
     color: var(--ink);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -40,7 +40,7 @@
     position: fixed; top: 0; left: 0; right: 0;
     display: flex; justify-content: space-between; align-items: center;
     padding: 0.7rem 1.2rem; font-size: 0.82rem;
-    background: rgba(16,26,34,0.94); z-index: 50;
+    background: rgba(27,31,36,0.94); z-index: 50;
   }
   .nav-top a { color: #b4c6d2; text-decoration: none; margin-right: 1rem; }
   .nav-top a:hover { color: #e6eff4; }
@@ -52,10 +52,12 @@
     width: var(--stage-w); aspect-ratio: 16 / 9;
     background: var(--paper);
     background-image:
-      radial-gradient(ellipse at 15% 8%, rgba(255,255,255,0.8) 0%, transparent 58%),
-      radial-gradient(ellipse at 86% 92%, rgba(28,86,117,0.14) 0%, transparent 60%);
-    border: 1px solid var(--paper-edge);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+      /* 종이 결 — 아주 옅은 사선 */
+      repeating-linear-gradient(112deg, rgba(120,108,92,0.030) 0 1px, transparent 1px 7px),
+      radial-gradient(ellipse at 14% 6%, rgba(255,253,249,0.9) 0%, transparent 62%),
+      radial-gradient(ellipse at 88% 94%, rgba(28,86,117,0.085) 0%, transparent 64%);
+    border: 1px solid var(--paper-edge); border-radius: 3px;
+    box-shadow: 0 14px 44px rgba(0,0,0,0.30);
     position: relative; overflow: hidden;
     display: flex; flex-direction: column;
     padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
@@ -63,8 +65,8 @@
   /* 우측 상단 — 문단 덩어리와 첫 줄 */
   .stage::before {
     content: ""; position: absolute; top: 5%; right: -2%;
-    width: 19%; height: 44%; pointer-events: none; opacity: 0.10;
-    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%231c5675' stroke-linecap='round'><path stroke-width='6' d='M18 18 H150'/><path stroke-width='2.2' d='M18 38 H182 M18 54 H182 M18 70 H126'/><path stroke-width='6' d='M18 100 H150'/><path stroke-width='2.2' d='M18 120 H182 M18 136 H182 M18 152 H108'/></g></svg>");
+    width: 19%; height: 44%; pointer-events: none; opacity: 0.07;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%235b5348' stroke-linecap='round'><path stroke-width='6' d='M18 18 H150'/><path stroke-width='2.2' d='M18 38 H182 M18 54 H182 M18 70 H126'/><path stroke-width='6' d='M18 100 H150'/><path stroke-width='2.2' d='M18 120 H182 M18 136 H182 M18 152 H108'/></g></svg>");
   }
   .stage > .slide { position: relative; z-index: 1; }
 
@@ -79,17 +81,21 @@
   h2.slide-title {
     font-family: "Gowun Batang", serif; font-weight: 700;
     font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
-    padding-bottom: 0.55cqw; margin-bottom: 1.65cqw;
-    border-bottom: 0.15cqw solid var(--ink);
-    align-self: flex-start; flex-shrink: 0;
+    padding-bottom: 0.62cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.1cqw solid var(--rule);
+    align-self: flex-start; flex-shrink: 0; position: relative;
+  }
+  h2.slide-title::after {
+    content: ""; position: absolute; left: 0; bottom: -0.1cqw;
+    width: 2.6em; height: 0.26cqw; background: var(--key);
   }
   h2.slide-title .qm {
-    font-family: "Noto Sans KR", sans-serif; font-weight: 400;
+    font-family: "IBM Plex Sans KR", sans-serif; font-weight: 400;
     font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
     margin-left: 0.8em; vertical-align: 0.18em;
   }
   h2.slide-title .ans-chip {
-    font-family: "Noto Sans KR", sans-serif; font-weight: 700;
+    font-family: "IBM Plex Sans KR", sans-serif; font-weight: 700;
     font-size: 0.46em; color: var(--paper); background: var(--key);
     padding: 0.18em 0.7em; margin-left: 0.8em; vertical-align: 0.22em;
     letter-spacing: 0.04em; white-space: nowrap;
@@ -122,9 +128,9 @@
     border-bottom: 1px solid var(--rule);
     display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
   }
-  .story-head .rng { font-family: "Noto Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story-head .rng { font-family: "IBM Plex Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
   .story {
-    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-family: "Gowun Batang", serif;
     font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
     line-height: 1.88; color: var(--ink); text-align: justify;
   }
@@ -132,7 +138,7 @@
 
   /* 기출 지문을 그대로 옮긴 자리 */
   .cite {
-    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-family: "Gowun Batang", serif;
     font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
     line-height: 1.86; color: var(--ink);
     background: rgba(28,86,117,0.05);
@@ -141,7 +147,7 @@
   }
   .cite .attr {
     display: block; margin-top: 0.42em;
-    font-family: "Noto Sans KR", sans-serif; font-size: 0.68em;
+    font-family: "IBM Plex Sans KR", sans-serif; font-size: 0.68em;
     color: var(--ink-faint); letter-spacing: 0.03em;
   }
   /* 지문 안에서 눈여겨볼 대목 — 색을 바꾸지 않고 획만 더한다 */
@@ -151,6 +157,7 @@
   .emotion {
     background: var(--card); border-left: 0.32cqw solid var(--key);
     padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+    border-radius: 0 2px 2px 0;
   }
   .emotion .etag {
     font-family: "Gowun Batang", serif; font-weight: 700;
@@ -205,7 +212,8 @@
   .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
   .num-list strong { color: var(--key); }
 
-  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw; }
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw;   border-radius: 2px;
+  }
   .def-box .dt {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
     font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
@@ -216,7 +224,8 @@
 
   .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
   .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
-  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw;   border-radius: 0 0 2px 2px;
+  }
   .c3 h3 {
     font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
     margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
@@ -231,6 +240,7 @@
   .flow-step {
     flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
     padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
+    border-radius: 0 0 2px 2px;
   }
   .flow-step .emo {
     font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
@@ -252,7 +262,7 @@
     width: 3.4em; flex-shrink: 0; white-space: nowrap;
   }
   .pline .pt {
-    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-family: "Gowun Batang", serif;
     font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
     line-height: 1.72; color: var(--ink);
   }
@@ -293,7 +303,7 @@
     font-size: calc(1.94cqw * var(--fs));
   }
   .pblock .ptx {
-    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-family: "Gowun Batang", serif;
     font-size: calc(2.06cqw * var(--fs)); line-height: 1.82; color: var(--ink);
   }
   .pblock .ptx b { color: var(--key); -webkit-text-stroke: 0.02em currentColor; font-weight: 400; }
@@ -308,7 +318,7 @@
     padding: 0.55cqw 1.05cqw; border: 1px solid transparent;
   }
   .choices .n { flex-shrink: 0; font-weight: 700; color: var(--ink-faint); width: 1.5em; }
-  .choices li.ans { background: var(--warn-bg); border-color: var(--warn-line); }
+  .choices li.ans { background: var(--warn-bg); border-color: var(--warn-line); border-radius: 2px; }
   .choices li.ans .n { color: var(--warn); }
   .choices li.ans .txt { font-weight: 700; }
   .choices b { color: var(--warn); }
@@ -317,6 +327,7 @@
   .bogi {
     background: var(--card); border: 1px solid var(--rule);
     padding: 1.1cqw 1.5cqw; font-size: calc(1.94cqw * var(--fs)); line-height: 1.68;
+    border-radius: 2px;
   }
   .bogi .tag {
     display: block; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
@@ -335,7 +346,8 @@
   .ans-banner .why { font-size: calc(2.16cqw * var(--fs)); line-height: 1.45; }
 
   .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
-  .evi .box { background: var(--card); border: 1px solid var(--rule); padding: 1.3cqw 1.6cqw; }
+  .evi .box { background: var(--card); border: 1px solid var(--rule); padding: 1.3cqw 1.6cqw;   border-radius: 2px;
+  }
   .evi .box .h {
     font-family: "Gowun Batang", serif; font-weight: 700;
     font-size: calc(1.98cqw * var(--fs)); letter-spacing: 0.06em;
@@ -363,7 +375,7 @@
   .otable .u-key { color: var(--key); }
 
   .trap {
-    margin-top: 1.4cqw; background: var(--card);
+    margin-top: 1.4cqw; background: var(--card); border-radius: 0 2px 2px 0;
     border-left: 0.4cqw solid var(--key); padding: 1.15cqw 1.6cqw; flex: 0 0 auto;
   }
   .trap .h {
