@@ -284,6 +284,30 @@
   }
   .qans strong { color: var(--key); }
 
+  /* 지문 골격 — 문단마다 한 줄 요지와 한 줄 보충 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.0cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.25cqw; }
+  .para-no {
+    flex-shrink: 0; width: 5.6cqw;
+    background: var(--key); color: var(--paper);
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: calc(2.1cqw * var(--fs));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; background: var(--card); border: 1px solid var(--rule); border-left: none;
+    padding: 1.1cqw 1.5cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: calc(2.2cqw * var(--fs)); font-weight: 700; line-height: 1.45; }
+  .para-body .t b { color: var(--key); }
+  .para-body .d {
+    font-size: calc(1.9cqw * var(--fs)); color: var(--ink-soft);
+    line-height: 1.55; margin-top: 0.35cqw;
+  }
+  .para-body .d b { color: var(--ink); }
+  .slide.tight .para-flow { gap: 0.75cqw; }
+  .slide.tight .para-body { padding: 0.85cqw 1.25cqw; }
+
   /* 지문 인용 — 문단 번호를 붙여 여러 문단을 나란히 */
   .passage { display: flex; flex-direction: column; gap: 1.0cqw; }
   .pblock { display: flex; gap: 1.1cqw; align-items: flex-start; }
@@ -457,11 +481,11 @@
       <span>2026 &middot; 2024 &middot; 2027학년도 6월 모의평가</span>
       <span>방과후 &middot; 2차시 (2시간)</span>
     </div>
-    <div class="page-num">1 / 54</div>
+    <div class="page-num">1 / 52</div>
   </section>
 
   <!-- 2 -->
-  <section class="slide tight" style="--fs:1.00;">
+  <section class="slide tight" style="--fs:1.39;">
     <h2 class="slide-title">오늘 할 일</h2>
     <div class="body-area">
       <table class="info-table">
@@ -471,7 +495,7 @@
         <tr><th>4부</th><td>노비제와 민권<br><span class="sub-note">2027학년도 6월 4&#12316;9번 &middot; 시대를 따라 흘러가는 글</span></td></tr>
       </table>
     </div>
-    <div class="page-num">2 / 54</div>
+    <div class="page-num">2 / 52</div>
   </section>
 
   <!-- 3 -->
@@ -490,7 +514,7 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">3 / 54</div>
+    <div class="page-num">3 / 52</div>
   </section>
 
   <!-- 4 -->
@@ -519,7 +543,7 @@
         <ul><li>첫 문단이 <strong>대립하는 두 입장</strong>을 내놓으면 첫째 꼴, <strong>한 사람의 이론 이름</strong>을 내놓으면 둘째 꼴, <strong>시기나 연대</strong>를 내놓으면 셋째 꼴이다.</li></ul>
       </div>
     </div>
-    <div class="page-num">4 / 54</div>
+    <div class="page-num">4 / 52</div>
   </section>
 
   <!-- 5 -->
@@ -539,7 +563,7 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">5 / 54</div>
+    <div class="page-num">5 / 52</div>
   </section>
 
   <!-- 6 -->
@@ -561,7 +585,7 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">6 / 54</div>
+    <div class="page-num">6 / 52</div>
   </section>
 
   <!-- 7 -->
@@ -582,7 +606,7 @@
         <ul><li>앞에 놓인 입장은 <strong>발판</strong>이다. 필자가 세우려는 것은 신호어 뒤에 있다. 발판을 필자의 주장으로 읽으면 문항이 전부 어긋난다.</li></ul>
       </div>
     </div>
-    <div class="page-num">7 / 54</div>
+    <div class="page-num">7 / 52</div>
   </section>
 
   <!-- 8 -->
@@ -596,7 +620,7 @@
         <li><span class="n">4</span>다 읽고 나면 <strong>관점표</strong>를 눈으로 확인한다. 빈칸이 있으면 그 자리가 문항이 된다.</li>
       </ul>
     </div>
-    <div class="page-num">8 / 54</div>
+    <div class="page-num">8 / 52</div>
   </section>
 
   <!-- 9 -->
@@ -614,7 +638,7 @@
         <ul><li>동일론 &rarr; 기능주의 &rarr; 설은 <strong>뒤가 앞을 밀어내는</strong> 순서다. 다만 셋 다 마음을 몸 안에 가둔다. 로랜즈는 그 울타리 자체를 문제 삼는다.</li></ul>
       </div>
     </div>
-    <div class="page-num">9 / 54</div>
+    <div class="page-num">9 / 52</div>
   </section>
 
   <!-- 10 -->
@@ -647,7 +671,7 @@
         <ul><li>&lsquo;동일론, 기능주의, 설은 <strong>모두</strong> 의식에 대한 논의를 몸의 내부로만 한정하고 있다.&rsquo; 앞의 셋을 한 덩어리로 묶고 로랜즈를 그 맞은편에 세운다.</li></ul>
       </div>
     </div>
-    <div class="page-num">10 / 54</div>
+    <div class="page-num">10 / 52</div>
   </section>
 
   <!-- 11 -->
@@ -674,7 +698,7 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">11 / 54</div>
+    <div class="page-num">11 / 52</div>
   </section>
 
   <!-- 12 -->
@@ -691,29 +715,35 @@
         <ul><li>객관주의 두 갈래는 서로 달라 보이지만 <strong>주체와 대상이 지각 이전에 이미 나뉘어 있다</strong>고 전제하는 점에서 같다. (나)는 그 전제를 친다.</li></ul>
       </div>
     </div>
-    <div class="page-num">12 / 54</div>
+    <div class="page-num">12 / 52</div>
   </section>
 
   <!-- 13 -->
-  <section class="slide" style="--fs:1.27;">
+  <section class="slide" style="--fs:1.36;">
     <h2 class="slide-title">지문 읽기 &middot; (나)의 뒤집기</h2>
     <div class="body-area">
-      <div class="passage" style="margin-bottom:1.2cqw;">
-        <div class="pblock">
-          <span class="pno">3문단</span>
-          <span class="ptx"><b>하지만</b> 지각은 주체와 대상이 각자로서 존재하기 <b>이전에</b> 나타나는 얽힘의 체험이다. <span class="dim">&hellip;</span> 감각하는 것이 동시에 감각되는 것이 되는 얽힘의 순간에, 나는 나와 대상을 확연히 구분한다. <b>지각이라는 얽힘의 작용이 있어야 주체와 대상이 분리될 수 있다.</b> 다시 말해 주체와 대상은 <b>지각이 일어난 이후 비로소 확정된다.</b></span>
+      <div class="para-flow" style="margin-bottom:1.2cqw;">
+        <div class="para-row">
+          <div class="para-no">객관<br>주의</div>
+          <div class="para-body">
+            <div class="t">주체와 대상이 <b>먼저</b> 있고, 그다음에 지각이 일어난다</div>
+            <div class="d">의식을 물질로 환원하든 독자적 실체로 보든, 둘 다 주체와 대상의 분리를 <b>전제</b>한다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">(나)</div>
+          <div class="para-body">
+            <div class="t">지각이 <b>먼저</b> 일어나고, 그다음에 주체와 대상이 갈린다</div>
+            <div class="d">&ldquo;지각이라는 얽힘의 작용이 있어야 주체와 대상이 분리될 수 있다&rdquo; &mdash; 3문단</div>
+          </div>
         </div>
       </div>
       <div class="emotion">
-        <div class="etag">순서가 뒤집혔다</div>
-        <ul>
-          <li>객관주의 &mdash; 주체와 대상이 먼저 있고, 그다음에 지각이 일어난다.</li>
-          <li>(나) &mdash; 지각이 먼저 일어나고, 그다음에 주체와 대상이 갈린다.</li>
-          <li>이 <strong>선후 관계</strong>가 14번과 15번의 근거다.</li>
-        </ul>
+        <div class="etag">이 선후 관계가</div>
+        <ul><li>14번과 15번의 근거다. 로랜즈가 <strong>주체를 앞에 놓았다</strong>는 것이 (나)에게는 곧 비판의 이유가 된다.</li></ul>
       </div>
     </div>
-    <div class="page-num">13 / 54</div>
+    <div class="page-num">13 / 52</div>
   </section>
 
   <!-- 14 -->
@@ -733,7 +763,7 @@
         <ul><li>둘 다 몸 바깥을 끌어들이지만 <strong>주체를 놓는 자리</strong>가 정반대다. 이 한 줄이 (나)가 (가)를 비판하는 근거가 된다.</li></ul>
       </div>
     </div>
-    <div class="page-num">14 / 54</div>
+    <div class="page-num">14 / 52</div>
   </section>
 
   <!-- 15 -->
@@ -752,7 +782,7 @@
         <li><span class="n">&#9316;</span><span class="txt">㉮ 입력과 출력 &nbsp;/&nbsp; ㉯ 의식의 판단</span></li>
       </ul>
     </div>
-    <div class="page-num">15 / 54</div>
+    <div class="page-num">15 / 52</div>
   </section>
 
   <!-- 16 -->
@@ -781,7 +811,7 @@
         <p>&#9313;&#9314;&#9316;의 ㉯는 모두 (나)가 물리친 입장이다. 신호어 &lsquo;&#12316;이 아니라 &#12316;이다&rsquo;에 표시해 두면 세 개가 한 번에 지워진다.</p>
       </div>
     </div>
-    <div class="page-num">16 / 54</div>
+    <div class="page-num">16 / 52</div>
   </section>
 
   <!-- 17 -->
@@ -796,7 +826,7 @@
         <li><span class="n">&#9316;</span><span class="txt">로랜즈는 노트북에 저장된 정보가 그 자체로는 심적 상태가 아니라고 볼 것이다.</span></li>
       </ul>
     </div>
-    <div class="page-num">17 / 54</div>
+    <div class="page-num">17 / 52</div>
   </section>
 
   <!-- 18 -->
@@ -824,11 +854,11 @@
         <p>이런 문장은 출제자가 <b>A를 가져다 선택지로 만들라고</b> 표시해 둔 자리다. 읽을 때 A와 B를 나란히 적어 두면 &#9314;가 그냥 눈에 걸린다.</p>
       </div>
     </div>
-    <div class="page-num">18 / 54</div>
+    <div class="page-num">18 / 52</div>
   </section>
 
   <!-- 19 -->
-  <section class="slide tight q-slide" style="--fs:1.25;">
+  <section class="slide tight q-slide" style="--fs:1.29;">
     <h2 class="slide-title">14번 &middot; (나)의 필자의 관점에서 ㉠을 평가한 내용으로 가장 적절한 것은?<span class="ans-chip">정답 &#9312;</span></h2>
     <div class="body-area">
       <div class="bogi" style="margin-bottom:1.0cqw;">
@@ -843,7 +873,7 @@
         <li><span class="n">&#9316;</span><span class="txt">&#12316;주장은, 주체와 대상의 분리를 통해서만 지각이 이루어질 수 있다고 보는 것이므로 타당하다.</span></li>
       </ul>
     </div>
-    <div class="page-num">19 / 54</div>
+    <div class="page-num">19 / 52</div>
   </section>
 
   <!-- 20 -->
@@ -872,7 +902,7 @@
         <p>셋 다 결론이 &lsquo;<b>타당하다</b>&rsquo;인데, 근거로 든 것은 모두 (나)가 비판한 객관주의의 말이다. (나)의 관점에서 물으므로 이 셋은 근거부터 성립하지 않는다.</p>
       </div>
     </div>
-    <div class="page-num">20 / 54</div>
+    <div class="page-num">20 / 52</div>
   </section>
 
   <!-- 21 -->
@@ -891,7 +921,7 @@
         <li><span class="n">&#9316;</span><span class="txt">주체와 대상이 분리되기 이전에 감각과 지각이 분리된 채로 존재하기 때문에</span></li>
       </ul>
     </div>
-    <div class="page-num">21 / 54</div>
+    <div class="page-num">21 / 52</div>
   </section>
 
   <!-- 22 -->
@@ -915,11 +945,11 @@
         <p>밑줄 친 문장의 <b>바로 앞뒤</b>를 먼저 본다. 이 지문은 앞 문장에 답이 그대로 있다. 멀리서 찾기 전에 한 문장 위를 확인한다.</p>
       </div>
     </div>
-    <div class="page-num">22 / 54</div>
+    <div class="page-num">22 / 52</div>
   </section>
 
   <!-- 23 -->
-  <section class="slide tight q-slide" style="--fs:1.00;">
+  <section class="slide tight q-slide" style="--fs:1.08;">
     <h2 class="slide-title">16번 &middot; &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은? [3점]<span class="ans-chip">정답 &#9314;</span></h2>
     <div class="body-area">
       <div class="bogi" style="margin-bottom:1.0cqw;">
@@ -934,7 +964,7 @@
         <li><span class="n">&#9316;</span><span class="txt">의식을 물질로 환원하는 입장에 따르면, BCI로 B의 지각이 일어났다면 자극에 따른 물질적 반응이겠군.</span></li>
       </ul>
     </div>
-    <div class="page-num">23 / 54</div>
+    <div class="page-num">23 / 52</div>
   </section>
 
   <!-- 24 -->
@@ -962,7 +992,7 @@
         <p>같은 &lt;보기&gt;라도 <b>어느 입장에 따르면</b>이 앞에 붙는다. &#9315;는 (나)의 필자, &#9316;는 (나)가 비판한 객관주의의 입장에서 묻는다. 비판받는 입장으로 물어도 <b>그 입장 안에서 맞으면</b> 적절한 진술이다.</p>
       </div>
     </div>
-    <div class="page-num">24 / 54</div>
+    <div class="page-num">24 / 52</div>
   </section>
 
   <!-- 25 -->
@@ -981,7 +1011,7 @@
         <li><span class="n">&#9316;</span><span class="txt">&#9428; 그는 컴퓨터 프로그램을 제법 만질 줄 안다. &nbsp;<span class="dim">&mdash; 다루다</span></span></li>
       </ul>
     </div>
-    <div class="page-num">25 / 54</div>
+    <div class="page-num">25 / 52</div>
   </section>
 
   <!-- 26 -->
@@ -998,71 +1028,42 @@
         <ul><li>도덕적 배려의 범위가 <strong>인간 &rarr; 생명 &rarr; 인공물</strong>로 넓어지는 흐름이 보인다. 플로리디는 그 끝에 서 있다.</li></ul>
       </div>
     </div>
-    <div class="page-num">26 / 54</div>
+    <div class="page-num">26 / 52</div>
   </section>
 
   <!-- 27 -->
-  <section class="slide" style="--fs:1.17;">
-    <h2 class="slide-title">지문 읽기 &middot; 1문단<span class="qm">인포그</span></h2>
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">지문의 뼈대<span class="qm">2026학년도 6월 14&#12316;17번</span></h2>
     <div class="body-area">
-      <div class="passage" style="margin-bottom:1.2cqw;">
-        <div class="pblock">
-          <span class="pno">1문단</span>
-          <span class="ptx">인간은 정보와 독립적으로 존재하며 정보는 인간의 도구에 불과하다는 <b>인간중심주의와 달리</b>, 플로리디의 정보 철학은 인간을 정보적 존재의 하나로 간주한다. <span class="dim">&hellip;</span> 속성과 행위가 정보로 환원되는 정보적 존재를 플로리디는 <b>&lsquo;인포그&rsquo;</b>라고 부른다. 인포그는 정보적으로 상호 연결되어 영향을 주고받는 존재이다. 상호 연결되었다는 것의 의미는, <b>다른 정보를 변화시키는 행위자 즉 주체인 동시에 다른 정보에 의해 변화되는 대상</b>이라는 것이다.</span>
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">인간도 정보로 환원되는 <b>&lsquo;인포그&rsquo;</b>다 &mdash; 인간중심주의와 대비</div>
+            <div class="d">다른 정보를 바꾸는 <b>주체</b>이자 다른 정보에 바뀌는 <b>대상</b>. 내 음성은 빵의 속성이 촉발한 대상이면서 친구의 행위를 낳은 주체다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t"><b>&lsquo;있음&rsquo;</b> = 상호 연결의 주체와 대상이 될 수 있다 &mdash; 경험주의와 대비</div>
+            <div class="d"><b>동일한 권리는 아니지만</b> 본성에 맞는 권리를 가진다 &rarr; 도덕의 범위가 칸트(인간) &middot; 생명 중심(생명)을 넘어 <b>인공물까지</b></div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t"><b>인포스피어</b> = 주체와 대상이 서로 의존하는 공간 &mdash; 뉴턴의 절대 공간과 대비</div>
+            <div class="d"><b>추상화 층위</b>는 목적에 맞는 속성만 보이게 하는 경로. 차를 살 때 안전성이면 에어백, 경제성이면 유지 비용. 이것이 <b>&lsquo;구성&rsquo;</b>이다</div>
+          </div>
         </div>
       </div>
-      <div class="emotion">
-        <div class="etag">빵의 예가 말하는 것</div>
-        <ul>
-          <li>내 음성 정보는 빵의 속성에 의해 촉발된 <strong>대상</strong>이면서, 친구의 행위를 낳은 <strong>주체</strong>다. 하나가 둘을 겸한다.</li>
-          <li>여기서 &lsquo;정보&rsquo;는 음성만이 아니다. 속성도 행위도 모두 정보다.</li>
-        </ul>
-      </div>
     </div>
-    <div class="page-num">27 / 54</div>
+    <div class="page-num">27 / 52</div>
   </section>
 
   <!-- 28 -->
-  <section class="slide" style="--fs:1.42;">
-    <h2 class="slide-title">지문 읽기 &middot; 2문단<span class="qm">&lsquo;있음&rsquo;과 도덕의 범위</span></h2>
-    <div class="body-area">
-      <div class="passage" style="margin-bottom:1.2cqw;">
-        <div class="pblock">
-          <span class="pno">2문단</span>
-          <span class="ptx">존재함 즉 &lsquo;있음&rsquo;을 <b>&lsquo;경험될 수 있다&rsquo;</b>는 뜻으로 정의하는 경험주의와 달리, 인포그의 &lsquo;있음&rsquo;은 <b>&lsquo;상호 연결의 주체와 대상이 될 수 있다&rsquo;</b>는 뜻으로 정의된다. 그러한 연결 속에서 모든 인포그들은, <b>동일한 권리는 아니지만 각자의 본성에 적합한 방식으로</b> &lsquo;있을&rsquo; 나름의 권리를 가진다.</span>
-        </div>
-      </div>
-      <div class="emotion">
-        <div class="etag">두 군데를 표시해 둔다</div>
-        <ul>
-          <li>&lsquo;있음&rsquo;의 뜻이 <strong>경험주의와 다르게</strong> 정의되었다. 14번 &#9312;이 이 자리를 묻는다.</li>
-          <li>&lsquo;동일한 권리는 아니지만&rsquo;이라는 단서. 16번 ㄱ이 이 단서를 지운 진술이다.</li>
-        </ul>
-      </div>
-    </div>
-    <div class="page-num">28 / 54</div>
-  </section>
-
-  <!-- 29 -->
-  <section class="slide" style="--fs:1.26;">
-    <h2 class="slide-title">지문 읽기 &middot; 3문단<span class="qm">인포스피어와 추상화 층위</span></h2>
-    <div class="body-area">
-      <div class="passage" style="margin-bottom:1.2cqw;">
-        <div class="pblock">
-          <span class="pno">3문단</span>
-          <span class="ptx">뉴턴이 생각한 공간은 <b>주체나 대상과 관계없는 절대적인 것</b>이었으나, 인포스피어는 <b>대상과 주체가 서로 의존함으로써 존재하는 공간</b>이자 대상이 추상화 층위를 통해 인식되는 공간이다. <span class="dim">&hellip;</span> 추상화 층위에서는 그 층위를 선택한 <b>주체의 목적에 부합하는 속성만 정보로 인식되고 나머지 정보는 생략된다.</b> <span class="dim">&hellip;</span> 인포스피어라는 공간은 <b>주체가 발견한 것도 주체가 만들어 낸 허구도 아니다.</b></span>
-        </div>
-      </div>
-      <div class="emotion">
-        <div class="etag">차를 살 때의 예</div>
-        <ul><li>안전성을 목적으로 삼으면 에어백 성능이, 경제성을 목적으로 삼으면 유지 비용이 보인다. <strong>차는 그대로인데 보이는 정보가 달라진다.</strong> 이것이 &lsquo;구성&rsquo;이다.</li></ul>
-      </div>
-    </div>
-    <div class="page-num">29 / 54</div>
-  </section>
-
-  <!-- 30 -->
-  <section class="slide tight" style="--fs:1.00;">
+  <section class="slide tight" style="--fs:1.13;">
     <h2 class="slide-title">읽으면서 만드는 표</h2>
     <div class="body-area">
       <table class="cmp-table">
@@ -1079,10 +1080,10 @@
         <ul><li>대비되는 입장이 넷, 문항도 넷이다. 네 문항이 이 네 줄을 하나씩 가져간다.</li></ul>
       </div>
     </div>
-    <div class="page-num">30 / 54</div>
+    <div class="page-num">28 / 52</div>
   </section>
 
-  <!-- 31 -->
+  <!-- 29 -->
   <section class="slide q-slide" style="--fs:1.45;">
     <h2 class="slide-title">14번 &middot; 플로리디의 정보 철학에 대한 이해로 가장 적절한 것은?<span class="ans-chip">정답 &#9314;</span></h2>
     <div class="body-area">
@@ -1094,10 +1095,10 @@
         <li><span class="n">&#9316;</span><span class="txt">하나의 정보적 존재는 다른 정보적 존재들과의 상호 연결 관계를 둘 이상 맺을 수 없다.</span></li>
       </ul>
     </div>
-    <div class="page-num">31 / 54</div>
+    <div class="page-num">29 / 52</div>
   </section>
 
-  <!-- 32 -->
+  <!-- 30 -->
   <section class="slide" style="--fs:1.00;">
     <h2 class="slide-title">14번 &middot; 정답과 근거</h2>
     <div class="body-area">
@@ -1118,10 +1119,10 @@
         <p>둘 다 지문이 <b>갈라 놓은 것을 붙이거나, 붙여 놓은 것을 뒤집었다.</b> 정의 문장에 밑줄을 그어 두었다면 그 자리로 바로 돌아갈 수 있다.</p>
       </div>
     </div>
-    <div class="page-num">32 / 54</div>
+    <div class="page-num">30 / 52</div>
   </section>
 
-  <!-- 33 -->
+  <!-- 31 -->
   <section class="slide q-slide" style="--fs:1.08;">
     <h2 class="slide-title">15번 &middot; ㉠의 의미로 가장 적절한 것은?<span class="ans-chip">정답 &#9316;</span></h2>
     <div class="body-area">
@@ -1137,10 +1138,10 @@
         <li class="ans"><span class="n">&#9316;</span><span class="txt">인포그가 지닌 속성이라는 정보는, 주체가 자신을 둘러싼 세계를 어떤 관점을 통해서 인식하는가에 의존한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">33 / 54</div>
+    <div class="page-num">31 / 52</div>
   </section>
 
-  <!-- 34 -->
+  <!-- 32 -->
   <section class="slide" style="--fs:1.09;">
     <h2 class="slide-title">15번 &middot; 정답과 근거</h2>
     <div class="body-area">
@@ -1166,10 +1167,10 @@
         <p>주체가 없는 것을 지어냈다는 뜻이 아니다. <b>주어진 세계</b>가 있고, 주체가 택한 경로에 따라 그중 일부만 보인다는 뜻이다. &#9315;는 &lsquo;구성&rsquo;을 &lsquo;허구&rsquo;로 읽어 만든 오답이다.</p>
       </div>
     </div>
-    <div class="page-num">34 / 54</div>
+    <div class="page-num">32 / 52</div>
   </section>
 
-  <!-- 35 -->
+  <!-- 33 -->
   <section class="slide q-slide" style="--fs:1.08;">
     <h2 class="slide-title">16번 &middot; ㄱ&#12316;ㅁ에 대해 판단한 것으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9312;</span></h2>
     <div class="body-area">
@@ -1185,10 +1186,10 @@
         <li><span class="n">&#9316;</span><span class="txt">ㅁ은 생명 중심 윤리학의 입장과 상충하지 않지만, 플로리디의 입장과는 상충한다.</span></li>
       </ul>
     </div>
-    <div class="page-num">35 / 54</div>
+    <div class="page-num">33 / 52</div>
   </section>
 
-  <!-- 36 -->
+  <!-- 34 -->
   <section class="slide" style="--fs:1.00;">
     <h2 class="slide-title">16번 &middot; 정답과 근거</h2>
     <div class="body-area">
@@ -1213,10 +1214,10 @@
         <p>ㄷ은 인간중심주의 줄, ㄹ은 뉴턴 줄, ㅁ은 생명 중심 윤리학 줄에서 판정된다. 읽으면서 네 줄을 채워 두었다면 선택지마다 지문을 뒤질 필요가 없다.</p>
       </div>
     </div>
-    <div class="page-num">36 / 54</div>
+    <div class="page-num">34 / 52</div>
   </section>
 
-  <!-- 37 -->
+  <!-- 35 -->
   <section class="slide tight q-slide" style="--fs:1.00;">
     <h2 class="slide-title">17번 &middot; ㉮에 들어갈 내용으로 적절하지 <u>않은</u> 것은? [3점]<span class="ans-chip">정답 &#9313;</span></h2>
     <div class="body-area">
@@ -1232,10 +1233,10 @@
         <li><span class="n">&#9316;</span><span class="txt">인포그들이 상호 의존함으로써 존재하는 인포스피어를 더 나은 공간으로 가꿔 나가는 데 호모포이에티쿠스가 책임을 다해야 한다고</span></li>
       </ul>
     </div>
-    <div class="page-num">37 / 54</div>
+    <div class="page-num">35 / 52</div>
   </section>
 
-  <!-- 38 -->
+  <!-- 36 -->
   <section class="slide" style="--fs:1.18;">
     <h2 class="slide-title">17번 &middot; 정답과 근거</h2>
     <div class="body-area">
@@ -1261,10 +1262,10 @@
         <p>1부의 관점표가 그대로 쓰인다. &lsquo;&#12316;와 달리&rsquo;, &lsquo;대조적으로&rsquo;가 붙은 선택지를 만나면 <b>정말 갈리는 자리인지</b>부터 확인한다. 이 문항은 같은 자리에 &lsquo;대조적&rsquo;을 붙여 만들었다.</p>
       </div>
     </div>
-    <div class="page-num">38 / 54</div>
+    <div class="page-num">36 / 52</div>
   </section>
 
-  <!-- 39 -->
+  <!-- 37 -->
   <section class="slide" style="--fs:1.00;">
     <h2 class="slide-title">배경지식 &middot; 조선 후기의 신분<span class="qm">2027학년도 6월 4&#12316;9번 (가)</span></h2>
     <div class="body-area">
@@ -1278,10 +1279,10 @@
         <ul><li>2문단의 <strong>양반들 일반</strong>과 3문단의 <strong>이익</strong>이 맞선다. 양반들은 노비를 가엾게 여기면서도 신분 질서 자체는 건드리지 않았고, 이익은 그 질서를 건드렸다.</li></ul>
       </div>
     </div>
-    <div class="page-num">39 / 54</div>
+    <div class="page-num">37 / 52</div>
   </section>
 
-  <!-- 40 -->
+  <!-- 38 -->
   <section class="slide" style="--fs:1.16;">
     <h2 class="slide-title">지문 읽기 &middot; 이익의 운명론</h2>
     <div class="body-area">
@@ -1307,10 +1308,10 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">40 / 54</div>
+    <div class="page-num">38 / 52</div>
   </section>
 
-  <!-- 41 -->
+  <!-- 39 -->
   <section class="slide" style="--fs:1.03;">
     <h2 class="slide-title">배경지식 &middot; 개화기의 민권<span class="qm">2027학년도 6월 4&#12316;9번 (나)</span></h2>
     <div class="body-area">
@@ -1325,10 +1326,10 @@
         <ul><li>인물이 넷, 단체가 둘 나온다. 이름마다 <strong>민을 어떻게 보았는지</strong> 한 마디씩 붙이면서 읽는다.</li></ul>
       </div>
     </div>
-    <div class="page-num">41 / 54</div>
+    <div class="page-num">39 / 52</div>
   </section>
 
-  <!-- 42 -->
+  <!-- 40 -->
   <section class="slide" style="--fs:1.00;">
     <h2 class="slide-title">지문 읽기 &middot; (나)의 시간 흐름</h2>
     <div class="body-area">
@@ -1343,10 +1344,10 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">42 / 54</div>
+    <div class="page-num">40 / 52</div>
   </section>
 
-  <!-- 43 -->
+  <!-- 41 -->
   <section class="slide q-slide" style="--fs:1.19;">
     <h2 class="slide-title">4번 &middot; (가)와 (나)에 대한 설명으로 가장 적절한 것은?<span class="ans-chip">정답 &#9314;</span></h2>
     <div class="body-area">
@@ -1358,10 +1359,10 @@
         <li><span class="n">&#9316;</span><span class="txt">(가)는 양반과 노비의 갈등이 발생하게 된 구조적 한계를, (나)는 근대 국가 건설을 위한 민권 운동의 역사적 의의를 서술하였다.</span></li>
       </ul>
     </div>
-    <div class="page-num">43 / 54</div>
+    <div class="page-num">41 / 52</div>
   </section>
 
-  <!-- 44 -->
+  <!-- 42 -->
   <section class="slide" style="--fs:1.06;">
     <h2 class="slide-title">4번 &middot; 정답과 근거</h2>
     <div class="body-area">
@@ -1382,10 +1383,10 @@
         <p>둘 다 <b>절반은 맞다.</b> 전개 방식 문항은 (가)와 (나) 중 한쪽만 보고 고르면 걸린다. 반드시 양쪽을 다 확인한다.</p>
       </div>
     </div>
-    <div class="page-num">44 / 54</div>
+    <div class="page-num">42 / 52</div>
   </section>
 
-  <!-- 45 -->
+  <!-- 43 -->
   <section class="slide q-slide" style="--fs:1.21;">
     <h2 class="slide-title">5번 &middot; ㉠에 대한 이해로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9313;</span></h2>
     <div class="body-area">
@@ -1401,10 +1402,10 @@
         <li><span class="n">&#9316;</span><span class="txt">굳센 의지를 지닌 노비의 행동을 부각하면서도 노비가 처한 불평등한 현실을 언급하지 않았다.</span></li>
       </ul>
     </div>
-    <div class="page-num">45 / 54</div>
+    <div class="page-num">43 / 52</div>
   </section>
 
-  <!-- 46 -->
+  <!-- 44 -->
   <section class="slide" style="--fs:1.03;">
     <h2 class="slide-title">5번 &middot; 정답과 근거</h2>
     <div class="body-area">
@@ -1430,10 +1431,10 @@
         <p>&lsquo;신분 질서를 정면에서 문제 삼지 않았다&rsquo;가 &#9315;의 <b>근본적인 원인을 간과</b>에, &lsquo;불평등한 여건과 처지는 거론하지 않았다&rsquo;가 &#9316;에 대응한다. 한 문단에서 선택지 넷이 나왔다.</p>
       </div>
     </div>
-    <div class="page-num">46 / 54</div>
+    <div class="page-num">44 / 52</div>
   </section>
 
-  <!-- 47 -->
+  <!-- 45 -->
   <section class="slide q-slide" style="--fs:1.20;">
     <h2 class="slide-title">6번 &middot; ㉮, ㉯가 서로에게 할 수 있는 비판으로 가장 적절한 것은?<span class="ans-chip">정답 &#9312;</span></h2>
     <div class="body-area">
@@ -1449,10 +1450,10 @@
         <li><span class="n">&#9316;</span><span class="txt">㉯는, ㉮가 인간이 태어날 때부터 정해져 있는 자연적 이치를 언급하지 않았다는 점을 비판하겠군.</span></li>
       </ul>
     </div>
-    <div class="page-num">47 / 54</div>
+    <div class="page-num">45 / 52</div>
   </section>
 
-  <!-- 48 -->
+  <!-- 46 -->
   <section class="slide" style="--fs:1.00;">
     <h2 class="slide-title">6번 &middot; 정답과 근거</h2>
     <div class="body-area">
@@ -1473,10 +1474,10 @@
         <p>비판의 <b>대상이 그런 말을 한 적이 없거나</b>(&#9315;&#9316;), <b>오히려 반대로 말했을 때</b>(&#9313;&#9314;) 성립하지 않는다. 선택지를 읽을 때 비판받는 쪽 문장부터 확인한다.</p>
       </div>
     </div>
-    <div class="page-num">48 / 54</div>
+    <div class="page-num">46 / 52</div>
   </section>
 
-  <!-- 49 -->
+  <!-- 47 -->
   <section class="slide q-slide" style="--fs:1.28;">
     <h2 class="slide-title">7번 &middot; (나)의 &lsquo;형평 운동&rsquo;에 대한 이해로 가장 적절한 것은?<span class="ans-chip">정답 &#9313;</span></h2>
     <div class="body-area">
@@ -1488,11 +1489,11 @@
         <li><span class="n">&#9316;</span><span class="txt">일제의 억압으로 발생한 불합리한 처우를 개선하기 위해 사회 운동가들의 노력으로 시작되었다.</span></li>
       </ul>
     </div>
-    <div class="page-num">49 / 54</div>
+    <div class="page-num">47 / 52</div>
   </section>
 
-  <!-- 50 -->
-  <section class="slide tight" style="--fs:1.00;">
+  <!-- 48 -->
+  <section class="slide tight" style="--fs:1.07;">
     <h2 class="slide-title">7번 &middot; 정답과 근거</h2>
     <div class="body-area">
       <div class="ans-banner">
@@ -1512,10 +1513,10 @@
         <p>&lsquo;도화선&rsquo;, &lsquo;본격화&rsquo;, &lsquo;개칭&rsquo;은 <b>일의 순서</b>를 알려 주는 말이다. 흐름형 지문의 오답은 이 순서를 건드려 만든다.</p>
       </div>
     </div>
-    <div class="page-num">50 / 54</div>
+    <div class="page-num">48 / 52</div>
   </section>
 
-  <!-- 51 -->
+  <!-- 49 -->
   <section class="slide tight q-slide" style="--fs:1.00;">
     <h2 class="slide-title">8번 &middot; &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은? [3점]<span class="ans-chip">정답 &#9316;</span></h2>
     <div class="body-area">
@@ -1531,10 +1532,10 @@
         <li class="ans"><span class="n">&#9316;</span><span class="txt">노예 출신 작가의 성취와 이익의 주장은 모두, 사회 제도의 변화를 위한 능동적인 행위의 당위성과 결부된 것이겠군.</span></li>
       </ul>
     </div>
-    <div class="page-num">51 / 54</div>
+    <div class="page-num">49 / 52</div>
   </section>
 
-  <!-- 52 -->
+  <!-- 50 -->
   <section class="slide" style="--fs:1.00;">
     <h2 class="slide-title">8번 &middot; 정답과 근거</h2>
     <div class="body-area">
@@ -1560,10 +1561,10 @@
         <p>두 대상을 하나로 묶는 선택지는 <b>묶는 기준이 양쪽에 다 걸리는지</b>를 본다. 여기서는 &lsquo;제도 변화를 위한 행위&rsquo;라는 기준이 작가 쪽에 걸리지 않는다.</p>
       </div>
     </div>
-    <div class="page-num">52 / 54</div>
+    <div class="page-num">50 / 52</div>
   </section>
 
-  <!-- 53 -->
+  <!-- 51 -->
   <section class="slide q-slide" style="--fs:1.20;">
     <h2 class="slide-title">9번 &middot; 문맥상 ⓐ와 가장 가까운 의미로 쓰인 것은?<span class="ans-chip">정답 &#9315;</span></h2>
     <div class="body-area">
@@ -1579,10 +1580,10 @@
         <li><span class="n">&#9316;</span><span class="txt">그의 판단은 그동안 쌓은 지식과 경험에 근거를 두고 있다. &nbsp;<span class="dim">&mdash; 바탕으로 삼다</span></span></li>
       </ul>
     </div>
-    <div class="page-num">53 / 54</div>
+    <div class="page-num">51 / 52</div>
   </section>
 
-  <!-- 54 -->
+  <!-- 52 -->
   <section class="slide" style="--fs:1.16;">
     <h2 class="slide-title">세 지문을 풀고 나서</h2>
     <div class="body-area">
@@ -1599,14 +1600,14 @@
         <ul><li>세 지문 모두, 읽으면서 <strong>표를 만들어 둔 사람</strong>은 선택지마다 돌아갈 자리가 정해져 있었다. 인문에서 시간을 줄이는 길은 지문을 빨리 읽는 것이 아니라 <strong>다시 읽지 않는 것</strong>이다.</li></ul>
       </div>
     </div>
-    <div class="page-num">54 / 54</div>
+    <div class="page-num">52 / 52</div>
   </section>
 
 </div>
 
 <div class="controls">
   <button id="prev">&larr; 이전</button>
-  <span id="counter">1 / 54</span>
+  <span id="counter">1 / 52</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
   <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
