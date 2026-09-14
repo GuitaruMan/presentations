@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인문 지문, 빠르고 정확하게 (방과후-2차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f2f4f7;
+    --paper-edge: #d6dce4;
+    --ink: #1a222b;
+    --ink-soft: #4c5865;
+    --ink-faint: #8b96a3;
+    --key: #1c5675;
+    --key-soft: #5c8ba6;
+    --rule: #ccd6de;
+    --card: #f9fbfc;
+    --warn: #b0392c;
+    --warn-bg: #fbefed;
+    --warn-line: #e6c2bd;
+    --ok: #1d6b52;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #101a22;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.012em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(16,26,34,0.94); z-index: 50;
+  }
+  .nav-top a { color: #b4c6d2; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #e6eff4; }
+  .nav-meta { color: #90a3b0; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 15% 8%, rgba(255,255,255,0.8) 0%, transparent 58%),
+      radial-gradient(ellipse at 86% 92%, rgba(28,86,117,0.14) 0%, transparent 60%);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
+  }
+  /* 우측 상단 — 문단 덩어리와 첫 줄 */
+  .stage::before {
+    content: ""; position: absolute; top: 5%; right: -2%;
+    width: 19%; height: 44%; pointer-events: none; opacity: 0.10;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%231c5675' stroke-linecap='round'><path stroke-width='6' d='M18 18 H150'/><path stroke-width='2.2' d='M18 38 H182 M18 54 H182 M18 70 H126'/><path stroke-width='6' d='M18 100 H150'/><path stroke-width='2.2' d='M18 120 H182 M18 136 H182 M18 152 H108'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.9cqw, 5.88rem); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.55cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.15cqw solid var(--ink);
+    align-self: flex-start; flex-shrink: 0;
+  }
+  h2.slide-title .qm {
+    font-family: "Noto Sans KR", sans-serif; font-weight: 400;
+    font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
+    margin-left: 0.8em; vertical-align: 0.18em;
+  }
+  h2.slide-title .ans-chip {
+    font-family: "Noto Sans KR", sans-serif; font-weight: 700;
+    font-size: 0.46em; color: var(--paper); background: var(--key);
+    padding: 0.18em 0.7em; margin-left: 0.8em; vertical-align: 0.22em;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.8rem, 1.68cqw, 2.02rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); color: var(--ink-soft); line-height: 1.8; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.5cqw, 3rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.4cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.46cqw, 1.76rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+
+  /* 줄글 — 설명을 이어서 하는 본문 */
+  .story-head {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.38em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+  }
+  .story-head .rng { font-family: "Noto Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
+    line-height: 1.88; color: var(--ink); text-align: justify;
+  }
+  .story + .story { margin-top: 0.55em; }
+
+  /* 기출 지문을 그대로 옮긴 자리 */
+  .cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
+    line-height: 1.86; color: var(--ink);
+    background: rgba(28,86,117,0.05);
+    border-left: 0.26em solid var(--rule);
+    padding: 0.65em 0.9em;
+  }
+  .cite .attr {
+    display: block; margin-top: 0.42em;
+    font-family: "Noto Sans KR", sans-serif; font-size: 0.68em;
+    color: var(--ink-faint); letter-spacing: 0.03em;
+  }
+  /* 지문 안에서 눈여겨볼 대목 — 색을 바꾸지 않고 획만 더한다 */
+  .cite .hl, .story .hl { -webkit-text-stroke: 0.022em currentColor; color: var(--key); }
+  .cite .dim { color: var(--ink-faint); }
+
+  .emotion {
+    background: var(--card); border-left: 0.32cqw solid var(--key);
+    padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76;
+    color: var(--ink-soft); padding-left: 1.2em; position: relative;
+  }
+  .emotion li + li { margin-top: 0.45em; }
+  .emotion li::before { content: "\2022"; position: absolute; left: 0.15em; color: var(--key-soft); }
+  .emotion li.q { color: var(--ink); }
+  .emotion li.q::before { content: "?"; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); left: 0; }
+  .emotion strong { color: var(--key); }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+  }
+  .info-table th { width: 5.4em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.7;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.15cqw solid var(--key); font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+  }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 5.2em; background: var(--card); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table strong { color: var(--key); }
+  .cmp-table caption {
+    caption-side: top; text-align: left; color: var(--ink-soft);
+    font-size: clamp(0.8rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs)));
+    padding-bottom: 0.6em;
+  }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.76;
+    padding-left: 1.7em; position: relative; margin-bottom: 0.62em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
+  .num-list strong { color: var(--key); }
+
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); line-height: 1.82; color: var(--ink-soft); }
+  .def-box strong { color: var(--key); }
+
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.45em; }
+  .c3 strong { color: var(--key); }
+
+  /* 문단 흐름도 */
+  .flow { display: flex; align-items: stretch; gap: 0.7cqw; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
+    padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); margin-bottom: 0.42em;
+  }
+  .flow-step .desc { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+  .flow-arrow { display: flex; align-items: center; color: var(--key-soft); font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); }
+
+  /* 문단 첫 문장만 이어 읽기 */
+  .plines { display: flex; flex-direction: column; gap: 0.62em; }
+  .pline {
+    display: flex; gap: 0.9em; align-items: baseline;
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.5em;
+  }
+  .pline:last-child { border-bottom: none; }
+  .pline .pn {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    width: 3.4em; flex-shrink: 0; white-space: nowrap;
+  }
+  .pline .pt {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    line-height: 1.72; color: var(--ink);
+  }
+
+  /* 단계 공개 — opacity로만 숨겨 자리를 미리 잡아 둔다 */
+  .reveal { opacity: 0; transition: opacity .25s ease; }
+  .reveal.shown { opacity: 1; }
+
+  .quiz-list {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(2.6cqw * var(--fs)); flex: 1;
+  }
+  .body-area > .quiz-list { margin-bottom: 3.0cqw; }
+  .qq {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: max(1rem, calc(2.5cqw * var(--fs))); line-height: 1.6;
+    padding-left: calc(3.4cqw * var(--fs)); position: relative;
+  }
+  .qq .qn { position: absolute; left: 0; top: 0; color: var(--key); font-size: 1.05em; }
+  .qans {
+    margin: calc(1.0cqw * var(--fs)) 0 0 calc(3.4cqw * var(--fs));
+    background: var(--card); border-left: 0.34cqw solid var(--key);
+    padding: calc(1.1cqw * var(--fs)) calc(1.6cqw * var(--fs));
+    font-size: max(0.9rem, calc(2.1cqw * var(--fs))); line-height: 1.76; color: var(--ink-soft);
+  }
+  .qans .tag {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    margin-right: 0.7em;
+  }
+  .qans strong { color: var(--key); }
+
+  /* 지문 인용 — 문단 번호를 붙여 여러 문단을 나란히 */
+  .passage { display: flex; flex-direction: column; gap: 1.0cqw; }
+  .pblock { display: flex; gap: 1.1cqw; align-items: flex-start; }
+  .pblock .pno {
+    flex-shrink: 0; width: 4.4em; padding-top: 0.2em;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(1.94cqw * var(--fs));
+  }
+  .pblock .ptx {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: calc(2.06cqw * var(--fs)); line-height: 1.82; color: var(--ink);
+  }
+  .pblock .ptx b { color: var(--key); -webkit-text-stroke: 0.02em currentColor; font-weight: 400; }
+  .pblock .ptx .dim { color: var(--ink-faint); }
+  .sub-note { display: block; margin-top: 0.25em; color: var(--ink-faint); font-size: 0.84em; }
+
+  /* ── 문제 슬라이드 ── */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.45cqw; }
+  .choices li {
+    display: flex; gap: 1.0cqw; align-items: flex-start;
+    font-size: calc(2.06cqw * var(--fs)); line-height: 1.55;
+    padding: 0.55cqw 1.05cqw; border: 1px solid transparent;
+  }
+  .choices .n { flex-shrink: 0; font-weight: 700; color: var(--ink-faint); width: 1.5em; }
+  .choices li.ans { background: var(--warn-bg); border-color: var(--warn-line); }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices b { color: var(--warn); }
+  .choices .dim { color: var(--ink-faint); }
+  .bogi .dim { color: var(--ink-faint); }
+
+  /* 발문에 딸린 인용 — ㉯의 비판, ⓐ~ⓔ의 문맥 등 */
+  .bogi {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.1cqw 1.5cqw; font-size: calc(1.94cqw * var(--fs)); line-height: 1.68;
+  }
+  .bogi .tag {
+    display: block; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(1.66cqw * var(--fs)); letter-spacing: 0.12em; margin-bottom: 0.5cqw;
+  }
+  .bogi b { color: var(--key); }
+
+  /* ── 정답과 근거 ── */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.3cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.1cqw 1.7cqw; margin-bottom: 1.5cqw; flex: 0 0 auto;
+  }
+  .ans-banner .lb { font-size: calc(1.8cqw * var(--fs)); letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num { font-family: "Gowun Batang", serif; font-weight: 700; font-size: calc(4.1cqw * var(--fs)); line-height: 1; }
+  .ans-banner .why { font-size: calc(2.16cqw * var(--fs)); line-height: 1.45; }
+
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
+  .evi .box { background: var(--card); border: 1px solid var(--rule); padding: 1.3cqw 1.6cqw; }
+  .evi .box .h {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: calc(1.98cqw * var(--fs)); letter-spacing: 0.06em;
+    padding-bottom: 0.5cqw; margin-bottom: 0.85cqw; border-bottom: 1px solid var(--rule);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: calc(2.04cqw * var(--fs)); line-height: 1.7; color: var(--ink-soft); }
+  .evi .box p + p { margin-top: 0.8cqw; }
+  .evi .box b { color: var(--ink); }
+  .evi .box .verdict { color: var(--warn); font-weight: 700; }
+
+  /* 선택지별 확인 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--rule); padding: 0.72cqw 1.0cqw;
+    font-size: calc(1.96cqw * var(--fs)); line-height: 1.55; text-align: left; vertical-align: top;
+    color: var(--ink-soft);
+  }
+  .otable th { width: 2.2em; text-align: center; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink-faint); background: var(--card); }
+  .otable tr.ans th { color: var(--warn); background: var(--warn-bg); }
+  .otable tr.ans td { background: var(--warn-bg); color: var(--ink); }
+  .otable b { color: var(--ink); }
+  .otable .u-warn { color: var(--warn); }
+  .otable .u-key { color: var(--key); }
+
+  .trap {
+    margin-top: 1.4cqw; background: var(--card);
+    border-left: 0.4cqw solid var(--key); padding: 1.15cqw 1.6cqw; flex: 0 0 auto;
+  }
+  .trap .h {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(2.0cqw * var(--fs)); margin-bottom: 0.45cqw;
+  }
+  .trap p { font-size: calc(2.02cqw * var(--fs)); line-height: 1.68; color: var(--ink-soft); }
+  .trap b { color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -2.7cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.32cqw, 1.58rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #b4c6d2; font-size: 0.86rem; }
+  .controls button {
+    background: #23404f; color: #e6eff4; border: 1px solid #3c5f72;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2d5064; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #869aa7; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w); height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cards2, .cards3, .evi { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* 자리가 빠듯한 장 — 여백만 줄이고 글자 크기는 지킨다 */
+  .slide.tight .story { line-height: 1.74; }
+  .slide.tight .cite { line-height: 1.72; padding: 0.5em 0.75em; }
+  .slide.tight .emotion { padding: 0.95cqw 1.35cqw; }
+  .slide.tight .emotion .etag { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .emotion li + li { margin-top: 0.28em; }
+  .slide.tight .story-head { margin-bottom: 0.42em; padding-bottom: 0.26em; }
+  .slide.tight .c3 { padding: 1.1cqw 1.2cqw; }
+  .slide.tight .c3 h3 { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .num-list li { margin-bottom: 0.4em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.42em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.42em 0.42em; }
+  .slide.tight .pline { padding-bottom: 0.38em; }
+  .slide.tight .plines { gap: 0.44em; }
+  .slide.tight .otable th, .slide.tight .otable td { padding: 0.48cqw 0.8cqw; line-height: 1.46; }
+  .slide.tight .choices { gap: 0.22cqw; }
+  .slide.tight .choices li { padding: 0.32cqw 0.85cqw; line-height: 1.44; }
+  .slide.tight .bogi { padding: 0.8cqw 1.2cqw; line-height: 1.56; }
+  .slide.tight .bogi .tag { margin-bottom: 0.32cqw; }
+  .slide.tight .trap { margin-top: 0.95cqw; padding: 0.85cqw 1.3cqw; }
+  .slide.tight .trap p { line-height: 1.56; }
+  .slide.tight .evi { gap: 1.2cqw; }
+  .slide.tight .evi .box { padding: 1.0cqw 1.2cqw; }
+  .slide.tight .evi .box .h { padding-bottom: 0.35cqw; margin-bottom: 0.6cqw; }
+  .slide.tight .evi .box p { line-height: 1.58; }
+  .slide.tight .ans-banner { padding: 0.82cqw 1.4cqw; margin-bottom: 1.1cqw; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_방과후.html">&larr; 방과후</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">인문 지문, 빠르고 정확하게 &middot; 방과후 2차시 &middot; 업데이트 2026. 9. 14.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">방 과 후 　 독 서</div>
+    <h1 class="title-main">인문 지문,<br>빠르고 정확하게</h1>
+    <div class="rule"></div>
+    <div class="sub">관점을 따라가며 읽고, 그 자리로 돌아가 푼다</div>
+    <div class="foot">
+      <span>2026 &middot; 2024 &middot; 2027학년도 6월 모의평가</span>
+      <span>방과후 &middot; 2차시 (2시간)</span>
+    </div>
+    <div class="page-num">1 / 55</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">오늘 할 일</h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>1부</th><td>인문 지문을 읽는 네 가지 도구</td></tr>
+        <tr><th>2부</th><td>플로리디의 정보 철학<br><span class="sub-note">2026학년도 6월 14&#12316;17번 &middot; 한 이론을 깊이 파는 글</span></td></tr>
+        <tr><th>3부</th><td>의식과 지각<br><span class="sub-note">2024학년도 6월 12&#12316;17번 &middot; 여러 관점이 맞서는 글</span></td></tr>
+        <tr><th>4부</th><td>노비제와 민권<br><span class="sub-note">2027학년도 6월 4&#12316;9번 &middot; 시대를 따라 흘러가는 글</span></td></tr>
+      </table>
+    </div>
+    <div class="page-num">2 / 55</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" style="--fs:1.33;">
+    <h2 class="slide-title">인문 지문에서 평가하는 것</h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.3cqw;">
+        인문 &middot; 예술 분야의 글에 담긴 인문학적 세계관 파악하기, 삶과 예술의 문제를 대하는 <span class="hl">필자의 관점 파악하기</span>, 필자의 관점을 <span class="hl">비판적으로 이해하기</span>
+        <span class="attr">고등학교 &#12302;독서와 작문&#12303; 성취기준</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">과학 기술 지문과 다른 점</div>
+        <ul>
+          <li>과학 기술은 <strong>무엇이 무엇을 어떻게 만드는가</strong>를 따라간다. 답이 하나로 정해져 있다.</li>
+          <li>인문은 <strong>누가 무엇을 주장하고 어디까지 동의하는가</strong>를 따라간다. 같은 말도 누가 했느냐에 따라 맞고 틀리다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">3 / 55</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" style="--fs:1.09;">
+    <h2 class="slide-title">인문 지문의 세 가지 꼴</h2>
+    <div class="body-area">
+      <div class="cards3" style="margin-bottom:1.3cqw;">
+        <div class="c3">
+          <h3><span class="word">한 이론을 깊이</span></h3>
+          <p>한 학자의 이론을 개념 &rarr; 확장 &rarr; 의의 순으로 판다. 다른 입장은 대비용으로만 짧게 나온다.</p>
+          <p><strong>2026학년도 6월</strong> 플로리디</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">관점이 맞섬</span></h3>
+          <p>여러 입장이 차례로 나오며 뒤가 앞을 반박한다. 누가 무엇에 동의하고 무엇을 문제 삼는지가 전부다.</p>
+          <p><strong>2024학년도 6월</strong> 의식과 지각</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">시대를 따라</span></h3>
+          <p>같은 화제를 시기별로 늘어놓는다. 인물이 많이 나오므로 시기와 주장을 짝지어야 한다.</p>
+          <p><strong>2027학년도 6월</strong> 노비제와 민권</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">첫 문단에서 가려진다</div>
+        <ul><li>첫 문단이 <strong>한 사람의 이론 이름</strong>을 내놓으면 첫째 꼴, <strong>대립하는 두 입장</strong>을 내놓으면 둘째 꼴, <strong>시기나 연대</strong>를 내놓으면 셋째 꼴이다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">4 / 55</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" style="--fs:1.20;">
+    <h2 class="slide-title">도구 &#9312; &middot; 정의 문장에 표시한다</h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.3cqw;">
+        속성과 행위가 정보로 환원되는 정보적 존재를 플로리디는 <span class="hl">&lsquo;인포그&rsquo;라고 부른다.</span><br>
+        추상화 층위<span class="hl">란</span> 주체의 목적이나 관심을 반영함으로써 주체와 대상 사이의 인식적 관계를 매개하는 경로<span class="hl">이다.</span>
+        <span class="attr">2026학년도 6월 14&#12316;17번</span>
+      </div>
+      <div class="emotion">
+        <div class="etag">정의가 하는 일</div>
+        <ul>
+          <li>&lsquo;&#12316;란 &#12316;이다&rsquo;, &lsquo;&#12316;를 &#12316;라 부른다&rsquo;, &lsquo;&#12316;로 정의된다&rsquo;. 이 꼴을 만나면 밑줄을 긋는다.</li>
+          <li>인문 지문의 정의는 <strong>일상어와 뜻이 다르다.</strong> &lsquo;있음&rsquo;, &lsquo;구성&rsquo;, &lsquo;심적 상태&rsquo; 모두 지문이 새로 규정한 말이다. 아는 단어라고 넘기면 그 자리가 답이 된다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 55</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" style="--fs:1.21;">
+    <h2 class="slide-title">도구 &#9313; &middot; 관점표를 만든다</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.3cqw;">
+        <thead><tr><th style="width:6.4em;">&nbsp;</th><th>쟁점 1</th><th>쟁점 2</th></tr></thead>
+        <tbody>
+          <tr><th>앞사람</th><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><th>뒷사람</th><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">가로와 세로</div>
+        <ul>
+          <li>가로줄은 <strong>사람</strong>, 세로줄은 <strong>쟁점</strong>이다. 이름 옆에 주장만 나열하면 누가 어디서 갈리는지가 남지 않는다.</li>
+          <li>쟁점은 지문이 알려 준다. 두 사람을 이어 주는 문장에 든 말이 곧 쟁점이다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">6 / 55</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">도구 &#9314; &middot; 대비 신호어를 놓치지 않는다</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.3cqw;">
+        <thead><tr><th style="width:7.2em;">신호어</th><th>실제 지문</th></tr></thead>
+        <tbody>
+          <tr><th>&#12316;와 달리</th><td>인간중심주의<strong>와 달리</strong>, 플로리디의 정보 철학은 인간을 정보적 존재의 하나로 간주한다</td></tr>
+          <tr><th>&#12316;와 대비된다</th><td>인간을 별도의 범주로 분류하는 인간중심주의<strong>와 대비된다</strong></td></tr>
+          <tr><th>이와 달리</th><td>동일론은 &#12316;동일하다고 본다. <strong>이와 달리</strong> 기능주의는 의식은 기능이며&#12316;</td></tr>
+          <tr><th>하지만</th><td><strong>하지만</strong> 지각은 주체와 대상이 각자로서 존재하기 이전에 나타나는 얽힘의 체험이다</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">신호어 뒤가 중심</div>
+        <ul><li>앞에 놓인 입장은 <strong>발판</strong>이다. 필자가 세우려는 것은 신호어 뒤에 있다. 발판을 필자의 주장으로 읽으면 문항이 전부 어긋난다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">7 / 55</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" style="--fs:1.21;">
+    <h2 class="slide-title">도구 &#9315; &middot; 배경지식은 이렇게 쓴다</h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.3cqw;">
+        <div class="c3">
+          <h3><span class="word">도움이 되는 쓰임</span></h3>
+          <p>낯선 용어를 처음 만났을 때 겁먹지 않게 해 준다.</p>
+          <p>글의 꼴을 미리 짐작하게 해 준다. 칸트가 나오면 뒤에 반박이 온다고 예상할 수 있다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">해가 되는 쓰임</span></h3>
+          <p>지문이 규정한 뜻 대신 알고 있던 뜻으로 읽는 것.</p>
+          <p>선택지를 지문이 아니라 기억으로 판정하는 것.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">어긋나면 지문이 옳다</div>
+        <ul><li>수능 지문은 학계의 정설을 그대로 옮기지 않는다. 필요한 만큼 고쳐 싣는다. 아는 내용과 다르면 <strong>지문을 따른다.</strong></li></ul>
+      </div>
+    </div>
+    <div class="page-num">8 / 55</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" style="--fs:1.45;">
+    <h2 class="slide-title">읽는 순서</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>첫 문단에서 <strong>글의 꼴</strong>을 가린다. 한 이론인가, 맞서는 관점인가, 시대 흐름인가.</li>
+        <li><span class="n">2</span><strong>정의 문장</strong>에 밑줄을 긋는다. 지문이 새로 규정한 말을 알아둔다.</li>
+        <li><span class="n">3</span>이름이 나올 때마다 여백에 <strong>한 마디</strong>로 적는다. 대비 신호어가 나오면 무엇과 무엇이 갈리는지 적는다.</li>
+        <li><span class="n">4</span>다 읽고 나면 <strong>관점표</strong>를 눈으로 확인한다. 빈칸이 있으면 그 자리가 문항이 된다.</li>
+      </ul>
+    </div>
+    <div class="page-num">9 / 55</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">배경지식 &middot; 정보 철학<span class="qm">2026학년도 6월 14&#12316;17번</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.2cqw;">
+        <tr><th>플로리디</th><td>루치아노 플로리디. 이탈리아 출신 철학자로 &lsquo;정보 철학&rsquo;과 &lsquo;정보 윤리&rsquo;라는 분야를 세웠다. 인공 지능과 디지털 사회의 윤리를 다루는 논의에서 자주 인용된다.</td></tr>
+        <tr><th>칸트 윤리학</th><td>자유 의지를 지니고 스스로 도덕 법칙을 세우는 <strong>이성적 인간만</strong>이 도덕 행위자라고 본다.</td></tr>
+        <tr><th>생명 중심<br>윤리학</th><td>도덕적으로 배려할 대상을 인간 너머 <strong>생명 전체</strong>로 넓힌다. 그래도 생명이 없는 인공물은 제외된다.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">이 배경을 알면</div>
+        <ul><li>도덕적 배려의 범위가 <strong>인간 &rarr; 생명 &rarr; 인공물</strong>로 넓어지는 흐름이 보인다. 플로리디는 그 끝에 서 있다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">10 / 55</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" style="--fs:1.17;">
+    <h2 class="slide-title">지문 읽기 &middot; 1문단<span class="qm">인포그</span></h2>
+    <div class="body-area">
+      <div class="passage" style="margin-bottom:1.2cqw;">
+        <div class="pblock">
+          <span class="pno">1문단</span>
+          <span class="ptx">인간은 정보와 독립적으로 존재하며 정보는 인간의 도구에 불과하다는 <b>인간중심주의와 달리</b>, 플로리디의 정보 철학은 인간을 정보적 존재의 하나로 간주한다. <span class="dim">&hellip;</span> 속성과 행위가 정보로 환원되는 정보적 존재를 플로리디는 <b>&lsquo;인포그&rsquo;</b>라고 부른다. 인포그는 정보적으로 상호 연결되어 영향을 주고받는 존재이다. 상호 연결되었다는 것의 의미는, <b>다른 정보를 변화시키는 행위자 즉 주체인 동시에 다른 정보에 의해 변화되는 대상</b>이라는 것이다.</span>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">빵의 예가 말하는 것</div>
+        <ul>
+          <li>내 음성 정보는 빵의 속성에 의해 촉발된 <strong>대상</strong>이면서, 친구의 행위를 낳은 <strong>주체</strong>다. 하나가 둘을 겸한다.</li>
+          <li>여기서 &lsquo;정보&rsquo;는 음성만이 아니다. 속성도 행위도 모두 정보다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">11 / 55</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" style="--fs:1.42;">
+    <h2 class="slide-title">지문 읽기 &middot; 2문단<span class="qm">&lsquo;있음&rsquo;과 도덕의 범위</span></h2>
+    <div class="body-area">
+      <div class="passage" style="margin-bottom:1.2cqw;">
+        <div class="pblock">
+          <span class="pno">2문단</span>
+          <span class="ptx">존재함 즉 &lsquo;있음&rsquo;을 <b>&lsquo;경험될 수 있다&rsquo;</b>는 뜻으로 정의하는 경험주의와 달리, 인포그의 &lsquo;있음&rsquo;은 <b>&lsquo;상호 연결의 주체와 대상이 될 수 있다&rsquo;</b>는 뜻으로 정의된다. 그러한 연결 속에서 모든 인포그들은, <b>동일한 권리는 아니지만 각자의 본성에 적합한 방식으로</b> &lsquo;있을&rsquo; 나름의 권리를 가진다.</span>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">두 군데를 표시해 둔다</div>
+        <ul>
+          <li>&lsquo;있음&rsquo;의 뜻이 <strong>경험주의와 다르게</strong> 정의되었다. 14번 &#9312;이 이 자리를 묻는다.</li>
+          <li>&lsquo;동일한 권리는 아니지만&rsquo;이라는 단서. 16번 ㄱ이 이 단서를 지운 진술이다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">12 / 55</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" style="--fs:1.26;">
+    <h2 class="slide-title">지문 읽기 &middot; 3문단<span class="qm">인포스피어와 추상화 층위</span></h2>
+    <div class="body-area">
+      <div class="passage" style="margin-bottom:1.2cqw;">
+        <div class="pblock">
+          <span class="pno">3문단</span>
+          <span class="ptx">뉴턴이 생각한 공간은 <b>주체나 대상과 관계없는 절대적인 것</b>이었으나, 인포스피어는 <b>대상과 주체가 서로 의존함으로써 존재하는 공간</b>이자 대상이 추상화 층위를 통해 인식되는 공간이다. <span class="dim">&hellip;</span> 추상화 층위에서는 그 층위를 선택한 <b>주체의 목적에 부합하는 속성만 정보로 인식되고 나머지 정보는 생략된다.</b> <span class="dim">&hellip;</span> 인포스피어라는 공간은 <b>주체가 발견한 것도 주체가 만들어 낸 허구도 아니다.</b></span>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">차를 살 때의 예</div>
+        <ul><li>안전성을 목적으로 삼으면 에어백 성능이, 경제성을 목적으로 삼으면 유지 비용이 보인다. <strong>차는 그대로인데 보이는 정보가 달라진다.</strong> 이것이 &lsquo;구성&rsquo;이다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">13 / 55</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">읽으면서 만드는 표</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:7.0em;">쟁점</th><th>다른 입장</th><th>플로리디</th></tr></thead>
+        <tbody>
+          <tr><th>인간의 자리</th><td>인간중심주의 &middot; 별도의 범주</td><td>인포그의 하나</td></tr>
+          <tr><th>&lsquo;있음&rsquo;의 뜻</th><td>경험주의 &middot; 경험될 수 있다</td><td>상호 연결의 주체와 대상이 될 수 있다</td></tr>
+          <tr><th>도덕의 범위</th><td>칸트 &middot; 자유 의지를 지닌 인간<br>생명 중심 &middot; 생명 (인공물 제외)</td><td>인공물까지 확장</td></tr>
+          <tr><th>공간</th><td>뉴턴 &middot; 절대적</td><td>주체와 대상이 서로 의존</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.2cqw;">
+        <div class="etag">네 줄이 네 문항</div>
+        <ul><li>대비되는 입장이 넷, 문항도 넷이다. 네 문항이 이 네 줄을 하나씩 가져간다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">14 / 55</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide q-slide" style="--fs:1.45;">
+    <h2 class="slide-title">14번 &middot; 플로리디의 정보 철학에 대한 이해로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">&lsquo;있음&rsquo;의 개념은 경험주의에서 정의하는 것과 같은 뜻을 지닌다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">인간과 영향을 주고받는 정보는 모두 음성 정보의 형태로 전달된다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">사물이 지닌 속성과 마찬가지로 인간이 지닌 속성 또한 정보로 환원될 수 있다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">추상화 층위에서 생략되는 정보는 층위를 선택한 주체의 목적에 부합하는 정보이다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">하나의 정보적 존재는 다른 정보적 존재들과의 상호 연결 관계를 둘 이상 맺을 수 없다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">15 / 55</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">14번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">인간을 포함한 모든 존재가 정보로 환원된다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>2문단은 두 뜻을 <b>나란히 두고 갈랐다.</b> 경험주의는 &lsquo;경험될 수 있다&rsquo;, 인포그는 &lsquo;상호 연결의 주체와 대상이 될 수 있다&rsquo; &rarr; <span class="u-warn">같은 뜻이 아니다</span></td></tr>
+        <tr><th>&#9313;</th><td>빵의 예에서 <b>빵이 지닌 속성</b>도 정보였다. 음성은 여러 정보 중 하나일 뿐이다</td></tr>
+        <tr class="ans"><th>&#9314;</th><td>1문단 &mdash; <b>인간을 포함한 세계 내 모든 존재는 속성과 행위가 정보로 환원된다</b> &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9315;</th><td>3문단 &mdash; 목적에 <b>부합하는</b> 속성만 인식되고 <b>나머지</b>가 생략된다 &rarr; <span class="u-warn">생략되는 쪽이 반대다</span></td></tr>
+        <tr><th>&#9316;</th><td>인포그는 상호 연결되어 영향을 주고받는 존재다. <span class="u-warn">연결을 하나로 제한한 서술은 없다</span></td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&#9312;과 &#9315;의 공통점</div>
+        <p>둘 다 지문이 <b>갈라 놓은 것을 붙이거나, 붙여 놓은 것을 뒤집었다.</b> 정의 문장에 밑줄을 그어 두었다면 그 자리로 바로 돌아갈 수 있다.</p>
+      </div>
+    </div>
+    <div class="page-num">16 / 55</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">15번 &middot; ㉠의 의미로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.1cqw;">
+        <span class="tag">㉠</span>
+        추상화 층위를 통해 인식되는 정보는 <b>&lsquo;구성&rsquo;</b>된 것이다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">인포그가 속한 공간은, 오프라인 공간이 아닌 온라인 공간이다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">주체가 어떤 추상화 층위를 택하는가에 따라, 인포그는 행위자와 대상 중 어느 하나에만 해당한다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">추상화 층위에 의한 주체와 대상 사이의 매개는, 인포그가 가지는 속성에 대한 인식이 객관적임을 보장한다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">인포그들이 서로 의존함으로써 존재하는 공간은, 추상화 층위를 통해 주체가 전적으로 만들어 낸 허구이다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">인포그가 지닌 속성이라는 정보는, 주체가 자신을 둘러싼 세계를 어떤 관점을 통해서 인식하는가에 의존한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">17 / 55</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" style="--fs:1.09;">
+    <h2 class="slide-title">15번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">보이는 정보가 주체의 목적에 달려 있다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">3문단</div>
+          <p>추상화 층위에서는 그 층위를 선택한 <b>주체의 목적에 부합하는 속성만</b> 정보로 인식된다.</p>
+          <p>구성이란 주어진 세계를 <b>주체가 택한 경로에 따라 해석하여 이해하는 것</b>을 말한다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">갈라야 할 두 오답</div>
+          <p><b>&#9314;</b> 목적을 반영해서 매개하므로 객관성이 보장될 리 없다.</p>
+          <p><b>&#9315;</b> 지문은 인포스피어가 <b>발견한 것도 허구도 아니라</b>고 못 박았다. &lsquo;구성&rsquo;은 그 사이에 있다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&lsquo;구성&rsquo;이라는 말의 뜻</div>
+        <p>주체가 없는 것을 지어냈다는 뜻이 아니다. <b>주어진 세계</b>가 있고, 주체가 택한 경로에 따라 그중 일부만 보인다는 뜻이다. &#9315;는 &lsquo;구성&rsquo;을 &lsquo;허구&rsquo;로 읽어 만든 오답이다.</p>
+      </div>
+    </div>
+    <div class="page-num">18 / 55</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">16번 &middot; ㄱ&#12316;ㅁ에 대해 판단한 것으로 적절하지 <u>않은</u> 것은?</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">진술</span>
+        <b>ㄱ.</b> 인간은 무엇이 그 본성에 적합한가와 무관하게 다른 인공물들과 동일한 권리를 가진다. &nbsp;<b>ㄴ.</b> 모든 정보는 인간의 행위에 의해 발생한다. &nbsp;<b>ㄷ.</b> 정보는 도구일 뿐이며 인간은 정보와 별개로 존재한다. &nbsp;<b>ㄹ.</b> 주체가 속한 공간은 그 주체가 어떤 인식적 매개 경로를 택하는가에 의해 영향을 받는다. &nbsp;<b>ㅁ.</b> 인공물은 도덕적으로 대해야 하는 대상이 아니다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">ㄱ은 플로리디의 입장과 상충하지 않는다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">ㄴ은 플로리디의 입장과 상충한다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">ㄷ은 인간중심주의의 입장과 상충하지 않는다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">ㄹ은 뉴턴의 입장과 상충하지만, 플로리디의 입장과는 상충하지 않는다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">ㅁ은 생명 중심 윤리학의 입장과 상충하지 않지만, 플로리디의 입장과는 상충한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">19 / 55</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">16번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9312;</span>
+        <span class="why">&lsquo;동일한 권리는 아니지만&rsquo;이라는 단서를 지웠다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">2문단</div>
+          <p>모든 인포그들은 <b>동일한 권리는 아니지만 각자의 본성에 적합한 방식으로</b> &lsquo;있을&rsquo; 나름의 권리를 가진다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">진술 ㄱ</div>
+          <p>인간은 <b>본성과 무관하게</b> 인공물들과 <b>동일한 권리</b>를 가진다.</p>
+          <p class="verdict">두 군데가 모두 어긋난다. ㄱ은 플로리디와 상충하므로 &lsquo;상충하지 않는다&rsquo;는 &#9312;이 적절하지 않다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">앞 슬라이드의 표를 그대로 쓴다</div>
+        <p>ㄷ은 인간중심주의 줄, ㄹ은 뉴턴 줄, ㅁ은 생명 중심 윤리학 줄에서 판정된다. 읽으면서 네 줄을 채워 두었다면 선택지마다 지문을 뒤질 필요가 없다.</p>
+      </div>
+    </div>
+    <div class="page-num">20 / 55</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide tight q-slide" style="--fs:1.00;">
+    <h2 class="slide-title">17번 &middot; ㉮에 들어갈 내용으로 적절하지 <u>않은</u> 것은? [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">보기 요지</span>
+        자유 의지는 없는 인공 지능 교통 통제 시스템(AI-TCS)이 교통 혼란을 일으켰다. 플로리디는 <b>그 시스템이 책임을 질 수는 없지만</b>, 칸트와 달리 <b>도덕 행위자에 포함되고 옳고 그름까지 평가될 수 있다</b>고 본다. 인포스피어의 번영을 감독할 책임을 진 인간은 <b>호모포이에티쿠스</b>라 부른다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">AI-TCS는 호모포이에티쿠스에 속하지 않으며, 칸트 윤리학에서 도덕 행위자로서의 지위가 인정될 자격을 갖지 않는다고</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">칸트와는 대조적으로, 자유 의지를 지니지 않은 비인간 행위자인 AI-TCS에는 교통 혼란에 대한 책임을 지울 수 없다고</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">AI-TCS와 같은 인공물이 바람직하지 않은 결과를 초래하지 않게끔 예방적으로 관리할 책임이 호모포이에티쿠스에게 있다고</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">규칙을 변경한 AI-TCS에 대해 도덕적 옳고 그름을 평가하는 것이 칸트와 달리 가능하다고</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">인포그들이 상호 의존함으로써 존재하는 인포스피어를 더 나은 공간으로 가꿔 나가는 데 호모포이에티쿠스가 책임을 다해야 한다고</span></li>
+      </ul>
+    </div>
+    <div class="page-num">21 / 55</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" style="--fs:1.18;">
+    <h2 class="slide-title">17번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">책임을 지울 수 없다는 것은 칸트와 같은 결론이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">플로리디가 칸트와 갈리는 지점</div>
+          <p><b>같은 것</b> &mdash; AI-TCS에 책임을 지울 수 없다.</p>
+          <p><b>다른 것</b> &mdash; 그래도 도덕 행위자에 포함되고, 옳고 그름을 평가할 수 있다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9313;</div>
+          <p><b>칸트와는 대조적으로</b> 책임을 지울 수 없다고.</p>
+          <p class="verdict">책임을 지울 수 없다는 대목은 두 사람이 <b>같은</b> 자리다. &lsquo;대조적으로&rsquo;가 붙을 곳이 아니다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">동의와 반대를 갈라 적었다면</div>
+        <p>1부의 관점표가 그대로 쓰인다. &lsquo;&#12316;와 달리&rsquo;, &lsquo;대조적으로&rsquo;가 붙은 선택지를 만나면 <b>정말 갈리는 자리인지</b>부터 확인한다. 이 문항은 같은 자리에 &lsquo;대조적&rsquo;을 붙여 만들었다.</p>
+      </div>
+    </div>
+    <div class="page-num">22 / 55</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide" style="--fs:1.03;">
+    <h2 class="slide-title">배경지식 &middot; 마음은 무엇인가<span class="qm">2024학년도 6월 12&#12316;17번 (가)</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.1cqw;">
+        <tr><th>심신 문제</th><td>마음과 몸이 어떤 관계인가를 따지는 철학의 오랜 물음. 심리 철학의 출발점이다.</td></tr>
+        <tr><th>동일론</th><td>마음의 상태는 <strong>곧 뇌의 물질적 상태</strong>다. 고통은 특정 신경이 활동하는 것과 같다.</td></tr>
+        <tr><th>기능주의</th><td>마음은 물질이 아니라 <strong>역할</strong>이다. 같은 역할을 하면 실리콘으로 만들어도 같은 마음이다.</td></tr>
+        <tr><th>중국어 방</th><td>철학자 설이 1980년에 내놓은 사고 실험. 규칙대로 답을 내놓는다고 <strong>뜻을 아는 것은 아니라</strong>는 반박이다.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">이 순서에 뜻이 있다</div>
+        <ul><li>동일론 &rarr; 기능주의 &rarr; 설은 <strong>뒤가 앞을 밀어내는</strong> 순서다. 다만 셋 다 마음을 몸 안에 가둔다. 로랜즈는 그 울타리 자체를 문제 삼는다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">23 / 55</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide" style="--fs:1.26;">
+    <h2 class="slide-title">지문 읽기 &middot; (가)의 네 입장</h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.2cqw;">
+        <div class="flow-step">
+          <div class="emo">동일론</div>
+          <div class="desc">의식은 뇌의 물질적 상태와 동일하다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">기능주의</div>
+          <div class="desc">의식은 기능이다. 입력과 출력의 쌍이 같으면 같은 의식이다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">설</div>
+          <div class="desc">중국어 방 &middot; 기능이 같아도 의식은 다를 수 있다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">로랜즈</div>
+          <div class="desc">앞의 셋은 의식을 몸 안에 가뒀다. 인지는 몸 바깥으로 확장된다</div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">3문단이 매듭을 짓는다</div>
+        <ul><li>&lsquo;동일론, 기능주의, 설은 <strong>모두</strong> 의식에 대한 논의를 몸의 내부로만 한정하고 있다.&rsquo; 앞의 셋을 한 덩어리로 묶고 로랜즈를 그 맞은편에 세운다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">24 / 55</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide" style="--fs:1.07;">
+    <h2 class="slide-title">(가)의 핵심 &middot; 두 가지 상태</h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.2cqw;">
+        <div class="c3">
+          <h3><span class="word">심적 상태</span></h3>
+          <p>어떤 것에도 의존함이 없이 주체에게 의미를 나타낸다.</p>
+          <p>기억, 믿음이 그 예다. 내 기억이 무엇인지 알기 위해 아무것에도 기댈 필요가 없다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">파생적 상태</span></h3>
+          <p>주체의 해석에 의존해서만, 또는 사회적 합의에 의존해서만 의미를 나타낸다.</p>
+          <p>노트북에 저장된 정보. <strong>열람한 뒤에도 여전히 파생적 상태다.</strong></p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">로랜즈가 뒤집은 것</div>
+        <ul>
+          <li>인지는 파생적 상태가 심적 상태로 <strong>변환되는</strong> 과정이 아니다. 파생적 상태를 <strong>조작함으로써</strong> 심적 상태가 생겨나게 하는 과정이다.</li>
+          <li>확장되는 것은 심적 상태가 아니라 <strong>인지 과정</strong>이다. 13번 &#9314;가 이 자리를 묻는다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">25 / 55</div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide" style="--fs:1.07;">
+    <h2 class="slide-title">배경지식 &middot; 몸으로 지각한다<span class="qm">2024학년도 6월 12&#12316;17번 (나)</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.1cqw;">
+        <tr><th>배경</th><td>지문에 이름은 없지만 프랑스 철학자 메를로퐁티의 &#12302;지각의 현상학&#12303;이 바탕이다. 몸을 인식의 도구가 아니라 <strong>인식의 주체</strong>로 본다.</td></tr>
+        <tr><th>객관주의</th><td>(나)가 비판하는 상대. 두 갈래다. 의식을 <strong>물질로 환원</strong>하거나, 의식을 <strong>독자적 실체</strong>로 규정한다.</td></tr>
+        <tr><th>두 손의 예</th><td>한 손이 다른 손을 만질 때 <strong>만지면서 동시에 만져진다.</strong> 주체와 대상이 한 몸에서 겹친다.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">비판의 요점</div>
+        <ul><li>객관주의 두 갈래는 서로 달라 보이지만 <strong>주체와 대상이 지각 이전에 이미 나뉘어 있다</strong>고 전제하는 점에서 같다. (나)는 그 전제를 친다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">26 / 55</div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide" style="--fs:1.27;">
+    <h2 class="slide-title">지문 읽기 &middot; (나)의 뒤집기</h2>
+    <div class="body-area">
+      <div class="passage" style="margin-bottom:1.2cqw;">
+        <div class="pblock">
+          <span class="pno">3문단</span>
+          <span class="ptx"><b>하지만</b> 지각은 주체와 대상이 각자로서 존재하기 <b>이전에</b> 나타나는 얽힘의 체험이다. <span class="dim">&hellip;</span> 감각하는 것이 동시에 감각되는 것이 되는 얽힘의 순간에, 나는 나와 대상을 확연히 구분한다. <b>지각이라는 얽힘의 작용이 있어야 주체와 대상이 분리될 수 있다.</b> 다시 말해 주체와 대상은 <b>지각이 일어난 이후 비로소 확정된다.</b></span>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">순서가 뒤집혔다</div>
+        <ul>
+          <li>객관주의 &mdash; 주체와 대상이 먼저 있고, 그다음에 지각이 일어난다.</li>
+          <li>(나) &mdash; 지각이 먼저 일어나고, 그다음에 주체와 대상이 갈린다.</li>
+          <li>이 <strong>선후 관계</strong>가 14번과 15번의 근거다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">27 / 55</div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">(가)와 (나)를 맞대어 놓으면</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:6.0em;">&nbsp;</th><th>(가) 로랜즈</th><th>(나) 필자</th></tr></thead>
+        <tbody>
+          <tr><th>넓히는 것</th><td>인지 <strong>과정</strong>을 몸 바깥으로</td><td>지각을 <strong>몸의 체험</strong>으로</td></tr>
+          <tr><th>주체는</th><td>인지 <strong>이전에</strong> 이미 있다. 주체 없는 인지란 없다</td><td>지각 <strong>이후에</strong> 확정된다</td></tr>
+          <tr><th>몸 바깥의<br>사물은</th><td>파생적 상태. 조작의 대상</td><td>지각이 이루어지게 한다면 <strong>몸의 일부</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.2cqw;">
+        <div class="etag">둘째 줄이 14번이다</div>
+        <ul><li>둘 다 몸 바깥을 끌어들이지만 <strong>주체를 놓는 자리</strong>가 정반대다. 이 한 줄이 (나)가 (가)를 비판하는 근거가 된다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">28 / 55</div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide q-slide" style="--fs:1.36;">
+    <h2 class="slide-title">12번 &middot; ㉮와 ㉯에 들어갈 말로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">학생의 정리</span>
+        (가)는 기능주의를 소개한 후 <b>㉮</b> 은/는 같지 않다는 설의 비판을 제시하고 있다. <span class="dim">&hellip;</span> (나)는 지각에 대한 객관주의 철학의 입장을 비판하고, <b>㉯</b> 으로서의 지각을 주장하고 있다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">㉮ 의식과 함수적 역할 &nbsp;/&nbsp; ㉯ 내 몸의 체험</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">㉮ 의식과 함수적 역할 &nbsp;/&nbsp; ㉯ 물질적 반응</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">㉮ 의식과 뇌의 상태 &nbsp;/&nbsp; ㉯ 의식의 판단</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">㉮ 의식과 뇌의 상태 &nbsp;/&nbsp; ㉯ 내 몸의 체험</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">㉮ 입력과 출력 &nbsp;/&nbsp; ㉯ 의식의 판단</span></li>
+      </ul>
+    </div>
+    <div class="page-num">29 / 55</div>
+  </section>
+
+  <!-- 30 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">12번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9312;</span>
+        <span class="why">설이 갈라 놓은 것은 의식과 함수적 역할이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">㉮ &middot; 2문단</div>
+          <p>방 안의 사람은 중국어 사용자와 <b>함수적 역할이 같지만</b> 중국어를 아는 것은 아니다. <b>기능이 같으면서 의식은 다른 사례</b>가 있다는 것이다.</p>
+          <p>&lsquo;의식과 뇌의 상태&rsquo;는 동일론의 주장이고, &lsquo;입력과 출력&rsquo;은 설이 <b>같다고 인정한</b> 쪽이다.</p>
+        </div>
+        <div class="box src">
+          <div class="h">㉯ &middot; (나) 마지막 문단</div>
+          <p>지각은 물질적 반응이나 의식의 판단이 아니라, <b>내 몸의 체험이다.</b></p>
+          <p>&lsquo;물질적 반응&rsquo;과 &lsquo;의식의 판단&rsquo;은 (나)가 <b>비판한</b> 객관주의의 두 갈래다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">비판한 말을 주장으로 넣은 오답</div>
+        <p>&#9313;&#9314;&#9316;의 ㉯는 모두 (나)가 물리친 입장이다. 신호어 &lsquo;&#12316;이 아니라 &#12316;이다&rsquo;에 표시해 두면 세 개가 한 번에 지워진다.</p>
+      </div>
+    </div>
+    <div class="page-num">30 / 55</div>
+  </section>
+
+  <!-- 31 -->
+  <section class="slide q-slide" style="--fs:1.43;">
+    <h2 class="slide-title">13번 &middot; (가)에서 알 수 있는 내용으로 적절하지 <u>않은</u> 것은?</h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">동일론자들은 뇌가 존재하지 않으면 의식도 존재하지 않는다고 볼 것이다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">설은 &lsquo;중국어 방&rsquo; 안의 사람과 중국어를 아는 사람의 의식이 다르다고 볼 것이다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">로랜즈는 기억이 주체의 몸 바깥으로 확장될 수 있다고 볼 것이다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">로랜즈는 인지 과정이 파생적 상태를 조작하는 과정을 포함한다고 볼 것이다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">로랜즈는 노트북에 저장된 정보가 그 자체로는 심적 상태가 아니라고 볼 것이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">31 / 55</div>
+  </section>
+
+  <!-- 32 -->
+  <section class="slide" style="--fs:1.23;">
+    <h2 class="slide-title">13번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">확장되는 것은 기억이 아니라 인지 과정이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가) 5문단</div>
+          <p><b>심적 상태가 주체의 몸 외부로 확장되는 것이 아니라,</b> 심적 상태를 생겨나게 하는 <b>인지 과정이 확장되는</b> 것이다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9314;</div>
+          <p><b>기억</b>이 주체의 몸 바깥으로 확장될 수 있다.</p>
+          <p class="verdict">기억은 심적 상태의 예다. 지문이 &lsquo;아니라&rsquo;로 부정한 바로 그 진술이다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&lsquo;A가 아니라 B&rsquo; 문장</div>
+        <p>이런 문장은 출제자가 <b>A를 가져다 선택지로 만들라고</b> 표시해 둔 자리다. 읽을 때 A와 B를 나란히 적어 두면 &#9314;가 그냥 눈에 걸린다.</p>
+      </div>
+    </div>
+    <div class="page-num">32 / 55</div>
+  </section>
+
+  <!-- 33 -->
+  <section class="slide q-slide" style="--fs:1.25;">
+    <h2 class="slide-title">14번 &middot; (나)의 필자의 관점에서 ㉠을 평가한 내용으로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">㉠</span>
+        확장된 인지 과정은 <b>인지 주체의 것일 때에만</b> 성립할 수 있다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">&#12316;주장은, 지각 이전에 확정된 주체를 전제한 것이므로 타당하지 않다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">&#12316;주장은, 의식이 세계를 구성하는 독자적 실체라고 규정하는 것이므로 타당하다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">&#12316;주장은, 의식은 물질에 불과하다고 본 것이므로 타당하다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">&#12316;주장은, 외부 세계에 대한 지각이 이루어질 수 없다고 보는 것이므로 타당하지 않다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">&#12316;주장은, 주체와 대상의 분리를 통해서만 지각이 이루어질 수 있다고 보는 것이므로 타당하다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">33 / 55</div>
+  </section>
+
+  <!-- 34 -->
+  <section class="slide" style="--fs:1.02;">
+    <h2 class="slide-title">14번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9312;</span>
+        <span class="why">주체를 놓는 자리가 정반대다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">㉠이 전제한 것</div>
+          <p>확장된 인지는 <b>주체의 것일 때에만</b> 성립한다. 로랜즈에게 <b>주체 없는 인지란 있을 수 없다.</b></p>
+          <p>곧 인지에 앞서 주체가 이미 확정되어 있다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">(나)의 필자</div>
+          <p>주체와 대상은 <b>지각이 일어난 이후 비로소 확정된다.</b></p>
+          <p class="verdict">미리 확정된 주체를 전제하는 것은 (나)가 객관주의를 칠 때 쓴 바로 그 논거다. 따라서 <b>타당하지 않다</b>고 평가한다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9313;&#9314;&#9316;을 먼저 지운다</div>
+        <p>셋 다 결론이 &lsquo;<b>타당하다</b>&rsquo;인데, 근거로 든 것은 모두 (나)가 비판한 객관주의의 말이다. (나)의 관점에서 물으므로 이 셋은 근거부터 성립하지 않는다.</p>
+      </div>
+    </div>
+    <div class="page-num">34 / 55</div>
+  </section>
+
+  <!-- 35 -->
+  <section class="slide q-slide" style="--fs:1.37;">
+    <h2 class="slide-title">15번 &middot; ㉡의 이유로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">㉡</span>
+        지각과 감각은 서로 구분되지 않는다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">감각과 지각 모두 물질세계에서 이루어지기 때문에</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">감각하는 것이 동시에 감각되는 것이 되는 얽힘의 작용이 지각이기 때문에</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">지각은 몸에 의해 이루어지지만 감각은 몸에 의해 이루어지지 않기 때문에</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">지각은 의식으로서의 주체가 외부의 대상을 감각하여 판단한 결과이기 때문에</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">주체와 대상이 분리되기 이전에 감각과 지각이 분리된 채로 존재하기 때문에</span></li>
+      </ul>
+    </div>
+    <div class="page-num">35 / 55</div>
+  </section>
+
+  <!-- 36 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">15번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">㉡ 바로 앞 문장이 곧 이유다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>(나)는 지각을 <span class="u-warn">물질세계의 일로 보지 않는다.</span> 물질적 반응으로 보는 것은 (나)가 비판한 입장이다</td></tr>
+        <tr class="ans"><th>&#9313;</th><td>3문단 &mdash; 두 손이 맞닿을 때 만지는 것이 동시에 만져진다. <b>감각이 곧 지각인 순간</b>이므로 둘을 가를 수 없다 &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9314;</th><td>마지막 문단은 <b>지각이 이루어지게 하는 것은 모두 나의 몸</b>이라 했다. 감각을 몸에서 떼어 낼 수 없다</td></tr>
+        <tr><th>&#9315;</th><td>&lsquo;의식의 판단&rsquo;은 <span class="u-warn">객관주의의 말</span>이다</td></tr>
+        <tr><th>&#9316;</th><td>둘이 <span class="u-warn">분리된 채로 존재한다</span>면 ㉡의 이유가 될 수 없다. 결론과 반대다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">이유를 묻는 문항</div>
+        <p>밑줄 친 문장의 <b>바로 앞뒤</b>를 먼저 본다. 이 지문은 앞 문장에 답이 그대로 있다. 멀리서 찾기 전에 한 문장 위를 확인한다.</p>
+      </div>
+    </div>
+    <div class="page-num">36 / 55</div>
+  </section>
+
+  <!-- 37 -->
+  <section class="slide tight q-slide" style="--fs:1.00;">
+    <h2 class="slide-title">16번 &middot; &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은? [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">보기</span>
+        빛이 차단된 암실에서 <b>A</b>는 막대기의 <b>진동</b>으로, <b>B</b>는 초음파 센서가 탐지한 정보를 <b>뇌-컴퓨터 인터페이스(BCI)</b>로 전달받아 사물의 위치를 파악한다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">기능주의에 따르면, A와 B가 같은 질문에 같은 대답을 내놓으면 둘의 의식은 차이가 없겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">확장 인지 이론에 따르면, BCI로 위치를 파악하는 것이 B의 인지 과정이면 B에게 심적 상태가 생겨나겠군.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">확장 인지 이론에 따르면, 막대기의 진동이 A의 해석에 의존해서만 의미를 나타내면 그 진동 상태는 파생적 상태가 아니겠군.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">몸에 의한 지각을 주장하는 입장에 따르면, 막대기로 A가 위치를 지각하면 막대기는 A의 몸의 일부겠군.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">의식을 물질로 환원하는 입장에 따르면, BCI로 B의 지각이 일어났다면 자극에 따른 물질적 반응이겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">37 / 55</div>
+  </section>
+
+  <!-- 38 -->
+  <section class="slide" style="--fs:1.09;">
+    <h2 class="slide-title">16번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">정의를 그대로 옮기면 파생적 상태가 맞다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가) 4문단의 정의</div>
+          <p>파생적 상태는 <b>주체의 해석에 의존해서만</b> 또는 사회적 합의에 의존해서만 의미를 나타내는 상태다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9314;</div>
+          <p>막대기의 진동이 <b>A의 해석에 의존해서만</b> 의미를 나타내는데, 파생적 상태가 <b>아니</b>라고 했다.</p>
+          <p class="verdict">선택지가 정의의 조건을 그대로 적어 놓고 결론만 뒤집었다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9315;와 &#9316;를 가르는 기준</div>
+        <p>같은 &lt;보기&gt;라도 <b>어느 입장에 따르면</b>이 앞에 붙는다. &#9315;는 (나)의 필자, &#9316;는 (나)가 비판한 객관주의의 입장에서 묻는다. 비판받는 입장으로 물어도 <b>그 입장 안에서 맞으면</b> 적절한 진술이다.</p>
+      </div>
+    </div>
+    <div class="page-num">38 / 55</div>
+  </section>
+
+  <!-- 39 -->
+  <section class="slide q-slide" style="--fs:1.36;">
+    <h2 class="slide-title">17번 &middot; ⓐ&#12316;ⓔ와 가장 가까운 의미로 쓰인 것은?<span class="ans-chip">정답 &#9315;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">문맥</span>
+        &#9424; 동일하다고 <b>본다</b> &nbsp;/&nbsp; &#9425; 몸 바깥에서 <b>일어나는</b> 일 &nbsp;/&nbsp; &#9426; 그에 <b>따르면</b> &nbsp;/&nbsp; &#9427; 자기의 기억이 무엇인지 <b>알아보기</b> 위해 &nbsp;/&nbsp; &#9428; 누군가의 손을 <b>만지는</b>
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">&#9424; 그간의 사정을 봐서 그를 용서해 주었다. &nbsp;<span class="dim">&mdash; 사정을 고려하다</span></span></li>
+        <li><span class="n">&#9313;</span><span class="txt">&#9425; 이사 후에 가난하던 살림살이가 일어났다. &nbsp;<span class="dim">&mdash; 형편이 펴지다</span></span></li>
+        <li><span class="n">&#9314;</span><span class="txt">&#9426; 개발에 따른 자연 훼손 문제가 심각해졌다. &nbsp;<span class="dim">&mdash; 뒤이어 생기다</span></span></li>
+        <li class="ans"><span class="n">&#9315;</span><span class="txt">&#9427; 단어의 뜻을 알아보기 위해 사전을 펼쳤다. &nbsp;<span class="dim">&mdash; 조사하여 알다. 문맥과 같다</span></span></li>
+        <li><span class="n">&#9316;</span><span class="txt">&#9428; 그는 컴퓨터 프로그램을 제법 만질 줄 안다. &nbsp;<span class="dim">&mdash; 다루다</span></span></li>
+      </ul>
+    </div>
+    <div class="page-num">39 / 55</div>
+  </section>
+
+  <!-- 40 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">배경지식 &middot; 조선 후기의 신분<span class="qm">2027학년도 6월 4&#12316;9번 (가)</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.1cqw;">
+        <tr><th>노비</th><td>주인이 사고팔고 물려줄 수 있는 <strong>재산</strong>이면서, 재산권과 소송권은 부분적으로 인정받은 이중적 존재였다.</td></tr>
+        <tr><th>왜란 &middot; 호란<br>이후</th><td>전란으로 호적이 무너지고 신분을 사고파는 일이 늘면서 노비 수가 줄고 양인과의 격차도 좁아졌다.</td></tr>
+        <tr><th>이익</th><td>18세기 실학자. &#12302;성호사설&#12303;을 남겼다. 토지 제도와 신분제를 근본부터 다시 따진 학자로, 노비의 매매와 세습을 금지하자고 주장했다.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">지문이 잡은 대립</div>
+        <ul><li>2문단의 <strong>양반들 일반</strong>과 3문단의 <strong>이익</strong>이 맞선다. 양반들은 노비를 가엾게 여기면서도 신분 질서 자체는 건드리지 않았고, 이익은 그 질서를 건드렸다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">40 / 55</div>
+  </section>
+
+  <!-- 41 -->
+  <section class="slide" style="--fs:1.16;">
+    <h2 class="slide-title">지문 읽기 &middot; 이익의 운명론</h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.2cqw;">
+        <div class="flow-step">
+          <div class="emo">천명(天命)</div>
+          <div class="desc">인간의 힘으로 어찌할 수 없는 것. 자연 이치</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo">성명(星命)</div>
+          <div class="desc">천체의 운행으로 길흉을 점치는 영역. 역시 자연 이치</div>
+        </div>
+        <div class="flow-step">
+          <div class="emo">조명(造命)</div>
+          <div class="desc">시세에 따라 <strong>인간의 힘이 참여하는</strong> 영역. 빈부와 귀천을 바꾼다</div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">이익이 바꾼 것</div>
+        <ul>
+          <li>이전 학자들은 조명의 대상을 <strong>왕과 고관대작으로 한정</strong>했다. 이익은 <strong>노비를 포함한 모든 사람</strong>으로 넓혔다.</li>
+          <li>국가의 역할은 조명이 가능한 <strong>최소한의 기반만 보장</strong>하고 결과에는 개입하지 않는 것이다. 6번 &#9315;가 이 대목을 뒤집었다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">41 / 55</div>
+  </section>
+
+  <!-- 42 -->
+  <section class="slide" style="--fs:1.03;">
+    <h2 class="slide-title">배경지식 &middot; 개화기의 민권<span class="qm">2027학년도 6월 4&#12316;9번 (나)</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.0cqw;">
+        <tr><th>개화파</th><td>서양 문물 수용을 놓고 갈렸다. <strong>급진 개화파</strong>(유길준, 박영효 등)는 제도까지 바꾸려 했고, <strong>온건 개화파</strong>(김윤식 등)는 기술만 받아들이고 유교 질서는 지키려 했다.</td></tr>
+        <tr><th>천부 인권</th><td>사람이 태어나면서부터 가지는 권리. 서구에서 들어온 이 생각이 신분제를 흔드는 근거가 되었다.</td></tr>
+        <tr><th>갑오개혁</th><td>1894년. 법으로 신분제를 폐지했다. 그러나 노비는 남았고 차별도 이어졌다.</td></tr>
+        <tr><th>형평 운동</th><td>1923년 진주에서 형평사가 조직되어 시작된, 백정에 대한 차별을 없애려는 운동.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">(나)를 읽는 눈</div>
+        <ul><li>인물이 넷, 단체가 둘 나온다. 이름마다 <strong>민을 어떻게 보았는지</strong> 한 마디씩 붙이면서 읽는다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">42 / 55</div>
+  </section>
+
+  <!-- 43 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">지문 읽기 &middot; (나)의 시간 흐름</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:6.6em;">누구 &middot; 언제</th><th>무엇을 주장했는가</th></tr></thead>
+        <tbody>
+          <tr><th>유길준</th><td>천부 인권과 인위적 권리를 보장하려면 <strong>근대적 법률</strong>이 필요하다. 다만 <strong>민은 무지한 존재</strong>여서 교육받지 않으면 혼란을 부른다</td></tr>
+          <tr><th>박영효</th><td>민권이 없으면 국권도 위태롭다. 민의 자유와 권리는 <strong>법을 통해서만</strong> 존재한다</td></tr>
+          <tr><th>김윤식<br>(온건)</th><td>노비 세습 금지는 지지한다. 그러나 <strong>타고난 능력에 따라 귀천이 생기는 것은 정당</strong>하다. 평등을 인정하면서 차별을 정당화한 양면적 태도</td></tr>
+          <tr><th>독립 협회</th><td>자유와 평등은 <strong>하늘이 준 권리</strong>다. 노비 소유와 매매를 맹렬히 비판</td></tr>
+          <tr><th>형평 운동<br>1923&#12316;1935</th><td>백정의 인권 존중. <strong>인권 운동이자 공동체 운동</strong>. 교육 차별이 도화선이어서 교육 활동을 폈다</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">43 / 55</div>
+  </section>
+
+  <!-- 44 -->
+  <section class="slide q-slide" style="--fs:1.19;">
+    <h2 class="slide-title">4번 &middot; (가)와 (나)에 대한 설명으로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">(가)는 노비제를 비판한 학자들의 인식 차이를, (나)는 노비제 폐지로 인해 발생한 사회 문제를 제시하였다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">(가)는 노비가 겪는 불합리한 사회 현실의 문제점을, (나)는 국가 정책에 대한 개화파들의 찬반 의견을 제시하였다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">(가)는 조선 시대 노비제에 대한 특정 실학자의 견해를, (나)는 민권에 관한 논의가 전개된 역사적 흐름을 서술하였다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">(가)는 노비에 대한 양반들의 여러 견해를, (나)는 민권 개혁의 부당성을 강조하는 주장과 이에 대한 반박을 서술하였다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">(가)는 양반과 노비의 갈등이 발생하게 된 구조적 한계를, (나)는 근대 국가 건설을 위한 민권 운동의 역사적 의의를 서술하였다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">44 / 55</div>
+  </section>
+
+  <!-- 45 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">4번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">(가)는 이익 한 사람, (나)는 시대 흐름</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>(가)에 노비제를 비판한 학자는 <span class="u-warn">이익뿐</span>이다. 여럿의 인식 차이가 없다</td></tr>
+        <tr><th>&#9313;</th><td>(나)에 있는 것은 신분 차별에 대한 개화파의 견해 차이다. <span class="u-warn">국가 정책에 대한 찬반</span>이 아니다</td></tr>
+        <tr class="ans"><th>&#9314;</th><td>(가)는 실학자 이익의 견해, (나)는 급진 &middot; 온건 개화파부터 형평 운동까지 <b>민권 논의의 역사적 흐름</b> &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9315;</th><td>앞은 맞다. 그러나 (나)에 <span class="u-warn">민권 개혁이 부당하다는 주장과 그 반박</span>은 없다</td></tr>
+        <tr><th>&#9316;</th><td>뒤는 맞다. 그러나 (가)에 <span class="u-warn">양반과 노비의 갈등, 구조적 한계</span>는 없다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&#9315;와 &#9316;가 남는 이유</div>
+        <p>둘 다 <b>절반은 맞다.</b> 전개 방식 문항은 (가)와 (나) 중 한쪽만 보고 고르면 걸린다. 반드시 양쪽을 다 확인한다.</p>
+      </div>
+    </div>
+    <div class="page-num">45 / 55</div>
+  </section>
+
+  <!-- 46 -->
+  <section class="slide q-slide" style="--fs:1.21;">
+    <h2 class="slide-title">5번 &middot; ㉠에 대한 이해로 적절하지 <u>않은</u> 것은?</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">㉠</span>
+        양반들의 노비에 대한 글 &middot; 노비의 죽음을 애도하거나 행적을 기록한 여러 글
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">지배층의 이념에 따라 행동한 노비들을 긍정적인 시각으로 기록하였다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">노비와 양인의 신분 격차가 줄어들면서 노비들이 갖게 된 인식을 형상화하였다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">양반이 노비를 따뜻한 시선으로 바라보며 그들을 약자로 여기는 태도를 반영하였다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">노비의 애환에 주의를 기울이면서도 그러한 상황이 발생하게 된 근본적인 원인은 간과하였다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">굳센 의지를 지닌 노비의 행동을 부각하면서도 노비가 처한 불평등한 현실을 언급하지 않았다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">46 / 55</div>
+  </section>
+
+  <!-- 47 -->
+  <section class="slide" style="--fs:1.03;">
+    <h2 class="slide-title">5번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">글에 담긴 것은 양반의 인식이지 노비의 인식이 아니다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가) 1&#12316;2문단</div>
+          <p>신분 격차가 줄어든 변화는 <b>노비에 대한 인식 변화</b>로 이어졌고, 그것이 양반들의 글로 구체화되었다.</p>
+          <p>2문단은 내내 <b>양반들이</b> 칭송하고, 형상화하고, 강조하고, 관심을 두었다고 서술한다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9313;</div>
+          <p><b>노비들이</b> 갖게 된 인식을 형상화하였다.</p>
+          <p class="verdict">글을 쓴 것도 양반, 글에 담긴 시각도 양반의 것이다. 인식의 주체가 바뀌었다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9315;와 &#9316;는 같은 문장에서 나왔다</div>
+        <p>&lsquo;신분 질서를 정면에서 문제 삼지 않았다&rsquo;가 &#9315;의 <b>근본적인 원인을 간과</b>에, &lsquo;불평등한 여건과 처지는 거론하지 않았다&rsquo;가 &#9316;에 대응한다. 한 문단에서 선택지 넷이 나왔다.</p>
+      </div>
+    </div>
+    <div class="page-num">47 / 55</div>
+  </section>
+
+  <!-- 48 -->
+  <section class="slide q-slide" style="--fs:1.20;">
+    <h2 class="slide-title">6번 &middot; ㉮, ㉯가 서로에게 할 수 있는 비판으로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">기호</span>
+        <b>㉮</b> 이익 &mdash; 신분은 세습이 아니라 개인의 재주와 덕행에 따라 결정되어야 한다 &nbsp;/&nbsp; <b>㉯</b> 유길준 &mdash; 민은 무지한 존재여서 교육받지 않으면 사회 혼란을 초래할 수 있다
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">㉮는, ㉯가 인간에 대한 차별적 시선을 가지고 있다는 점을 비판하겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">㉮는, ㉯가 인간에 대한 교육의 필요성을 고려하지 않았다는 점을 비판하겠군.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">㉮는, ㉯가 국가의 기본 체제를 제시하지 않고 개혁을 논의하였다는 점을 비판하겠군.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">㉯는, ㉮가 국가의 개입을 강조하여 개인의 발전 기회를 차단한다는 점을 비판하겠군.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">㉯는, ㉮가 인간이 태어날 때부터 정해져 있는 자연적 이치를 언급하지 않았다는 점을 비판하겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">48 / 55</div>
+  </section>
+
+  <!-- 49 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">6번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9312;</span>
+        <span class="why">이익에게는 차별적 의식이 없고, 유길준은 민을 무지하다 보았다</span>
+      </div>
+      <table class="otable">
+        <tr class="ans"><th>&#9312;</th><td>㉮는 신분이 <b>재주와 덕행</b>으로 결정되어야 한다고 보아 차별적 의식이 없다. ㉯는 민을 <b>무지한 존재</b>로 보았다 &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9313;</th><td>㉯는 교육받지 않으면 혼란이 온다고 했다. <span class="u-warn">교육의 필요성을 오히려 강조한 쪽</span>이다</td></tr>
+        <tr><th>&#9314;</th><td>㉯는 근대적 법률의 제정과 시행이 필수적이라고 했다. <span class="u-warn">체제를 제시하지 않았다고 할 수 없다</span></td></tr>
+        <tr><th>&#9315;</th><td>㉮는 국가가 최소한의 기반만 보장하고 <b>결과에 개입하지 않아야</b> 한다고 했다. <span class="u-warn">국가 개입을 강조한 적이 없다</span></td></tr>
+        <tr><th>&#9316;</th><td>㉮는 천명과 성명을 <b>자연 이치로 간주</b>한다고 이미 언급했다 <span class="u-warn">&rarr; 언급하지 않았다는 전제가 틀렸다</span></td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">비판 문항이 무너지는 두 가지 방식</div>
+        <p>비판의 <b>대상이 그런 말을 한 적이 없거나</b>(&#9315;&#9316;), <b>오히려 반대로 말했을 때</b>(&#9313;&#9314;) 성립하지 않는다. 선택지를 읽을 때 비판받는 쪽 문장부터 확인한다.</p>
+      </div>
+    </div>
+    <div class="page-num">49 / 55</div>
+  </section>
+
+  <!-- 50 -->
+  <section class="slide q-slide" style="--fs:1.28;">
+    <h2 class="slide-title">7번 &middot; (나)의 &lsquo;형평 운동&rsquo;에 대한 이해로 가장 적절한 것은?</h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">형평사를 중심으로, 개인의 소양에 따라 사회적 대우가 달라지는 부당함을 비판하였다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">백정에 대한 차별 문제 해결과 함께 형평사 회원들에게 도움을 주는 활동을 전개하였다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">백정들이 처한 경제적 불평등을 제도적 차원에서 해소하기 위한 활동이 중심이었다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">형평사가 대동사로 개칭되면서 교육을 통해 참여자들의 평등한 권리를 실현하고자 하였다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">일제의 억압으로 발생한 불합리한 처우를 개선하기 위해 사회 운동가들의 노력으로 시작되었다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">50 / 55</div>
+  </section>
+
+  <!-- 51 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">7번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">인권 운동이자 공동체 운동이라는 두 성격</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>지문은 <b>사회적 대우를 받으려면 소양을 갖춰야 한다는 인식</b>에 따라 교육 활동을 폈다고 했다. <span class="u-warn">그 관계를 부당하다고 보지 않았다</span></td></tr>
+        <tr class="ans"><th>&#9313;</th><td>4문단 &mdash; <b>인간의 존엄성과 평등을 이루려는 인권 운동</b>이자 <b>참여자들에게 실질적인 혜택을 제공하는 공동체 운동</b> &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9314;</th><td>도화선은 <span class="u-warn">교육 차별</span>이었고 활동의 중심도 교육이었다. 경제적 불평등 해소가 중심이 아니다</td></tr>
+        <tr><th>&#9315;</th><td>대동사로 개칭되면서 <span class="u-warn">운동 본래의 성격을 잃었다</span>. 시점이 정반대다</td></tr>
+        <tr><th>&#9316;</th><td>일제의 억압 때문에 생긴 것이 아니고, <span class="u-warn">백정들이 시작</span>해 사회 운동가들이 결합하며 본격화되었다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">한 문단에서 다섯 선택지</div>
+        <p>&lsquo;도화선&rsquo;, &lsquo;본격화&rsquo;, &lsquo;개칭&rsquo;은 <b>일의 순서</b>를 알려 주는 말이다. 흐름형 지문의 오답은 이 순서를 건드려 만든다.</p>
+      </div>
+    </div>
+    <div class="page-num">51 / 55</div>
+  </section>
+
+  <!-- 52 -->
+  <section class="slide q-slide" style="--fs:1.00;">
+    <h2 class="slide-title">8번 &middot; &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은? [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">보기</span>
+        <b>아리스토텔레스</b>는 심사숙고 능력이 없는 노예를 정치에서 배제해야 한다고 보았다. 계몽주의 이후 <b>사회의 공리를 극대화하지 않는 제도와 법률의 근본 개혁</b>을 촉구하며 노예 해방을 주장하는 목소리가 나왔다. 노예 무역이 본격화되는 가운데 <b>빼앗긴 자유를 회복시키자</b>는 노예 해방론이 제기되었고, 스스로의 노력으로 해방되어 문학적 성취를 이룬 <b>노예 출신 작가들</b>도 노예제에 반대했다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">아리스토텔레스와 김윤식은 모두, 인간의 타고난 능력의 차이를 인정한 것이겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">법률의 근본 개혁을 촉구한 주장과 박영효는 모두, 인간의 권리 보장을 위해 법이 뒷받침되어야 한다는 것이겠군.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">노예 무역의 대상이었던 노예와 조선 시대의 노비는 모두, 소유주의 뜻에 따라 매매의 대상이었다는 것이겠군.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">빼앗긴 자유를 회복시키자는 주장과 독립 협회는 모두, 모든 사람에게 자유가 인정되어야 한다는 것이겠군.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">노예 출신 작가의 성취와 이익의 주장은 모두, 사회 제도의 변화를 위한 능동적인 행위의 당위성과 결부된 것이겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">52 / 55</div>
+  </section>
+
+  <!-- 53 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">8번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">작가의 성취는 개인의 노력이지 제도 변화의 주장이 아니다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">이익의 주장</div>
+          <p>노비의 <b>매매와 세습을 금지하면</b> 노비가 점차 사라질 것이다.</p>
+          <p>제도를 바꾸자는 주장이므로 <b>사회 제도의 변화를 위한 능동적 행위</b>에 해당한다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">&lt;보기&gt;의 작가</div>
+          <p>노예제하에서 <b>스스로의 노력으로</b> 해방되어 문학적 성취를 이루었다.</p>
+          <p class="verdict">성취 자체는 개인의 노력이다. 제도 변화를 위한 행위와 결부된다고 보기 어렵다. 둘을 &lsquo;모두&rsquo;로 묶을 수 없다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&lsquo;모두 &#12316;이겠군&rsquo; 꼴</div>
+        <p>두 대상을 하나로 묶는 선택지는 <b>묶는 기준이 양쪽에 다 걸리는지</b>를 본다. 여기서는 &lsquo;제도 변화를 위한 행위&rsquo;라는 기준이 작가 쪽에 걸리지 않는다.</p>
+      </div>
+    </div>
+    <div class="page-num">53 / 55</div>
+  </section>
+
+  <!-- 54 -->
+  <section class="slide q-slide" style="--fs:1.20;">
+    <h2 class="slide-title">9번 &middot; 문맥상 ⓐ와 가장 가까운 의미로 쓰인 것은?<span class="ans-chip">정답 &#9315;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">문맥</span>
+        빈한한 주인을 위해 희생하는 노비의 애환에 관심을 <b>ⓐ두면서</b> &rarr; 어떤 일에 <b>관심이나 생각을 가지다</b>
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">우리 반은 오래도록 염원하던 승리를 눈앞에 두고 있다. &nbsp;<span class="dim">&mdash; 어떤 상황에 처하다</span></span></li>
+        <li><span class="n">&#9313;</span><span class="txt">학교는 학생회에 기획부, 총무부, 체육부 등을 두고 있다. &nbsp;<span class="dim">&mdash; 조직을 설치하다</span></span></li>
+        <li><span class="n">&#9314;</span><span class="txt">그는 슬픔과 기쁨을 함께 나눌 수 있는 친구를 두고 있다. &nbsp;<span class="dim">&mdash; 사람을 가지고 있다</span></span></li>
+        <li class="ans"><span class="n">&#9315;</span><span class="txt">나는 초등학교 때부터 만났던 친구에게 마음을 두고 있다. &nbsp;<span class="dim">&mdash; 마음이나 관심을 가지다. 문맥과 같다</span></span></li>
+        <li><span class="n">&#9316;</span><span class="txt">그의 판단은 그동안 쌓은 지식과 경험에 근거를 두고 있다. &nbsp;<span class="dim">&mdash; 바탕으로 삼다</span></span></li>
+      </ul>
+    </div>
+    <div class="page-num">54 / 55</div>
+  </section>
+
+  <!-- 55 -->
+  <section class="slide" style="--fs:1.16;">
+    <h2 class="slide-title">세 지문을 풀고 나서</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.6em;">글의 꼴</th><th>읽으며 만든 것</th><th>오답이 만들어진 방식</th></tr></thead>
+        <tbody>
+          <tr><th>한 이론</th><td>정의 문장과 대비되는 입장 넷</td><td>정의를 뒤집거나 단서를 지운다</td></tr>
+          <tr><th>관점 대립</th><td>주체를 어디에 놓는가라는 쟁점</td><td>비판받은 입장의 말을 주장으로 옮긴다</td></tr>
+          <tr><th>시대 흐름</th><td>인물 &middot; 단체마다 붙인 한 마디</td><td>주체를 바꾸거나 순서를 뒤집는다</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.2cqw;">
+        <div class="etag">공통</div>
+        <ul><li>세 지문 모두, 읽으면서 <strong>표를 만들어 둔 사람</strong>은 선택지마다 돌아갈 자리가 정해져 있었다. 인문에서 시간을 줄이는 길은 지문을 빨리 읽는 것이 아니라 <strong>다시 읽지 않는 것</strong>이다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">55 / 55</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 55</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  // 슬라이드 안에서 하나씩 띄울 요소들
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  // showAllSteps: 뒤로 돌아갈 때는 그 슬라이드의 단계가 모두 드러난 상태로 들어간다
+  function show(n, showAllSteps) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
