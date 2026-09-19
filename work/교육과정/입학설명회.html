@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>교육과정 - My Presentations</title>
+<title>입학설명회 - My Presentations</title>
 <style>
   :root { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270; --accent: #3a5ba0; --shadow: rgba(28, 34, 48, 0.10); }
   @media (prefers-color-scheme: dark) { :root { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8; --accent: #7fa2e0; --shadow: rgba(0,0,0,0.4); } }
@@ -36,48 +36,23 @@
 </head>
 <body>
   <div class="top">
-        <a class="back" href="../index.html">&larr; 홈으로</a>
+        <a class="back" href="../교육과정.html">&larr; 교육과정</a>
   </div>
-  <h1>📘 교육과정</h1>
+  <h1>🏫 입학설명회</h1>
 
+  <div class="sect">2026 경상고 입학설명회(1차)</div>
   <div class="grid">
-    <a class="card" href="교육과정/2028과목선택/index.html">
-      <div class="icon2">🧭</div>
-      <div class="label">2028 과목 선택 안내</div>
-      <div class="updated" data-date="./work/교육과정/2028과목선택/index.html"></div>
+    <a class="card" href="입학설명회/2026%20경상고%20입학설명회(1차).pdf" target="_blank">
+      <div class="icon2">📄</div>
+      <div class="label">PDF</div>
+      <div class="updated">바로 보기</div>
     </a>
-    <a class="card" href="교육과정/입학설명회.html">
-      <div class="icon2">🏫</div>
-      <div class="label">입학설명회</div>
-      <div class="updated" data-date="./work/교육과정/입학설명회.html"></div>
-    </a>
-  </div>
-
-  <div class="sect">관리자용</div>
-  <div class="grid">
-    <a class="card admin" href="교육과정/2028과목선택/admin.html">
-      <div class="icon2">⚙️</div>
-      <div class="label">개설 현황 관리</div>
-      <div class="updated" data-date="./work/교육과정/2028과목선택/admin.html"></div>
+    <a class="card" href="입학설명회/2026%20경상고%20입학설명회(1차).pptx" download>
+      <div class="icon2">📊</div>
+      <div class="label">PPTX</div>
+      <div class="updated">내려받기</div>
     </a>
   </div>
 
-<script>
-/* 업데이트 날짜 — dates.json 은 GitHub Actions 가 각 파일의
-   마지막 커밋일로 자동 생성한다. 손으로 적으면 고치는 걸 잊는다. */
-fetch('../dates.json?v=' + Date.now())
-  .then(function (r) { return r.json(); })
-  .then(function (d) {
-    document.querySelectorAll('[data-date]').forEach(function (el) {
-      var v = d[el.dataset.date];
-      if (!v) { el.remove(); return; }
-      var p = v.split('-');
-      el.textContent = '업데이트: ' + p[0] + '. ' + Number(p[1]) + '. ' + Number(p[2]) + '.';
-    });
-  })
-  .catch(function () {
-    document.querySelectorAll('[data-date]').forEach(function (el) { el.remove(); });
-  });
-</script>
 </body>
 </html>
