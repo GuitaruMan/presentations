@@ -180,6 +180,16 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
 .rule-calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
 .rule-calc select,.rule-calc input[type=number]{font-size:13.5px}
 .rule-calc input[type=number]{width:56px;text-align:center}
+/* 선수과목 — '그리고' 줄마다 '또는' 후보를 나란히 둔다 */
+.prereq-conds{margin:10px 0 0;padding-left:14px;border-left:2px solid var(--rule)}
+.prereq-cond{padding:5px 0}
+.prereq-word{font-size:12.5px;color:var(--soft);min-width:42px}
+.prereq-alt{display:inline-flex;align-items:center;gap:2px}
+.prereq-x{border:0;background:none;color:var(--faint);cursor:pointer;font-size:12.5px;padding:2px 6px;border-radius:6px}
+.prereq-x:hover{color:#B3402F;background:#F6E9E6}
+.prereq-mini{padding:4px 10px;font-size:12.5px}
+.prereq-read{margin:10px 0 0;padding:8px 10px;background:#F3F1EC;border-radius:8px;font-size:13px;line-height:1.6}
+.prereq-read .lbl{font-size:11.5px;color:var(--faint);margin-right:8px}
 .rule-display{
   display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 10px;
   background:#F3F1EC;border-radius:8px;
@@ -412,7 +422,8 @@ footer{margin:34px 0 40px;font-size:12px;color:var(--faint)}
       <div id="scienceBox"></div>
 
       <h3 style="margin-top:22px">⑤ 선수과목 관계</h3>
-      <p class="hint" style="margin-top:0">이 과목을 들으려면 먼저 들어야 하는 과목을 정합니다. 둘 다 이 학년 개설과목 중에서 고릅니다.</p>
+      <p class="hint" style="margin-top:0">이 과목을 들으려면 먼저 들어야 하는 과목을 정합니다. 모두 이 학년 개설과목 중에서 고릅니다.<br>
+        <b>+ 그리고</b> — 함께 들어야 하는 과목을 한 줄 더 늘립니다. <b>+ 또는</b> — 그 줄에서 대신 들어도 되는 과목을 늘립니다(그중 1과목만 들으면 됩니다).</p>
       <div id="prereqList"></div>
       <button type="button" class="btn ghost" id="prereqAddBtn">+ 관계 추가</button>
 
@@ -1945,7 +1956,11 @@ function updateScienceRule(){
    RULES.선수과목은 {후속과목: [선수과목,...]} 맵이라 화면 쪽 편집은 배열로 스냅샷을 떠서
    순서를 유지하고, change/click마다 이 배열 전체를 다시 맵으로 써서 RULES.선수과목을 교체한다.
    (키 이름을 드롭다운으로 바꾸는 동안에도 행 순서·다른 행이 흔들리지 않도록 하기 위함이다.)
-   선수과목은 현재 데이터가 전부 "선수 과목 1개"이므로 드롭다운 하나로 편집한다(목록에 없는 값은 보존). */
+   선수 조건 한 칸은 과목 이름 하나(문자열)이거나 '그중 1과목'을 뜻하는 묶음(배열)이다.
+     "고급 물리학": ["물리학", ["역학과 에너지", "전자기와 양자"]]
+     → 물리학 그리고 (역학과 에너지 또는 전자기와 양자 중 1과목)
+   칸들 사이는 '그리고', 묶음 안은 '또는'이다. 후보가 하나뿐인 칸은 문자열로 되돌려 적어
+   예전 자료와 모양이 달라지지 않게 한다. 고르는 중인 빈 칸('')은 저장할 때 걸러낸다. */
 function 선수과목행목록(){
   var map = RULES.선수과목 || {};
   return Object.keys(map).map(function(course){ return { course: course, pre: map[course]||[] }; });
@@ -1955,43 +1970,81 @@ function 선수과목행목록_저장(rows){
   rows.forEach(function(row){ map[row.course] = row.pre; });
   RULES.선수과목 = map;
 }
+function 선수후보(c){ return Array.isArray(c) ? c.slice() : [c]; }
+function 선수칸(후보){ return 후보.length > 1 ? 후보 : (후보[0] || ''); }
+/* 사람이 읽는 말 — 편집 줄 아래 '읽는 법'과 저장 전 변경 내역에 함께 쓴다 */
+function 선수조건말(pre){
+  var 칸들 = (pre||[]).map(function(c){ return 선수후보(c).filter(Boolean); })
+    .filter(function(후보){ return 후보.length; });
+  return 칸들.map(function(후보){
+    return 후보.length > 1 ? '(' + 후보.join(' 또는 ') + ' 중 1과목)' : 후보[0];
+  }).join(' 그리고 ');
+}
 function renderPrereqs(){
   var rows = 선수과목행목록();
   var 과목티어들 = 과목티어();
   var html = rows.map(function(row, i){
-    var pre = row.pre;
+    var conds = row.pre.length ? row.pre : [''];
+    var condsHTML = conds.map(function(c, j){
+      var 후보 = 선수후보(c);
+      var alts = 후보.map(function(name, k){
+        return (k ? '<span class="prereq-word" style="min-width:0">또는</span>' : '')+
+          '<span class="prereq-alt">'+
+          '<select class="prereq-f" data-alt="'+k+'">'+tieredSelectOptions(과목티어들, name, '(과목 고르기)')+'</select>'+
+          (후보.length>1 ? '<button type="button" class="prereq-x" data-remove-alt="'+k+'" title="이 과목을 후보에서 뺍니다" aria-label="후보에서 빼기">✕</button>' : '')+
+          '</span>';
+      }).join('');
+      return '<div class="rule-calc prereq-cond" data-cond="'+j+'">'+
+        '<span class="prereq-word">'+(j ? '그리고' : '먼저')+'</span>'+
+        alts+
+        (후보.length>1 ? '<span>중 1과목</span>' : '')+
+        '<button type="button" class="btn ghost prereq-mini" data-add-alt="1" title="이 과목 대신 들어도 되는 과목을 늘립니다">+ 또는</button>'+
+        (conds.length>1 ? '<button type="button" class="prereq-x" data-remove-cond="1" title="이 줄을 지웁니다" style="margin-left:auto">줄 삭제</button>' : '')+
+        '</div>';
+    }).join('');
+    // 과목 하나짜리 줄은 위 문장만으로 충분하다. 조건이 얽힐 때만 풀어서 보여 준다.
+    var 말 = 선수조건말(row.pre);
     return '<div class="rule-sentence prereq-row" data-idx="'+i+'">'+
       '<div class="rule-calc">'+
       '<select class="prereq-course-f">'+tieredSelectOptions(과목티어들, row.course, '(과목 고르기)')+'</select>'+
-      '<span>을 들으려면</span>'+
-      '<select class="prereq-f">'+tieredSelectOptions(과목티어들, pre[0]||'', '(과목 고르기)')+'</select>'+
-      '<span>을 먼저 들어야 합니다</span>'+
+      '<span>을(를) 들으려면</span>'+
       '<button type="button" class="btn ghost" data-remove-prereq="'+i+'" style="margin-left:auto">삭제</button>'+
       '</div>'+
-      (pre.length>1?'<p class="hint" style="margin:6px 0 0">그 외 선수과목: '+esc(pre.slice(1).join(', '))+' (여러 개는 이 화면에서 바꿀 수 없습니다. 필요하면 알려주세요)</p>':'')+
+      '<div class="prereq-conds">'+condsHTML+
+      '<div class="rule-calc prereq-cond"><span class="prereq-word"></span>'+
+      '<button type="button" class="btn ghost prereq-mini" data-add-cond="1" title="함께 들어야 하는 과목을 한 줄 더 늘립니다">+ 그리고</button>'+
+      '<span>을(를) 들어야 합니다</span></div>'+
+      '</div>'+
+      (row.course && /그리고|또는/.test(말) ? '<p class="prereq-read"><span class="lbl">읽는 법</span>'+
+        esc(row.course)+' ← '+esc(말)+'</p>' : '')+
       '</div>';
   }).join('');
   $('#prereqList').innerHTML = html || '<p class="st">선수과목 관계가 없습니다.</p>';
 }
 
+/* 눌린 곳이 몇 번째 관계의 몇 번째 줄인지 */
+function 선수위치(el){
+  var row = el.closest('.prereq-row'); if(!row) return null;
+  var cond = el.closest('[data-cond]');
+  return { i: Number(row.dataset.idx), j: cond ? Number(cond.dataset.cond) : -1 };
+}
+
 $('#prereqList').addEventListener('change', function(ev){
-  var row = ev.target.closest('.prereq-row');
-  if(!row) return;
-  var i = Number(row.dataset.idx);
-  var rows = 선수과목행목록();
+  var at = 선수위치(ev.target);
+  if(!at) return;
+  var rows = 선수과목행목록(), i = at.i;
   if(ev.target.classList.contains('prereq-f')){
-    if(ev.target.value === CUSTOM_VALUE){
-      activateCustomInput(ev.target, function(custom){
-        var rest = rows[i].pre.slice(1);
-        rows[i].pre = [custom].concat(rest).filter(Boolean);
-        선수과목행목록_저장(rows);
-        renderPrereqs();
-      }, '과목명');
-      return;
-    }
-    var rest = rows[i].pre.slice(1);
-    rows[i].pre = [ev.target.value].concat(rest).filter(Boolean);
-    선수과목행목록_저장(rows);
+    var j = at.j, k = Number(ev.target.dataset.alt);
+    var 쓰기 = function(v){
+      var 후보 = 선수후보(rows[i].pre[j] == null ? '' : rows[i].pre[j]);
+      후보[k] = v;
+      // 묶음 안의 빈 칸은 고르는 중이므로 그대로 둔다. 저장할 때 걸러진다.
+      rows[i].pre[j] = 후보.length > 1 ? 후보 : 선수칸(후보);
+      선수과목행목록_저장(rows);
+      renderPrereqs();
+    };
+    if(ev.target.value === CUSTOM_VALUE){ activateCustomInput(ev.target, 쓰기, '과목명'); return; }
+    쓰기(ev.target.value);
   } else if(ev.target.classList.contains('prereq-course-f')){
     if(ev.target.value === CUSTOM_VALUE){
       activateCustomInput(ev.target, function(custom){
@@ -2008,10 +2061,26 @@ $('#prereqList').addEventListener('change', function(ev){
 });
 
 $('#prereqList').addEventListener('click', function(ev){
-  var idxStr = ev.target.dataset.removePrereq;
-  if(idxStr == null) return;
+  var d = ev.target.dataset;
+  if(d.removePrereq == null && d.addAlt == null && d.removeAlt == null &&
+     d.addCond == null && d.removeCond == null) return;
   var rows = 선수과목행목록();
-  rows.splice(Number(idxStr), 1);
+  if(d.removePrereq != null){
+    rows.splice(Number(d.removePrereq), 1);
+  } else {
+    var at = 선수위치(ev.target), pre = rows[at.i].pre;
+    if(!pre.length) pre.push('');
+    if(d.addCond != null){
+      pre.push('');
+    } else if(d.removeCond != null){
+      pre.splice(at.j, 1);
+    } else {
+      var 후보 = 선수후보(pre[at.j]);
+      if(d.addAlt != null) 후보.push('');
+      else 후보.splice(Number(d.removeAlt), 1);
+      pre[at.j] = 선수칸(후보);
+    }
+  }
   선수과목행목록_저장(rows);
   renderPrereqs();
 });
@@ -2151,6 +2220,12 @@ function rulesSavePayload(){
   // 선수과목에 과목을 아직 고르지 않은 빈 줄(키='')이 남아 있으면 저장 대상에서 뺀다.
   var 선수과목 = Object.assign({}, RULES.선수과목);
   delete 선수과목[''];
+  // 고르다 만 빈 칸을 걸러낸다. 후보가 하나만 남은 묶음은 문자열로 되돌린다.
+  Object.keys(선수과목).forEach(function(k){
+    선수과목[k] = (선수과목[k]||[]).map(function(c){
+      return 선수칸(선수후보(c).filter(Boolean));
+    }).filter(function(c){ return c.length; });
+  });
   return {
     이수규칙: RULES.이수규칙,
     선수과목: 선수과목,
@@ -2233,9 +2308,9 @@ function buildRulesDiff(before, after){
   var preKeys = Object.keys(Object.assign({}, bPre, aPre));
   preKeys.forEach(function(k){
     if(eq(bPre[k], aPre[k])) return;
-    if(bPre[k] == null) preLines.push('+ ' + k + ' ← ' + (aPre[k]||[]).join(', ') + ' (새로 추가)');
-    else if(aPre[k] == null) preLines.push('- ' + k + ' ← ' + (bPre[k]||[]).join(', ') + ' (삭제)');
-    else preLines.push(k + ' ← ' + (bPre[k]||[]).join(', ') + ' → ' + (aPre[k]||[]).join(', '));
+    if(bPre[k] == null) preLines.push('+ ' + k + ' ← ' + 선수조건말(aPre[k]) + ' (새로 추가)');
+    else if(aPre[k] == null) preLines.push('- ' + k + ' ← ' + 선수조건말(bPre[k]) + ' (삭제)');
+    else preLines.push(k + ' ← ' + 선수조건말(bPre[k]) + '  →  ' + 선수조건말(aPre[k]));
   });
   if(preLines.length) sections.push({ title: '⑤ 선수과목', lines: preLines });
 

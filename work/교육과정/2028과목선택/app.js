@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260908d';
+var VERSION = '20260921a';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1489,7 +1489,9 @@ function preCheck() {
     var need = pre[item.name];
     if (!need) return;
     var missing = need.filter(function (p) {
-      var found = seq.filter(function (x) { return x.name === p; });
+      // 묶음(배열)은 그중 한 과목만 앞서 있으면 채워진다
+      var 후보 = 선수후보(p);
+      var found = seq.filter(function (x) { return 후보.indexOf(x.name) !== -1; });
       // 같은 학기여도 되지만, 뒤 학기에 있으면 순서가 어긋난다
       return !found.some(function (x) { return x.order <= item.order; });
     });
@@ -1504,8 +1506,18 @@ function preCheck() {
   return out;
 }
 
+/* 선수과목 한 칸 — 과목 이름 하나이거나, '그중 1과목'을 뜻하는 묶음(배열)이다.
+   '고급 물리학 ← 물리학 + (역학과 에너지·전자기와 양자 중 1과목)' 같은 학교 규정을 담는다.
+   교육과정이 강제하는 것이 아니라 학교가 정해 운영하는 규정이므로, Ⅰ/Ⅱ 짝처럼
+   담기를 막지는 않고 '강력 권장'으로 알린다. */
+function 선수후보(p) { return Array.isArray(p) ? p : [p]; }
+function 선수이름(p) {
+  var 말 = 선수후보(p).map(function (x) { return '‘' + x + '’'; });
+  return 말.length > 1 ? 말.join('·') + ' 중 1과목' : 말[0];
+}
+
 function 따옴표(list) {
-  return list.map(function (x) { return '‘' + x + '’'; }).join('와 ');
+  return list.map(선수이름).join('와 ');
 }
 
 function toggleCart(name, key) {
@@ -1566,11 +1578,12 @@ function toggleCart(name, key) {
   var need = pre[name];
   if (need) {
     var lack = need.filter(function (p) {
-      return !cartHas(p) && !LOGIC.mustPrecede(name, p);
+      var 담았다 = 선수후보(p).some(function (x) { return cartHas(x); });
+      return !담았다 && !LOGIC.mustPrecede(name, p);
     });
     if (lack.length) {
       flash('‘' + name + '’을(를) 들으려면 ' + 따옴표(lack) +
-            ' 과목을 먼저 듣기를 강력히 권장합니다.', true);
+            '을(를) 먼저 듣기를 강력히 권장합니다.', true);
     }
   }
 }
@@ -1827,7 +1840,7 @@ function renderMy() {
       '</h4><ul>';
     lack.forEach(function (x) {
       st += '<li>‘' + esc(x.과목) + '’(' + esc(x.슬롯) + ')을(를) 들으려면 ' +
-        '<b>' + x.필요.map(function (p) { return '‘' + esc(p) + '’'; }).join('와 ') +
+        '<b>' + esc(따옴표(x.필요)) +
         '</b>을(를) ' +
         (x.필수 ? '<b>반드시 먼저 이수해야 합니다</b>' : '먼저 듣기를 <b>강력히 권장</b>합니다') +
         '.</li>';
@@ -1972,7 +1985,7 @@ function openSubject(name) {
   var need = ((D.school.meta && D.school.meta.선수과목) || {})[name];
   if (need && need.length) {
     h += '<p class="subj-pre"><span class="subj-pre-icon" aria-hidden="true">⚠</span>' +
-      '<span><b>' + esc(need.join(', ')) + '</b> 과목을 먼저 이수해야 합니다.</span></p>';
+      '<span><b>' + esc(need.map(선수이름).join(', ')) + '</b>을(를) 먼저 이수해야 합니다.</span></p>';
   }
 
   if (!arr.length) {
