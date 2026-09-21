@@ -2347,7 +2347,9 @@ $('#rulesSaveBtn').addEventListener('click', function(){
   if(!RULES || !RULES_ORIGINAL) return;
   var before = {
     이수규칙: RULES_ORIGINAL.이수규칙, 선수과목: RULES_ORIGINAL.선수과목,
-    선택슬롯: RULES_ORIGINAL.선택슬롯, 유의사항: RULES_ORIGINAL.유의사항, 과정구분: RULES_ORIGINAL.과정구분
+    선택슬롯: RULES_ORIGINAL.선택슬롯, 유의사항: RULES_ORIGINAL.유의사항, 과정구분: RULES_ORIGINAL.과정구분,
+    // 빠뜨리면 저장할 때마다 자료 출처가 '(비어 있음) → …'으로 바뀌는 것처럼 보인다.
+    출처: RULES_ORIGINAL.출처
   };
   var after = rulesSavePayload();
   var sections = buildRulesDiff(before, after);

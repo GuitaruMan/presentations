@@ -2,7 +2,7 @@
    데이터: data/*.json — 기준은 각 대학 PDF 원문 */
 'use strict';
 
-var VERSION = '20260921a';
+var VERSION = '20260921b';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -2297,9 +2297,11 @@ function stampFoot() {
 
   var t = '자료 기준일 ' + D.rec.meta.갱신일 + ' · ' + 대학수 + '개 대학 ' +
           모집단위수 + '개 모집단위';
+  // 기간은 폐강 목록이 아니라 학년도(school_cohorts.단계)에 있다. CLOSED.meta 에서 읽으면
+  // 그 칸이 없어 늘 비었다. 머리말(기간표시)과 같은 곳에서 읽는다.
   if (CLOSED && CLOSED.meta && CLOSED.meta.갱신일) {
     t += ' · 개설 현황 ' + CLOSED.meta.갱신일 +
-         (CLOSED.meta.단계 ? ' (' + CLOSED.meta.단계 + ')' : '');
+         (COHORT && COHORT.단계 ? ' (' + COHORT.단계 + ')' : '');
   }
   $('#stamp').textContent = t + ' · 출처: 각 대학 발표 원문';
 }
