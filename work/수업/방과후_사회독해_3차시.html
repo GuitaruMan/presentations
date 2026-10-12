@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사회 지문, 갈래를 그리며 읽는다 (방과후-3차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f4f3f0;
+    --paper-edge: #e2ddd6;
+    --ink: #23262b;
+    --ink-soft: #55585e;
+    --ink-faint: #979490;
+    --key: #1c5675;
+    --key-soft: #5c8ba6;
+    --rule: #ded9d2;
+    --card: #fbfaf8;
+    --warn: #b0392c;
+    --warn-bg: #fbefed;
+    --warn-line: #e6c2bd;
+    --ok: #1d6b52;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #1b1f24;
+    font-family: "IBM Plex Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.012em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(27,31,36,0.94); z-index: 50;
+  }
+  .nav-top a { color: #b4c6d2; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #e6eff4; }
+  .nav-meta { color: #90a3b0; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      /* 종이 결 — 아주 옅은 사선 */
+      repeating-linear-gradient(112deg, rgba(120,108,92,0.030) 0 1px, transparent 1px 7px),
+      radial-gradient(ellipse at 14% 6%, rgba(255,253,249,0.9) 0%, transparent 62%),
+      radial-gradient(ellipse at 88% 94%, rgba(28,86,117,0.085) 0%, transparent 64%);
+    border: 1px solid var(--paper-edge); border-radius: 3px;
+    box-shadow: 0 14px 44px rgba(0,0,0,0.30);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
+  }
+  /* 우측 상단 — 문단 덩어리와 첫 줄 */
+  .stage::before {
+    content: ""; position: absolute; top: 5%; right: -2%;
+    width: 19%; height: 44%; pointer-events: none; opacity: 0.07;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%235b5348' stroke-linecap='round'><path stroke-width='6' d='M18 18 H150'/><path stroke-width='2.2' d='M18 38 H182 M18 54 H182 M18 70 H126'/><path stroke-width='6' d='M18 100 H150'/><path stroke-width='2.2' d='M18 120 H182 M18 136 H182 M18 152 H108'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.9cqw, 5.88rem); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.62cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.1cqw solid var(--rule);
+    align-self: flex-start; flex-shrink: 0; position: relative;
+  }
+  h2.slide-title::after {
+    content: ""; position: absolute; left: 0; bottom: -0.1cqw;
+    width: 2.6em; height: 0.26cqw; background: var(--key);
+  }
+  h2.slide-title .qm {
+    font-family: "IBM Plex Sans KR", sans-serif; font-weight: 400;
+    font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
+    margin-left: 0.8em; vertical-align: 0.18em;
+  }
+  h2.slide-title .ans-chip {
+    font-family: "IBM Plex Sans KR", sans-serif; font-weight: 700;
+    font-size: 0.46em; color: var(--paper); background: var(--key);
+    padding: 0.18em 0.7em; margin-left: 0.8em; vertical-align: 0.22em;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.8rem, 1.68cqw, 2.02rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); color: var(--ink-soft); line-height: 1.8; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.5cqw, 3rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.4cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.46cqw, 1.76rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+
+  /* 줄글 — 설명을 이어서 하는 본문 */
+  .story-head {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.38em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+  }
+  .story-head .rng { font-family: "IBM Plex Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
+    line-height: 1.88; color: var(--ink); text-align: justify;
+  }
+  .story + .story { margin-top: 0.55em; }
+
+  /* 기출 지문을 그대로 옮긴 자리 */
+  .cite {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
+    line-height: 1.86; color: var(--ink);
+    background: rgba(28,86,117,0.05);
+    border-left: 0.26em solid var(--rule);
+    padding: 0.65em 0.9em;
+  }
+  .cite .attr {
+    display: block; margin-top: 0.42em;
+    font-family: "IBM Plex Sans KR", sans-serif; font-size: 0.68em;
+    color: var(--ink-faint); letter-spacing: 0.03em;
+  }
+  /* 지문 안에서 눈여겨볼 대목 — 색을 바꾸지 않고 획만 더한다 */
+  .cite .hl, .story .hl { -webkit-text-stroke: 0.022em currentColor; color: var(--key); }
+  .cite .dim { color: var(--ink-faint); }
+
+  .emotion {
+    background: var(--card); border-left: 0.32cqw solid var(--key);
+    padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+    border-radius: 0 2px 2px 0;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76;
+    color: var(--ink-soft); padding-left: 1.2em; position: relative;
+  }
+  .emotion li + li { margin-top: 0.45em; }
+  .emotion li::before { content: "\2022"; position: absolute; left: 0.15em; color: var(--key-soft); }
+  .emotion li.q { color: var(--ink); }
+  .emotion li.q::before { content: "?"; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); left: 0; }
+  .emotion strong { color: var(--key); }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+  }
+  .info-table th { width: 5.4em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.7;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.15cqw solid var(--key); font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+  }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 5.2em; background: var(--card); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table strong { color: var(--key); }
+  .cmp-table caption {
+    caption-side: top; text-align: left; color: var(--ink-soft);
+    font-size: clamp(0.8rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs)));
+    padding-bottom: 0.6em;
+  }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.76;
+    padding-left: 1.7em; position: relative; margin-bottom: 0.62em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
+  .num-list strong { color: var(--key); }
+
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw;   border-radius: 2px;
+  }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); line-height: 1.82; color: var(--ink-soft); }
+  .def-box strong { color: var(--key); }
+
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw;   border-radius: 0 0 2px 2px;
+  }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.45em; }
+  .c3 strong { color: var(--key); }
+
+  /* 문단 흐름도 */
+  .flow { display: flex; align-items: stretch; gap: 0.7cqw; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
+    padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
+    border-radius: 0 0 2px 2px;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); margin-bottom: 0.42em;
+  }
+  .flow-step .desc { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+  .flow-arrow { display: flex; align-items: center; color: var(--key-soft); font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); }
+
+  /* 문단 첫 문장만 이어 읽기 */
+  .plines { display: flex; flex-direction: column; gap: 0.62em; }
+  .pline {
+    display: flex; gap: 0.9em; align-items: baseline;
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.5em;
+  }
+  .pline:last-child { border-bottom: none; }
+  .pline .pn {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    width: 3.4em; flex-shrink: 0; white-space: nowrap;
+  }
+  .pline .pt {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    line-height: 1.72; color: var(--ink);
+  }
+
+  /* 단계 공개 — opacity로만 숨겨 자리를 미리 잡아 둔다 */
+  .reveal { opacity: 0; transition: opacity .25s ease; }
+  .reveal.shown { opacity: 1; }
+
+  .quiz-list {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(2.6cqw * var(--fs)); flex: 1;
+  }
+  .body-area > .quiz-list { margin-bottom: 3.0cqw; }
+  .qq {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: max(1rem, calc(2.5cqw * var(--fs))); line-height: 1.6;
+    padding-left: calc(3.4cqw * var(--fs)); position: relative;
+  }
+  .qq .qn { position: absolute; left: 0; top: 0; color: var(--key); font-size: 1.05em; }
+  .qans {
+    margin: calc(1.0cqw * var(--fs)) 0 0 calc(3.4cqw * var(--fs));
+    background: var(--card); border-left: 0.34cqw solid var(--key);
+    padding: calc(1.1cqw * var(--fs)) calc(1.6cqw * var(--fs));
+    font-size: max(0.9rem, calc(2.1cqw * var(--fs))); line-height: 1.76; color: var(--ink-soft);
+  }
+  .qans .tag {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    margin-right: 0.7em;
+  }
+  .qans strong { color: var(--key); }
+
+  /* 지문 골격 — 문단마다 한 줄 요지와 한 줄 보충 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.0cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.25cqw; }
+  .para-no {
+    flex-shrink: 0; width: 5.6cqw;
+    background: var(--key); color: var(--paper);
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: calc(2.1cqw * var(--fs));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; background: var(--card); border: 1px solid var(--rule); border-left: none;
+    border-radius: 0 2px 2px 0;
+    padding: 1.1cqw 1.5cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: calc(2.2cqw * var(--fs)); font-weight: 700; line-height: 1.45; }
+  .para-body .t b { color: var(--key); }
+  .para-body .d {
+    font-size: calc(1.9cqw * var(--fs)); color: var(--ink-soft);
+    line-height: 1.55; margin-top: 0.35cqw;
+  }
+  .para-body .d b { color: var(--ink); }
+  .slide.tight .para-flow { gap: 0.75cqw; }
+  .slide.tight .para-body { padding: 0.85cqw 1.25cqw; }
+
+  /* 지문 인용 — 문단 번호를 붙여 여러 문단을 나란히 */
+  .passage { display: flex; flex-direction: column; gap: 1.0cqw; }
+  .pblock { display: flex; gap: 1.1cqw; align-items: flex-start; }
+  .pblock .pno {
+    flex-shrink: 0; width: 4.4em; padding-top: 0.2em;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(1.94cqw * var(--fs));
+  }
+  .pblock .ptx {
+    font-family: "Gowun Batang", serif;
+    font-size: calc(2.06cqw * var(--fs)); line-height: 1.82; color: var(--ink);
+  }
+  .pblock .ptx b { color: var(--key); -webkit-text-stroke: 0.02em currentColor; font-weight: 400; }
+  .pblock .ptx .dim { color: var(--ink-faint); }
+  .sub-note { display: block; margin-top: 0.25em; color: var(--ink-faint); font-size: 0.84em; }
+
+  /* ── 문제 슬라이드 ── */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.45cqw; }
+  .choices li {
+    display: flex; gap: 1.0cqw; align-items: flex-start;
+    font-size: calc(2.06cqw * var(--fs)); line-height: 1.55;
+    padding: 0.55cqw 1.05cqw; border: 1px solid transparent;
+  }
+  .choices .n { flex-shrink: 0; font-weight: 700; color: var(--ink-faint); width: 1.5em; }
+  .choices li.ans { background: var(--warn-bg); border-color: var(--warn-line); border-radius: 2px; }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices b { color: var(--warn); }
+  .choices .dim { color: var(--ink-faint); }
+  .bogi .dim { color: var(--ink-faint); }
+
+  /* 발문에 딸린 인용 — ㉯의 비판, ⓐ~ⓔ의 문맥 등 */
+  .bogi {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.1cqw 1.5cqw; font-size: calc(1.94cqw * var(--fs)); line-height: 1.68;
+    border-radius: 2px;
+  }
+  .bogi .tag {
+    display: block; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(1.66cqw * var(--fs)); letter-spacing: 0.12em; margin-bottom: 0.5cqw;
+  }
+  .bogi b { color: var(--key); }
+
+  /* ── 정답과 근거 ── */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.3cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.1cqw 1.7cqw; margin-bottom: 1.5cqw; flex: 0 0 auto;
+  }
+  .ans-banner .lb { font-size: calc(1.8cqw * var(--fs)); letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num { font-family: "Gowun Batang", serif; font-weight: 700; font-size: calc(4.1cqw * var(--fs)); line-height: 1; }
+  .ans-banner .why { font-size: calc(2.16cqw * var(--fs)); line-height: 1.45; }
+
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
+  .evi .box { background: var(--card); border: 1px solid var(--rule); padding: 1.3cqw 1.6cqw;   border-radius: 2px;
+  }
+  .evi .box .h {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: calc(1.98cqw * var(--fs)); letter-spacing: 0.06em;
+    padding-bottom: 0.5cqw; margin-bottom: 0.85cqw; border-bottom: 1px solid var(--rule);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: calc(2.04cqw * var(--fs)); line-height: 1.7; color: var(--ink-soft); }
+  .evi .box p + p { margin-top: 0.8cqw; }
+  .evi .box b { color: var(--ink); }
+  .evi .box .verdict { color: var(--warn); font-weight: 700; }
+
+  /* 선택지별 확인 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--rule); padding: 0.72cqw 1.0cqw;
+    font-size: calc(1.96cqw * var(--fs)); line-height: 1.55; text-align: left; vertical-align: top;
+    color: var(--ink-soft);
+  }
+  .otable th { width: 2.2em; text-align: center; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink-faint); background: var(--card); }
+  .otable tr.ans th { color: var(--warn); background: var(--warn-bg); }
+  .otable tr.ans td { background: var(--warn-bg); color: var(--ink); }
+  .otable b { color: var(--ink); }
+  .otable .u-warn { color: var(--warn); }
+  .otable .u-key { color: var(--key); }
+
+  .trap {
+    margin-top: 1.4cqw; background: var(--card); border-radius: 0 2px 2px 0;
+    border-left: 0.4cqw solid var(--key); padding: 1.15cqw 1.6cqw; flex: 0 0 auto;
+  }
+  .trap .h {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(2.0cqw * var(--fs)); margin-bottom: 0.45cqw;
+  }
+  .trap p { font-size: calc(2.02cqw * var(--fs)); line-height: 1.68; color: var(--ink-soft); }
+  .trap b { color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -2.7cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.32cqw, 1.58rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #b4c6d2; font-size: 0.86rem; }
+  .controls button {
+    background: #23404f; color: #e6eff4; border: 1px solid #3c5f72;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2d5064; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #869aa7; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w); height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cards2, .cards3, .evi { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* 자리가 빠듯한 장 — 여백만 줄이고 글자 크기는 지킨다 */
+  .slide.tight .story { line-height: 1.74; }
+  .slide.tight .cite { line-height: 1.72; padding: 0.5em 0.75em; }
+  .slide.tight .emotion { padding: 0.95cqw 1.35cqw; }
+  .slide.tight .emotion .etag { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .emotion li + li { margin-top: 0.28em; }
+  .slide.tight .story-head { margin-bottom: 0.42em; padding-bottom: 0.26em; }
+  .slide.tight .c3 { padding: 1.1cqw 1.2cqw; }
+  .slide.tight .c3 h3 { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .num-list li { margin-bottom: 0.4em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.42em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.42em 0.42em; }
+  .slide.tight .pline { padding-bottom: 0.38em; }
+  .slide.tight .plines { gap: 0.44em; }
+  .slide.tight .otable th, .slide.tight .otable td { padding: 0.48cqw 0.8cqw; line-height: 1.46; }
+  .slide.tight .choices { gap: 0.22cqw; }
+  .slide.tight .choices li { padding: 0.32cqw 0.85cqw; line-height: 1.44; }
+  .slide.tight .bogi { padding: 0.8cqw 1.2cqw; line-height: 1.56; }
+  .slide.tight .bogi .tag { margin-bottom: 0.32cqw; }
+  .slide.tight .trap { margin-top: 0.95cqw; padding: 0.85cqw 1.3cqw; }
+  .slide.tight .trap p { line-height: 1.56; }
+  .slide.tight .evi { gap: 1.2cqw; }
+  .slide.tight .evi .box { padding: 1.0cqw 1.2cqw; }
+  .slide.tight .evi .box .h { padding-bottom: 0.35cqw; margin-bottom: 0.6cqw; }
+  .slide.tight .evi .box p { line-height: 1.58; }
+  .slide.tight .ans-banner { padding: 0.82cqw 1.4cqw; margin-bottom: 1.1cqw; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_방과후.html">&larr; 방과후</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">사회 지문, 갈래를 그리며 읽는다 &middot; 방과후 3차시 &middot; 업데이트 2026. 10. 12.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">방 과 후 　 독 서</div>
+    <h1 class="title-main">사회 지문,<br>갈래를 그리며 읽는다</h1>
+    <div class="rule"></div>
+    <div class="sub">법 &middot; 제도 지문과 경제 지문, 네 세트</div>
+    <div class="foot">
+      <span>2027 &middot; 2025 &middot; 2023학년도 모의평가 &middot; 2022학년도 수능</span>
+      <span>방과후 &middot; 3차시 (블록 2시간)</span>
+    </div>
+    <div class="page-num">1 / 51</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" style="--fs:1.04;">
+    <h2 class="slide-title">오늘 할 일</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:4.6em;">학습지</th><th>지문</th><th style="width:5.2em;">갈래</th><th style="width:7.2em;">출처</th></tr></thead>
+        <tbody>
+          <tr><th>1&#12316;4번</th><td>정보 비대칭과 사상의 자유 시장 이론</td><td>법 &middot; 제도</td><td>2027학년도 6월</td></tr>
+          <tr><th>5&#12316;8번</th><td>재판매 가격 유지 행위와 부당한 광고</td><td>법 &middot; 제도</td><td>2025학년도 9월</td></tr>
+          <tr><th>9&#12316;12번</th><td>이중차분법</td><td>경제</td><td>2023학년도 6월</td></tr>
+          <tr><th>13&#12316;16번</th><td>기축 통화와 트리핀 딜레마</td><td>경제</td><td>2022학년도 수능</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">2 / 51</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" style="--fs:1.20;">
+    <h2 class="slide-title">사회 지문의 두 갈래</h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.3cqw;">
+        <div class="c3">
+          <h3><span class="word">법 &middot; 제도</span></h3>
+          <p>&lsquo;A에 해당하면 B를 한다&rsquo;는 <strong>요건과 효과</strong>의 짝으로 쓰인다. 짝 뒤에 <strong>예외</strong>가 따라붙는다.</p>
+          <p>문항은 &lt;보기&gt;의 사람을 요건에 대어 보라고 한다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">경제</span></h3>
+          <p>개념을 <strong>정의</strong>한 뒤 변수들이 <strong>어느 방향으로</strong> 움직이는지를 쌓는다. 오르면 내리고, 늘면 준다.</p>
+          <p>문항은 방향을 뒤집거나 숫자를 계산하라고 한다.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">첫 문단에서 가려진다</div>
+        <ul><li>&lsquo;금지한다&rsquo;, &lsquo;처벌&rsquo;, &lsquo;위헌&rsquo;, &lsquo;규제&rsquo;가 보이면 법 지문. &lsquo;증가&rsquo;, &lsquo;비교&rsquo;, &lsquo;환율&rsquo;, &lsquo;효과&rsquo;가 보이면 경제 지문.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">3 / 51</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" style="--fs:1.28;">
+    <h2 class="slide-title">도구 &#9312; &middot; 법 지문은 갈래를 그린다<span class="qm">2025학년도 9월 2&#12316;3문단</span></h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.3cqw;">
+        <div class="flow-step">
+          <div class="emo">요건</div>
+          <div class="desc">거래 상대방 사업자에게 가격을 정해 그대로 팔도록 <strong>강제</strong>한다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">효과</div>
+          <div class="desc">원칙적으로 금지. 시정명령 &middot; 과징금 (형사 처벌은 없다)</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">예외</div>
+          <div class="desc">고시된 출판 저작물 / <strong>정당한 이유</strong>가 있으면 허용, 사업자가 입증</div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">갈림길이 되는 말</div>
+        <ul>
+          <li>&lsquo;원칙적으로&rsquo;가 나오면 뒤에 반드시 &lsquo;다만&rsquo;이 온다. &lsquo;&#12316;하더라도&rsquo;, &lsquo;&#12316;가 없다면&rsquo;은 예외의 조건이다.</li>
+          <li>제재의 <strong>종류</strong>를 따로 적는다. 시정명령 &middot; 과징금 &middot; 형사 처벌 중 어디까지인지가 문항이 된다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">4 / 51</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">도구 &#9313; &middot; 경제 지문은 식으로 바꾼다<span class="qm">2023학년도 6월 2문단</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        이중차분법은 <span class="hl">시행집단에서 일어난 변화</span>에서 <span class="hl">비교집단에서 일어난 변화</span>를 뺀 값을 사건의 효과라고 평가하는 방법이다.
+      </div>
+      <div class="def-box" style="margin-bottom:1.2cqw;">
+        <div class="dt">여백에 이렇게 적는다</div>
+        <p>효과 = (시행 후 &minus; 시행 전) &minus; (비교 후 &minus; 비교 전)</p>
+      </div>
+      <div class="emotion">
+        <div class="etag">방향어에는 화살표</div>
+        <ul>
+          <li>&lsquo;증가 &middot; 상승 &middot; 과잉&rsquo;은 &uarr;, &lsquo;감소 &middot; 하락 &middot; 과소&rsquo;는 &darr;. 문장 옆에 적어 두면 &lsquo;반대&rsquo;로 만든 선택지가 바로 걸린다.</li>
+          <li>&lsquo;A에 대한 B의 환율이 하락&rsquo;처럼 <strong>기준이 붙은 말</strong>은 그 자리에서 풀어 적는다. 뒤에서 다시 읽으면 늦다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 51</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" style="--fs:1.04;">
+    <h2 class="slide-title">도구 &#9314; &middot; &lt;보기&gt;의 사람을 요건에 댄다</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.3cqw;">
+        <thead><tr><th style="width:6.2em;">&lt;보기&gt;</th><th>무엇을 했나</th><th>지문의 어느 요건인가</th></tr></thead>
+        <tbody>
+          <tr><th>갑</th><td>생성형 인공 지능으로 과장 광고를 만들어 익명으로 올렸다</td><td>2문단 &middot; <strong>정보 제공자</strong>. ⓐ의 의무 대상은 아직 아니다</td></tr>
+          <tr><th>을</th><td>선거 기간에 이름을 바꿔 가며 같은 글을 여러 번 올렸다</td><td>4문단 &middot; 의도적으로 유통된 정보를 <strong>진정한 의견으로 오인</strong></td></tr>
+          <tr><th>플랫폼 B</th><td>실명 확인을 하지 않았다</td><td>5문단 &middot; 그 제재 규정은 <strong>위헌</strong>으로 결정</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">표부터 만들고 선지를 읽는다</div>
+        <ul><li>사례 문항은 &lt;보기&gt;를 읽는 동안 사람마다 <strong>지문의 문단 번호</strong>를 붙여 두면, 선지마다 지문을 뒤지지 않아도 된다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">6 / 51</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" style="--fs:1.44;">
+    <h2 class="slide-title">읽는 순서</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>첫 문단에서 <strong>법인가 경제인가</strong>를 가린다.</li>
+        <li><span class="n">2</span>법이면 요건 &rarr; 효과 &rarr; 예외를 <strong>갈래</strong>로, 경제면 정의를 <strong>식</strong>으로, 방향어를 <strong>화살표</strong>로 바꿔 여백에 적는다.</li>
+        <li><span class="n">3</span>입장이 둘 나오면 <strong>누가 무엇을 규제하자는가</strong>를 한 줄씩. 사전인지 사후인지, 정부인지 사업자인지.</li>
+        <li><span class="n">4</span>&lt;보기&gt;가 나오면 사람마다 <strong>지문의 문단 번호</strong>를 붙인 다음 선지를 읽는다.</li>
+      </ul>
+    </div>
+    <div class="page-num">7 / 51</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide tight" style="--fs:1.06;">
+    <h2 class="slide-title">지문의 뼈대<span class="qm">2027학년도 6월 10&#12316;13번 &middot; 학습지 1&#12316;4번</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t"><b>정보 비대칭</b> &rarr; 역선택 &rarr; 정부가 법으로 개입</div>
+            <div class="d">정보를 적게 가진 쪽이 나쁜 상품을 비싸게 산다. 성분 &middot; 효능 표시 강제가 그 예</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">온라인 &middot; 생성형 인공 지능 &rarr; <b>ⓐ 생성물 표시 의무</b></div>
+            <div class="d">의무는 <b>인공 지능 사업자</b>에게만. 정보 제공자 &middot; 플랫폼에도 지우자는 <b>주장</b>이 제기된 단계</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t"><b>㉠ 사상의 자유 시장 이론</b> &mdash; 정부는 개입하면 안 된다</div>
+            <div class="d">진위와 가치는 의견 경쟁으로 결정. 미 연방 대법원 &middot; 우리 헌법 재판소가 이 입장</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t"><b>㉡ 비판론</b> &mdash; 플랫폼과 정부의 <b>공동 규제</b></div>
+            <div class="d">허위가 대량이면 경쟁이 안 된다. 플랫폼이 <b>사전</b> 자율 삭제 &rarr; 미흡하면 정부 <b>사후</b> 규제, 법적 근거를 갖춰서</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t"><b>ⓑ 실명확인 사건</b> &mdash; 다수 의견 위헌 / 소수 의견은 비판론 취지</div>
+            <div class="d">실명 확인 안 한 언론사를 제재하는 규정이 <b>위헌</b>. 소수 의견은 허위 정보가 토론으로 교정되기 어렵다고 봄</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">8 / 51</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" style="--fs:1.18;">
+    <h2 class="slide-title">㉠과 ㉡, 누가 무엇을 규제하자는가</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.3cqw;">
+        <thead><tr><th style="width:6.4em;">&nbsp;</th><th>㉠ 사상의 자유 시장 이론</th><th>㉡ 비판론</th></tr></thead>
+        <tbody>
+          <tr><th>전제</th><td>의견 경쟁이 진위를 가린다</td><td>허위가 대량이면 경쟁이 안 된다</td></tr>
+          <tr><th>정부 개입</th><td><strong>안 된다</strong></td><td>플랫폼 사전 자율 규제 &rarr; 미흡하면 정부 <strong>사후</strong></td></tr>
+          <tr><th>공통 전제</th><td colspan="2">표현의 자유는 <strong>기본권</strong>이다 &mdash; ㉠은 그래서 보호, ㉡은 그래서 법적 근거를 갖추자</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">셋째 줄이 3번 문항이다</div>
+        <ul><li>두 입장이 갈리는 곳만 보면 &lsquo;모두 &#12316;를 전제한다&rsquo;는 선지를 판정할 수 없다. <strong>같은 자리</strong>도 한 줄 적어 둔다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">9 / 51</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide q-slide" style="--fs:1.44;">
+    <h2 class="slide-title">1번 &middot; 윗글에 대한 설명으로 가장 적절한 것은?<span class="ans-chip">정답 &#9313;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">정보 비대칭 상황의 장단점을 분석하여 제시하고 있다.</span></li>
+        <li class="ans"><span class="n">&#9313;</span><span class="txt">정보 비대칭 상황에 대응하는 방식을 이론과 결부하여 구분하고 있다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">정보 비대칭 상황에 대한 사람들의 인식 변화를 통시적으로 설명하고 있다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">정보 비대칭 상황을 분류하는 기준의 문제점을 사례를 들어 규명하고 있다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">정보 비대칭 상황에 대한 다양한 개념을 종합하여 새로운 개념으로 재구성하고 있다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">10 / 51</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">1번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">3·4문단이 ㉠과 ㉡으로 대응 방식을 갈라 놓았다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>정보 비대칭의 <span class="u-warn">장점</span>은 어디에도 없다. 문제 상황으로만 다룬다</td></tr>
+        <tr class="ans"><th>&#9313;</th><td>개입하면 안 된다(㉠) / 공동 규제해야 한다(㉡). 두 <b>이론</b>으로 대응 방식을 <b>구분</b>했다 &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9314;</th><td>시기에 따른 <span class="u-warn">인식 변화</span>가 없다. 두 입장이 나란히 놓였을 뿐이다</td></tr>
+        <tr><th>&#9315;</th><td>정보 비대칭을 <span class="u-warn">분류하는 기준</span> 자체가 제시되지 않았다</td></tr>
+        <tr><th>&#9316;</th><td>여러 개념을 <span class="u-warn">종합해 새 개념</span>을 만든 대목이 없다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">뼈대 슬라이드로 돌아가면</div>
+        <p>3문단 첫머리 &lsquo;㉠에 따르면&rsquo;과 4문단 첫머리 &lsquo;㉡도 제기되었다&rsquo;가 곧 &#9313;의 &lsquo;이론과 결부하여 구분&rsquo;이다. 전개 방식 문항은 문단 첫 문장만 모아 보면 된다.</p>
+      </div>
+    </div>
+    <div class="page-num">11 / 51</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide q-slide" style="--fs:1.34;">
+    <h2 class="slide-title">2번 &middot; 윗글에서 알 수 있는 내용으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9314;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">거래에 관한 정보를 얻는 데 투입한 비용의 차이는 역선택 문제에 영향을 준다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">성분 표시 강제는 공급자와 소비자 간의 정보 비대칭을 해소하기 위한 정부 개입의 한 방식이다.</span></li>
+        <li class="ans"><span class="n">&#9314;</span><span class="txt">온라인에 유통되는 허위 광고는 그 의도가 이용자에 의해 쉽게 파악되므로 정보 비대칭 문제를 야기한다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">경제 주체가 완전한 거래 정보를 갖는다고 가정되는 완전경쟁시장에서는 정보 비대칭 문제가 일어나지 않는다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">플랫폼 사업자가 법에 근거해 불법 정보의 유통을 사전 차단하는 것은 비판론이 제시한 공동 규제의 한 축을 이룬다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">12 / 51</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">2번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">&lsquo;알기 어려운&rsquo;을 &lsquo;쉽게 파악되므로&rsquo;로 뒤집었다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">2문단</div>
+          <p>이용자가 정보의 진위나 의도, 편향 등의 여부를 <b>알기 어려운</b> 허위 &middot; 과장 광고가 증가하고 있다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9314;</div>
+          <p>그 의도가 이용자에 의해 <b>쉽게 파악되므로</b> 정보 비대칭 문제를 야기한다.</p>
+          <p class="verdict">앞뒤가 모순이다. 쉽게 파악된다면 비대칭이 생기지 않는다. 지문은 알기 어렵기 <b>때문에</b> 비대칭이라 했다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9316;가 맞는 이유</div>
+        <p>4문단의 공동 규제는 두 축이다. 플랫폼이 법적 근거를 갖춰 <b>사전</b>에 삭제 &middot; 차단하고, 미흡하면 정부가 <b>사후</b>에 규제한다. 플랫폼의 사전 차단은 그 첫째 축이다.</p>
+      </div>
+    </div>
+    <div class="page-num">13 / 51</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide q-slide" style="--fs:1.20;">
+    <h2 class="slide-title">3번 &middot; ㉠, ㉡에 대한 이해로 가장 적절한 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">㉠은 가치가 없는 정치적 표현을 정부가 사전에 차단해야 그 해악이 사상의 자유 시장에서 해소된다고 본다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">㉠은 미국 연방 대법원이 명백하고 현존하는 위험한 표현을 보호하는 판결의 근거이고, 한국의 헌법 재판소가 정치적 표현을 보호하는 결정의 근거이다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">㉡은 민주주의 의사 결정이 왜곡되는 것은 허위 정보에 비해 진실한 정보가 과잉 공급되는 정보 비대칭에서 비롯된다고 본다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">㉡은 정부가 유해한 정보를 미리 차단 조치해야 시민이 사회적 판단을 내릴 때 왜곡된 정보의 영향을 받지 않는다고 본다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">㉠에 따라 플랫폼 시장에 자율 규제를 실시하는 것과 ㉡이 정부와 플랫폼 사업자의 공동 규제 실시를 주장하는 것에는 모두 표현의 자유를 기본권으로 삼는 관점이 전제되어 있다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">14 / 51</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">3번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">두 입장이 같은 자리에 선 유일한 곳</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>㉠은 정부가 <span class="u-warn">개입하면 안 된다</span>는 입장이다. 사전 차단은 정반대</td></tr>
+        <tr><th>&#9313;</th><td>대법원이 보호하는 것은 명백하고 현존하는 위험에 <span class="u-warn">해당하지 않는</span> 표현이다. &lsquo;않는&rsquo;을 지웠다</td></tr>
+        <tr><th>&#9314;</th><td>4문단은 진실한 정보가 <span class="u-warn">과소</span> 공급되고 허위가 <span class="u-warn">대량</span> 공급된다고 했다. 방향이 반대</td></tr>
+        <tr><th>&#9315;</th><td>미리 차단하는 주체는 <span class="u-warn">플랫폼</span>이고, 정부는 미흡할 때 <span class="u-warn">사후</span>에 나선다. 주체와 시점이 둘 다 바뀌었다</td></tr>
+        <tr class="ans"><th>&#9316;</th><td>㉠은 표현이 기본권이라 보호하고, ㉡은 기본권이라 <b>법적 근거를 갖추자</b>고 했다. 같은 전제 &rarr; <b>정답</b></td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&#9315;가 68%짜리 함정인 이유</div>
+        <p>&lsquo;비판론 = 규제 강화&rsquo;로만 기억하면 &#9315;가 맞아 보인다. 4문단의 공동 규제는 <b>플랫폼이 먼저, 정부는 나중</b>이라는 순서가 정해져 있다. 도구 &#9312;에서 적어 둔 &lsquo;누가 &middot; 언제&rsquo;가 여기서 쓰인다.</p>
+      </div>
+    </div>
+    <div class="page-num">15 / 51</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide tight" style="--fs:1.08;">
+    <h2 class="slide-title">4번 &middot; &lt;보기&gt; [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.1cqw;">
+        <span class="tag">보기</span>
+        &#9702; 식품 판매자 <b>갑</b>은 과장 광고 글과 가상 의료인 동영상을 생성형 인공 지능으로 만들어 인터넷 언론사 <b>플랫폼 A</b>에 익명으로 올렸다. 인공 지능 사용 표시는 없었다.<br>
+        &#9702; <b>을</b>은 선거 운동 기간에 &lsquo;&#9651;&#9651;법&rsquo; 제정을 주장하는 글을 <b>플랫폼 B</b>에 올린 뒤, 이름을 달리해 같은 글을 여러 번 올렸다.
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.6em;">&nbsp;</th><th>지문의 어디에 대는가</th></tr></thead>
+        <tbody>
+          <tr><th>갑</th><td>2문단 &middot; 광고를 <strong>만들어 올린 정보 제공자</strong>. ⓐ의 의무 대상은 아직 &lsquo;인공 지능 사업자&rsquo;뿐</td></tr>
+          <tr><th>플랫폼 A</th><td>2문단 &middot; 플랫폼 사업자. 역시 의무를 지우자는 <strong>주장만</strong> 있다</td></tr>
+          <tr><th>을</th><td>4문단 &middot; 이름을 바꿔 가며 올린 글 = <strong>의도적으로 유통된 정보</strong></td></tr>
+          <tr><th>플랫폼 B</th><td>5문단 &middot; 실명 확인을 안 한 인터넷 언론사. 그 제재 규정은 <strong>위헌</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">16 / 51</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">4번 &middot; ⓐ, ⓑ와 관련하여 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">&lsquo;갑&rsquo;이 게시한 글은 정보 비대칭 상황을 심화하는 과장 광고이지만 그의 글이 확산되더라도 플랫폼 A를 ⓐ로 제재하지 못하겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">&lsquo;갑&rsquo;이 가상의 의료인을 등장시켜 게시한 동영상은 정보 비대칭 상황을 심화하는 허위 광고이지만 &lsquo;갑&rsquo;을 ⓐ로 제재하지 못하겠군.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">&lsquo;을&rsquo;이 작성한 글에서 &#9651;&#9651;법의 필요성을 주장한 내용은 ⓑ에 대한 헌법 재판소 다수 의견 취지에 부합하지 않겠군.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">&lsquo;을&rsquo;이 게시자 이름을 서로 다르게 하여 여러 글을 게시한 것이 &#9651;&#9651;법 제정으로 이어졌다면, 이는 ⓑ에 대한 헌법 재판소 소수 의견을 뒷받침하는 근거가 될 수 있겠군.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">&lsquo;을&rsquo;이 플랫폼 B에 여러 차례 글을 올리는 과정에서 플랫폼 B가 실명 확인 절차를 거치지 않았다면, ⓑ에 대한 헌법 재판소의 결론에 따라 플랫폼 B는 법적 제재를 받겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">17 / 51</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide tight" style="--fs:1.12;">
+    <h2 class="slide-title">4번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">위헌으로 결정된 규정으로는 제재할 수 없다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">5문단</div>
+          <p>실명 확인 조치를 하지 않은 인터넷 언론사를 제재하는 법률 규정에 대해 다수 의견은 <b>위헌</b>이라고 결정하였다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9316;</div>
+          <p>헌법 재판소의 결론에 따라 플랫폼 B는 <b>법적 제재를 받겠군.</b></p>
+          <p class="verdict">헌법 재판소의 결론은 &lsquo;위헌&rsquo;이다. 그 결론을 따르면 제재의 근거가 사라진다. 결론을 거꾸로 적용했다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9312;&#9313;이 39%를 가른 자리</div>
+        <p>ⓐ가 <b>지금</b> 의무를 지우는 상대는 인공 지능 제품 &middot; 서비스 사업자뿐이다. 정보 제공자(갑)와 플랫폼(A)에게도 지우자는 것은 &lsquo;주장이 제기되고 있다&rsquo;는 단계다. 이미 시행 중인 것과 주장 단계인 것을 2문단에서 갈라 두어야 &#9312;&#9313;이 맞다는 것이 보인다.</p>
+      </div>
+    </div>
+    <div class="page-num">18 / 51</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide tight" style="--fs:1.02;">
+    <h2 class="slide-title">지문의 뼈대<span class="qm">2025학년도 9월 4&#12316;7번 &middot; 학습지 5&#12316;8번</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1&middot;2</div>
+          <div class="para-body">
+            <div class="t">공정거래위원회가 두 법으로 규제한다 &mdash; <b>㉠ 재판매 가격 유지 행위</b>의 정의</div>
+            <div class="d">상대방 <b>사업자</b>에게 가격을 정해 강제하는 것. 권장 소비자 가격도 <b>강제성이 있으면</b> 해당</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">왜 금지하나 &middot; 어떻게 제재하나 &middot; <b>예외</b>는</div>
+            <div class="d">가격 결정의 자유 &middot; 경쟁 &middot; 유통 효율을 해침 / 시정명령 &middot; 과징금, <b>형사는 없다</b> / 고시 출판물, 정당한 이유(사업자 입증)</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t">표시광고법 &mdash; <b>거짓 &middot; 과장</b>과 <b>기만</b> 광고를 금지</div>
+            <div class="d">광고는 표현 &middot; 영업의 자유로 보호받지만, 위반하면 시정명령 &middot; 과징금 <b>또는 형사 처벌</b></div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t">추천 &middot; 보증 &mdash; <b>제3자의 독자적 의견</b>으로 인식되는 표현</div>
+            <div class="d">경험 근거 &rarr; 써 보고 사실에 맞게 / 전문 판단 근거 &rarr; 전문 지식에 맞게 / 대가 받았으면 <b>명시</b></div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">6&middot;7</div>
+          <div class="para-body">
+            <div class="t"><b>㉡ 이용후기 광고</b> &mdash; <b>소비자의</b> 후기를 사업자가 활용</div>
+            <div class="d">불리한 후기를 이유 없이 숨기면 부당 광고 / 후기가 경험에 바탕을 둔 공공의 이익이면 명예훼손죄 <b>불성립</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">19 / 51</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">읽으면서 만든 갈래</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:7.4em;">행위</th><th>요건</th><th>효과</th><th>예외 &middot; 단서</th></tr></thead>
+        <tbody>
+          <tr><th>㉠ 재판매 가격 유지</th><td>사업자 &rarr; 사업자, 가격 강제</td><td>시정명령 &middot; 과징금</td><td>고시 출판물 / 정당한 이유, <strong>사업자 입증</strong></td></tr>
+          <tr><th>부당 광고</th><td>거짓 &middot; 과장 / 기만</td><td>시정명령 &middot; 과징금 <strong>+ 형사</strong></td><td>&mdash;</td></tr>
+          <tr><th>추천 &middot; 보증</th><td>경험 / 전문 판단</td><td>사실 &middot; 전문 지식에 부합해야</td><td>대가 있으면 명시</td></tr>
+          <tr><th>㉡ 이용후기</th><td><strong>소비자</strong>가 쓴 후기</td><td>불리한 것 숨기면 부당 광고</td><td>합리적 이유가 있으면 아님</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.2cqw;">
+        <div class="etag">이 표의 어느 칸이 문항이 되는가</div>
+        <ul><li>5번은 효과 칸(형사 처벌 유무), 6번은 요건 칸(누가 쓴 후기인가), 7번은 예외 칸(권장 소비자 가격이라도)이다. 네 줄 세 칸이면 세 문항이 끝난다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">20 / 51</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide q-slide" style="--fs:1.28;">
+    <h2 class="slide-title">5번 &middot; 윗글을 통해 알 수 있는 내용으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9315;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">부당한 광고 행위에 대해서는 재판매 가격 유지 행위와 달리 형사 처벌이 내려질 수 있다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">거래 단계별 사업자에게 거래 가격을 강제하는 것은 유통 조직의 효율성 저하를 초래한다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">재판매 가격 유지 행위의 정당성을 인정받고자 하는 사업자는 그 행위의 정당성을 입증할 책임을 진다.</span></li>
+        <li class="ans"><span class="n">&#9315;</span><span class="txt">경험적 사실을 바탕으로 한 추천 &middot; 보증은 심사 지침에 따라 해당 분야의 전문적 지식에 부합해야 한다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">공정거래위원회가 고시하는 출판된 저작물의 사업자는 거래 상대방 사업자에게 기준 가격을 지정할 수 있다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">21 / 51</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">5번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9315;</span>
+        <span class="why">경험 근거와 전문 판단 근거의 기준을 바꿔 끼웠다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">5문단</div>
+          <p><b>경험적 사실</b>을 근거로 할 때는 실제 사용해 봐야 하고 <b>경험한 사실에</b> 부합해야 한다.</p>
+          <p><b>전문적 판단</b>을 근거로 할 때는 <b>전문적 지식에</b> 부합해야 한다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9315;</div>
+          <p>경험적 사실을 바탕으로 한 추천 &middot; 보증은 <b>전문적 지식에</b> 부합해야 한다.</p>
+          <p class="verdict">두 기준이 짝이 다르다. 경험 &rarr; 사실, 전문 &rarr; 지식.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9316;가 맞는 이유</div>
+        <p>3문단은 고시된 출판 저작물을 재판매 가격 유지 금지의 <b>대상에서 뺐다</b>. 금지되지 않으니 기준 가격을 지정할 수 있다. 예외 칸을 적어 두면 &lsquo;지정할 수 있다&rsquo;가 당연해진다.</p>
+      </div>
+    </div>
+    <div class="page-num">22 / 51</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide q-slide" style="--fs:1.40;">
+    <h2 class="slide-title">6번 &middot; ㉠, ㉡에 대한 이해로 가장 적절한 것은?<span class="ans-chip">정답 &#9315;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">㉠은 소비자 후생 증대 효과가 시장 경쟁 제한의 폐해보다 작은 경우에 허용된다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">㉠을 &lsquo;공정거래법&rsquo;에서 금지하는 목적은 사업자의 가격 결정의 자유를 제한하기 위한 것이다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">㉡을 할 때 사업자는 영업의 자유를 보호받지만 표현의 자유는 보호받지 못한다.</span></li>
+        <li class="ans"><span class="n">&#9315;</span><span class="txt">㉡은 사업자가 자사의 홈페이지에 직접 작성해서 게시한 이용후기를 광고로 활용하는 것을 포함하지 않는다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">㉠은 사업자와 소비자 간에, ㉡은 소비자와 소비자 간에 직접 일어나는 행위이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">23 / 51</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">6번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9315;</span>
+        <span class="why">이용후기 광고의 요건은 &lsquo;소비자의&rsquo; 후기다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>허용되는 것은 후생 증대 효과가 폐해보다 <span class="u-warn">큰</span> 경우다. 대소가 반대</td></tr>
+        <tr><th>&#9313;</th><td>㉠이 가격 결정의 자유를 <b>제한하기 때문에</b> 금지한다. 금지의 목적은 그 자유를 <span class="u-warn">지키는</span> 쪽이다</td></tr>
+        <tr><th>&#9314;</th><td>4문단 &mdash; 광고는 표현의 자유<b>와</b> 영업의 자유로 보호받는다. <span class="u-warn">둘 다</span>다</td></tr>
+        <tr class="ans"><th>&#9315;</th><td>6문단 &mdash; ㉡은 <b>소비자의</b> 상품 이용후기를 활용하는 것. 사업자가 직접 쓴 글은 요건에서 빠진다 &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9316;</th><td>㉠은 사업자 &rarr; <span class="u-warn">사업자</span>, ㉡은 소비자 후기에 <span class="u-warn">사업자가 개입</span>한다. 둘 다 당사자가 틀렸다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&#9313;이 66%를 만든 자리</div>
+        <p>&lsquo;㉠은 가격 결정의 자유를 제한한다&rsquo;는 문장이 지문에 있다. 그런데 그것은 ㉠의 <b>폐해</b>를 말한 것이지 금지의 <b>목적</b>이 아니다. 요건 &middot; 효과 &middot; 이유를 칸을 나눠 적어야 뒤섞이지 않는다.</p>
+      </div>
+    </div>
+    <div class="page-num">24 / 51</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide q-slide" style="--fs:1.00;">
+    <h2 class="slide-title">7번 &middot; &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은? [3점]<span class="ans-chip">정답 &#9314;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">보기 요지</span>
+        제조사 <b>갑</b>은 거래 상대방 사업자에게 판매 가격을 지정했다. 홈페이지의 불량 후기 200개를 <b>삭제</b>하고 박○○ 교수팀의 추천 &middot; 보증 광고를 올렸다. 대행사 직원 <b>을</b>은 효능이 뛰어나다는 후기를 올렸다. 소비자 <b>병</b>은 하자 사진과 불량 후기를 올렸고, 갑은 병을 명예훼손으로 고소했다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">갑이 불리한 이용후기를 삭제하는 대신 비공개 처리하는 것도 부당한 광고에 해당하겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">박○○ 교수팀이 실험 &middot; 검증했다고 광고했으나 실험이 없었다면 갑은 부당한 광고로 제재를 받겠군.</span></li>
+        <li class="ans"><span class="n">&#9314;</span><span class="txt">갑이 지정한 가격의 정당성을 인정받지 못했더라도 그 가격이 권장 소비자 가격이었다면 갑은 제재를 받지 않겠군.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">을이 갑으로부터 금전을 받고 장점을 알리는 후기를 올렸다면 대가성이 있었다는 사실을 명시해야겠군.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">병이 직접 써 보고 결점을 제시하며 다른 소비자에게 도움을 주려 한 점이 인정되면 명예훼손죄가 성립되지 않겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">25 / 51</div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">7번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">권장 소비자 가격이라도 강제성이 있으면 ㉠이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">2 &middot; 3문단</div>
+          <p>권장 소비자 가격이라도 <b>강제성이 있다면</b> 재판매 가격 유지 행위에 해당한다.</p>
+          <p>정당한 이유가 있으면 허용되는데, 그 이유는 <b>사업자가 입증</b>해야 한다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9314;</div>
+          <p>정당성을 인정받지 못했더라도 <b>권장 소비자 가격이었다면</b> 제재를 받지 않겠군.</p>
+          <p class="verdict">갑은 가격을 지정하고 준수 조건을 부과했다. 강제성이 있다. 명칭이 권장 소비자 가격이어도 빠져나갈 수 없다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">사람마다 문단 번호를 붙였다면</div>
+        <p>갑의 가격 지정은 2 &middot; 3문단, 후기 삭제는 6문단, 교수팀 광고는 4 &middot; 5문단, 을은 5문단 끝, 병은 7문단이다. 다섯 선지가 다섯 문단에 하나씩 대응한다. 91%가 맞힌 문항이지만 시간을 아끼는 자리는 여기다.</p>
+      </div>
+    </div>
+    <div class="page-num">26 / 51</div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide q-slide" style="--fs:1.26;">
+    <h2 class="slide-title">8번 &middot; ⓐ와 문맥상 의미가 가장 가까운 것은?<span class="ans-chip">정답 &#9312;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">문맥</span>
+        그 가격대로 판매 &middot; 제공하도록 그 밖의 <b>구속 조건을 ⓐ붙여</b> 거래하는 행위 &rarr; 조건 &middot; 이유 따위를 <b>딸리게 하다</b>
+      </div>
+      <ul class="choices">
+        <li class="ans"><span class="n">&#9312;</span><span class="txt">그는 내 의견에 본인의 견해를 붙여 발언을 이어 갔다. &nbsp;<span class="dim">&mdash; 견해를 딸리게 하다. 문맥과 같다</span></span></li>
+        <li><span class="n">&#9313;</span><span class="txt">나는 수영에 재미를 붙여 수영장에 다니기로 결정했다. &nbsp;<span class="dim">&mdash; 감정이 생기게 하다</span></span></li>
+        <li><span class="n">&#9314;</span><span class="txt">그는 따뜻한 바닥에 등을 붙여 잠깐 동안 잠을 청했다. &nbsp;<span class="dim">&mdash; 신체를 대다</span></span></li>
+        <li><span class="n">&#9315;</span><span class="txt">나는 알림판에 게시물을 붙여 동아리 행사를 홍보했다. &nbsp;<span class="dim">&mdash; 물체를 맞닿게 하다</span></span></li>
+        <li><span class="n">&#9316;</span><span class="txt">그는 숯에 불을 붙여 고기를 배부를 만큼 구워 먹었다. &nbsp;<span class="dim">&mdash; 불이 옮게 하다</span></span></li>
+      </ul>
+    </div>
+    <div class="page-num">27 / 51</div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide" style="--fs:1.02;">
+    <h2 class="slide-title">배경지식 &middot; 효과를 어떻게 재는가<span class="qm">2023학년도 6월 14&#12316;17번 &middot; 학습지 9&#12316;12번</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.1cqw;">
+        <tr><th>반사실</th><td>&lsquo;그 사건이 없었다면 어땠을까&rsquo;. 볼 수 없으므로 사건을 겪지 않은 <strong>비교집단</strong>으로 대신한다. 효과 평가의 출발점이다.</td></tr>
+        <tr><th>스노와 콜레라</th><td>1854년 런던. 두 수도 회사 중 한 곳만 수원을 바꿨고 주민은 몰랐다. 사망률 변화를 견주어 <strong>물</strong>이 원인임을 밝혔다. 역학 조사의 시작으로 꼽힌다.</td></tr>
+        <tr><th>최저임금 연구</th><td>&lt;보기&gt;의 P주 &middot; Q주 식당은 1992년 미국 뉴저지 &middot; 펜실베이니아 연구를 옮긴 것이다. 이 연구로 이중차분법이 널리 쓰이게 되었고, 연구자는 2021년 노벨 경제학상을 받았다.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">지문이 이 셋을 어떻게 쓰는가</div>
+        <ul><li>1문단이 반사실, 3문단이 스노, &lt;보기&gt;가 최저임금이다. 배경을 알면 글의 <strong>순서가 예측</strong>된다. 다만 판정은 지문의 문장으로 한다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">28 / 51</div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">지문의 뼈대<span class="qm">2023학년도 6월 14&#12316;17번</span></h2>
+    <div class="body-area">
+      <div class="para-flow" style="gap:0.55cqw;">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">효과 평가 = 사건 후 결과 vs 사건이 없었을 때의 결과</div>
+            <div class="d">못 보는 쪽 대신 <b>비교집단</b>을 견준다. 임의 배정하는 <b>실험적 방법</b>이 이상적이나 사회 문제엔 못 쓸 때가 많음</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t"><b>이중차분법</b> = 시행집단의 변화 &minus; 비교집단의 변화</div>
+            <div class="d"><b>평행추세 가정</b>: 사건이 없었어도 같은 크기로 변했을 것. 서면 사건 <b>전</b> 상태가 달라도 된다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">스노 1854 &middot; 경제학 1910년대</div>
+            <div class="d">수원 교체 전후의 사망률 변화를 두 집단에서 비교 &rarr; 콜레라는 물로 전염</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t">가정이 깨지면 잘못 평가 &mdash; <b>㉠</b> 교육 프로그램의 예</div>
+            <div class="d">시행집단에 일자리 급감 산업 종사자가 많으면 불충족. <b>이전 시기의 시행집단</b>으로 대신해도 보장 안 됨, 고용은 <b>동시성</b>이 중요</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t">신뢰도를 높이는 두 가지</div>
+            <div class="d">여러 비교집단에서 결과가 같음을 확인 / 특성이 비슷한 비교집단을 구성</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">29 / 51</div>
+  </section>
+
+  <!-- 30 -->
+  <section class="slide" style="--fs:1.22;">
+    <h2 class="slide-title">식으로 바꿔 두면</h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.2cqw;">
+        <div class="dt">이중차분법</div>
+        <p>효과 = (시행 후 &minus; 시행 전) &minus; (비교 후 &minus; 비교 전)</p>
+        <p>비교집단의 변화가 &lsquo;사건이 없었다면 시행집단도 이만큼 변했을 것&rsquo;의 자리에 들어간다. 이것이 <strong>평행추세 가정</strong>이다.</p>
+      </div>
+      <div class="cards2">
+        <div class="c3">
+          <h3><span class="word">가정이 서면</span></h3>
+          <p>두 집단의 <strong>출발점</strong>이 달라도 된다. 뺄셈이 출발점 차이를 지운다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">가정이 깨지면</span></h3>
+          <p>비교집단의 변화가 시행집단이 겪었을 변화와 다르다. 뺄셈 결과가 <strong>과대</strong> 또는 <strong>과소</strong>평가된다. 10번이 그 방향을 묻는다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">30 / 51</div>
+  </section>
+
+  <!-- 31 -->
+  <section class="slide q-slide" style="--fs:1.30;">
+    <h2 class="slide-title">9번 &middot; 윗글에 대한 이해로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9312;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li class="ans"><span class="n">&#9312;</span><span class="txt">실험적 방법에서는 시행집단에서 일어난 평균 임금의 사건 전후 변화를 어떤 사건이 임금에 미친 효과라고 평가한다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">사람을 표본으로 하거나 사회 문제를 다룰 때에도 실험적 방법을 적용하는 경우가 있다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">평행추세 가정에서는 특정 사건 이외에는 두 집단의 변화에 차이가 날 이유가 없다고 전제한다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">스노의 연구에서 시행집단과 비교집단의 콜레라 사망률은 사건 후뿐만 아니라 사건 전에도 차이가 있었을 수 있다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">스노는 수원이 바뀐 주민들과 바뀌지 않은 주민들 사이에 공기의 차이는 없다고 보았을 것이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">31 / 51</div>
+  </section>
+
+  <!-- 32 -->
+  <section class="slide tight" style="--fs:1.12;">
+    <h2 class="slide-title">9번 &middot; 정답과 근거<span class="qm">정답률 22%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9312;</span>
+        <span class="why">실험적 방법도 두 집단을 비교한다. 시행집단만의 전후 변화가 아니다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">1문단</div>
+          <p>시행집단의 결과와 비교집단의 결과를 <b>비교하여</b> 효과를 평가한다. 이를 위해 두 집단에 표본이 임의로 배정되도록 설계하는 것이 실험적 방법이다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9312;</div>
+          <p><b>시행집단에서 일어난</b> 평균 임금의 사건 전후 변화를 효과라고 평가한다.</p>
+          <p class="verdict">실험적 방법은 임의 배정으로 두 집단을 만든 뒤 <b>둘을 견준다</b>. 시행집단 하나의 전후만 보는 방법이 아니다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9315;와 &#9316;가 오답인 이유</div>
+        <p>&#9315; 2문단 &mdash; 가정이 서면 사건 <b>전</b> 상태가 같지 않아도 된다. 전에도 차이가 있었을 수 있다. &#9316; 스노는 <b>같은 지역</b> 주민을 비교해 &lsquo;공기가 아닌 물&rsquo;이라 했다. 공기가 달랐다면 그 결론이 안 선다.</p>
+      </div>
+    </div>
+    <div class="page-num">32 / 51</div>
+  </section>
+
+  <!-- 33 -->
+  <section class="slide q-slide" style="--fs:1.22;">
+    <h2 class="slide-title">10번 &middot; A와 B에 들어갈 말을 바르게 짝지은 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">㉠에 이중차분법을 적용하면</span>
+        프로그램이 없었다면 시행집단에서 일어났을 고용률 증가는, 비교집단에서 일어난 고용률 증가와/보다 <b>( A )</b> 것이다. 그러므로 ㉠에 이중차분법을 적용하여 평가한 프로그램의 고용 증가 효과는 평행추세 가정이 충족되는 비교집단을 이용하여 평가한 경우의 효과보다 <b>( B )</b> 것이다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">A 클 &nbsp;/&nbsp; B 클</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">A 클 &nbsp;/&nbsp; B 작을</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">A 같을 &nbsp;/&nbsp; B 클</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">A 작을 &nbsp;/&nbsp; B 클</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">A 작을 &nbsp;/&nbsp; B 작을</span></li>
+      </ul>
+    </div>
+    <div class="page-num">33 / 51</div>
+  </section>
+
+  <!-- 34 -->
+  <section class="slide" style="--fs:1.20;">
+    <h2 class="slide-title">10번 &middot; 정답과 근거<span class="qm">정답률 39%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">빼는 값이 실제보다 크면, 남는 값은 실제보다 작다</span>
+      </div>
+      <table class="otable">
+        <tr><th>A</th><td>㉠의 시행집단에는 일자리가 <b>급감하는</b> 산업 종사자가 더 많다. 프로그램이 없었다면 시행집단의 고용률 증가는 비교집단보다 <b>작았을</b> 것 &rarr; <b>작을</b></td></tr>
+        <tr><th>B</th><td>이중차분법은 비교집단의 변화를 뺀다. 그런데 비교집단의 변화가 시행집단이 겪었을 변화보다 <b>크다</b>. 실제보다 큰 값을 빼므로 효과가 <b>작게</b> 평가된다 &rarr; <b>작을</b></td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">식에 넣어 보면</div>
+        <p>효과 = 시행 변화 &minus; 비교 변화. 평행추세가 선 비교집단이라면 &lsquo;비교 변화&rsquo;는 작은 값이어야 한다. ㉠의 비교집단은 그보다 큰 값을 내놓는다. 큰 값을 빼면 결과는 줄어든다. <b>도구 &#9313;</b>에서 식을 적어 둔 사람은 A에서 B가 바로 따라 나온다.</p>
+      </div>
+    </div>
+    <div class="page-num">34 / 51</div>
+  </section>
+
+  <!-- 35 -->
+  <section class="slide tight" style="--fs:1.18;">
+    <h2 class="slide-title">11번 &middot; &lt;보기&gt; [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.1cqw;">
+        <span class="tag">보기</span>
+        <b>P주</b>는 1992년 4월 최저임금을 4달러에서 5달러로 올렸고, 인접한 <b>Q주</b>는 올리지 않았다. P주 <b>저임금 식당</b>만 인상 후 임금이 올랐다. P주 <b>고임금 식당</b>은 이미 5달러 넘게 주고 있어 임금이 오르지 않았다. 임금 상승이 <b>고용</b>에 미친 효과를 평가한다.
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:9em;">집단 (평균 피고용인 수, 명)</th><th>사건 전 (A)</th><th>사건 후 (B)</th><th>변화 (B&minus;A)</th></tr></thead>
+        <tbody>
+          <tr><th>P주 저임금 식당 <span class="dim">(시행집단)</span></th><td>19.6</td><td>20.9</td><td><strong>1.3</strong></td></tr>
+          <tr><th>P주 고임금 식당</th><td>22.3</td><td>20.2</td><td><strong>&minus;2.1</strong></td></tr>
+          <tr><th>Q주 식당</th><td>23.3</td><td>21.2</td><td><strong>&minus;2.1</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">35 / 51</div>
+  </section>
+
+  <!-- 36 -->
+  <section class="slide q-slide" style="--fs:1.20;">
+    <h2 class="slide-title">11번 &middot; 윗글을 바탕으로 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9315;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">최저임금 인상 후에 시행집단에서 일어난 변화는 1.3명이다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">시행집단과 비교집단의 식당들이 종류나 매출액 수준 등의 특성에서 통계적 유사성이 높을수록 평가에 대한 신뢰도가 높아진다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">비교집단을 Q주 식당들로 택해 이중차분법을 적용하면 시행집단에서 최저임금 인상에 따른 임금 상승의 고용 효과는 3.4명 증가로 평가된다.</span></li>
+        <li class="ans"><span class="n">&#9315;</span><span class="txt">비교집단의 변화를, P주 고임금 식당들의 1992년 1년간 변화로 파악할 경우보다 시행집단의 1991년 1년간 변화로 파악할 경우에 더 신뢰할 만한 평가를 얻는다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">비교집단을 Q주 식당들로 택하든 P주 고임금 식당들로 택하든 비교집단에서 일어난 변화가 동일하다는 사실은 평행추세 가정의 충족에 대한 신뢰도를 높인다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">36 / 51</div>
+  </section>
+
+  <!-- 37 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">11번 &middot; 정답과 근거<span class="qm">정답률 47%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9315;</span>
+        <span class="why">고용은 경기에 민감하므로 같은 시기의 비교집단이 낫다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">4문단</div>
+          <p>사건 <b>이전 시기의 시행집단</b>을 비교집단으로 설정하는 것이 평행추세 가정의 충족을 보장하는 것은 아니다. 고용처럼 경기변동에 민감한 변화라면 통계적 유사성보다 <b>변화 발생의 동시성</b>이 더 중요할 수 있다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9315;</div>
+          <p>1992년 고임금 식당보다 <b>시행집단의 1991년</b> 변화로 파악하는 쪽이 더 신뢰할 만하다.</p>
+          <p class="verdict">&lsquo;시행집단의 1991년&rsquo;이 바로 지문이 경계한 &lsquo;이전 시기의 시행집단&rsquo;이다. 고임금 식당은 1992년, 즉 <b>같은 시기</b>다. 신뢰의 방향이 반대다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9314;와 &#9316;는 표에서 끝난다</div>
+        <p>&#9314; 1.3 &minus; (&minus;2.1) = <b>3.4</b>. &#9316; 두 비교집단의 변화가 모두 &minus;2.1로 같다. 5문단 &mdash; 여러 비교집단에서 결과가 같으면 가정이 충족된다는 신뢰를 준다.</p>
+      </div>
+    </div>
+    <div class="page-num">37 / 51</div>
+  </section>
+
+  <!-- 38 -->
+  <section class="slide q-slide" style="--fs:1.22;">
+    <h2 class="slide-title">12번 &middot; 문맥상 ⓐ&#12316;ⓔ의 단어와 가장 가까운 의미로 쓰인 것은?<span class="ans-chip">정답 &#9313;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">문맥</span>
+        &#9424; 결과에 차이가 <b>날</b> &nbsp;/&nbsp; &#9425; 한 회사만 수원을 <b>바꿨는데</b> &nbsp;/&nbsp; &#9426; 결론을 <b>내렸다</b> &nbsp;/&nbsp; &#9427; 통계적 유사성을 <b>높이려고</b> &nbsp;/&nbsp; &#9428; 위협받을 가능성을 <b>줄일</b>
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">&#9424; 그 사건의 전말이 모두 오늘 신문에 났다. &nbsp;<span class="dim">&mdash; 실리다. 문맥은 &lsquo;생기다&rsquo;</span></span></li>
+        <li class="ans"><span class="n">&#9313;</span><span class="txt">&#9425; 산에 가려다가 생각을 바꿔 바다로 갔다. &nbsp;<span class="dim">&mdash; 다른 것으로 대신하다. 문맥과 같다</span></span></li>
+        <li><span class="n">&#9314;</span><span class="txt">&#9426; 기상청에서 전국에 건조 주의보를 내렸다. &nbsp;<span class="dim">&mdash; 발표하다. 문맥은 &lsquo;판단을 짓다&rsquo;</span></span></li>
+        <li><span class="n">&#9315;</span><span class="txt">&#9427; 회원들이 회칙 개정을 요구하는 목소리를 높였다. &nbsp;<span class="dim">&mdash; 소리를 크게 하다. 문맥은 &lsquo;정도를 올리다&rsquo;</span></span></li>
+        <li><span class="n">&#9316;</span><span class="txt">&#9428; 하고 싶은 말은 많지만 오늘은 이만 줄입니다. &nbsp;<span class="dim">&mdash; 말을 끝맺다. 문맥은 &lsquo;정도를 낮추다&rsquo;</span></span></li>
+      </ul>
+    </div>
+    <div class="page-num">38 / 51</div>
+  </section>
+
+  <!-- 39 -->
+  <section class="slide" style="--fs:1.24;">
+    <h2 class="slide-title">배경지식 &middot; 세계의 돈은 어떻게 맞춰졌나<span class="qm">2022학년도 수능 10&#12316;13번 &middot; 학습지 13&#12316;16번</span></h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.2cqw;">
+        <div class="flow-step">
+          <div class="emo">금 본위</div>
+          <div class="desc">각 통화를 <strong>금</strong>에 고정. 환율은 저절로 정해진다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">브레턴우즈 1944</div>
+          <div class="desc"><strong>달러</strong>만 금에(1온스 = 35달러), 다른 통화는 달러에 고정</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">닉슨 쇼크 1971</div>
+          <div class="desc">달러의 금 태환 정지. 체제 붕괴, 변동 환율로</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">플라자 합의 1985</div>
+          <div class="desc">달러 강세를 낮추기로 주요국이 합의. 16번 &lt;보기&gt;의 배경</div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">지문이 다루는 범위</div>
+        <ul><li>앞의 셋을 지문이 설명하고, 넷째는 &lt;보기&gt;에 &lsquo;국제적 합의&rsquo;로만 나온다. 이름을 몰라도 지문의 환율 규칙으로 푼다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">39 / 51</div>
+  </section>
+
+  <!-- 40 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">지문의 뼈대<span class="qm">2022학년도 수능 10&#12316;13번</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t"><b>기축 통화</b>의 정의 &mdash; 트리핀의 지적 (1960)</div>
+            <div class="d">미국이 경상 수지 적자를 안 내면 국제 유동성이 끊기고, 계속 내면 달러 신뢰가 떨어진다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t"><b>트리핀 딜레마</b> = 유동성 확보 vs 달러 신뢰 &mdash; <b>㉠ 금 본위</b>, <b>㉡ 브레턴우즈</b></div>
+            <div class="d">㉠ 각 통화를 금에 고정 &rarr; 환율 자동 / ㉡ 금 1온스 = 35달러, 다른 통화는 달러에 고정 &rarr; <b>교차 환율</b>이 자동</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3&middot;4</div>
+          <div class="para-body">
+            <div class="t">1970년대 초 &mdash; 적자 누적, 달러 과잉, 금 준비 급감 &rarr; <b>닉슨 쇼크</b> 1971</div>
+            <div class="d">해법은 달러 <b>평가 절하</b>(규정상 불가) 또는 독일 &middot; 일본의 <b>평가 절상</b>(거부). 마르크 &middot; 엔에 투기 수요 &rarr; 금 태환 정지</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t">그래도 달러가 기축인 이유 &mdash; <b>규모의 경제</b> (<b>㉢</b> 기축 통화가 없는 경우와 비교)</div>
+            <div class="d">기축이 없으면 두 나라를 짝짓는 수만큼 환율이 생긴다. 하나를 중심에 두면 비용이 준다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">40 / 51</div>
+  </section>
+
+  <!-- 41 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">방향어를 먼저 풀어 둔다</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.2cqw;">
+        <thead><tr><th style="width:11em;">지문의 말</th><th>풀어 쓰면</th></tr></thead>
+        <tbody>
+          <tr><th>달러에 대한 마르크의 환율 <strong>하락</strong></th><td>1달러를 사는 데 마르크가 <strong>덜</strong> 든다 = 마르크 가치 <strong>상승</strong> = 마르크 <strong>평가 절상</strong></td></tr>
+          <tr><th>달러 <strong>평가 절하</strong></th><td>달러 가치를 내림. 브레턴우즈에서는 <strong>규정상 불가</strong></td></tr>
+          <tr><th>경상 수지 <strong>적자</strong></th><td>수입 &gt; 수출. 자국 통화가 밖으로 더 나간다</td></tr>
+          <tr><th>국제 유동성</th><td>어디서나 통하는 지불 수단. 금 &rarr; 금 + 달러</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">기준이 붙은 환율</div>
+        <ul><li>&lsquo;A에 대한 B의 환율&rsquo;은 <strong>A 하나를 B 얼마로 사는가</strong>다. 하락하면 B가 비싸진 것이다. 14번과 16번이 이 한 줄로 갈린다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">41 / 51</div>
+  </section>
+
+  <!-- 42 -->
+  <section class="slide q-slide" style="--fs:1.44;">
+    <h2 class="slide-title">13번 &middot; 윗글을 통해 답을 찾을 수 <u>없는</u> 질문은?<span class="ans-chip">정답 &#9313;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">브레턴우즈 체제 붕괴 이후에도 달러화가 기축 통화로서 역할을 할 수 있었던 이유는 무엇인가?</span></li>
+        <li class="ans"><span class="n">&#9313;</span><span class="txt">브레턴우즈 체제 붕괴 이후의 세계 경제 위축에 대해 트리핀은 어떤 전망을 했는가?</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">브레턴우즈 체제에서 미국 중앙은행은 어떤 의무를 수행해야 했는가?</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">브레턴우즈 체제에서 국제 유동성의 역할을 한 것은 무엇인가?</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">브레턴우즈 체제에서 달러화 신뢰도 하락의 원인은 무엇인가?</span></li>
+      </ul>
+    </div>
+    <div class="page-num">42 / 51</div>
+  </section>
+
+  <!-- 43 -->
+  <section class="slide tight" style="--fs:1.16;">
+    <h2 class="slide-title">13번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">트리핀의 말은 1960년, 붕괴는 1971년이다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>5문단 &mdash; <b>규모의 경제</b></td></tr>
+        <tr class="ans"><th>&#9313;</th><td>1문단의 트리핀은 유동성 공급이 <b>중단되면</b> 세계 경제가 위축된다고 했다. 체제 <b>붕괴 이후</b>에 대한 전망은 어디에도 없다 &rarr; <b>답을 찾을 수 없음</b></td></tr>
+        <tr><th>&#9314;</th><td>2문단 &mdash; 금 1온스와 35달러를 언제나 <b>맞교환</b>해 줄 의무</td></tr>
+        <tr><th>&#9315;</th><td>2문단 &mdash; 금에 <b>달러가 추가</b>된 금 환 본위제</td></tr>
+        <tr><th>&#9316;</th><td>1 &middot; 3문단 &mdash; 적자가 지속돼 달러가 <b>과잉 공급</b></td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&lsquo;답을 찾을 수 없는&rsquo; 문항</div>
+        <p>네 선지는 지문 문장을 질문으로 바꾼 것이다. 하나만 지문의 <b>시점 밖</b>을 묻는다. 트리핀의 조건(&lsquo;중단되면&rsquo;)과 선지의 조건(&lsquo;붕괴 이후&rsquo;)이 다르다.</p>
+      </div>
+    </div>
+    <div class="page-num">43 / 51</div>
+  </section>
+
+  <!-- 44 -->
+  <section class="slide q-slide" style="--fs:1.20;">
+    <h2 class="slide-title">14번 &middot; 윗글을 바탕으로 추론한 내용으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">닉슨 쇼크가 단행된 이후 달러화의 고평가 문제를 해결할 수 있는 달러화의 평가 절하가 가능해졌다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">브레턴우즈 체제에서 마르크화와 엔화의 투기적 수요가 증가한 것은 이들 통화의 평가 절상을 예상했기 때문이다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">금의 생산량 증가를 통한 국제 유동성 공급량의 증가는 트리핀 딜레마 상황을 완화하는 한 가지 방법이 될 수 있다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">트리핀 딜레마는 달러화를 통한 국제 유동성 공급을 중단할 수도 없고 공급량을 무한정 늘릴 수도 없는 상황을 말한다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">브레턴우즈 체제에서 마르크화가 달러화에 대해 평가 절상되면, 같은 금액의 마르크화로 구입 가능한 금의 양은 감소한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">44 / 51</div>
+  </section>
+
+  <!-- 45 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">14번 &middot; 정답과 근거<span class="qm">정답률 36%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">마르크가 비싸지면 더 많은 달러를, 따라서 더 많은 금을 산다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">2문단의 규칙 두 개</div>
+          <p>금은 <b>달러로만</b> 살 수 있다. 금 1온스 = <b>35달러</b>로 고정.</p>
+          <p>마르크 평가 절상 = 같은 마르크로 <b>더 많은 달러</b>를 바꾼다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9316;</div>
+          <p>같은 금액의 마르크화로 구입 가능한 금의 양은 <b>감소</b>한다.</p>
+          <p class="verdict">더 많은 달러 &rarr; 달러당 금은 고정 &rarr; 더 많은 금. <b>증가</b>가 맞다. 두 단계를 거쳐야 해서 36%다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9312;과 &#9314;</div>
+        <p>&#9312; 평가 절하가 불가능했던 이유는 브레턴우즈의 <b>규정</b>이다. 체제가 무너지면 그 규정도 없다. &#9314; 트리핀 딜레마는 유동성을 달러 적자로만 공급하기 때문에 생긴다. 금이 늘어 유동성이 따로 공급되면 달러에 덜 기대도 된다.</p>
+      </div>
+    </div>
+    <div class="page-num">45 / 51</div>
+  </section>
+
+  <!-- 46 -->
+  <section class="slide q-slide" style="--fs:1.42;">
+    <h2 class="slide-title">15번 &middot; 세 국가가 각각 다른 통화를 사용할 때, ㉠&#12316;㉢에 대한 설명으로 적절한 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">㉠에서 자동적으로 결정되는 환율의 가짓수는 금에 자국 통화의 가치를 고정한 국가 수보다 하나 적다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">㉡이 붕괴된 이후에도 여전히 달러화가 기축 통화라면 ㉡에 비해 교차 환율의 가짓수는 적어진다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">㉢에서 국가 수가 하나씩 증가할 때마다 환율의 전체 가짓수도 하나씩 증가한다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">㉠에서 ㉡으로 바뀌면 자동적으로 결정되는 환율의 가짓수가 많아진다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">㉡에서 교차 환율의 가짓수는 ㉢에서 생기는 환율의 가짓수보다 적다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">46 / 51</div>
+  </section>
+
+  <!-- 47 -->
+  <section class="slide tight" style="--fs:1.12;">
+    <h2 class="slide-title">15번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">세 나라를 세어 보면 1 &lt; 3</span>
+      </div>
+      <div class="def-box" style="margin-bottom:1.0cqw;">
+        <div class="dt">세 나라(미국 포함)일 때</div>
+        <p>㉠ 금 본위 &mdash; 셋 다 금에 고정, 환율 <b>3개 모두 자동</b> &nbsp;/&nbsp; ㉡ 브레턴우즈 &mdash; 두 통화가 달러에 고정(2) + 그 둘 사이 <b>교차 환율 1개</b>만 자동 &nbsp;/&nbsp; ㉢ 기축 없음 &mdash; 짝의 수만큼, <b>3개</b>(네 나라면 6)</p>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>㉠ 3개 vs 국가 수 3 &minus; 1 = 2. <span class="u-warn">하나 적지 않다</span></td></tr>
+        <tr><th>&#9313;</th><td>달러가 여전히 기축이면 교차 환율은 그대로 1. <span class="u-warn">적어지지 않는다</span></td></tr>
+        <tr><th>&#9314;</th><td>3국 3개 &rarr; 4국 6개. <span class="u-warn">하나씩이 아니다</span></td></tr>
+        <tr><th>&#9315;</th><td>자동 결정 3 &rarr; 1. <span class="u-warn">적어진다</span></td></tr>
+        <tr class="ans"><th>&#9316;</th><td>㉡ 교차 환율 1 &lt; ㉢ 환율 3 &rarr; <b>정답</b></td></tr>
+      </table>
+    </div>
+    <div class="page-num">47 / 51</div>
+  </section>
+
+  <!-- 48 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">16번 &middot; &lt;보기&gt; [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.1cqw;">
+        <span class="tag">보기</span>
+        브레턴우즈 체제 붕괴 이후, 기축 통화국 <b>A국</b>은 석유 파동으로 금리가 오르고 통화 공급이 줄었다. 여기에 소득세 감면과 군비 증대가 금리를 더 올렸고, 높은 금리로 <b>외국 자본이 대량 유입</b>되었다. A국이 주도한 국제적 합의로 A &middot; B &middot; C 세 나라가 외환 시장에 개입했고, A국 통화에 대한 B국 통화의 환율은 <b>50%</b>, C국 통화의 환율은 <b>30%</b> 하락했다.
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:9em;">&lt;보기&gt;의 사건</th><th>풀어 쓰면</th></tr></thead>
+        <tbody>
+          <tr><th>자본 대량 유입</th><td>다들 A국 통화를 사려 함 &rarr; A국 통화 가치 <strong>상승</strong>(고평가)</td></tr>
+          <tr><th>B 환율 50% 하락</th><td>B국 통화가 A국 통화에 대해 <strong>절상</strong>. C는 30%만 절상</td></tr>
+          <tr><th>B가 C보다 더 절상</th><td>B국 통화에 대한 C국 통화의 환율은 <strong>상승</strong>. C 물건이 B에서 싸진다</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">48 / 51</div>
+  </section>
+
+  <!-- 49 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">16번 &middot; 윗글을 참고할 때, &lt;보기&gt;에 대한 반응으로 가장 적절한 것은?<span class="ans-chip">정답 &#9315;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">A국의 금리 인상과 통화 공급 감소로 인해 A국 통화의 신뢰도가 낮아진 것은 외국 자본이 대량으로 유입되었기 때문이겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">국제적 합의로 인한 A국 통화에 대한 B국 통화의 환율 하락으로 국제 유동성 공급량이 증가하여 A국 통화의 가치가 상승했겠군.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">다른 모든 조건이 변하지 않았다면, 국제적 합의로 인해 A국 통화에 대한 B국 통화의 환율과 B국 통화에 대한 C국 통화의 환율은 모두 하락했겠군.</span></li>
+        <li class="ans"><span class="n">&#9315;</span><span class="txt">다른 모든 조건이 변하지 않았다면, 국제적 합의로 인해 A국 통화에 대한 B국과 C국 통화의 환율이 하락하여, B국에 대한 C국의 경상 수지는 개선되었겠군.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">다른 모든 조건이 변하지 않았다면, A국의 소득세 감면과 군비 증대로 A국의 경상 수지가 악화되며, 그 완화 방안 중 하나는 A국 통화에 대한 B국 통화의 환율을 상승시키는 것이겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">49 / 51</div>
+  </section>
+
+  <!-- 50 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">16번 &middot; 정답과 근거<span class="qm">정답률 33%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9315;</span>
+        <span class="why">C국 통화가 B국 통화보다 덜 올랐으니 C의 물건이 B에서 싸진다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>자본이 유입되면 A국 통화는 <span class="u-warn">비싸진다</span>. 신뢰도 하락과 무관하다</td></tr>
+        <tr><th>&#9313;</th><td>환율 하락은 B국 통화 절상 = A국 통화 가치 <span class="u-warn">하락</span>. 유동성 공급량과도 상관없다</td></tr>
+        <tr><th>&#9314;</th><td>B가 50%, C가 30% 절상. B에 대한 C의 환율은 <span class="u-warn">상승</span>한다. 둘 다 하락이 아니다</td></tr>
+        <tr class="ans"><th>&#9315;</th><td>C국 통화가 B국 통화보다 상대적으로 싸졌다 &rarr; C의 수출이 B에서 유리 &rarr; B에 대한 C의 경상 수지 <b>개선</b> &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9316;</th><td>A의 적자를 줄이려면 A국 통화가 <b>싸져야</b> 한다. 그것은 A에 대한 B의 환율 <span class="u-warn">하락</span>이다. 상승이 아니다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&#9315;가 성립하는 두 단계</div>
+        <p>&lsquo;A에 대한 환율&rsquo;만 주어졌는데 묻는 것은 <b>B와 C 사이</b>다. 두 통화가 모두 절상됐으니 <b>차이</b>만 남는다. 50% &gt; 30%이므로 C가 B보다 덜 올랐고, 덜 오른 쪽의 물건이 상대국에서 싸진다. 41쪽의 한 줄을 두 번 적용하면 끝난다.</p>
+      </div>
+    </div>
+    <div class="page-num">50 / 51</div>
+  </section>
+
+  <!-- 51 -->
+  <section class="slide" style="--fs:1.14;">
+    <h2 class="slide-title">네 세트를 풀고 나서</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.4em;">갈래</th><th>읽으며 만든 것</th><th>오답이 만들어진 방식</th></tr></thead>
+        <tbody>
+          <tr><th>법 &middot; 제도</th><td>요건 &middot; 효과 &middot; 예외 세 칸, 입장별 &lsquo;누가 &middot; 언제&rsquo;</td><td>예외를 지우거나, 주체 &middot; 시점을 바꾸거나, 이유를 목적으로 옮긴다</td></tr>
+          <tr><th>경제</th><td>정의를 식으로, 방향어를 화살표로, 기준이 붙은 말은 풀어 쓰기</td><td>방향을 뒤집거나, 두 단계를 거쳐야 보이는 결과를 묻는다</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.2cqw;">
+        <div class="etag">정답률이 낮았던 네 문항의 공통점</div>
+        <ul><li>9번 22%, 16번 33%, 14번 36%, 4번 39%. 모두 지문의 문장 <strong>두 개를 이어야</strong> 판정되는 문항이었다. 여백에 식과 갈래를 적어 둔 사람은 이어 붙일 재료를 이미 가지고 있다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">51 / 51</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 51</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  // 슬라이드 안에서 하나씩 띄울 요소들
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  // showAllSteps: 뒤로 돌아갈 때는 그 슬라이드의 단계가 모두 드러난 상태로 들어간다
+  function show(n, showAllSteps) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
