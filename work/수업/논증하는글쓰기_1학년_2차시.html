@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>논증하는 글 쓰기 (1학년-2차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f3faf8;
+    --paper-edge: #c9e4df;
+    --ink: #1e2a2d;
+    --ink-soft: #4a5c5f;
+    --ink-faint: #879a9d;
+    --key: #178a82;
+    --key-soft: #5bb3ab;
+    --rule: #c3e0db;
+    --card: #fbfdfc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #12302f;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.012em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(18,48,47,0.94); z-index: 50;
+  }
+  .nav-top a { color: #a6d3cc; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #e4f4f1; }
+  .nav-meta { color: #86b5af; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 12% 6%, rgba(247,227,106,0.38) 0%, transparent 55%),
+      radial-gradient(ellipse at 86% 92%, rgba(23,138,130,0.15) 0%, transparent 60%);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
+  }
+  /* 우측 상단 — 원고지 칸 */
+  .stage::before {
+    content: ""; position: absolute; top: 5%; right: -2%;
+    width: 19%; height: 44%; pointer-events: none; opacity: 0.075;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 180'><g fill='none' stroke='%23178a82'><rect x='6' y='6' width='188' height='168' stroke-width='3'/><path stroke-width='1.3' d='M6 48 H194 M6 90 H194 M6 132 H194 M53 6 V174 M100 6 V174 M147 6 V174'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.9cqw, 5.88rem); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.55cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.15cqw solid var(--ink);
+    align-self: flex-start; flex-shrink: 0;
+  }
+  h2.slide-title .qm {
+    font-family: "Noto Sans KR", sans-serif; font-weight: 400;
+    font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
+    margin-left: 0.8em; vertical-align: 0.18em;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.8rem, 1.68cqw, 2.02rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); color: var(--ink-soft); line-height: 1.8; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.5cqw, 3rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.4cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.46cqw, 1.76rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+
+  /* ── 줄글 ─────────────────────────────────────────────
+     지문의 흐름을 옮긴 본문. 인용구와 한 결로 읽히도록 명조로 두고
+     한 칸에 몰지 않고 전폭으로 편다. 좁은 칸에 넣으면 자간이 벌어진다. */
+  .story-head {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.38em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+  }
+  .story-head .rng { font-family: "Noto Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
+    line-height: 1.88; color: var(--ink); text-align: justify;
+  }
+  .story + .story { margin-top: 0.55em; }
+
+  /* 원문을 그대로 옮긴 줄. 본문 글꼴에 옅은 바탕과 왼쪽 선만 더한다 */
+  .cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
+    line-height: 1.86; color: var(--ink);
+    background: rgba(244,165,138,0.16);
+    border-left: 0.26em solid #efb09a;
+    padding: 0.65em 0.9em;
+  }
+  .cite .attr {
+    display: block; margin-top: 0.42em;
+    font-family: "Noto Sans KR", sans-serif; font-size: 0.68em;
+    color: var(--ink-faint); letter-spacing: 0.03em;
+  }
+
+  .emotion {
+    background: var(--card); border-left: 0.32cqw solid var(--key);
+    padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76;
+    color: var(--ink-soft); padding-left: 1.2em; position: relative;
+  }
+  .emotion li + li { margin-top: 0.45em; }
+  .emotion li::before { content: "\2022"; position: absolute; left: 0.15em; color: var(--key-soft); }
+  .emotion li.q { color: var(--ink); }
+  .emotion li.q::before { content: "?"; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); left: 0; }
+  .emotion strong { color: var(--key); }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+  }
+  .info-table th { width: 4.2em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.7;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.15cqw solid var(--key); font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+  }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 4.6em; background: var(--card); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table strong { color: var(--key); }
+  .cmp-table caption {
+    caption-side: top; text-align: left; color: var(--ink-soft);
+    font-size: clamp(0.8rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs)));
+    padding-bottom: 0.6em;
+  }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.76;
+    padding-left: 1.7em; position: relative; margin-bottom: 0.62em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
+  .num-list strong { color: var(--key); }
+
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); line-height: 1.82; color: var(--ink-soft); }
+  .def-box strong { color: var(--key); }
+
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .c3 strong { color: var(--key); }
+
+  /* 어휘 풀이 */
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8cqw 2.2cqw; }
+  .gl { display: flex; gap: 0.85cqw; align-items: baseline; padding-bottom: 0.52em; border-bottom: 1px solid var(--rule); }
+  .gl .gw {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.9rem, calc(2.08cqw * var(--fs)), calc(2.5rem * var(--fs))); width: 5em; flex-shrink: 0;
+  }
+  .gl .gd { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+
+  /* 스트레스 반응 단계 */
+  .flow { display: flex; align-items: stretch; gap: 0.7cqw; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
+    padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); margin-bottom: 0.42em;
+  }
+  .flow-step .desc { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+  .flow-arrow { display: flex; align-items: center; color: var(--key-soft); font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); }
+
+  /* 확인 문제 */
+  .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .quiz-guide { font-size: clamp(0.9rem, calc(1.96cqw * var(--fs)), calc(2.35rem * var(--fs))); color: var(--ink-soft); margin-bottom: 1.5cqw; }
+  .quiz-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1.05rem, calc(2.6cqw * var(--fs)), calc(3.12rem * var(--fs))); line-height: 1.8;
+    padding: 2.0cqw 2.3cqw; background: var(--card); border: 1px solid var(--rule);
+  }
+  .blank {
+    display: inline-block; min-width: 5em; text-align: center;
+    color: var(--key); border-bottom: 2px solid var(--key); font-weight: 700;
+  }
+  .answer-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.3rem, calc(3.4cqw * var(--fs)), calc(4.08rem * var(--fs))); color: var(--paper);
+    background: var(--key); padding: 0.45rem 1.7rem; margin-bottom: 1.8cqw;
+  }
+  .answer-desc {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.88; color: var(--ink-soft);
+    max-width: 44em;
+  }
+  .answer-desc strong { color: var(--key); }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.35cqw; }
+  .srow { display: flex; gap: 1.8cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); width: 4.4em; flex-shrink: 0; text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.78; }
+  .srow .sval strong { color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -2.7cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.32cqw, 1.58rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #a6d3cc; font-size: 0.86rem; }
+  .controls button {
+    background: #1a4b48; color: #e4f4f1; border: 1px solid #2f7670;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #22625d; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #7dada6; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w); height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cards2, .gloss { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* 내용이 많아 자리가 빠듯한 장 — 여백만 줄이고 글자 크기는 지킨다 */
+  .slide.tight .story { line-height: 1.74; }
+  .slide.tight .emotion { padding: 0.95cqw 1.35cqw; }
+  .slide.tight .emotion .etag { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .emotion li + li { margin-top: 0.28em; }
+  .slide.tight .story-head { margin-bottom: 0.42em; padding-bottom: 0.26em; }
+  .slide.tight .cite { padding: 0.5em 0.75em; }
+  .slide.tight .c3 { padding: 1.1cqw 1.2cqw; }
+  .slide.tight .c3 h3 { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .gl { padding-bottom: 0.38em; }
+  .slide.tight .num-list li { margin-bottom: 0.4em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.42em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.42em 0.42em; }
+
+  /* 세 칸 카드 */
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6cqw; }
+  @media (max-width: 720px) { .cards3 { grid-template-columns: 1fr; gap: 1rem; } }
+  /* 활동 지시문 */
+  .act-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+    color: var(--ink); margin-bottom: 1.3cqw; flex: 0 0 auto;
+  }
+  .act-q .no { color: var(--key); font-weight: 700; margin-right: 0.4em; }
+  /* 빈칸 */
+  .q { color: var(--ink-faint); }
+  .cmp-table th.c, .info-table th.c { color: var(--key); }
+  /* 표 안의 작은 글머리 */
+  .cmp-table td ul, .info-table td ul { list-style: none; }
+  .cmp-table td li, .info-table td li { padding-left: 1.1em; position: relative; }
+  .cmp-table td li::before, .info-table td li::before { content: "\2022"; position: absolute; left: 0.1em; color: var(--key-soft); }
+  .cmp-table td li + li, .info-table td li + li { margin-top: 0.22em; }
+  .cite .add { color: var(--key); font-weight: 700; }
+  .flow-step.sm { padding: 1.1cqw 0.9cqw; }
+  .flow-step.sm .emo { font-size: clamp(0.88rem, calc(1.96cqw * var(--fs)), calc(2.35rem * var(--fs))); margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_1학년.html">&larr; 1학년</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">논증하는 글 쓰기 &middot; 1학년 2차시 &middot; 업데이트 2026. 10. 12.</div>
+</div>
+
+<div class="stage" id="stage">
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">쓰 　 기</div>
+    <h1 class="title-main">논증하는 글 쓰기</h1>
+    <div class="rule"></div>
+    <div class="sub">계획하기부터 고쳐쓰기까지 &middot; 텀블러를 예로</div>
+    <div class="foot">
+      <span>공통국어2 &middot; 3. 글로 읽는 세상, 세상을 움직이는 글</span>
+      <span>1학년 &middot; 2차시</span>
+    </div>
+      <div class="page-num">1 / 29</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" style="--fs:1.24;">
+    <h2 class="slide-title">학습 목표<span class="qm">교과서 140쪽</span></h2>
+    <div class="body-area">
+      <ul class="num-list" style="margin-bottom:1.6cqw;">
+        <li><span class="n">1</span>언어 공동체가 공유하는 작문 관습의 특성을 이해하고 쓰기 과정과 전략을 점검하며 책임감 있게 글을 쓴다.</li>
+        <li><span class="n">2</span>논증 요소에 따른 분석을 바탕으로 하여 효과적으로 내용을 조직하여 논증하는 글을 쓴다.</li>
+      </ul>
+      <div class="emotion">
+        <div class="etag">2차시에 할 일</div>
+        <ul>
+          <li>쓰기 과정의 세 단계를 따라 논증하는 글 한 편을 직접 쓴다. 교과서 148~153쪽, 활동 2에 해당하는 시간이다.</li>
+          <li>지도서의 텀블러 예시를 함께 보면서 각 단계에서 무엇을 하는지 확인한다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">2 / 29</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" style="--fs:1.38;">
+    <h2 class="slide-title">전시 학습 &middot; 1차시에 확인한 것</h2>
+    <div class="body-area">
+      <div class="summary-list">
+        <div class="srow"><span class="skey">작문 관습</span><span class="sval">글을 쓸 때 따라야 하는 질서. 형식적 측면과 태도적 측면(쓰기 윤리)이 있다.</span></div>
+        <div class="srow"><span class="skey">논증하는 글</span><span class="sval">독자의 태도나 행동을 변화시키려는 목적으로, 논증 요소를 갖추어, 논증 방법으로 조직하고, 명확하고 객관적인 표현을 쓴다.</span></div>
+        <div class="srow"><span class="skey">논증 요소</span><span class="sval">주장, 근거(객관적 자료), 이유(주관적 요인), 예상되는 반론과 반박.</span></div>
+        <div class="srow"><span class="skey">논증 방법</span><span class="sval">연역 논증(대전제·소전제 &rarr; 결론), 귀납 논증(사례들 &rarr; 일반적 결론).</span></div>
+        <div class="srow"><span class="skey">쓰기 과정</span><span class="sval">계획하기 &rarr; 내용 생성하기 &rarr; 내용 조직하기 &rarr; 표현하기 &rarr; 고쳐쓰기. 필요하면 이전 단계로 돌아간다.</span></div>
+      </div>
+    </div>
+      <div class="page-num">3 / 29</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" style="--fs:1.73;">
+    <h2 class="slide-title">활동 2 &middot; 작문 관습을 고려하여 논증하는 글 쓰기<span class="qm">교과서 148쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q">일반적인 쓰기 과정과 전략을 점검하며 책임감 있는 태도로 논증하는 글을 써 보자.</div>
+      <div class="flow">
+        <div class="flow-step"><div class="emo">1단계</div><div class="desc">계획하기</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">2단계</div><div class="desc">내용 생성하기와 내용 조직하기</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">3단계</div><div class="desc">표현하기와 고쳐쓰기</div></div>
+      </div>
+    </div>
+      <div class="page-num">4 / 29</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" style="--fs:1.57;">
+    <h2 class="slide-title">1단계 &middot; 계획하기<span class="qm">교과서 148쪽</span></h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.6cqw;">
+        <p>계획하기 단계에서는 <strong>쓰기 맥락을 분석</strong>한다. 그리고 글을 쓰는 동안에 분석한 쓰기 맥락을 고려하며 글쓰기 과정과 전략을 계속 점검한다.</p>
+      </div>
+      <div class="act-q"><span class="no">1 (1)</span>우리 주변에서 논증하는 글로 써 보고 싶은 주제를 찾아보자.</div>
+      <div class="cards3">
+        <div class="c3"><p>통컵(텀블러)을 사용하면 환경 보호에 도움이 될까?</p></div>
+        <div class="c3"><p>로봇세를 부과해야 할까?</p></div>
+        <div class="c3"><p>선행 학습이 학업에 도움이 될까?</p></div>
+      </div>
+    </div>
+      <div class="page-num">5 / 29</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" style="--fs:1.33;">
+    <h2 class="slide-title">주장의 종류<span class="qm">지도서 참고 자료</span></h2>
+    <div class="body-area">
+      <p class="story" style="margin-bottom:1.4cqw;">주제를 정했으면 내가 펼칠 주장이 어떤 종류인지 가려 본다.</p>
+      <div class="cards3">
+        <div class="c3">
+          <h3><span class="word">사실 명제</span></h3>
+          <p>참임을 입증할 수 있는 사실을 진술한 명제.</p>
+          <p>예 &middot; 독도는 대한민국의 영토이다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">정책 명제</span></h3>
+          <p>현실의 문제에 대한 해법을 제안하는 명제. &lsquo;무엇을 해야 한다 / 해서는 안 된다&rsquo;의 형태.</p>
+          <p>예 &middot; 동물 실험을 금지해야 한다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">가치 명제</span></h3>
+          <p>가치 판단이나 평가를 담은 명제. &lsquo;무엇이 좋다 / 나쁘다&rsquo;, &lsquo;옳다 / 그르다&rsquo;의 형태.</p>
+          <p>예 &middot; 선의의 거짓말은 필요하다.</p>
+        </div>
+      </div>
+    </div>
+      <div class="page-num">6 / 29</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" style="--fs:1.07;">
+    <h2 class="slide-title">1단계 &middot; 쓰기 맥락 분석하기<span class="qm">교과서 148쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">1 (2)</span>논증하는 글의 쓰기 맥락을 분석해 보자.</div>
+      <table class="info-table" style="margin-bottom:1.4cqw;">
+        <tr><th>글의 목적</th><td class="q">?</td></tr>
+        <tr><th>주제</th><td class="q">?</td></tr>
+        <tr><th>예상 독자</th><td class="q">?</td></tr>
+        <tr><th>매체</th><td class="q">?</td></tr>
+      </table>
+      <div class="emotion">
+        <ul>
+          <li>논증하는 글은 독자의 행동이나 태도를 변화시키는 것을 목적으로 하므로 <strong>예상 독자의 특성</strong>을 아는 것이 무척 중요하다. 예상 독자의 가치관, 배경지식 수준, 사회&middot;문화적 배경, 문제에 대한 태도를 따져 본다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">7 / 29</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" style="--fs:1.57;">
+    <h2 class="slide-title">1단계 &middot; 쓰기 맥락 분석하기 &middot; 예시<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>글의 목적</th><td>텀블러를 친환경적으로 이용하도록 설득하기</td></tr>
+        <tr><th>주제</th><td>환경을 보호하기 위해 텀블러 하나를 오래, 많이 사용하자.</td></tr>
+        <tr><th>예상 독자</th><td>신문 구독자, 텀블러를 사용하는 다수의 사람</td></tr>
+        <tr><th>매체</th><td>인터넷 신문</td></tr>
+      </table>
+    </div>
+      <div class="page-num">8 / 29</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" style="--fs:1.44;">
+    <h2 class="slide-title">1단계 &middot; 글을 쓸 때 고려할 점<span class="qm">교과서 148쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">1 (3)</span>(2)에서 정리한 쓰기 맥락을 바탕으로 하여 글을 쓸 때 고려할 점을 생각해 보자.</div>
+      <div class="cite" style="margin-bottom:1.4cqw;">인터넷 블로그에 실을 거니까 딱딱하지 않게 쓰되, 쓰기 윤리를 더욱 잘 지켜야지.<span class="attr">교과서 148쪽의 예</span></div>
+      <div class="emotion">
+        <ul>
+          <li class="q">텀블러 글이라면 목적, 주제, 예상 독자, 매체에서 각각 무엇이 따라 나올까?</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">9 / 29</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" style="--fs:1.73;">
+    <h2 class="slide-title">1단계 &middot; 글을 쓸 때 고려할 점 &middot; 예시<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>근거</th><td>텀블러 사용이 오히려 환경을 오염시킬 수 있다는 사실을 <strong>여러 연구 결과를 근거로</strong> 해서 제시해야겠어.</td></tr>
+          <tr><th>표현</th><td>인터넷 신문에 투고할 글이므로 <strong>정확하고 정중한 표현</strong>을 사용해야겠어.</td></tr>
+          <tr><th>쓰기 윤리</th><td>쓰기 윤리를 지켜 <strong>자료의 출처를 명확히</strong> 밝혀야겠어.</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">10 / 29</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" style="--fs:1.38;">
+    <h2 class="slide-title">쓰기 맥락이 달라지면<span class="qm">지도서 수업 아이디어</span></h2>
+    <div class="body-area">
+      <p class="story" style="margin-bottom:1.4cqw;">(2)에서 분석한 쓰기 맥락이 달라진다면 (3)의 답도 바뀐다.</p>
+      <div class="cards2" style="margin-bottom:1.4cqw;">
+        <div class="c3">
+          <h3>예상 독자가 텀블러를 이미 쓰는 성인일 때</h3>
+          <p>텀블러를 제대로 쓰는 방법으로 바로 들어갈 수 있다.</p>
+        </div>
+        <div class="c3">
+          <h3>환경 문제에 관심이 적은 청소년일 때</h3>
+          <p>텀블러를 사용해야 하는 까닭부터 설명해야 한다. 근거의 종류, 표현 방식, 사용하는 어휘의 수준도 달라진다.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <ul><li>쓰기 맥락에 따라 글을 쓸 때 유의해야 할 점이 달라진다.</li></ul>
+      </div>
+    </div>
+      <div class="page-num">11 / 29</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" style="--fs:1.29;">
+    <h2 class="slide-title">2단계 &middot; 내용 생성하기와 내용 조직하기<span class="qm">교과서 149쪽</span></h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.4cqw;">
+        <div class="c3">
+          <h3><span class="word">내용 생성하기</span></h3>
+          <p>주제와 관련된 생각을 자유롭게 떠올리고 관련된 자료를 수집하고 선정한다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">내용 조직하기</span></h3>
+          <p>개요 작성하기 전략을 사용한다. 개요는 글 전체를 간략히 시각화하고 각 부분의 연결 관계를 보여 주므로 빠진 부분은 없는지, 연결 관계가 자연스러운지를 점검할 수 있다.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <ul>
+          <li>어떤 자료를 수집해야 할지 몰라 막힐 때는 중심 개념으로부터 생각을 넓혀 가는 생각 그물 만들기, 동료나 교사와 대화하기 전략을 쓴다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">12 / 29</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" style="--fs:1.26;">
+    <h2 class="slide-title">2단계 &middot; 자료 선정하기<span class="qm">교과서 149쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">2 (1)</span>다양한 매체에서 주장의 근거로 삼을 만한 자료를 수집하고, 다음 기준에 따라 선정해 보자.</div>
+      <div class="cards3" style="margin-bottom:1.4cqw;">
+        <div class="c3"><h3><span class="word">타당성</span></h3><p>주장을 잘 뒷받침하는가?</p></div>
+        <div class="c3"><h3><span class="word">신뢰성</span></h3><p>출처가 확실하여 믿을 만한가?</p></div>
+        <div class="c3"><h3><span class="word">공정성</span></h3><p>편향되지 않은 중립적인 자료인가?</p></div>
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:9em;">근거로 삼을 자료</th><th style="width:9em;">활용하지 않을 자료</th></tr></thead>
+        <tbody><tr><td class="q">? &middot; 선정한 까닭은?</td><td class="q">? &middot; 선정하지 않은 까닭은?</td></tr></tbody>
+      </table>
+    </div>
+      <div class="page-num">13 / 29</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide tight" style="--fs:1.02;">
+    <h2 class="slide-title">2단계 &middot; 자료 선정하기 &middot; 예시<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:8em;">구분</th><th>자료</th><th>까닭</th></tr></thead>
+        <tbody>
+          <tr><th>근거로 삼을 자료</th>
+            <td><ul>
+              <li>신문 기사 &lsquo;환경을 위해 텀블러를 쓰는 당신, 환경 빌런일 수도?&rsquo;, 《더사이언스타임즈》(2023. 5. 19.)</li>
+              <li>텔레비전 방송 &lsquo;분리수거 열심히 하고 있다면, 꼭 한번 생각해 봐야 할 사실들&rsquo;, 스브스 뉴스(2023. 4. 21.)</li>
+            </ul></td>
+            <td>두 자료 모두 텀블러 사용의 문제를 구체적인 사례, 수치, 그래프 등을 통해 제시하고 있어서 근거로서의 <strong>타당성과 신뢰성</strong>이 높다.</td></tr>
+          <tr><th>활용하지 않을 자료</th>
+            <td>책 《텀블러로 지구를 구한다는 농담》, 알렉산더 폰 쇤부르크 지음, 이상희 옮김, 추수밭, 2023.</td>
+            <td>친환경 제품이라도 많이 구매하면 안 된다는 주장은 같지만, 텀블러보다는 주로 에코백을 예로 들어 설명하고 있어서 근거로 활용하기에 적합하지 않았다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">14 / 29</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" style="--fs:1.73;">
+    <h2 class="slide-title">2단계 &middot; 논증 요소 정리하기<span class="qm">교과서 149쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">2 (2)</span>글에서 활용할 논증 요소를 다음과 같이 정리해 보자.</div>
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>주장</th><td class="q">?</td></tr>
+          <tr><th>이유</th><td class="q">?</td></tr>
+          <tr><th>근거</th><td class="q">?</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">15 / 29</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide tight" style="--fs:1.22;">
+    <h2 class="slide-title">2단계 &middot; 논증 요소 정리하기 &middot; 예시<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>주장</th><td><strong>환경을 보호하기 위해서 텀블러 하나를 오래, 많이 사용해야 한다.</strong></td></tr>
+          <tr><th>이유</th><td>텀블러를 친환경 제품이라 여기지만, 이를 구매하고 사용하는 행위가 오히려 환경에 해가 되는 리바운드 효과(rebound effect)가 나타나기 때문이다.</td></tr>
+          <tr><th>근거</th><td><ul>
+            <li>(기후변화행동연구소 실험 결과) 텀블러는 제작, 사용, 폐기의 전 과정에서 종이컵보다 약 24배, 일회용 플라스틱 컵보다 약 13배 많은 온실가스를 배출함.</li>
+            <li>(캐나다 제품수명주기분석연구소(CIRAIG) 연구 결과) 폴리프로필렌 소재로 제작된 텀블러는 50회 이상, 스테인리스 텀블러는 220회 이상 사용해야 환경 보호에 효과가 있음.</li>
+          </ul></td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">16 / 29</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide" style="--fs:1.28;">
+    <h2 class="slide-title">2단계 &middot; 개요 작성하기<span class="qm">교과서 150쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">2 (3)</span>어떤 논증 방법을 사용할지 정하고, 글의 개요를 작성해 보자.</div>
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <tbody>
+          <tr><th>서론</th><td class="q">?</td></tr>
+          <tr><th>본론</th><td class="q">?</td></tr>
+          <tr><th>결론</th><td class="q">?</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <ul>
+          <li>각 부분에서 다룰 대상을 단어나 어구로 적은 <strong>화제 개요</strong>를 먼저 만들고, 이를 문장으로 늘린 <strong>문장 개요</strong>로 확장하면 전체 구성을 점검하고 초고 쓰기를 수월하게 할 수 있다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">17 / 29</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" style="--fs:1.36;">
+    <h2 class="slide-title">2단계 &middot; 개요 작성하기 &middot; 예시 ①<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>서론</th><td>텀블러는 정말 친환경적인 제품일까? 최근 환경을 보호하고자 제품을 구매하고 사용하는 행위가 오히려 환경에 해가 되는 리바운드 효과가 논란이 되고 있음.</td></tr>
+          <tr><th>본론 1</th><td>
+            <p>텀블러 사용에 따른 문제</p>
+            <ul>
+              <li>텀블러의 과다 소유 현상(&lsquo;필수템&rsquo;이 된 텀블러): 우리나라 사람들의 텀블러 사용 및 구매 양상에 대한 설문 조사 결과</li>
+              <li>텀블러의 생산&middot;폐기 과정에서 배출되는 온실가스양에 대한 실험 결과: 케이비에스(KBS)와 기후변화행동연구소의 실험 결과</li>
+            </ul>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">18 / 29</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide" style="--fs:1.69;">
+    <h2 class="slide-title">2단계 &middot; 개요 작성하기 &middot; 예시 ②<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>본론 2</th><td>
+            <p>텀블러를 친환경적으로 제대로 이용하는 방법</p>
+            <ul>
+              <li>텀블러 하나를 오래, 많이 사용하기</li>
+              <li>사용하지 않는 텀블러 정리하기</li>
+              <li>단일 소재의 텀블러 선택하기</li>
+            </ul>
+          </td></tr>
+          <tr><th>결론</th><td>환경을 보호하기 위해서는 하나의 텀블러를 오래, 많이 사용해야 한다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">19 / 29</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide" style="--fs:1.40;">
+    <h2 class="slide-title">2단계 &middot; 개요 점검하기<span class="qm">교과서 150쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">2 (4)</span>다음 기준에 따라 (3)에서 작성한 개요를 점검하고 수정&middot;보완해 보자.</div>
+      <ul class="num-list" style="margin-bottom:1.6cqw;">
+        <li><span class="n">1</span>주제에서 벗어나는 내용은 없는가?</li>
+        <li><span class="n">2</span>타당한 논증이 이루어지도록 조직되었는가?</li>
+        <li><span class="n">3</span>글의 각 부분이 자연스럽게 연결되어 있는가?</li>
+      </ul>
+      <div class="emotion">
+        <ul>
+          <li>쓰기 과정과 전략의 점검&middot;조정은 글쓰기의 전 과정에서 쓰기 전략을 적절하게 사용하고 있는지를 점검하고 쓰기 활동을 효과적으로 조정하는 것을 말한다. 필요하면 이전 단계로 돌아가 조정한다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">20 / 29</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide" style="--fs:1.38;">
+    <h2 class="slide-title">2단계 &middot; 개요 점검하기 &middot; 예시<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>기준 2</th><td>본론 2-① &lsquo;텀블러 하나를 오래, 많이 사용해야 한다&rsquo;는 주장에 대한 근거로 캐나다 제품수명주기분석연구소(CIRAIG)의 연구 결과를 <strong>추가</strong>해서 논증의 타당성을 높여야겠어.</td></tr>
+          <tr><th>기준 3</th><td>본론 2의 2-① &lsquo;텀블러 하나를 오래, 많이 사용하기&rsquo;와 2-② &lsquo;사용하지 않는 텀블러 정리하기&rsquo;의 <strong>순서를 바꾸는</strong> 것이 좋겠어. 텀블러는 필요한 개수만 사용해야 한다는 주장을 한 뒤에 텀블러 하나를 오래, 많이 사용해야 환경 보호 효과가 있다는 내용이 이어져야 자연스러울 것 같아.</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">21 / 29</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" style="--fs:1.25;">
+    <h2 class="slide-title">3단계 &middot; 표현하기와 고쳐쓰기<span class="qm">교과서 151쪽</span></h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.4cqw;">
+        <div class="c3">
+          <h3><span class="word">표현하기</span></h3>
+          <p>내용을 표현하기에 적합한 어휘와 표현 기법을 활용하여 글을 쓴다. 독자가 이해하기 쉽고 흥미를 느낄 수 있도록, 독자를 설득할 수 있도록 쓴다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">고쳐쓰기</span></h3>
+          <p>지금까지 쓴 글이 계획하기 단계에서 설정한 목적에 부합하는지 확인한다. 자신의 글을 글, 문단, 문장, 단어 수준에서 객관적으로 보며 고쳐 쓴다.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <ul>
+          <li>초고는 필자 중심의 생각을 <strong>예상 독자 중심</strong>으로 바꾸어 쓴다.</li>
+          <li>쓰다가 막히면 전체를 완성하는 데 목표를 두고, 생각나지 않는 내용이나 표현은 과감히 건너뛰는 얼른 쓰기(내리 쓰기) 전략을 쓴다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">22 / 29</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide tight" style="--fs:1.11;">
+    <h2 class="slide-title">개요가 글이 되면 &middot; 예시 초고의 서론과 결론<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">일회용품이 환경을 오염시키는 주범이라는 인식이 널리 퍼지면서, 사람들은 일회용 컵 대신 여러 번 사용할 수 있는 다회용 컵을 사용하게 되었다. 그래서 텀블러는 현재 환경을 생각하는 사람들에게 이른바 &lsquo;필수템&rsquo;으로 자리 잡고 인기 제품은 앞다투어 팔리기도 한다. 그런데 이런 텀블러가 과연 친환경적인 도구로서 제대로 활용되고 있을까?<span class="attr">서론</span></div>
+      <div class="cite">점차 일회용 컵 사용량이 줄어들고 있는 것은 바람직한 현상이다. 그러나 친환경 제품이라고 해서 마음놓고 소비하거나 구매를 늘리는 것은 오히려 환경을 망치는 일이 될 수 있다. &lsquo;환경 빌런&rsquo;이 되지 않기 위해, 이제부터 정말 마음에 드는 텀블러 하나를 오래 두고 쓰는 건 어떨까?<span class="attr">결론</span></div>
+    </div>
+      <div class="page-num">23 / 29</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">3단계 &middot; 초고 점검 기준<span class="qm">교과서 152쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">3 (2)</span>다음 점검 기준에 따라 초고를 스스로 점검해 보자.</div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:6.5em;">구분</th><th>점검 기준</th></tr></thead>
+        <tbody>
+          <tr><th>내용</th><td><ul><li>주장을 분명히 드러냈다.</li><li>주장을 뒷받침하는 타당한 근거를 제시했다.</li></ul></td></tr>
+          <tr><th>구성&middot;표현</th><td><ul><li>어법에 맞게 표현했다.</li><li>글의 내용을 짜임새 있게 조직했다.</li><li>예상 독자의 수준을 고려하여 이해하기 쉽게 썼다.</li></ul></td></tr>
+          <tr><th>쓰기 윤리</th><td><ul><li>내용을 과장&middot;축소&middot;왜곡하지 않았다.</li><li>독자를 존중하고 배려하여 표현했다.</li><li>다른 사람의 생각이나 자료를 무단으로 베끼지 않고, 출처를 명확하게 밝혔다.</li></ul></td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">24 / 29</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide" style="--fs:1.30;">
+    <h2 class="slide-title">3단계 &middot; 초고 점검과 공유 &middot; 예시<span class="qm">텀블러</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <tbody>
+          <tr><th>쓰기 윤리</th><td>텀블러의 재사용 횟수에 관한 설문 조사 결과의 <strong>출처를 밝혀야겠어</strong>.</td></tr>
+          <tr><th>구성</th><td>텀블러의 올바른 이용 방법을 세 가지로 나누어 제시하였으나 같은 말이 반복되므로, 정리하여 <strong>두 가지로 제시해야겠어</strong>.</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">3 (3) 고쳐 쓰고 공유하기</div>
+        <ul>
+          <li>점검한 내용에 따라 초고를 고쳐 쓰고, 완성한 글을 자신이 선정한 매체에 실어 본다.</li>
+          <li>친구들과 글을 돌려 읽고 고쳐 쓸 부분이 있는지 상호 평가해 볼 수도 있다. 온라인 학급 게시판에 올려 서로 의견을 내는 방법도 있다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">25 / 29</div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide tight" style="--fs:1.21;">
+    <h2 class="slide-title">소단원 마무리<span class="qm">교과서 153쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>작문 관습</th><td>글을 쓸 때 따라야 하는 <span class="blank">①</span>. 형식은 쓰려는 글의 종류에 따라 다르게 해야 하고, 태도는 글쓴이로서 책임감을 가지고 개인적&middot;사회적 쓰기 윤리를 지켜야 함.</td></tr>
+          <tr><th>논증 요소</th><td>주장, 근거(주장을 지지하는 객관적 자료), <span class="blank">②</span>(근거를 바탕으로 하여 주장을 가능하게 하는 주관적 요인), 예상되는 반론과 이에 대한 반박</td></tr>
+          <tr><th>논증 방법</th><td><ul>
+            <li>연역 논증: 일반적인 원칙을 전제로 하여 특정 사례에 대해 구체적인 주장을 하는 것</li>
+            <li><span class="blank">③</span>: 구체적인 사례들로부터 일반적인 사실을 결론으로 이끌어 내는 것</li>
+          </ul></td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">26 / 29</div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide" style="--fs:1.73;">
+    <h2 class="slide-title">소단원 마무리 &middot; 풀이<span class="qm">교과서 153쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>①</th><td><strong>관습</strong></td></tr>
+          <tr><th>②</th><td><strong>이유</strong></td></tr>
+          <tr><th>③</th><td><strong>귀납 논증</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">27 / 29</div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide tight" style="--fs:1.16;">
+    <h2 class="slide-title">확인 문제 &middot; 맞으면 ○, 틀리면 &times;</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>쓰기 윤리는 글의 형식적 측면과 달리 작문 관습에 포함되지 않는다.</li>
+        <li><span class="n">2</span>글에서 활용할 자료를 선정할 때에는 자료의 타당성, 신뢰성, 공정성을 따져 보아야 한다.</li>
+        <li><span class="n">3</span>고쳐쓰기 단계에서는 자신의 초고를 글, 문단, 문장, 단어 수준에서 객관적으로 점검해야 한다.</li>
+        <li><span class="n">4</span>논증하는 글에 포함되는 논증 요소에는 주장, 근거, 이유는 물론 반론과 이에 대한 반박도 있다.</li>
+        <li><span class="n">5</span>논증하는 글에서 사용할 수 있는 전략에는 객관적인 통계나 연구 자료 제시하기, 전문가의 말 인용하기 등이 있다.</li>
+      </ul>
+    </div>
+      <div class="page-num">28 / 29</div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide" style="--fs:1.23;">
+    <h2 class="slide-title">확인 문제 &middot; 풀이</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>1 &times;</th><td>쓰기 윤리는 작문 관습의 <strong>태도적 측면</strong>이다. 작문 관습은 글의 형식과 책임감 있는 태도를 모두 포함한다.</td></tr>
+          <tr><th>2 ○</th><td>타당성, 신뢰성, 공정성. (교과서 149쪽)</td></tr>
+          <tr><th>3 ○</th><td>글, 문단, 문장, 단어 수준에서 객관적으로 본다. (교과서 151쪽)</td></tr>
+          <tr><th>4 ○</th><td>주장, 근거, 이유, 예상되는 반론과 이에 대한 반박. (교과서 143쪽)</td></tr>
+          <tr><th>5 ○</th><td>통계&middot;연구 자료 제시하기, 다양한 사례 보여 주기, 전문가의 말 인용하기. (교과서 143쪽)</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">29 / 29</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 1</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+  let syncingHash = false;
+
+  function updateButtons() {
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+  }
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() { if (idx < slides.length - 1) show(idx + 1); }
+  function prev() { if (idx > 0) show(idx - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+  function toggleFullscreen() {
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.body.requestFullscreen().catch(() => {}); }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>

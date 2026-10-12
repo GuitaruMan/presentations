@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>논증하는 글 쓰기 (1학년-1차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f3faf8;
+    --paper-edge: #c9e4df;
+    --ink: #1e2a2d;
+    --ink-soft: #4a5c5f;
+    --ink-faint: #879a9d;
+    --key: #178a82;
+    --key-soft: #5bb3ab;
+    --rule: #c3e0db;
+    --card: #fbfdfc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #12302f;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.012em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(18,48,47,0.94); z-index: 50;
+  }
+  .nav-top a { color: #a6d3cc; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #e4f4f1; }
+  .nav-meta { color: #86b5af; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    /* 안쪽 여백은 무대 너비를 기준으로 잡는다. %로 두면 body 너비를 따라가서
+       화면이 넓을수록 여백만 커지고 글자가 작아진다. */
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 12% 6%, rgba(247,227,106,0.38) 0%, transparent 55%),
+      radial-gradient(ellipse at 86% 92%, rgba(23,138,130,0.15) 0%, transparent 60%);
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
+  }
+  /* 우측 상단 — 원고지 칸 */
+  .stage::before {
+    content: ""; position: absolute; top: 5%; right: -2%;
+    width: 19%; height: 44%; pointer-events: none; opacity: 0.075;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 180'><g fill='none' stroke='%23178a82'><rect x='6' y='6' width='188' height='168' stroke-width='3'/><path stroke-width='1.3' d='M6 48 H194 M6 90 H194 M6 132 H194 M53 6 V174 M100 6 V174 M147 6 V174'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.9cqw, 5.88rem); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.55cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.15cqw solid var(--ink);
+    align-self: flex-start; flex-shrink: 0;
+  }
+  h2.slide-title .qm {
+    font-family: "Noto Sans KR", sans-serif; font-weight: 400;
+    font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
+    margin-left: 0.8em; vertical-align: 0.18em;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.8rem, 1.68cqw, 2.02rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); color: var(--ink-soft); line-height: 1.8; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.5cqw, 3rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.4cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.46cqw, 1.76rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+
+  /* ── 줄글 ─────────────────────────────────────────────
+     지문의 흐름을 옮긴 본문. 인용구와 한 결로 읽히도록 명조로 두고
+     한 칸에 몰지 않고 전폭으로 편다. 좁은 칸에 넣으면 자간이 벌어진다. */
+  .story-head {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.38em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+  }
+  .story-head .rng { font-family: "Noto Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
+    line-height: 1.88; color: var(--ink); text-align: justify;
+  }
+  .story + .story { margin-top: 0.55em; }
+
+  /* 원문을 그대로 옮긴 줄. 본문 글꼴에 옅은 바탕과 왼쪽 선만 더한다 */
+  .cite {
+    font-family: "Gowun Batang", "Noto Serif KR", serif;
+    font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
+    line-height: 1.86; color: var(--ink);
+    background: rgba(244,165,138,0.16);
+    border-left: 0.26em solid #efb09a;
+    padding: 0.65em 0.9em;
+  }
+  .cite .attr {
+    display: block; margin-top: 0.42em;
+    font-family: "Noto Sans KR", sans-serif; font-size: 0.68em;
+    color: var(--ink-faint); letter-spacing: 0.03em;
+  }
+
+  .emotion {
+    background: var(--card); border-left: 0.32cqw solid var(--key);
+    padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76;
+    color: var(--ink-soft); padding-left: 1.2em; position: relative;
+  }
+  .emotion li + li { margin-top: 0.45em; }
+  .emotion li::before { content: "\2022"; position: absolute; left: 0.15em; color: var(--key-soft); }
+  .emotion li.q { color: var(--ink); }
+  .emotion li.q::before { content: "?"; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); left: 0; }
+  .emotion strong { color: var(--key); }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+  }
+  .info-table th { width: 4.2em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.7;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.15cqw solid var(--key); font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+  }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 4.6em; background: var(--card); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table strong { color: var(--key); }
+  .cmp-table caption {
+    caption-side: top; text-align: left; color: var(--ink-soft);
+    font-size: clamp(0.8rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs)));
+    padding-bottom: 0.6em;
+  }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.76;
+    padding-left: 1.7em; position: relative; margin-bottom: 0.62em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
+  .num-list strong { color: var(--key); }
+
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw; }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); line-height: 1.82; color: var(--ink-soft); }
+  .def-box strong { color: var(--key); }
+
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw; }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .c3 strong { color: var(--key); }
+
+  /* 어휘 풀이 */
+  .gloss { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8cqw 2.2cqw; }
+  .gl { display: flex; gap: 0.85cqw; align-items: baseline; padding-bottom: 0.52em; border-bottom: 1px solid var(--rule); }
+  .gl .gw {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.9rem, calc(2.08cqw * var(--fs)), calc(2.5rem * var(--fs))); width: 5em; flex-shrink: 0;
+  }
+  .gl .gd { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+
+  /* 스트레스 반응 단계 */
+  .flow { display: flex; align-items: stretch; gap: 0.7cqw; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
+    padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); margin-bottom: 0.42em;
+  }
+  .flow-step .desc { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+  .flow-arrow { display: flex; align-items: center; color: var(--key-soft); font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); }
+
+  /* 확인 문제 */
+  .quiz-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .quiz-guide { font-size: clamp(0.9rem, calc(1.96cqw * var(--fs)), calc(2.35rem * var(--fs))); color: var(--ink-soft); margin-bottom: 1.5cqw; }
+  .quiz-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1.05rem, calc(2.6cqw * var(--fs)), calc(3.12rem * var(--fs))); line-height: 1.8;
+    padding: 2.0cqw 2.3cqw; background: var(--card); border: 1px solid var(--rule);
+  }
+  .blank {
+    display: inline-block; min-width: 5em; text-align: center;
+    color: var(--key); border-bottom: 2px solid var(--key); font-weight: 700;
+  }
+  .answer-badge {
+    display: inline-block; font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.3rem, calc(3.4cqw * var(--fs)), calc(4.08rem * var(--fs))); color: var(--paper);
+    background: var(--key); padding: 0.45rem 1.7rem; margin-bottom: 1.8cqw;
+  }
+  .answer-desc {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.88; color: var(--ink-soft);
+    max-width: 44em;
+  }
+  .answer-desc strong { color: var(--key); }
+
+  .summary-list { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.35cqw; }
+  .srow { display: flex; gap: 1.8cqw; align-items: baseline; }
+  .srow .skey {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); width: 4.4em; flex-shrink: 0; text-align: right;
+  }
+  .srow .sval { flex: 1; font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.78; }
+  .srow .sval strong { color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -2.7cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.32cqw, 1.58rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #a6d3cc; font-size: 0.86rem; }
+  .controls button {
+    background: #1a4b48; color: #e4f4f1; border: 1px solid #2f7670;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #22625d; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #7dada6; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w); height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cards2, .gloss { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* 내용이 많아 자리가 빠듯한 장 — 여백만 줄이고 글자 크기는 지킨다 */
+  .slide.tight .story { line-height: 1.74; }
+  .slide.tight .emotion { padding: 0.95cqw 1.35cqw; }
+  .slide.tight .emotion .etag { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .emotion li + li { margin-top: 0.28em; }
+  .slide.tight .story-head { margin-bottom: 0.42em; padding-bottom: 0.26em; }
+  .slide.tight .cite { padding: 0.5em 0.75em; }
+  .slide.tight .c3 { padding: 1.1cqw 1.2cqw; }
+  .slide.tight .c3 h3 { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .gl { padding-bottom: 0.38em; }
+  .slide.tight .num-list li { margin-bottom: 0.4em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.42em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.42em 0.42em; }
+
+  /* 세 칸 카드 */
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6cqw; }
+  @media (max-width: 720px) { .cards3 { grid-template-columns: 1fr; gap: 1rem; } }
+  /* 활동 지시문 */
+  .act-q {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+    color: var(--ink); margin-bottom: 1.3cqw; flex: 0 0 auto;
+  }
+  .act-q .no { color: var(--key); font-weight: 700; margin-right: 0.4em; }
+  /* 빈칸 */
+  .q { color: var(--ink-faint); }
+  .cmp-table th.c, .info-table th.c { color: var(--key); }
+  /* 표 안의 작은 글머리 */
+  .cmp-table td ul, .info-table td ul { list-style: none; }
+  .cmp-table td li, .info-table td li { padding-left: 1.1em; position: relative; }
+  .cmp-table td li::before, .info-table td li::before { content: "\2022"; position: absolute; left: 0.1em; color: var(--key-soft); }
+  .cmp-table td li + li, .info-table td li + li { margin-top: 0.22em; }
+  .cite .add { color: var(--key); font-weight: 700; }
+  .flow-step.sm { padding: 1.1cqw 0.9cqw; }
+  .flow-step.sm .emo { font-size: clamp(0.88rem, calc(1.96cqw * var(--fs)), calc(2.35rem * var(--fs))); margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_1학년.html">&larr; 1학년</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">논증하는 글 쓰기 &middot; 1학년 1차시 &middot; 업데이트 2026. 10. 12.</div>
+</div>
+
+<div class="stage" id="stage">
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">쓰 　 기</div>
+    <h1 class="title-main">논증하는 글 쓰기</h1>
+    <div class="rule"></div>
+    <div class="sub">작문 관습과 논증 요소 &middot; 범석이의 초고 읽기</div>
+    <div class="foot">
+      <span>공통국어2 &middot; 3. 글로 읽는 세상, 세상을 움직이는 글</span>
+      <span>1학년 &middot; 1차시</span>
+    </div>
+      <div class="page-num">1 / 30</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" style="--fs:1.24;">
+    <h2 class="slide-title">학습 목표<span class="qm">교과서 140쪽</span></h2>
+    <div class="body-area">
+      <ul class="num-list" style="margin-bottom:1.6cqw;">
+        <li><span class="n">1</span>언어 공동체가 공유하는 작문 관습의 특성을 이해하고 쓰기 과정과 전략을 점검하며 책임감 있게 글을 쓴다.</li>
+        <li><span class="n">2</span>논증 요소에 따른 분석을 바탕으로 하여 효과적으로 내용을 조직하여 논증하는 글을 쓴다.</li>
+      </ul>
+      <div class="emotion">
+        <div class="etag">1차시에 할 일</div>
+        <ul>
+          <li>작문 관습과 쓰기 과정을 익히고, 범석이가 쓴 초고에서 논증 요소와 논증 방법을 찾는다. 교과서 142~147쪽, 활동 1에 해당하는 시간이다.</li>
+          <li>2차시에는 같은 과정을 따라 논증하는 글을 직접 쓴다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">2 / 30</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" style="--fs:1.22;">
+    <h2 class="slide-title">기초 개념 짚고 가기<span class="qm">교과서 140~141쪽</span></h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.6cqw;">
+        <div class="c3">
+          <h3><span class="word">언어 공동체</span></h3>
+          <p>같은 언어를 사용하면서 생활하는 사회 집단.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">논증</span></h3>
+          <p>옳고 그름을 이유나 근거를 들어 밝힘.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">삶과 연관 짓기</div>
+        <ul>
+          <li class="q">내 주장을 펼치기 위해 글을 써 본 적이 있나요?</li>
+          <li>없다면, 늦은 밤에 세탁기를 쓰지 말자는 것처럼 생활 속에서 주장하고 싶은 문제가 있는지 떠올려 본다. 논증은 어려운 것이 아니라 상대를 설득하기 위해 일상에서 늘 이루어지는 일이다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">3 / 30</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" style="--fs:1.20;">
+    <h2 class="slide-title">작문 관습<span class="qm">교과서 142쪽</span></h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.6cqw;">
+        <div class="dt">정의</div>
+        <p>글을 쓸 때 따라야 하는 질서로, 글의 <strong>형식</strong>과 <strong>책임감 있는 태도</strong>를 모두 포함한다.</p>
+      </div>
+      <div class="def-box" style="margin-bottom:1.6cqw;">
+        <div class="dt">형식적 측면에서의 관습</div>
+        <p>주제, 주제를 다루는 방식, 내용의 조직과 표현 방식, 사용하는 어휘 등에 관한 것으로, 쓰려는 글의 종류에 따라 달라진다.</p>
+      </div>
+      <div class="emotion">
+        <ul>
+          <li>쉽게 말하면 설명문을 설명문답게, 논설문을 논설문답게 하는 글의 특징이다. 정보를 전달하는 글, 설득하는 글, 정서를 표현하는 글은 작문 관습이 서로 다르다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">4 / 30</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" style="--fs:1.55;">
+    <h2 class="slide-title">작문 관습 &middot; 태도적 측면<span class="qm">교과서 142쪽</span></h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.6cqw;">
+        <div class="dt">태도적 측면에서의 관습</div>
+        <p>글쓴이가 지켜야 하는 <strong>쓰기 윤리</strong>에 관한 것이다.</p>
+      </div>
+      <div class="cards2">
+        <div class="c3">
+          <h3><span class="word">개인적 쓰기 윤리</span></h3>
+          <p>생각과 감정을 진솔하게 표현하기</p>
+          <p>독자를 존중하고 배려하여 표현하기</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">사회적 쓰기 윤리</span></h3>
+          <p>타인의 지식 재산 존중하기</p>
+        </div>
+      </div>
+    </div>
+      <div class="page-num">5 / 30</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" style="--fs:1.45;">
+    <h2 class="slide-title">논증하는 글이 따라야 하는 작문 관습<span class="qm">교과서 143쪽</span></h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>주장이 참이라는 것을 증명하여 <strong>독자의 태도나 행동을 변화시키려는 목적</strong>으로 쓴다.</li>
+        <li><span class="n">2</span>주장과 그 주장을 지지하는 객관적 자료인 근거, 근거를 바탕으로 하여 주장을 가능하게 하는 주관적 요인인 이유, 예상되는 반론과 이에 대한 반박 등의 <strong>논증 요소</strong>를 포함한다.</li>
+        <li><span class="n">3</span>연역법과 귀납법 등 <strong>논증 방법</strong>을 활용하여 내용을 조직한다.</li>
+        <li><span class="n">4</span><strong>명확하고 객관적인 표현과 어휘</strong>를 사용한다.</li>
+      </ul>
+    </div>
+      <div class="page-num">6 / 30</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" style="--fs:1.57;">
+    <h2 class="slide-title">논증 요소<span class="qm">교과서 143쪽</span></h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>주장</th><td>글쓴이가 참이라고 증명하려는 것.</td></tr>
+        <tr><th>근거</th><td>주장을 지지하는 <strong>객관적 자료</strong>.</td></tr>
+        <tr><th>이유</th><td>근거를 바탕으로 하여 주장을 가능하게 하는 <strong>주관적 요인</strong>.</td></tr>
+        <tr><th>반론과 반박</th><td>예상되는 반론과 이에 대한 반박.</td></tr>
+      </table>
+    </div>
+      <div class="page-num">7 / 30</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">이유와 근거의 구별<span class="qm">지도서 참고 자료</span></h2>
+    <div class="body-area">
+      <p class="story" style="margin-bottom:1.4cqw;">국어과 교육과정에서는 두 개념이 대체로 유사하지만 객관적이거나 논리적인 정도에 차이가 있는 것으로 본다. 윌리엄스와 콜럼은 둘을 다음과 같이 구별한다.</p>
+      <div class="cards2" style="margin-bottom:1.4cqw;">
+        <div class="c3">
+          <h3><span class="word">이유</span> reason</h3>
+          <p>필자가 생각해 낸 것. 무엇 때문에 그러한 주장을 하는지 밝힌다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">근거</span> evidence</h3>
+          <p>바깥세상에서 끌어온 것. 확실하고 믿을 만하며 독자가 확인하고 공유할 수 있는 정보여야 한다. 필자는 근거를 만들어 내는 것이 아니라 찾아서 &lsquo;보고&rsquo;한다.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <ul>
+          <li>범석이의 글에서 &lsquo;소유 소비는 우리에게 부정적 영향을 미친다&rsquo;는 이유이고, 이를 뒷받침하는 미국의 연구와 리친스 교수의 실험이 근거다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">8 / 30</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" style="--fs:1.68;">
+    <h2 class="slide-title">쓰기 과정과 전략<span class="qm">교과서 143쪽</span></h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.8cqw;">
+        <div class="flow-step sm"><div class="emo">계획하기</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step sm"><div class="emo">내용 생성하기</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step sm"><div class="emo">내용 조직하기</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step sm"><div class="emo">표현하기</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step sm"><div class="emo">고쳐쓰기</div></div>
+      </div>
+      <div class="emotion">
+        <div class="etag">논증하는 글을 쓸 때 쓸 수 있는 전략</div>
+        <ul>
+          <li>객관적인 통계 자료나 연구 자료 제시하기</li>
+          <li>다양한 사례 보여 주기</li>
+          <li>전문가의 말 인용하기</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">9 / 30</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" style="--fs:1.04;">
+    <h2 class="slide-title">쓰기 과정의 동시성과 회귀성<span class="qm">지도서 수업 연구 자료</span></h2>
+    <div class="body-area">
+      <p class="story" style="margin-bottom:1.4cqw;">계획하기가 끝나야 내용 생성하기가 시작되는 식으로 쓰기 과정이 순서대로 이어진다고 생각하기 쉽다. 그러나 자신의 글쓰기를 돌이켜 보면 그렇게 단순하지 않다.</p>
+      <div class="cards2" style="margin-bottom:1.4cqw;">
+        <div class="c3">
+          <h3><span class="word">동시성</span></h3>
+          <p>두 가지 이상의 쓰기 과정을 동시에 수행한다. 내용을 생성하는 동시에 조직하기도 하고, 조직하는 동시에 글로 작성하기도 한다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">회귀성</span></h3>
+          <p>언제든 이전 과정으로 되돌아간다. 글을 쓰다 말고 개요를 다시 짜기도 하고, 개요를 짜다 말고 새로운 내용을 떠올리기도 한다.</p>
+        </div>
+      </div>
+      <div class="cite">내용, 짜임, 표현과 어휘가 적절한지 등을 수시로 점검하면서 필요하면 이전 단계로 돌아가 조정한다.<span class="attr">교과서 150쪽 도움말</span></div>
+    </div>
+      <div class="page-num">10 / 30</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" style="--fs:1.31;">
+    <h2 class="slide-title">범석이의 초고 &lsquo;소유&rsquo;보다 &lsquo;경험&rsquo;<span class="qm">교과서 144~145쪽</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.4cqw;">
+        <tr><th>갈래</th><td>논증하는 글</td></tr>
+        <tr><th>제재</th><td>소유 소비와 경험 소비</td></tr>
+        <tr><th>주제</th><td>행복한 삶을 위해 소유 소비 대신 경험 소비를 추구해야 한다.</td></tr>
+        <tr><th>특징</th><td><ul>
+          <li>연역과 귀납의 방법으로 논증을 구성함.</li>
+          <li>소유 소비와 경험 소비를 대조하여 경험 소비의 장점을 부각함.</li>
+          <li>다양한 국내외 연구 결과를 인용하여 주장을 논리적으로 뒷받침함.</li>
+        </ul></td></tr>
+      </table>
+    </div>
+      <div class="page-num">11 / 30</div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" style="--fs:1.24;">
+    <h2 class="slide-title">초고 읽기 &middot; 1문단<span class="qm">교과서 144쪽</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.4cqw;">하지만 소비를 많이 할수록 더 행복해지는 것은 아니다. 물건에 집착하는 소비 방식은 환경은 물론, 우리 자신에게도 부정적인 영향을 미치기 때문이다. (&hellip;) 이에 이 글에서는 물건을 구매하여 소유하는 데 집착하는 &lsquo;소유 소비&rsquo;보다는 의미 있는 경험에 가치를 두는 &lsquo;경험 소비&rsquo;를 추구하는 것이 바람직하다고 이야기하고자 한다.</div>
+      <div class="emotion">
+        <ul>
+          <li>광고와 사회 관계망 서비스가 필요 이상으로 소비하도록 부추긴다는 현상에서 시작해, 마지막 문장에서 글의 <strong>주장</strong>을 밝힌다.</li>
+          <li>중요한 것은 얼마만큼 소비하느냐가 아니라 무엇을 어떻게 소비하느냐라고 말한다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">12 / 30</div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" style="--fs:1.19;">
+    <h2 class="slide-title">초고 읽기 &middot; 2문단<span class="qm">교과서 144쪽</span></h2>
+    <div class="body-area">
+      <p class="story" style="margin-bottom:1.4cqw;">소유 소비는 자기가 가진 물건을 다른 사람에게 과시하여 인정받고자 하는 욕구에서 비롯된다고 본다. 특히 자신의 소비 생활을 사회 관계망 서비스로 드러내는 젊은 세대 중에 이런 욕구에 과몰입하여 비합리적 소유 소비를 하는 사람이 적지 않다고 말한다.</p>
+      <div class="emotion">
+        <div class="etag">근거</div>
+        <ul>
+          <li>사회 관계망 서비스를 이용하는 사람들을 추적 관찰한 <strong>미국의 한 연구</strong>. 서비스를 통해 자신과 다른 사람을 비교하는 행위는 부정적 감정을 일으킨다.</li>
+          <li>소유 소비가 사회 관계망 서비스 이용과 맞물려 우울감이나 상대적 박탈감을 유발할 수 있음을 보여 준다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">13 / 30</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide" style="--fs:1.14;">
+    <h2 class="slide-title">초고 읽기 &middot; 3문단<span class="qm">교과서 144쪽</span></h2>
+    <div class="body-area">
+      <p class="story" style="margin-bottom:1.4cqw;">소유 소비가 주는 행복은 오래 지속되지 않으며 소비 중독으로 이어지기도 한다고 말한다.</p>
+      <div class="emotion">
+        <div class="etag">근거</div>
+        <ul>
+          <li>2013년 미국 미주리 대학교 <strong>마샤 리친스 교수의 실험</strong>. 대학생 174명을 물질만능주의적 가치관을 가진 A 그룹과 그렇지 않은 B 그룹으로 나누고 물건 구매 전후의 기분 변화를 추적했다.</li>
+          <li>A 그룹은 구매 전에는 더 큰 행복감을 느꼈지만, 결제 직후부터 행복감이 급격히 떨어졌고 지속 시간도 B 그룹보다 훨씬 짧았다. 강한 쾌락과 큰 실망감이 반복되었다.</li>
+          <li>소유 소비에 중독의 위험이 있음을 알려 준다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">14 / 30</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" style="--fs:1.19;">
+    <h2 class="slide-title">초고 읽기 &middot; 4문단<span class="qm">교과서 145쪽</span></h2>
+    <div class="body-area">
+      <p class="story" style="margin-bottom:1.4cqw;">소유 소비의 폐해를 극복할 대안으로 경험 소비를 제시한다. 경험 소비란 물건이 아닌 경험에 비용을 지불하는 소비 방식으로, 여행, 공연 관람, 스포츠 활동 등이 그 예다.</p>
+      <div class="cite" style="margin-bottom:1.4cqw;">인간은 행복한 경험을 함으로써 긍정적 자아를 형성할 수 있다. 사람들은 좋아하는 가수의 공연에 가서 행복을 느끼고는 하는데, 그렇다면 공연 관람을 위한 소비가 긍정적 자아를 형성하게 한 것이다.</div>
+      <div class="emotion">
+        <ul><li>경험 소비가 인간의 긍정적 자아 형성에 도움을 준다는 내용이다. 이 부분의 논증 방법은 뒤에서 다시 본다.</li></ul>
+      </div>
+    </div>
+      <div class="page-num">15 / 30</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" style="--fs:1.23;">
+    <h2 class="slide-title">초고 읽기 &middot; 5문단<span class="qm">교과서 145쪽</span></h2>
+    <div class="body-area">
+      <p class="story" style="margin-bottom:1.4cqw;">경험 소비는 소유 소비에 비해 더 큰 행복을 주기도 한다고 말하며 두 조사를 든다.</p>
+      <div class="cards2">
+        <div class="c3">
+          <h3>초등학생 대상 실험</h3>
+          <p>초등학교 3~4학년에게 한 명당 5만 원씩 주고 &lsquo;소비와 행복의 상관관계&rsquo;를 실험했다. 물건을 산 A 팀의 행복도는 31.5점에서 32점으로, 여행을 떠난 B 팀은 32.33점에서 34.83점으로 바뀌었다. 소비 만족도도 A 팀 27점, B 팀 29.83점.</p>
+        </div>
+        <div class="c3">
+          <h3>설문 조사</h3>
+          <p>미국의 심리학자 리프 반 보벤과 토머스 길로비치의 설문 조사. 물건에 돈을 쓴 사람은 34퍼센트만이, 경험에 돈을 쓴 사람은 57퍼센트가 더 행복해졌다고 응답했다.</p>
+        </div>
+      </div>
+    </div>
+      <div class="page-num">16 / 30</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">초고 읽기 &middot; 6문단<span class="qm">교과서 145쪽</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.4cqw;">같은 돈이라도 어떻게 쓰느냐에 따라 우리가 느끼는 행복감은 달라진다. 그렇다면 우리가 어떤 소비를 하는 것이 바람직한지는 분명하다. 우리 모두 물건을 구매하고 소유하는 것에서 벗어나 의미 있고 특별한 경험을 소비하자.</div>
+      <p class="story" style="margin-bottom:1.4cqw;">주장을 다시 밝히고 독자에게 행동을 권하며 글을 맺는다. 143쪽에서 본 &lsquo;독자의 태도나 행동을 변화시키려는 목적&rsquo;이 드러나는 자리다.</p>
+      <div class="gloss">
+        <div class="gl"><span class="gw">재화</span><span class="gd">사람이 바라는 바를 충족시켜 주는 모든 물건.</span></div>
+        <div class="gl"><span class="gw">물질만능주의</span><span class="gd">돈만 있으면 무엇이든지 마음대로 할 수 있다는 사고방식이나 태도.</span></div>
+        <div class="gl"><span class="gw">폐해</span><span class="gd">어떤 일이나 행동에서 나타나는 나쁜 경향이나 현상 때문에 생기는 해로움.</span></div>
+        <div class="gl"><span class="gw">상관관계</span><span class="gd">두 가지 가운데 한쪽이 변화하면 다른 한쪽도 따라서 변화하는 관계.</span></div>
+      </div>
+    </div>
+      <div class="page-num">17 / 30</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">활동 1 &middot; 논증 요소 정리하기<span class="qm">교과서 146쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">1 (1)</span>이 글의 논증 요소를 다음과 같이 정리해 보자.</div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.5em;">요소</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><th>주장</th><td class="q">?</td></tr>
+          <tr><th>이유 1</th><td>소유 소비는 우리에게 부정적 영향을 미친다.</td></tr>
+          <tr><th>근거</th><td class="q">?</td></tr>
+          <tr><th>이유 2</th><td class="q">?</td></tr>
+          <tr><th>근거</th><td class="q">?</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">18 / 30</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide" style="--fs:1.29;">
+    <h2 class="slide-title">활동 1 &middot; 논증 요소 정리하기 &middot; 풀이 ①<span class="qm">교과서 146쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.5em;">요소</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><th>주장</th><td><strong>소유 소비보다 경험 소비를 추구하는 것이 바람직하다.</strong></td></tr>
+          <tr><th>이유 1</th><td>소유 소비는 우리에게 부정적 영향을 미친다.</td></tr>
+          <tr><th>근거</th><td><ul>
+            <li>(미국의 한 연구) 사회 관계망 서비스 이용과 맞물려 우울감, 상대적 박탈감 등 부정적 감정을 일으킨다.</li>
+            <li>(마샤 리친스 교수의 실험) 소비 이후 행복이 오래 지속되지 않으며 중독의 위험이 있다.</li>
+          </ul></td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">19 / 30</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide" style="--fs:1.39;">
+    <h2 class="slide-title">활동 1 &middot; 논증 요소 정리하기 &middot; 풀이 ②<span class="qm">교과서 146쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:5.5em;">요소</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><th>이유 2</th><td><strong>경험 소비는 우리에게 긍정적인 영향을 미친다.</strong> (인간의 긍정적 자아 형성에 도움을 주고, 소유 소비에 비해 더 큰 행복을 줌.)</td></tr>
+          <tr><th>근거</th><td><ul>
+            <li>(초등학생을 대상으로 한 소비와 행복의 상관관계 실험) 소유 소비에 비해 행복도가 더 크게 높아진다.</li>
+            <li>(리프 반 보벤과 토머스 길로비치가 진행한 설문 조사) 소유 소비에 비해 더 높은 비율로 행복해진다.</li>
+          </ul></td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">20 / 30</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide" style="--fs:1.24;">
+    <h2 class="slide-title">연역 논증<span class="qm">교과서 146쪽 도움말</span></h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.6cqw;">
+        <p>일반적인 원칙인 <strong>대전제</strong>와 특정 사례인 <strong>소전제</strong>로부터 하나의 <strong>결론</strong>을 끌어내는 논증 방식이다. 연역 논증이 성립하려면 전제들이 참이어야 하고 전제에 오류가 있으면 안 된다.</p>
+      </div>
+      <table class="cmp-table">
+        <caption>흔히 드는 예</caption>
+        <tbody>
+          <tr><th>대전제</th><td>모든 사람은 죽는다.</td></tr>
+          <tr><th>소전제</th><td>소크라테스는 사람이다.</td></tr>
+          <tr><th>결론</th><td>따라서 소크라테스는 죽는다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">21 / 30</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" style="--fs:1.16;">
+    <h2 class="slide-title">활동 1 &middot; 4문단의 연역 논증<span class="qm">교과서 146쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">1 (2) &#10102;</span>4문단에 사용된 연역 논증을 다음과 같이 정리해 보자.</div>
+      <div class="cite" style="margin-bottom:1.4cqw;">인간은 행복한 경험을 함으로써 긍정적 자아를 형성할 수 있다. 사람들은 좋아하는 가수의 공연에 가서 행복을 느끼고는 하는데, 그렇다면 공연 관람을 위한 소비가 긍정적 자아를 형성하게 한 것이다.</div>
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>대전제</th><td class="q">?</td></tr>
+          <tr><th>소전제</th><td>사람들은 좋아하는 가수의 공연을 관람하며 행복감을 느낀다.</td></tr>
+          <tr><th>결론</th><td class="q">?</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">22 / 30</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide" style="--fs:1.51;">
+    <h2 class="slide-title">활동 1 &middot; 4문단의 연역 논증 &middot; 풀이<span class="qm">교과서 146쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.6cqw;">
+        <tbody>
+          <tr><th>대전제</th><td><strong>인간은 행복한 경험을 함으로써 긍정적 자아를 형성할 수 있다.</strong></td></tr>
+          <tr><th>소전제</th><td>사람들은 좋아하는 가수의 공연을 관람하며 행복감을 느낀다.</td></tr>
+          <tr><th>결론</th><td><strong>공연 관람을 위한 소비가 긍정적 자아를 형성하게 할 수 있다.</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <ul>
+          <li>일반적인 원칙(행복한 경험은 긍정적 자아를 형성한다)을 특정 사례(공연 관람)에 적용해 결론을 끌어냈다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">23 / 30</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide" style="--fs:1.57;">
+    <h2 class="slide-title">귀납 논증<span class="qm">교과서 147쪽 도움말</span></h2>
+    <div class="body-area">
+      <div class="def-box" style="margin-bottom:1.6cqw;">
+        <p>구체적인 <strong>사례</strong>들로부터 일반적인 사실을 <strong>결론</strong>으로 이끌어 내는 논증 방식이다. 구체적인 사례 중 예외가 있는 경우 주장을 제대로 증명하기 어렵다.</p>
+      </div>
+      <div class="emotion">
+        <ul>
+          <li>연역 논증이 원칙에서 사례로 내려온다면, 귀납 논증은 사례에서 원칙으로 올라간다.</li>
+          <li class="q">범석이의 논증을 더 튼튼하게 하려면 어떤 사례를 덧붙일 수 있을까?</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">24 / 30</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide" style="--fs:1.73;">
+    <h2 class="slide-title">활동 1 &middot; 이 글의 귀납 논증<span class="qm">교과서 147쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">1 (2) &#10103;</span>이 글에 사용된 귀납 논증을 다음과 같이 정리해 보자.</div>
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>사례 1</th><td class="q">?</td></tr>
+          <tr><th>사례 2</th><td class="q">?</td></tr>
+          <tr><th>결론</th><td>경험 소비가 소유 소비보다 더 큰 행복을 준다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">25 / 30</div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide" style="--fs:1.42;">
+    <h2 class="slide-title">활동 1 &middot; 이 글의 귀납 논증 &middot; 풀이<span class="qm">교과서 147쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <tbody>
+          <tr><th>사례 1</th><td><strong>초등학교 3~4학년을 대상으로 하여 &lsquo;소비와 행복의 상관관계&rsquo;를 실험한 결과</strong>, 경험 소비를 한 팀이 소유 소비를 한 팀보다 행복도가 더 크게 높아졌고 소비 만족도도 높았다.</td></tr>
+          <tr><th>사례 2</th><td><strong>미국의 심리학자들이 진행한 설문 조사 결과</strong>, 소유 소비보다 경험 소비를 한 사람 중에 소비 이후 행복해졌다고 대답한 사람의 비율이 더 높았다.</td></tr>
+          <tr><th>결론</th><td>경험 소비가 소유 소비보다 더 큰 행복을 준다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div class="page-num">26 / 30</div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide tight" style="--fs:1.02;">
+    <h2 class="slide-title">활동 1 &middot; 고쳐 쓴 두 대목<span class="qm">교과서 147쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">2 (1)</span>다음은 범석이가 초고를 고쳐 쓴 것이다. 고쳐쓰기 과정에서 무엇을 고려하였는지 각각 이야기해 보자.</div>
+      <div class="cite" style="margin-bottom:1.1cqw;">소유 소비는 많은 경우 자신이 소유하고 있는 물건을 다른 사람에게 과시하여 인정받고자 하는 욕구에서 비롯된다. <span class="add">미국의 사회학자 소스타인 베블런 역시 그의 책 《유한계급론》에서 경쟁과 자존심이 과시 소비의 원인이라고 주장했다.</span> 특히 자신의 소비 생활을 &hellip;&hellip;<span class="attr">2문단</span></div>
+      <div class="cite">경험 소비는 소유 소비에 비해 더 큰 행복을 주기도 한다. <span class="add">이비에스(EBS) 다큐멘터리 《자본주의》에서</span> 초등학교 3~4학년을 대상으로 하여 &lsquo;소비와 행복의 상관관계&rsquo;를 실험한 결과에서 이를 확인할 수 있다.<span class="attr">5문단</span></div>
+    </div>
+      <div class="page-num">27 / 30</div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide" style="--fs:1.43;">
+    <h2 class="slide-title">활동 1 &middot; 고쳐 쓴 두 대목 &middot; 풀이<span class="qm">교과서 147쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.6cqw;">
+        <tbody>
+          <tr><th>2문단</th><td>권위 있는 <strong>전문가의 말을 인용</strong>하여 주장의 타당성과 신뢰성을 높이고자 했다.</td></tr>
+          <tr><th>5문단</th><td>근거로 인용한 실험 결과의 <strong>출처를 명확하게 밝혀서</strong> 신뢰성을 높이고자 했다.</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <ul>
+          <li>143쪽에서 본 쓰기 전략 가운데 &lsquo;전문가의 말 인용하기&rsquo;를 쓴 것이고, 출처를 밝힌 것은 사회적 쓰기 윤리(타인의 지식 재산 존중하기)에 해당한다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">28 / 30</div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide" style="--fs:1.20;">
+    <h2 class="slide-title">활동 1 &middot; 더 고쳐 쓸 부분<span class="qm">교과서 147쪽</span></h2>
+    <div class="body-area">
+      <div class="act-q"><span class="no">2 (2)</span>범석이의 초고에서 더 고쳐 써야 할 부분이 있는지 살펴보고, 적절하게 고쳐 보자.</div>
+      <div class="cite" style="margin-bottom:1.4cqw;">그 결과 A 그룹의 학생들은 물건을 구매하기 전에 B 그룹의 학생들보다 더 큰 행복감을 느꼈다. 그러므로 그 행복감은 물건값을 결제한 직후부터 급격히 떨어졌으며 행복감의 지속 시간이 B 그룹에 비해 훨씬 짧았다.<span class="attr">3문단</span></div>
+      <div class="emotion">
+        <ul>
+          <li>고쳐쓰기를 할 때에는 어법에 맞는 표현을 사용했는지, 글의 내용이 짜임새 있게 조직되었는지도 살펴본다.</li>
+          <li>어떤 기준으로 점검할지 막막하면 교과서 152쪽의 고쳐쓰기 점검 기준을 먼저 본다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">29 / 30</div>
+  </section>
+
+  <!-- 30 -->
+  <section class="slide" style="--fs:1.62;">
+    <h2 class="slide-title">활동 1 &middot; 더 고쳐 쓸 부분 &middot; 풀이<span class="qm">교과서 147쪽</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.4cqw;">그 결과 A 그룹의 학생들은 물건을 구매하기 전에 B 그룹의 학생들보다 더 큰 행복감을 느꼈다. <span class="add">그러나</span> 그 행복감은 물건값을 결제한 직후부터 급격히 떨어졌으며 &hellip;&hellip;</div>
+      <div class="emotion">
+        <ul>
+          <li>앞 문장(구매 전에는 더 큰 행복감을 느꼈다)과 뒤 문장(결제 직후부터 급격히 떨어졌다)은 서로 반대되는 내용이다. 접속어 &lsquo;그러므로&rsquo;를 <strong>&lsquo;그러나&rsquo;</strong>로 고쳐야 문장 사이의 응집성이 높아진다.</li>
+        </ul>
+      </div>
+    </div>
+      <div class="page-num">30 / 30</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 1</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 클릭으로 이동 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+  let syncingHash = false;
+
+  function updateButtons() {
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+  }
+
+  function show(n) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() { if (idx < slides.length - 1) show(idx + 1); }
+  function prev() { if (idx > 0) show(idx - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+  function toggleFullscreen() {
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.body.requestFullscreen().catch(() => {}); }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
