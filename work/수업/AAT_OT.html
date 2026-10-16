@@ -505,6 +505,9 @@
   .cmp-table.num td { text-align: center; }
   .slide.tight .cmp-table.num th, .slide.tight .cmp-table.num td { padding-top: 0.3em; padding-bottom: 0.3em; }
   .cmp-table.yrs td b { color: var(--key); }
+  .lead-note { font-size: clamp(0.8rem, calc(1.75cqw * var(--fs)), calc(2.1rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); flex: 0 0 auto; }
+  .src { position: absolute; left: 0; right: 7.5cqw; bottom: -2.7cqw; font-family: "IBM Plex Sans KR", sans-serif;
+    font-size: clamp(0.58rem, 1.05cqw, 1.26rem); color: var(--ink-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
 </head>
 <body>
@@ -530,7 +533,7 @@
       <span>2027학년도 수시모집요강 &middot; 2023~2026학년도 기출</span>
       <span>AAT &middot; 오리엔테이션</span>
     </div>
-    <div class="page-num">1 / 33</div>
+    <div class="page-num">1 / 45</div>
   </section>
 
 
@@ -552,13 +555,32 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">2 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 8·10쪽, 경북대 입학처, 「2027학년도 수시모집요강」 12쪽</div>
+    <div class="page-num">2 / 45</div>
   </section>
 
 
   <!-- 3 -->
+  <section class="slide" style="--fs:1.19;">
+    <h2 class="slide-title">대학이 밝힌 목적과 출제 경향</h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.3cqw;">
+        대학 전공과정을 이수하는데 있어서 반드시 요구되는 기본적인 지적 역량(텍스트를 읽고, 그에 서술된 사실적 정보와 의견을 분석하고 종합하며, 제3의 창의적인 의견을 제시하는 능력)의 함양과 점검에 중점을 둡니다.
+        <span class="attr">논술(AAT) 전형 목적</span>
+      </div>
+      <div class="cite">
+        우리 사회에서 이슈가 되고 있거나 사회 현실을 이해하는데 유용한 주제가 제시되며, 고등학교 교육과정을 정상적으로 마친 학생이 이해할 수 있는 인문・사회과학과 관련된 제시문이 주어짐.
+        <span class="attr">인문계열 출제 경향</span>
+      </div>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 8~9쪽</div>
+    <div class="page-num">3 / 45</div>
+  </section>
+
+
+  <!-- 4 -->
   <section class="slide" style="--fs:1.56;">
-    <h2 class="slide-title">2027학년도 일정<span class="qm">모집요강 14쪽</span></h2>
+    <h2 class="slide-title">2027학년도 일정</h2>
     <div class="body-area">
       <table class="info-table">
         <tr><th>원서 접수</th><td>2026. 9. 7.(월) ~ 9. 11.(금) &middot; 마감</td></tr>
@@ -567,13 +589,14 @@
         <tr><th>합격자 발표</th><td>12. 18.(금)</td></tr>
       </table>
     </div>
-    <div class="page-num">3 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 수시모집요강」 14쪽</div>
+    <div class="page-num">4 / 45</div>
   </section>
 
 
-  <!-- 4 -->
+  <!-- 5 -->
   <section class="slide tight" style="--fs:1.03;">
-    <h2 class="slide-title">인문계열 모집단위와 인원<span class="qm">2027학년도 &middot; 모집요강 16~20쪽</span></h2>
+    <h2 class="slide-title">인문계열 모집단위와 인원<span class="qm">2027학년도</span></h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.1cqw;">
         <thead><tr><th style="width:7.2em;">단과대학</th><th>모집단위와 논술(AAT) 인원</th><th style="width:3.4em;">계</th></tr></thead>
@@ -589,13 +612,14 @@
         <ul><li>자율전공학부 53, 간호학과 10, 산림과학&middot;조경학부 5, 컴퓨터학부(첨단AI컴퓨팅전공) 5</li></ul>
       </div>
     </div>
-    <div class="page-num">4 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 수시모집요강」 16~20쪽</div>
+    <div class="page-num">5 / 45</div>
   </section>
 
 
-  <!-- 5 -->
+  <!-- 6 -->
   <section class="slide" style="--fs:1.17;">
-    <h2 class="slide-title">수능 최저학력기준<span class="qm">모집요강 75쪽</span></h2>
+    <h2 class="slide-title">수능 최저학력기준</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.4cqw;">
         <thead><tr><th>모집단위</th><th style="width:13em;">국어, 수학, 영어, 탐구(1과목)</th></tr></thead>
@@ -613,13 +637,14 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">5 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 수시모집요강」 75쪽</div>
+    <div class="page-num">6 / 45</div>
   </section>
 
 
-  <!-- 6 -->
+  <!-- 7 -->
   <section class="slide" style="--fs:1.40;">
-    <h2 class="slide-title">학생부 교과 150점<span class="qm">모집요강 72쪽</span></h2>
+    <h2 class="slide-title">학생부 교과 150점</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.4cqw;">
         <thead><tr><th style="width:4.6em;">등급</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
@@ -636,35 +661,33 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">6 / 33</div>
-  </section>
-
-
-  <!-- 7 -->
-  <section class="slide" style="--fs:1.09;">
-    <h2 class="slide-title">경쟁률</h2>
-    <div class="body-area">
-      <table class="cmp-table" style="margin-bottom:1.4cqw;">
-        <thead><tr><th style="width:7em;">학년도</th><th>모집</th><th>지원</th><th>경쟁률</th></tr></thead>
-        <tbody>
-          <tr><th>2025</th><td>544명</td><td>9,572명</td><td>17.6 : 1</td></tr>
-          <tr><th>2026</th><td>554명</td><td>10,306명</td><td>18.6 : 1</td></tr>
-          <tr><th>2027</th><td>550명</td><td>11,288명</td><td><strong>20.5 : 1</strong></td></tr>
-        </tbody>
-      </table>
-      <div class="emotion">
-        <div class="etag">인문계열은 평균보다 높다</div>
-        <ul>
-          <li>위는 의약학계열과 자연계열을 합친 전형 전체의 수치다.</li>
-          <li>2026학년도 인문계열 모집단위 24곳(뒤의 입결 표)은 119명 모집에 2,916명이 지원해 <strong>24.5 : 1</strong>이었다.</li>
-        </ul>
-      </div>
-    </div>
-    <div class="page-num">7 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 수시모집요강」 72쪽</div>
+    <div class="page-num">7 / 45</div>
   </section>
 
 
   <!-- 8 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">경쟁률</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.0cqw;">
+        <thead><tr><th style="width:7em;">학년도</th><th>모집</th><th>지원</th><th>경쟁률</th></tr></thead>
+        <tbody>
+          <tr><th>2024</th><td>506명</td><td>12,841명</td><td>25.4 : 1</td></tr>
+          <tr><th>2025</th><td>544명</td><td>9,585명</td><td>17.6 : 1</td></tr>
+          <tr><th>2026</th><td>554명</td><td>10,306명</td><td>18.6 : 1</td></tr>
+          <tr><th>2027</th><td>550명</td><td>11,288명</td><td><strong>20.5 : 1</strong></td></tr>
+          <tr><th>2026 인문</th><td>119명</td><td>2,916명</td><td><strong>24.5 : 1</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="lead-note">위 네 줄은 자연계열을 합친 전형 전체, 마지막 줄은 인문계열 모집단위 24곳의 합계다.</p>
+    </div>
+    <div class="src">출처: 2024~2026 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 8쪽 / 2027 경북대학교 보도자료(2026. 9.)</div>
+    <div class="page-num">8 / 45</div>
+  </section>
+
+
+  <!-- 9 -->
   <section class="slide" style="--fs:1.16;">
     <h2 class="slide-title">지원자와 실제 경쟁자<span class="qm">2026학년도 인문계열 모집단위</span></h2>
     <div class="body-area">
@@ -684,12 +707,13 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">8 / 33</div>
+    <div class="src">출처: 경북대 입학처 자료실, 2025·2026학년도 입학전형 결과(모집단위별 합산) / 응시 인원 경북대학교 보도자료(2025. 11. 24.)</div>
+    <div class="page-num">9 / 45</div>
   </section>
 
 
-  <!-- 9 -->
-  <section class="slide tight" style="--fs:1.22;">
+  <!-- 10 -->
+  <section class="slide tight" style="--fs:1.35;">
     <h2 class="slide-title">2026학년도 입결 &middot; 인문대학 ①</h2>
     <div class="body-area">
       <table class="cmp-table num">
@@ -704,12 +728,13 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">9 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 16~18쪽(2026학년도 지원결과, 입학자 평균 성적)</div>
+    <div class="page-num">10 / 45</div>
   </section>
 
 
-  <!-- 10 -->
-  <section class="slide tight" style="--fs:1.43;">
+  <!-- 11 -->
+  <section class="slide tight" style="--fs:1.56;">
     <h2 class="slide-title">2026학년도 입결 &middot; 인문대학 ②</h2>
     <div class="body-area">
       <table class="cmp-table num">
@@ -723,12 +748,13 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">10 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 16~18쪽(2026학년도 지원결과, 입학자 평균 성적)</div>
+    <div class="page-num">11 / 45</div>
   </section>
 
 
-  <!-- 11 -->
-  <section class="slide tight" style="--fs:1.00;">
+  <!-- 12 -->
+  <section class="slide tight" style="--fs:1.05;">
     <h2 class="slide-title">2026학년도 입결 &middot; 사회과학대학</h2>
     <div class="body-area">
       <table class="cmp-table num">
@@ -745,12 +771,13 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">11 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 16~18쪽(2026학년도 지원결과, 입학자 평균 성적)</div>
+    <div class="page-num">12 / 45</div>
   </section>
 
 
-  <!-- 12 -->
-  <section class="slide tight" style="--fs:1.22;">
+  <!-- 13 -->
+  <section class="slide tight" style="--fs:1.35;">
     <h2 class="slide-title">2026학년도 입결 &middot; 경상대학 외<span class="qm">자율전공학부 경쟁률은 자연계열 응시자 포함</span></h2>
     <div class="body-area">
       <table class="cmp-table num">
@@ -765,11 +792,12 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">12 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 16~18쪽(2026학년도 지원결과, 입학자 평균 성적)</div>
+    <div class="page-num">13 / 45</div>
   </section>
 
 
-  <!-- 13 -->
+  <!-- 14 -->
   <section class="slide" style="--fs:1.65;">
     <h2 class="slide-title">입결에서 보이는 것</h2>
     <div class="body-area">
@@ -780,11 +808,12 @@
         <li><span class="n">4</span>합격과 불합격은 결국 <strong>논술 점수</strong>에서 갈린다.</li>
       </ul>
     </div>
-    <div class="page-num">13 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 16~18쪽에서 인문계열 모집단위 24곳을 모아 계산</div>
+    <div class="page-num">14 / 45</div>
   </section>
 
 
-  <!-- 14 -->
+  <!-- 15 -->
   <section class="slide" style="--fs:1.37;">
     <h2 class="slide-title">시험의 생김새</h2>
     <div class="body-area">
@@ -796,11 +825,12 @@
         <tr><th>답</th><td><strong>제시문에 있는 내용</strong>으로 답한다. 외운 지식을 묻지 않는다</td></tr>
       </table>
     </div>
-    <div class="page-num">14 / 33</div>
+    <div class="src">출처: 경북대 입학처, 선행학습영향평가 보고서(2023·2024·2026학년도)와 2025학년도 문항 및 해설</div>
+    <div class="page-num">15 / 45</div>
   </section>
 
 
-  <!-- 15 -->
+  <!-- 16 -->
   <section class="slide" style="--fs:1.05;">
     <h2 class="slide-title">단답형과 약술형</h2>
     <div class="body-area">
@@ -823,11 +853,12 @@
         <ul><li>2023학년도 3개, 2024학년도 4개, 2025학년도 3개, 2026학년도 1개. 나머지는 모두 약술형이다.</li></ul>
       </div>
     </div>
-    <div class="page-num">15 / 33</div>
+    <div class="src">출처: 2023~2026학년도 인문계열 문제지, 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 22~23쪽</div>
+    <div class="page-num">16 / 45</div>
   </section>
 
 
-  <!-- 16 -->
+  <!-- 17 -->
   <section class="slide tight" style="--fs:1.06;">
     <h2 class="slide-title">채점은 요소별로<span class="qm">2026학년도 4-2 &middot; 140자 이내 &middot; 30점</span></h2>
     <div class="body-area">
@@ -847,11 +878,12 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">16 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2026학년도 선행학습영향평가 보고서 문항카드 4 / 감점 기준 2025학년도 모의고사 문항해설</div>
+    <div class="page-num">17 / 45</div>
   </section>
 
 
-  <!-- 17 -->
+  <!-- 18 -->
   <section class="slide" style="--fs:1.69;">
     <h2 class="slide-title">답안지<span class="qm">2026학년도 3-2 예시 답안 &middot; 50자 이내</span></h2>
     <div class="body-area">
@@ -865,13 +897,14 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">17 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2026학년도 선행학습영향평가 보고서 문항카드 3, 논술(AAT) 답안지 양식</div>
+    <div class="page-num">18 / 45</div>
   </section>
 
 
-  <!-- 18 -->
+  <!-- 19 -->
   <section class="slide" style="--fs:1.19;">
-    <h2 class="slide-title">시험 당일<span class="qm">모집요강 62쪽 &middot; 문제지 유의 사항</span></h2>
+    <h2 class="slide-title">시험 당일</h2>
     <div class="body-area">
       <table class="info-table">
         <tr><th>입실</th><td>09:00까지. 고사장은 11. 24.에 공지한다</td></tr>
@@ -882,13 +915,14 @@
         <tr><th>0점</th><td>답안지에 신원을 드러내거나 문제와 관계없는 내용을 쓴 경우</td></tr>
       </table>
     </div>
-    <div class="page-num">18 / 33</div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 수시모집요강」 62쪽, 2024학년도 논술(AAT) 문제지 수험생 유의 사항</div>
+    <div class="page-num">19 / 45</div>
   </section>
 
 
-  <!-- 19 -->
+  <!-- 20 -->
   <section class="slide tight" style="--fs:1.03;">
-    <h2 class="slide-title">4개년 출제 &middot; 2023~2024학년도<span class="qm">대학 공개 문항카드의 과목과 핵심 개념</span></h2>
+    <h2 class="slide-title">4개년 출제 &middot; 2023~2024학년도</h2>
     <div class="body-area">
       <table class="cmp-table yrs">
         <thead><tr><th style="width:3.2em;">문항</th><th>2023학년도</th><th>2024학년도</th></tr></thead>
@@ -902,13 +936,14 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">19 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2023·2024학년도 선행학습영향평가 보고서 문항카드</div>
+    <div class="page-num">20 / 45</div>
   </section>
 
 
-  <!-- 20 -->
+  <!-- 21 -->
   <section class="slide tight" style="--fs:1.07;">
-    <h2 class="slide-title">4개년 출제 &middot; 2025~2026학년도<span class="qm">대학 공개 문항카드의 과목과 핵심 개념</span></h2>
+    <h2 class="slide-title">4개년 출제 &middot; 2025~2026학년도</h2>
     <div class="body-area">
       <table class="cmp-table yrs">
         <thead><tr><th style="width:3.2em;">문항</th><th>2025학년도</th><th>2026학년도</th></tr></thead>
@@ -922,11 +957,12 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">20 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2025학년도 문항 및 해설, 2026학년도 선행학습영향평가 보고서 문항카드</div>
+    <div class="page-num">21 / 45</div>
   </section>
 
 
-  <!-- 21 -->
+  <!-- 22 -->
   <section class="slide" style="--fs:1.07;">
     <h2 class="slide-title">어느 과목에서 나오는가<span class="qm">2023~2026학년도 24문항 &middot; 여러 과목에 걸친 문항은 과목마다 셈</span></h2>
     <div class="body-area">
@@ -942,12 +978,13 @@
         </tbody>
       </table>
     </div>
-    <div class="page-num">21 / 33</div>
+    <div class="src">출처: 경북대 입학처, 선행학습영향평가 보고서(2023·2024·2026학년도)와 2025학년도 문항 및 해설의 문항카드 &lsquo;교육과정 과목명&rsquo;을 세어 정리</div>
+    <div class="page-num">22 / 45</div>
   </section>
 
 
-  <!-- 22 -->
-  <section class="slide" style="--fs:1.00;">
+  <!-- 23 -->
+  <section class="slide" style="--fs:1.04;">
     <h2 class="slide-title">표와 수치를 읽는 문항</h2>
     <div class="body-area">
       <table class="cmp-table" style="margin-bottom:1.4cqw;">
@@ -966,11 +1003,133 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">22 / 33</div>
+    <div class="src">출처: 2023~2026학년도 인문계열 문제지 / 난이도 2024·2026학년도 선행학습영향평가 보고서 검토위원 의견</div>
+    <div class="page-num">23 / 45</div>
   </section>
 
 
-  <!-- 23 -->
+  <!-- 24 -->
+  <section class="slide tight" style="--fs:1.04;">
+    <h2 class="slide-title">2027학년도 모의고사의 구성<span class="qm">2026. 7. 10.~12. 시행</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.1cqw;">
+        <thead><tr><th style="width:3.2em;">문항</th><th>제시문과 다룬 내용</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td>이강백 〈파수꾼〉, 전상국 〈우상의 눈물〉 &middot; 제4의 벽, 인물을 대하는 방식</td></tr>
+          <tr><th>2</th><td>사형을 정당화하는 두 입장 &middot; 공리주의(벤담)와 칸트의 응보주의</td></tr>
+          <tr><th>3</th><td>데이터 분석과 프라이버시 침해의 기준</td></tr>
+          <tr><th>4</th><td>우울증을 개인의 문제로 보게 된 과정, &lsquo;마음지킴&rsquo; 자기계발론</td></tr>
+          <tr><th>5</th><td>애덤 스미스의 &lsquo;보이지 않는 손&rsquo;과 찰스 다윈의 &lsquo;자연선택&rsquo;</td></tr>
+          <tr><th>6</th><td>사회명목론과 사회실재론, 행태주의의 한계</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <ul><li>1번 문학과 윤리, 경제, 사회&middot;문화 문항의 틀은 본고사 4개년과 같다. 소문항은 2~3개, 50~200자였다.</li></ul>
+      </div>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 40~81쪽(모의고사 문제지와 해설)</div>
+    <div class="page-num">24 / 45</div>
+  </section>
+
+
+  <!-- 25 -->
+  <section class="slide" style="--fs:1.22;">
+    <h2 class="slide-title">대학이 나눈 네 가지 유형</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:9.4em;">유형</th><th>평가하는 것</th></tr></thead>
+        <tbody>
+          <tr><th>분석 및 요약형</th><td>제시문을 정확하게 분석해 핵심 내용을 요약한다. 제시문이 여럿이면 공통점과 차이점을 본다</td></tr>
+          <tr><th>비판적 사고형</th><td>현상이나 주장의 문제점을 분석하고 비판한다</td></tr>
+          <tr><th>논리적 추론형</th><td>숨겨진 전제를 추론하거나, 전제에서 결론을 이끌어 낸다</td></tr>
+          <tr><th>문제 해결 및 대안 제시형</th><td>해결 방안을 제시한다. 다만 완전히 열린 방안이 아니라 <strong>제시문의 논리로 제한된</strong> 방안이다</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 25~30쪽</div>
+    <div class="page-num">25 / 45</div>
+  </section>
+
+
+  <!-- 26 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">짧은 예시 ① 숨겨진 전제 찾기<span class="qm">논리적 추론형 &middot; 30자 이내</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.2cqw;">
+        모든 개인은 자신의 소유물에 대해서 불가침의 권리와 더불어 처분할 수 있는 권리를 갖는다. 나의 몸 역시 나의 소유물이므로, 나는 나의 몸을 자유롭게 처분할 수 있는 권리, 즉 자살할 수 있는 권리를 갖는다.
+        <span class="attr">제시문 발췌 &middot; 자살을 정당화하는 사람의 주장</span>
+      </div>
+      <table class="info-table" style="margin-bottom:1.2cqw;">
+        <tr><th>대전제</th><td>누구나 자신의 소유물을 처분하는 것은 정당하다.</td></tr>
+        <tr><th>소전제</th><td>(　　　　　　　　　　)</td></tr>
+        <tr><th>결론</th><td>그러므로 내가 나의 몸을 처분하는 것은 정당하다.</td></tr>
+      </table>
+      <div class="cite reveal">
+        나의 몸은 나의 소유물이다.
+        <span class="attr">모범답안</span>
+      </div>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 29쪽(기출문제 예시)</div>
+    <div class="page-num">26 / 45</div>
+  </section>
+
+
+  <!-- 27 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">짧은 예시 ② 개념을 사례에 대기<span class="qm">50자 이내</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:0.9cqw;">
+        &hellip; 비언어적 표현은 언어적&middot;준언어적 표현 이외의 방식으로 의미를 표현하는 방법이다. &hellip; 비언어적 표현은 언어적 표현으로 드러내는 의미를 보완하고 강화하는 기능을 가지고 있으므로 &hellip;
+        <span class="attr">제시문 (가) 발췌</span>
+      </div>
+      <div class="cite" style="margin-bottom:0.9cqw;">
+        ㉡ 문자 메시지에서는 긍정적인 의미를 표시하기 위해 내용 뒤에 &lsquo;^^&rsquo;을(를), 부정적인 의미를 표시하기 위해 &lsquo;ㅠㅠ&rsquo;을(를) 덧붙이곤 한다.
+        <span class="attr">제시문 발췌</span>
+      </div>
+      <div class="bogi" style="margin-bottom:0.9cqw;">
+        <span class="tag">발문</span>
+        (가)에서 설명한 세 가지 표현 방식 중 ㉡에 가장 가까운 표현 방식을 찾아 쓰고, 그것의 역할을 제시하시오.
+      </div>
+      <div class="cite reveal">
+        비언어적 표현. 언어적 표현으로 드러나는 의미를 보완하고 강화한다.
+        <span class="attr">모범답안</span>
+      </div>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 30~31쪽(기출문제 예시)</div>
+    <div class="page-num">27 / 45</div>
+  </section>
+
+
+  <!-- 28 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">짧은 예시 ③ 표에서 범위 구하기<span class="qm">사회과학 유형</span></h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:0.5cqw;">
+        &hellip; 이때 정화시설을 설치하되 이로부터 농민이 얻는 이익의 ㉢ 일부를 공장에 지불한다면 공장과 농민의 이익이 모두 커진다.
+        <span class="attr">제시문 (나) 발췌 &middot; 코즈의 아이디어</span>
+      </div>
+      <table class="cmp-table num" style="margin-bottom:0.5cqw;">
+        <thead><tr><th>정화시설</th><th>공장의 이익</th><th>농민의 이익</th><th>총이익</th></tr></thead>
+        <tbody>
+          <tr><th>미설치</th><td>60</td><td>30</td><td>90</td></tr>
+          <tr><th>설치</th><td>40</td><td>70</td><td>110</td></tr>
+        </tbody>
+      </table>
+      <div class="bogi" style="margin-bottom:0.5cqw;">
+        <span class="tag">발문</span>
+        아래 식은 ㉢의 범위를 표현하고 있다. 제시문의 [표]를 바탕으로 괄호에 알맞은 숫자를 쓰시오. 　( 　 ) &lt; ㉢ &lt; ( 　 )
+      </div>
+      <div class="cite reveal">
+        ( 20 ) &lt; ㉢ &lt; ( 40 )
+        <span class="attr">모범답안</span>
+      </div>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 34~35쪽(기출문제 예시)</div>
+    <div class="page-num">28 / 45</div>
+  </section>
+
+
+  <!-- 29 -->
   <section class="slide tight" style="--fs:1.11;">
     <h2 class="slide-title">기출 살펴보기 ① 문학<span class="qm">2025학년도 1-1</span></h2>
     <div class="body-area">
@@ -979,7 +1138,7 @@
         <span class="attr">제시문(소설) 발췌</span>
       </div>
       <div class="cite" style="margin-bottom:1.0cqw;">
-        바람직하지 않은 속성이 불명예나 수치를 가져오는 경우 이를 낙인이라고 한다. &hellip; 이들을 보호하기 위한 장치가 때로는 낙인 효과를 강화한다는 점에서 양면성을 지닌다.
+        &hellip; 이처럼 바람직하지 않은 속성이 불명예나 수치를 가져오는 경우 이를 낙인이라고 한다. &hellip; 이들을 보호하기 위한 장치가 때로는 낙인 효과를 강화한다는 점에서 양면성을 지닌다.
         <span class="attr">&lt;보기&gt; 발췌</span>
       </div>
       <div class="bogi">
@@ -987,11 +1146,12 @@
         윗글에서 &lt;보기&gt;의 내용을 잘 보여주는 <b>사물을 찾아 쓰고</b>, 그것이 어떤 점에서 <b>양면성</b>을 지니는지 쓰시오.
       </div>
     </div>
-    <div class="page-num">23 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2025학년도 AAT 인문계열 문항 및 해설(문항카드 1)</div>
+    <div class="page-num">29 / 45</div>
   </section>
 
 
-  <!-- 24 -->
+  <!-- 30 -->
   <section class="slide" style="--fs:1.22;">
     <h2 class="slide-title">① 채점 기준과 예시 답안<span class="qm">2025학년도 1-1 &middot; 20점</span></h2>
     <div class="body-area">
@@ -1007,11 +1167,12 @@
         <span class="attr">예시 답안</span>
       </div>
     </div>
-    <div class="page-num">24 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2025학년도 AAT 인문계열 문항 및 해설(문항카드 1)</div>
+    <div class="page-num">30 / 45</div>
   </section>
 
 
-  <!-- 25 -->
+  <!-- 31 -->
   <section class="slide tight" style="--fs:1.00;">
     <h2 class="slide-title">기출 살펴보기 ② 빈칸 채우기<span class="qm">2023학년도 5-3</span></h2>
     <div class="body-area">
@@ -1028,11 +1189,12 @@
         &lt;보기&gt;를 참조하여 ㉡, ㉢에 들어갈 알맞은 말을 쓰시오.
       </div>
     </div>
-    <div class="page-num">25 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2023학년도 논술(AAT) 인문계열 문제지 5번</div>
+    <div class="page-num">31 / 45</div>
   </section>
 
 
-  <!-- 26 -->
+  <!-- 32 -->
   <section class="slide" style="--fs:1.14;">
     <h2 class="slide-title">② 채점 기준과 정답<span class="qm">2023학년도 5-3 &middot; 10점</span></h2>
     <div class="body-area">
@@ -1054,11 +1216,12 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">26 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2023학년도 선행학습영향평가 보고서 문항카드 5 / 확인하는 법은 수업용 정리</div>
+    <div class="page-num">32 / 45</div>
   </section>
 
 
-  <!-- 27 -->
+  <!-- 33 -->
   <section class="slide tight" style="--fs:1.00;">
     <h2 class="slide-title">기출 살펴보기 ③ 경제와 수치<span class="qm">2025학년도 2-2</span></h2>
     <div class="body-area">
@@ -1075,11 +1238,12 @@
         A가 어떤 시장을 선택하는 것이 <b>합리적</b>인지, 어떤 선택이 사회의 경제적인 <b>총가치를 극대화</b>하는지 각각 그 이유와 함께 서술하시오.
       </div>
     </div>
-    <div class="page-num">27 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2025학년도 AAT 인문계열 문항 및 해설(문항카드 2)</div>
+    <div class="page-num">33 / 45</div>
   </section>
 
 
-  <!-- 28 -->
+  <!-- 34 -->
   <section class="slide tight" style="--fs:1.11;">
     <h2 class="slide-title">③ 채점 기준과 예시 답안<span class="qm">2025학년도 2-2 &middot; 30점</span></h2>
     <div class="body-area">
@@ -1096,11 +1260,12 @@
         <span class="attr">예시 답안</span>
       </div>
     </div>
-    <div class="page-num">28 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2025학년도 AAT 인문계열 문항 및 해설(문항카드 2)</div>
+    <div class="page-num">34 / 45</div>
   </section>
 
 
-  <!-- 29 -->
+  <!-- 35 -->
   <section class="slide tight" style="--fs:1.00;">
     <h2 class="slide-title">기출 살펴보기 ④ 철학<span class="qm">2026학년도 5-1</span></h2>
     <div class="body-area">
@@ -1117,11 +1282,12 @@
         ㉡의 관점에서 &lt;보기&gt;의 논증을 비판하시오.
       </div>
     </div>
-    <div class="page-num">29 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2026학년도 선행학습영향평가 보고서 문항카드 5</div>
+    <div class="page-num">35 / 45</div>
   </section>
 
 
-  <!-- 30 -->
+  <!-- 36 -->
   <section class="slide tight" style="--fs:1.03;">
     <h2 class="slide-title">④ 채점 기준과 예시 답안<span class="qm">2026학년도 5-1 &middot; 20점</span></h2>
     <div class="body-area">
@@ -1139,16 +1305,17 @@
         <span class="attr">예시 답안</span>
       </div>
     </div>
-    <div class="page-num">30 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2026학년도 선행학습영향평가 보고서 문항카드 5</div>
+    <div class="page-num">36 / 45</div>
   </section>
 
 
-  <!-- 31 -->
+  <!-- 37 -->
   <section class="slide tight" style="--fs:1.23;">
     <h2 class="slide-title">기출 살펴보기 ⑤ 표 읽기<span class="qm">2026학년도 6-1</span></h2>
     <div class="body-area">
       <div class="cite" style="margin-bottom:1.0cqw;">
-        인간 사이에는 ㉠&lsquo;자연적 귀족제&rsquo;가 존재한다고 믿습니다. 그 근거는 덕성과 재능입니다. &hellip; 또 다른 형태로 ㉡&lsquo;인위적 귀족제&rsquo;가 있는데, 이는 덕성이나 재능 없이 오로지 부(富)와 혈통에 기반합니다.
+        &hellip; 인간 사이에는 ㉠&lsquo;자연적 귀족제&rsquo;가 존재한다고 믿습니다. 그 근거는 덕성과 재능입니다. &hellip; 또 다른 형태로 ㉡&lsquo;인위적 귀족제&rsquo;가 있는데, 이는 덕성이나 재능 없이 오로지 부(富)와 혈통에 기반합니다.
         <span class="attr">제시문 (가) 발췌 &middot; 토머스 제퍼슨의 편지</span>
       </div>
       <table class="cmp-table num" style="margin-bottom:1.0cqw;">
@@ -1160,11 +1327,12 @@
         ㉠과 ㉡ 중 &lt;표&gt;에 나타나는 A국의 현재 상황을 더 잘 설명하는 개념을 고르고 그 근거를 서술하시오.
       </div>
     </div>
-    <div class="page-num">31 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2026학년도 선행학습영향평가 보고서 문항카드 6</div>
+    <div class="page-num">37 / 45</div>
   </section>
 
 
-  <!-- 32 -->
+  <!-- 38 -->
   <section class="slide" style="--fs:1.14;">
     <h2 class="slide-title">⑤ 채점 기준과 예시 답안<span class="qm">2026학년도 6-1 &middot; 10점</span></h2>
     <div class="body-area">
@@ -1181,11 +1349,119 @@
         <span class="attr">예시 답안</span>
       </div>
     </div>
-    <div class="page-num">32 / 33</div>
+    <div class="src">출처: 경북대 입학처, 2026학년도 선행학습영향평가 보고서 문항카드 6</div>
+    <div class="page-num">38 / 45</div>
   </section>
 
 
-  <!-- 33 -->
+  <!-- 39 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">대학의 답 ① 학교 수업만으로 대비할 수 있나요?</h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.3cqw;">
+        경북대 논술(AAT) 시험은 논술 주제, 난이도, 답안의 분량 등을 고려할 때 학교 수업만으로도 충분히 대비할 수 있습니다. 학교 수업에 충실하고 수능시험을 열심히 준비하면서 최근 논술(AAT) 시험의 기출문제나 모의고사 문제를 풀어 본다면 좋은 성적을 거둘 수 있습니다.
+        <span class="attr">Q2에 대한 답</span>
+      </div>
+      <div class="cite">
+        제시문에서 다루고 있는 논술 주제는 고등학교의 교육과정이나 교과서에 나오는 것입니다. &hellip; 문제의 난이도도 수능 시험의 수준이기 때문에 고등학교 수준에서 충분히 풀 수 있는 문제입니다.
+        <span class="attr">같은 답의 인문계열 부분</span>
+      </div>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 10~11쪽(자주 묻는 질문)</div>
+    <div class="page-num">39 / 45</div>
+  </section>
+
+
+  <!-- 40 -->
+  <section class="slide tight" style="--fs:1.15;">
+    <h2 class="slide-title">대학의 답 ② 어떻게 써야 점수를 받나요?</h2>
+    <div class="body-area">
+      <div class="cite" style="margin-bottom:1.0cqw;">
+        짧은 답안 분량의 문항에서는 문제가 요구하는 핵심 내용을 정확하게 요약하여 서술할 때 좋은 점수를 받을 수 있으며, 상대적으로 긴 답안 분량의 문항에서는 주장과 근거가 분명히 드러나도록 답안을 서술할 때 좋은 점수를 받을 수 있습니다. 문제가 요구하는 정답의 논리를 어느 정도 반영하고 있는지, 그리고 표현의 완성도가 어느 정도인지를 기준으로 점수를 부여합니다.
+        <span class="attr">Q3에 대한 답 &middot; 약술형</span>
+      </div>
+      <table class="cmp-table num">
+        <thead><tr><th>대학이 든 예</th><th colspan="5">점수</th></tr></thead>
+        <tbody>
+          <tr><th>10점짜리 약술형</th><td>10 (A)</td><td>8 (B)</td><td>6 (C)</td><td>4 (D)</td><td>0 (F)</td></tr>
+          <tr><th>6점짜리 단답형, 2개 고르기</th><td colspan="2">둘 다 맞히면 6</td><td colspan="2">하나만 맞히면 3</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 11~13쪽(자주 묻는 질문)</div>
+    <div class="page-num">40 / 45</div>
+  </section>
+
+
+  <!-- 41 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">대학의 답 ③ 고쳐 쓰기와 기출 보기</h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>미리 쓰기</th><td>문제지의 여백에 답안을 미리 작성해 본 다음에 그 내용을 답안지에 옮겨 쓰는 것도 좋은 방법입니다.</td></tr>
+        <tr><th>고칠 때</th><td>원고지 교정부호를 사용하여 수정하면 됩니다. 연필로 쓴 경우에는 지우개로 지운 뒤 다시 써도 됩니다.</td></tr>
+        <tr><th>새 답안지</th><td>수정한 부분이 너무 많아 답안지 전체가 지저분하면 새로운 답안지를 요구하여 새로 작성해도 됩니다.</td></tr>
+        <tr><th>필기구</th><td>흑색 필기구. 볼펜, 만년필, 연필 모두 되지만 한 가지를 끝까지 써야 합니다.</td></tr>
+        <tr><th>기출</th><td>입학 홈페이지의 기출과 모의고사 해설에 제시문의 출전, 출제 의도, 문항 해설, 정답 기준이 모두 있습니다.</td></tr>
+      </table>
+    </div>
+    <div class="src">출처: 경북대 입학처, 「2027학년도 논술(AAT) 전형 가이드북」 13~14쪽(자주 묻는 질문)</div>
+    <div class="page-num">41 / 45</div>
+  </section>
+
+
+  <!-- 42 -->
+  <section class="slide" style="--fs:1.45;">
+    <h2 class="slide-title">합격생 후기 ① 어떻게 준비했나<span class="qm">인문논술 합격생</span></h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>교과 성적만으로 희망 학과에 지원하기 어렵다고 보고, 경북대 기출을 풀어 본 뒤 논술전형을 골랐다.</li>
+        <li><span class="n">2</span>최근 3개년 기출을 정답, 채점기준과 함께 썼다. <strong>먼저 답안을 쓰고</strong> 모범답안과 비교했다.</li>
+        <li><span class="n">3</span>어떤 유형이 반복되는지, 채점에서 어떤 요소가 중요한지를 살폈다. 채점기준과 대조하면 빠진 내용과 불필요한 서술이 구분된다.</li>
+        <li><span class="n">4</span>다른 대학 논술도 풀어 보며 경북대 논술과의 차이를 비교했다.</li>
+      </ul>
+    </div>
+    <div class="src">출처: 경북대학교 유튜브 「논술전형(인문) 합격수기」(2026. 7. 22.), 「교육을 비추다」 2026. 7. 23. 기사의 정리</div>
+    <div class="page-num">42 / 45</div>
+  </section>
+
+
+  <!-- 43 -->
+  <section class="slide" style="--fs:1.36;">
+    <h2 class="slide-title">합격생 후기 ② 시험장에서는</h2>
+    <div class="body-area">
+      <ul class="num-list" style="margin-bottom:1.3cqw;">
+        <li><span class="n">1</span>시험의 느낌을 <strong>&lsquo;국어 모의고사를 주관식으로 푸는 것&rsquo;</strong>에 비유했다.</li>
+        <li><span class="n">2</span>문제 자체가 지나치게 어렵지는 않았다. 그러나 답안은 짧아도 문항 수가 많아 <strong>시간 관리</strong>가 중요했다.</li>
+        <li><span class="n">3</span>그래서 기출을 풀 때도 실제 시험 시간에 맞춰 답안을 완성하는 연습이 필요하다.</li>
+      </ul>
+      <div class="cite">
+        비문학 보기 문제에 강한 사람이 합격을 쟁취할 수 있음
+        <span class="attr">모의고사 응시생의 한 줄 후기 &middot; 개인 의견</span>
+      </div>
+    </div>
+    <div class="src">출처: 1~3 경북대학교 유튜브 「논술전형(인문) 합격수기」, 「교육을 비추다」 2026. 7. 23. / 한 줄 후기 오르비 orbi.kr/00063315312 (2023. 6. 10.)</div>
+    <div class="page-num">43 / 45</div>
+  </section>
+
+
+  <!-- 44 -->
+  <section class="slide" style="--fs:1.42;">
+    <h2 class="slide-title">교육 언론이 정리한 준비 방법</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>경북대가 공개한 선행학습영향평가 보고서와 논술 가이드북으로 준비한다.</li>
+        <li><span class="n">2</span>보고서를 볼 때는 예시답안만 읽지 말고 <strong>채점기준을 먼저</strong> 살핀다.</li>
+        <li><span class="n">3</span>2027학년도 출제 범위와 기본 문항 구성은 2026학년도와 같다. 2027 모의고사로 올해 출제 방향을, 2026 본고사로 실전 난도와 세부 채점 방식을 점검한다.</li>
+        <li><span class="n">4</span>인문논술은 정답과 채점기준을 활용해 요구된 핵심 내용을 빠짐없이 쓰는 연습이 필요하다.</li>
+      </ul>
+    </div>
+    <div class="src">출처: 1~3 「한입신문」 2026. 9. 11. 김경화 기자 / 4 「교육을 비추다」 2026. 7. 23.</div>
+    <div class="page-num">44 / 45</div>
+  </section>
+
+
+  <!-- 45 -->
   <section class="slide" style="--fs:1.53;">
     <h2 class="slide-title">이 수업에서 하는 것</h2>
     <div class="body-area">
@@ -1205,14 +1481,15 @@
         </ul>
       </div>
     </div>
-    <div class="page-num">33 / 33</div>
+    <div class="page-num">45 / 45</div>
   </section>
+
 
 </div>
 
 <div class="controls">
   <button id="prev">&larr; 이전</button>
-  <span id="counter">1 / 33</span>
+  <span id="counter">1 / 45</span>
   <button id="next">다음 &rarr;</button>
   <button id="fs">전체화면</button>
   <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
