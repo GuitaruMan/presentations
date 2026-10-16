@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AAT, 어떤 시험인가 (AAT 오리엔테이션)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f4f3f0;
+    --paper-edge: #e2ddd6;
+    --ink: #23262b;
+    --ink-soft: #55585e;
+    --ink-faint: #979490;
+    --key: #34407d;
+    --key-soft: #7480b4;
+    --rule: #ded9d2;
+    --card: #fbfaf8;
+    --warn: #b0392c;
+    --warn-bg: #fbefed;
+    --warn-line: #e6c2bd;
+    --ok: #1d6b52;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #1c1e29;
+    font-family: "IBM Plex Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.012em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(28,30,41,0.94); z-index: 50;
+  }
+  .nav-top a { color: #bcc2dc; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #eceefa; }
+  .nav-meta { color: #989fbd; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    --stage-w: min(100%, 1180px, (100vh - 11rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      /* 종이 결 — 아주 옅은 사선 */
+      repeating-linear-gradient(112deg, rgba(120,108,92,0.030) 0 1px, transparent 1px 7px),
+      radial-gradient(ellipse at 14% 6%, rgba(255,253,249,0.9) 0%, transparent 62%),
+      radial-gradient(ellipse at 88% 94%, rgba(52,64,125,0.085) 0%, transparent 64%);
+    border: 1px solid var(--paper-edge); border-radius: 3px;
+    box-shadow: 0 14px 44px rgba(0,0,0,0.30);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
+  }
+  /* 우측 상단 — 원고지 칸 */
+  .stage::before {
+    content: ""; position: absolute; top: 5%; right: -2%;
+    width: 19%; height: 44%; pointer-events: none; opacity: 0.07;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%2334407d' stroke-width='2.4'><path d='M20 20 H180 V140 H20 Z M20 60 H180 M20 100 H180 M60 20 V140 M100 20 V140 M140 20 V140'/><path d='M20 140 V180 H100 V140 M60 140 V180'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.9cqw, 5.88rem); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.62cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.1cqw solid var(--rule);
+    align-self: flex-start; flex-shrink: 0; position: relative;
+  }
+  h2.slide-title::after {
+    content: ""; position: absolute; left: 0; bottom: -0.1cqw;
+    width: 2.6em; height: 0.26cqw; background: var(--key);
+  }
+  h2.slide-title .qm {
+    font-family: "IBM Plex Sans KR", sans-serif; font-weight: 400;
+    font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
+    margin-left: 0.8em; vertical-align: 0.18em;
+  }
+  h2.slide-title .ans-chip {
+    font-family: "IBM Plex Sans KR", sans-serif; font-weight: 700;
+    font-size: 0.46em; color: var(--paper); background: var(--key);
+    padding: 0.18em 0.7em; margin-left: 0.8em; vertical-align: 0.22em;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.8rem, 1.68cqw, 2.02rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); color: var(--ink-soft); line-height: 1.8; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.5cqw, 3rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.4cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.46cqw, 1.76rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+
+  /* 줄글 — 설명을 이어서 하는 본문 */
+  .story-head {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.38em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+  }
+  .story-head .rng { font-family: "IBM Plex Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
+    line-height: 1.88; color: var(--ink); text-align: justify;
+  }
+  .story + .story { margin-top: 0.55em; }
+
+  /* 기출 지문을 그대로 옮긴 자리 */
+  .cite {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
+    line-height: 1.86; color: var(--ink);
+    background: rgba(52,64,125,0.05);
+    border-left: 0.26em solid var(--rule);
+    padding: 0.65em 0.9em;
+  }
+  .cite .attr {
+    display: block; margin-top: 0.42em;
+    font-family: "IBM Plex Sans KR", sans-serif; font-size: 0.68em;
+    color: var(--ink-faint); letter-spacing: 0.03em;
+  }
+  /* 지문 안에서 눈여겨볼 대목 — 색을 바꾸지 않고 획만 더한다 */
+  .cite .hl, .story .hl { -webkit-text-stroke: 0.022em currentColor; color: var(--key); }
+  .cite .dim { color: var(--ink-faint); }
+
+  .emotion {
+    background: var(--card); border-left: 0.32cqw solid var(--key);
+    padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+    border-radius: 0 2px 2px 0;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76;
+    color: var(--ink-soft); padding-left: 1.2em; position: relative;
+  }
+  .emotion li + li { margin-top: 0.45em; }
+  .emotion li::before { content: "\2022"; position: absolute; left: 0.15em; color: var(--key-soft); }
+  .emotion li.q { color: var(--ink); }
+  .emotion li.q::before { content: "?"; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); left: 0; }
+  .emotion strong { color: var(--key); }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+  }
+  .info-table th { width: 5.4em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.7;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.15cqw solid var(--key); font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+  }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 5.2em; background: var(--card); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table strong { color: var(--key); }
+  .cmp-table caption {
+    caption-side: top; text-align: left; color: var(--ink-soft);
+    font-size: clamp(0.8rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs)));
+    padding-bottom: 0.6em;
+  }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.76;
+    padding-left: 1.7em; position: relative; margin-bottom: 0.62em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
+  .num-list strong { color: var(--key); }
+
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw;   border-radius: 2px;
+  }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); line-height: 1.82; color: var(--ink-soft); }
+  .def-box strong { color: var(--key); }
+
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw;   border-radius: 0 0 2px 2px;
+  }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.45em; }
+  .c3 strong { color: var(--key); }
+
+  /* 문단 흐름도 */
+  .flow { display: flex; align-items: stretch; gap: 0.7cqw; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
+    padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
+    border-radius: 0 0 2px 2px;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); margin-bottom: 0.42em;
+  }
+  .flow-step .desc { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+  .flow-arrow { display: flex; align-items: center; color: var(--key-soft); font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); }
+
+  /* 문단 첫 문장만 이어 읽기 */
+  .plines { display: flex; flex-direction: column; gap: 0.62em; }
+  .pline {
+    display: flex; gap: 0.9em; align-items: baseline;
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.5em;
+  }
+  .pline:last-child { border-bottom: none; }
+  .pline .pn {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    width: 3.4em; flex-shrink: 0; white-space: nowrap;
+  }
+  .pline .pt {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    line-height: 1.72; color: var(--ink);
+  }
+
+  /* 단계 공개 — opacity로만 숨겨 자리를 미리 잡아 둔다 */
+  .reveal { opacity: 0; transition: opacity .25s ease; }
+  .reveal.shown { opacity: 1; }
+
+  .quiz-list {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(2.6cqw * var(--fs)); flex: 1;
+  }
+  .body-area > .quiz-list { margin-bottom: 3.0cqw; }
+  .qq {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: max(1rem, calc(2.5cqw * var(--fs))); line-height: 1.6;
+    padding-left: calc(3.4cqw * var(--fs)); position: relative;
+  }
+  .qq .qn { position: absolute; left: 0; top: 0; color: var(--key); font-size: 1.05em; }
+  .qans {
+    margin: calc(1.0cqw * var(--fs)) 0 0 calc(3.4cqw * var(--fs));
+    background: var(--card); border-left: 0.34cqw solid var(--key);
+    padding: calc(1.1cqw * var(--fs)) calc(1.6cqw * var(--fs));
+    font-size: max(0.9rem, calc(2.1cqw * var(--fs))); line-height: 1.76; color: var(--ink-soft);
+  }
+  .qans .tag {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    margin-right: 0.7em;
+  }
+  .qans strong { color: var(--key); }
+
+  /* 지문 골격 — 문단마다 한 줄 요지와 한 줄 보충 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.0cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.25cqw; }
+  .para-no {
+    flex-shrink: 0; width: 5.6cqw;
+    background: var(--key); color: var(--paper);
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: calc(2.1cqw * var(--fs));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; background: var(--card); border: 1px solid var(--rule); border-left: none;
+    border-radius: 0 2px 2px 0;
+    padding: 1.1cqw 1.5cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: calc(2.2cqw * var(--fs)); font-weight: 700; line-height: 1.45; }
+  .para-body .t b { color: var(--key); }
+  .para-body .d {
+    font-size: calc(1.9cqw * var(--fs)); color: var(--ink-soft);
+    line-height: 1.55; margin-top: 0.35cqw;
+  }
+  .para-body .d b { color: var(--ink); }
+  .slide.tight .para-flow { gap: 0.75cqw; }
+  .slide.tight .para-body { padding: 0.85cqw 1.25cqw; }
+
+  /* 지문 인용 — 문단 번호를 붙여 여러 문단을 나란히 */
+  .passage { display: flex; flex-direction: column; gap: 1.0cqw; }
+  .pblock { display: flex; gap: 1.1cqw; align-items: flex-start; }
+  .pblock .pno {
+    flex-shrink: 0; width: 4.4em; padding-top: 0.2em;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(1.94cqw * var(--fs));
+  }
+  .pblock .ptx {
+    font-family: "Gowun Batang", serif;
+    font-size: calc(2.06cqw * var(--fs)); line-height: 1.82; color: var(--ink);
+  }
+  .pblock .ptx b { color: var(--key); -webkit-text-stroke: 0.02em currentColor; font-weight: 400; }
+  .pblock .ptx .dim { color: var(--ink-faint); }
+  .sub-note { display: block; margin-top: 0.25em; color: var(--ink-faint); font-size: 0.84em; }
+
+  /* ── 문제 슬라이드 ── */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.45cqw; }
+  .choices li {
+    display: flex; gap: 1.0cqw; align-items: flex-start;
+    font-size: calc(2.06cqw * var(--fs)); line-height: 1.55;
+    padding: 0.55cqw 1.05cqw; border: 1px solid transparent;
+  }
+  .choices .n { flex-shrink: 0; font-weight: 700; color: var(--ink-faint); width: 1.5em; }
+  .choices li.ans { background: var(--warn-bg); border-color: var(--warn-line); border-radius: 2px; }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices b { color: var(--warn); }
+  .choices .dim { color: var(--ink-faint); }
+  .bogi .dim { color: var(--ink-faint); }
+
+  /* 발문에 딸린 인용 — ㉯의 비판, ⓐ~ⓔ의 문맥 등 */
+  .bogi {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.1cqw 1.5cqw; font-size: calc(1.94cqw * var(--fs)); line-height: 1.68;
+    border-radius: 2px;
+  }
+  .bogi .tag {
+    display: block; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(1.66cqw * var(--fs)); letter-spacing: 0.12em; margin-bottom: 0.5cqw;
+  }
+  .bogi b { color: var(--key); }
+
+  /* ── 정답과 근거 ── */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.3cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.1cqw 1.7cqw; margin-bottom: 1.5cqw; flex: 0 0 auto;
+  }
+  .ans-banner .lb { font-size: calc(1.8cqw * var(--fs)); letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num { font-family: "Gowun Batang", serif; font-weight: 700; font-size: calc(4.1cqw * var(--fs)); line-height: 1; }
+  .ans-banner .why { font-size: calc(2.16cqw * var(--fs)); line-height: 1.45; }
+
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
+  .evi .box { background: var(--card); border: 1px solid var(--rule); padding: 1.3cqw 1.6cqw;   border-radius: 2px;
+  }
+  .evi .box .h {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: calc(1.98cqw * var(--fs)); letter-spacing: 0.06em;
+    padding-bottom: 0.5cqw; margin-bottom: 0.85cqw; border-bottom: 1px solid var(--rule);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: calc(2.04cqw * var(--fs)); line-height: 1.7; color: var(--ink-soft); }
+  .evi .box p + p { margin-top: 0.8cqw; }
+  .evi .box b { color: var(--ink); }
+  .evi .box .verdict { color: var(--warn); font-weight: 700; }
+
+  /* 선택지별 확인 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--rule); padding: 0.72cqw 1.0cqw;
+    font-size: calc(1.96cqw * var(--fs)); line-height: 1.55; text-align: left; vertical-align: top;
+    color: var(--ink-soft);
+  }
+  .otable th { width: 2.2em; text-align: center; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink-faint); background: var(--card); }
+  .otable tr.ans th { color: var(--warn); background: var(--warn-bg); }
+  .otable tr.ans td { background: var(--warn-bg); color: var(--ink); }
+  .otable b { color: var(--ink); }
+  .otable .u-warn { color: var(--warn); }
+  .otable .u-key { color: var(--key); }
+
+  .trap {
+    margin-top: 1.4cqw; background: var(--card); border-radius: 0 2px 2px 0;
+    border-left: 0.4cqw solid var(--key); padding: 1.15cqw 1.6cqw; flex: 0 0 auto;
+  }
+  .trap .h {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(2.0cqw * var(--fs)); margin-bottom: 0.45cqw;
+  }
+  .trap p { font-size: calc(2.02cqw * var(--fs)); line-height: 1.68; color: var(--ink-soft); }
+  .trap b { color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -2.7cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.32cqw, 1.58rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #bcc2dc; font-size: 0.86rem; }
+  .controls button {
+    background: #2b3157; color: #eceefa; border: 1px solid #454d80;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #37407a; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #8e95b3; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w); height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cards2, .cards3, .evi { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* 자리가 빠듯한 장 — 여백만 줄이고 글자 크기는 지킨다 */
+  .slide.tight .story { line-height: 1.74; }
+  .slide.tight .cite { line-height: 1.72; padding: 0.5em 0.75em; }
+  .slide.tight .emotion { padding: 0.95cqw 1.35cqw; }
+  .slide.tight .emotion .etag { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .emotion li + li { margin-top: 0.28em; }
+  .slide.tight .story-head { margin-bottom: 0.42em; padding-bottom: 0.26em; }
+  .slide.tight .c3 { padding: 1.1cqw 1.2cqw; }
+  .slide.tight .c3 h3 { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .num-list li { margin-bottom: 0.4em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.42em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.42em 0.42em; }
+  .slide.tight .pline { padding-bottom: 0.38em; }
+  .slide.tight .plines { gap: 0.44em; }
+  .slide.tight .otable th, .slide.tight .otable td { padding: 0.48cqw 0.8cqw; line-height: 1.46; }
+  .slide.tight .choices { gap: 0.22cqw; }
+  .slide.tight .choices li { padding: 0.32cqw 0.85cqw; line-height: 1.44; }
+  .slide.tight .bogi { padding: 0.8cqw 1.2cqw; line-height: 1.56; }
+  .slide.tight .bogi .tag { margin-bottom: 0.32cqw; }
+  .slide.tight .trap { margin-top: 0.95cqw; padding: 0.85cqw 1.3cqw; }
+  .slide.tight .trap p { line-height: 1.56; }
+  .slide.tight .evi { gap: 1.2cqw; }
+  .slide.tight .evi .box { padding: 1.0cqw 1.2cqw; }
+  .slide.tight .evi .box .h { padding-bottom: 0.35cqw; margin-bottom: 0.6cqw; }
+  .slide.tight .evi .box p { line-height: 1.58; }
+  .slide.tight .ans-banner { padding: 0.82cqw 1.4cqw; margin-bottom: 1.1cqw; }
+
+  /* ── AAT 덱에서 더한 것 ── */
+  .lim, .yr {
+    font-family: "IBM Plex Sans KR", sans-serif; color: var(--ink-faint);
+    font-size: 0.76em; white-space: nowrap; margin-left: 0.5em;
+  }
+  .cmp-table.crit .sc {
+    width: 5.2em; text-align: center; white-space: nowrap;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+  }
+  .c3 p.cite { color: var(--ink); }
+  /* 원고지 — 한 줄 35칸, 제한 글자 수만큼만 칸을 둔다 */
+  .wg { display: grid; grid-template-columns: repeat(35, 1fr); grid-auto-rows: 3.15cqw; padding: 0 1px 1px 0; flex: 0 0 auto; }
+  .wg i {
+    font-style: normal; font-family: "Gowun Batang", serif;
+    font-size: 1.62cqw; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--key-soft); margin: 0 -1px -1px 0; background: var(--card);
+  }
+  .wg .cnt {
+    grid-column: span 6; align-self: center; padding-left: 0.8em;
+    font-size: 1.3cqw; color: var(--ink-faint); white-space: nowrap;
+  }
+  .dl-row { margin-top: 0.6rem; display: flex; align-items: center; gap: 0.7rem; color: #989fbd; font-size: 0.8rem; flex-wrap: wrap; justify-content: center; }
+  .dl-row a {
+    color: #eceefa; text-decoration: none; background: #2b3157; border: 1px solid #454d80;
+    padding: 0.34rem 0.85rem; border-radius: 4px;
+  }
+  .dl-row a:hover { background: #37407a; }
+  body:fullscreen .dl-row { display: none; }
+  /* ── OT 덱에서 더한 것 ── */
+  .flow-step .big { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink);
+    font-size: clamp(1.2rem, calc(3.3cqw * var(--fs)), calc(3.96rem * var(--fs))); line-height: 1.3; margin-bottom: 0.2em; }
+  .cmp-table.num td { text-align: center; }
+  .slide.tight .cmp-table.num th, .slide.tight .cmp-table.num td { padding-top: 0.3em; padding-bottom: 0.3em; }
+  .cmp-table.yrs td b { color: var(--key); }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_AAT.html">&larr; AAT</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">AAT, 어떤 시험인가 &middot; AAT 오리엔테이션 &middot; 업데이트 2026. 10. 16.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">경 북 대 　 논 술 ( A A T )</div>
+    <h1 class="title-main">AAT,<br>어떤 시험인가</h1>
+    <div class="rule"></div>
+    <div class="sub">전형, 현황, 출제 경향</div>
+    <div class="foot">
+      <span>2027학년도 수시모집요강 &middot; 2023~2026학년도 기출</span>
+      <span>AAT &middot; 오리엔테이션</span>
+    </div>
+    <div class="page-num">1 / 23</div>
+  </section>
+
+
+  <!-- 2 -->
+  <section class="slide" style="--fs:1.09;">
+    <h2 class="slide-title">AAT란</h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.4cqw;">
+        <tr><th>이름</th><td>Academic Aptitude Test. 경북대학교 수시 <strong>논술전형</strong>의 이름이다</td></tr>
+        <tr><th>선발</th><td>2027학년도 <strong>550명</strong>. 수시 전체 4,530명의 12%다</td></tr>
+        <tr><th>전형요소</th><td>논술 350점(70%)과 학생부 교과 150점(30%)을 합산한다. 수능최저를 적용한다</td></tr>
+        <tr><th>인문계열</th><td>국어, 인문학, 사회과학 등 교과목 통합. <strong>6문항 내외</strong>, 문제마다 소문항이 있다</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">다른 대학 논술과 다른 점</div>
+        <ul>
+          <li>다른 대학은 2~3문항을 내고 1,500~1,800자를 쓰게 하는 경우가 많다.</li>
+          <li>AAT는 6문항을 내고, <strong>단답형</strong>이나 <strong>짧은 약술형</strong>으로 답하게 한다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">2 / 23</div>
+  </section>
+
+
+  <!-- 3 -->
+  <section class="slide" style="--fs:1.56;">
+    <h2 class="slide-title">2027학년도 일정<span class="qm">모집요강 14쪽</span></h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>원서 접수</th><td>2026. 9. 7.(월) ~ 9. 11.(금) &middot; 마감</td></tr>
+        <tr><th>고사장 안내</th><td>11. 24.(화) 10:00, 입학처 홈페이지에서 수험표 출력</td></tr>
+        <tr><th>논술 고사</th><td><strong>11. 28.(토)</strong> 인문계열 입실 09:00까지, 고사 09:30~11:10(100분)</td></tr>
+        <tr><th>합격자 발표</th><td>12. 18.(금)</td></tr>
+      </table>
+    </div>
+    <div class="page-num">3 / 23</div>
+  </section>
+
+
+  <!-- 4 -->
+  <section class="slide tight" style="--fs:1.03;">
+    <h2 class="slide-title">인문계열 모집단위와 인원<span class="qm">2027학년도 &middot; 모집요강 16~20쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.1cqw;">
+        <thead><tr><th style="width:7.2em;">단과대학</th><th>모집단위와 논술(AAT) 인원</th><th style="width:3.4em;">계</th></tr></thead>
+        <tbody>
+          <tr><th>인문대학</th><td>국어국문 5, 영어영문 6, 사학 3, 철학 5, 불어불문 3, 독어독문 4, 중어중문 3, 고고인류 4, 일어일문 3, 한문 4, 노어노문 3, 인문대학 자율학부 2</td><td>45</td></tr>
+          <tr><th>사회과학대학</th><td>정치외교 3, 사회 3, 지리 4, 문헌정보 4, 심리 4, 사회복지 4, 미디어커뮤니케이션 4, 사회과학대학 자율학부 3</td><td>29</td></tr>
+          <tr><th>경상대학</th><td>경제통상 18, 경영 18, 경상대학 자율학부 5</td><td>41</td></tr>
+          <tr><th>그 밖</th><td>행정학부 5, 식품자원경제학과 3</td><td>8</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">인문계열과 자연계열Ⅰ 가운데 골라 응시하는 곳</div>
+        <ul><li>자율전공학부 53, 간호학과 10, 산림과학&middot;조경학부 5, 컴퓨터학부(첨단AI컴퓨팅전공) 5</li></ul>
+      </div>
+    </div>
+    <div class="page-num">4 / 23</div>
+  </section>
+
+
+  <!-- 5 -->
+  <section class="slide" style="--fs:1.17;">
+    <h2 class="slide-title">수능 최저학력기준<span class="qm">모집요강 75쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <thead><tr><th>모집단위</th><th style="width:13em;">국어, 수학, 영어, 탐구(1과목)</th></tr></thead>
+        <tbody>
+          <tr><th>인문대학, 사회과학대학, 농업생명과학대학</th><td>상위 2개 영역 등급 합 <strong>6 이내</strong></td></tr>
+          <tr><th>경상대학, 행정학부, 자율전공학부, 간호대학</th><td>상위 2개 영역 등급 합 <strong>5 이내</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">함께 보아야 할 조건</div>
+        <ul>
+          <li>한국사는 <strong>응시만</strong> 하면 된다.</li>
+          <li>탐구는 2과목에 응시해야 하며, 그중 상위 1과목을 반영한다.</li>
+          <li>지정한 영역에 하나라도 응시하지 않으면 불합격이다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 23</div>
+  </section>
+
+
+  <!-- 6 -->
+  <section class="slide" style="--fs:1.40;">
+    <h2 class="slide-title">학생부 교과 150점<span class="qm">모집요강 72쪽</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <thead><tr><th style="width:4.6em;">등급</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+        <tbody>
+          <tr><th>점수</th><td>150</td><td>145</td><td>140</td><td>135</td><td>130</td><td>120</td><td>100</td><td>50</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">반영 방법</div>
+        <ul>
+          <li>국어, 수학, 영어, 사회, 과학, 한국사 <strong>전 과목</strong>을 3학년 1학기까지 반영한다.</li>
+          <li>1등급과 4등급의 차이는 <strong>15점</strong>이다. 논술은 350점 만점이다.</li>
+          <li>6등급 아래부터 간격이 커진다. 6등급 120점, 7등급 100점, 8등급 50점이다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">6 / 23</div>
+  </section>
+
+
+  <!-- 7 -->
+  <section class="slide" style="--fs:1.09;">
+    <h2 class="slide-title">경쟁률</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <thead><tr><th style="width:7em;">학년도</th><th>모집</th><th>지원</th><th>경쟁률</th></tr></thead>
+        <tbody>
+          <tr><th>2025</th><td>544명</td><td>9,572명</td><td>17.6 : 1</td></tr>
+          <tr><th>2026</th><td>554명</td><td>10,306명</td><td>18.6 : 1</td></tr>
+          <tr><th>2027</th><td>550명</td><td>11,288명</td><td><strong>20.5 : 1</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">인문계열은 평균보다 높다</div>
+        <ul>
+          <li>위는 의약학계열과 자연계열을 합친 전형 전체의 수치다.</li>
+          <li>2026학년도 인문계열 모집단위 24곳(뒤의 입결 표)은 119명 모집에 2,916명이 지원해 <strong>24.5 : 1</strong>이었다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">7 / 23</div>
+  </section>
+
+
+  <!-- 8 -->
+  <section class="slide" style="--fs:1.16;">
+    <h2 class="slide-title">지원자와 실제 경쟁자<span class="qm">2026학년도 인문계열 모집단위</span></h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.6cqw;">
+        <div class="flow-step"><div class="emo">지원</div><div class="big">2,916명</div><div class="desc">경쟁률 24.5 : 1</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">수능최저 통과</div><div class="big">1,032명</div><div class="desc">지원자의 35%</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">모집</div><div class="big">119명</div><div class="desc">실질 경쟁률 8.7 : 1</div></div>
+      </div>
+      <div class="emotion">
+        <div class="etag">함께 볼 수치</div>
+        <ul>
+          <li>실질 경쟁률은 수능최저 통과 인원을 모집인원으로 나눈 값이다. 뒤의 입결 표에서 내신과 논술(350점 만점 원점수)은 입학자 평균이다.</li>
+          <li>전형 전체로는 지원자 10,306명 가운데 5,283명(51%)만 논술 고사에 응시했다.</li>
+          <li>2025학년도도 비슷했다. 지원 2,472명, 수능최저 통과 884명(36%), 실질 경쟁률 7.8 : 1이었다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">8 / 23</div>
+  </section>
+
+
+  <!-- 9 -->
+  <section class="slide tight" style="--fs:1.22;">
+    <h2 class="slide-title">2026학년도 입결 &middot; 인문대학 ①</h2>
+    <div class="body-area">
+      <table class="cmp-table num">
+        <thead><tr><th>모집단위</th><th>모집</th><th>경쟁률</th><th>실질 경쟁률</th><th>입학자 내신</th><th>입학자 논술</th></tr></thead>
+        <tbody>
+          <tr><th>국어국문학과</th><td>5</td><td>24.8</td><td>10.2</td><td>4.90</td><td>229.3</td></tr>
+          <tr><th>영어영문학과</th><td>6</td><td>27.8</td><td>13.3</td><td>3.86</td><td>200.5</td></tr>
+          <tr><th>사학과</th><td>3</td><td>24.7</td><td>9.3</td><td>4.44</td><td>219.8</td></tr>
+          <tr><th>철학과</th><td>5</td><td>25.2</td><td>11.0</td><td>4.35</td><td>230.0</td></tr>
+          <tr><th>불어불문학과</th><td>3</td><td>24.7</td><td>10.3</td><td>4.49</td><td>207.0</td></tr>
+          <tr><th>독어독문학과</th><td>4</td><td>24.0</td><td>8.0</td><td>4.81</td><td>193.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">9 / 23</div>
+  </section>
+
+
+  <!-- 10 -->
+  <section class="slide tight" style="--fs:1.43;">
+    <h2 class="slide-title">2026학년도 입결 &middot; 인문대학 ②</h2>
+    <div class="body-area">
+      <table class="cmp-table num">
+        <thead><tr><th>모집단위</th><th>모집</th><th>경쟁률</th><th>실질 경쟁률</th><th>입학자 내신</th><th>입학자 논술</th></tr></thead>
+        <tbody>
+          <tr><th>중어중문학과</th><td>3</td><td>30.0</td><td>8.3</td><td>4.99</td><td>183.0</td></tr>
+          <tr><th>고고인류학과</th><td>4</td><td>25.0</td><td>7.5</td><td>4.15</td><td>219.1</td></tr>
+          <tr><th>일어일문학과</th><td>3</td><td>28.0</td><td>10.3</td><td>4.61</td><td>238.2</td></tr>
+          <tr><th>한문학과</th><td>3</td><td>25.7</td><td>9.3</td><td>4.08</td><td>189.3</td></tr>
+          <tr><th>노어노문학과</th><td>3</td><td>23.3</td><td>7.3</td><td>4.37</td><td>189.8</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">10 / 23</div>
+  </section>
+
+
+  <!-- 11 -->
+  <section class="slide tight" style="--fs:1.00;">
+    <h2 class="slide-title">2026학년도 입결 &middot; 사회과학대학</h2>
+    <div class="body-area">
+      <table class="cmp-table num">
+        <thead><tr><th>모집단위</th><th>모집</th><th>경쟁률</th><th>실질 경쟁률</th><th>입학자 내신</th><th>입학자 논술</th></tr></thead>
+        <tbody>
+          <tr><th>정치외교학과</th><td>3</td><td>28.7</td><td>11.0</td><td>4.38</td><td>237.3</td></tr>
+          <tr><th>사회학과</th><td>3</td><td>27.7</td><td>9.0</td><td>5.22</td><td>233.3</td></tr>
+          <tr><th>지리학과</th><td>4</td><td>25.5</td><td>11.0</td><td>4.55</td><td>217.8</td></tr>
+          <tr><th>문헌정보학과</th><td>4</td><td>24.0</td><td>11.0</td><td>4.23</td><td>222.1</td></tr>
+          <tr><th>심리학과</th><td>3</td><td>29.3</td><td>12.0</td><td>4.25</td><td>228.5</td></tr>
+          <tr><th>사회복지학부</th><td>4</td><td>23.5</td><td>6.8</td><td>3.95</td><td>191.0</td></tr>
+          <tr><th>미디어커뮤니케이션학과</th><td>4</td><td>36.3</td><td>14.0</td><td>3.81</td><td>236.6</td></tr>
+          <tr><th>사회과학대학 자율학부</th><td>3</td><td>29.7</td><td>13.0</td><td>3.69</td><td>194.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">11 / 23</div>
+  </section>
+
+
+  <!-- 12 -->
+  <section class="slide tight" style="--fs:1.22;">
+    <h2 class="slide-title">2026학년도 입결 &middot; 경상대학 외<span class="qm">자율전공학부 경쟁률은 자연계열 응시자 포함</span></h2>
+    <div class="body-area">
+      <table class="cmp-table num">
+        <thead><tr><th>모집단위</th><th>모집</th><th>경쟁률</th><th>실질 경쟁률</th><th>입학자 내신</th><th>입학자 논술</th></tr></thead>
+        <tbody>
+          <tr><th>경제통상학부</th><td>18</td><td>20.1</td><td>5.1</td><td>3.95</td><td>213.9</td></tr>
+          <tr><th>경영학부</th><td>18</td><td>23.9</td><td>8.2</td><td>4.09</td><td>223.6</td></tr>
+          <tr><th>경상대학 자율학부</th><td>5</td><td>18.8</td><td>3.4</td><td>4.53</td><td>201.6</td></tr>
+          <tr><th>행정학부</th><td>5</td><td>19.2</td><td>7.2</td><td>3.45</td><td>201.1</td></tr>
+          <tr><th>식품자원경제학과</th><td>3</td><td>22.7</td><td>7.0</td><td>3.61</td><td>199.8</td></tr>
+          <tr><th>자율전공학부</th><td>42</td><td>18.1</td><td>5.8</td><td>3.96</td><td>220.7</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">12 / 23</div>
+  </section>
+
+
+  <!-- 13 -->
+  <section class="slide" style="--fs:1.65;">
+    <h2 class="slide-title">입결에서 보이는 것</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>입학자 내신은 3.5~5.2등급, 평균 <strong>4.3등급</strong>이다. 교과 점수로 1등급과 4등급의 차이는 15점이다.</li>
+        <li><span class="n">2</span>입학자 논술 평균은 350점 만점에 183~238점, 평균 <strong>약 213점</strong>이다. 만점의 60% 안팎이다.</li>
+        <li><span class="n">3</span>수능최저를 맞추면 경쟁자가 지원자의 3분의 1 남짓으로 준다.</li>
+        <li><span class="n">4</span>합격과 불합격은 결국 <strong>논술 점수</strong>에서 갈린다.</li>
+      </ul>
+    </div>
+    <div class="page-num">13 / 23</div>
+  </section>
+
+
+  <!-- 14 -->
+  <section class="slide" style="--fs:1.37;">
+    <h2 class="slide-title">시험의 생김새</h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>시간</th><td>100분에 6문항. 대학이 밝힌 예상 소요 시간은 문항마다 15분이다</td></tr>
+        <tr><th>문항</th><td>제시문과 소문항 2~3개. 해마다 소문항이 15~17개다</td></tr>
+        <tr><th>제재</th><td>1번은 문학, 2~6번은 사회 교과와 윤리 교과의 글</td></tr>
+        <tr><th>배점</th><td>소문항마다 10~40점, 합계 350점</td></tr>
+        <tr><th>답</th><td><strong>제시문에 있는 내용</strong>으로 답한다. 외운 지식을 묻지 않는다</td></tr>
+      </table>
+    </div>
+    <div class="page-num">14 / 23</div>
+  </section>
+
+
+  <!-- 15 -->
+  <section class="slide" style="--fs:1.05;">
+    <h2 class="slide-title">단답형과 약술형</h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.4cqw;">
+        <div class="c3">
+          <h3>단답형</h3>
+          <p>빈칸에 들어갈 말을 쓰거나, &lt;보기&gt;에서 고르거나, 표의 값을 쓴다.</p>
+          <p class="cite">(나)의 &lt;표 2&gt; ㉠~㉣에 들어갈 값을 쓰시오. <span class="lim">2026학년도 4-1 &middot; 30점</span></p>
+          <p>정답이 분명하다. 위 문항은 칸마다 점수를 매겼다.</p>
+        </div>
+        <div class="c3">
+          <h3>약술형</h3>
+          <p>글자 수 제한 안에서 문장으로 쓴다. 4개년 기출은 50~230자였다.</p>
+          <p>50~70자는 한두 문장, 120~150자는 서너 문장이다.</p>
+          <p>서론, 본론, 결론을 갖추지 않는다. 문제가 요구한 내용만 쓴다.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">글자 수 제한이 없는 소문항</div>
+        <ul><li>2023학년도 3개, 2024학년도 4개, 2025학년도 3개, 2026학년도 1개. 나머지는 모두 약술형이다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">15 / 23</div>
+  </section>
+
+
+  <!-- 16 -->
+  <section class="slide tight" style="--fs:1.06;">
+    <h2 class="slide-title">채점은 요소별로<span class="qm">2026학년도 4-2 &middot; 140자 이내 &middot; 30점</span></h2>
+    <div class="body-area">
+      <table class="cmp-table crit" style="margin-bottom:1.1cqw;">
+        <thead><tr><th>답안에 들어 있어야 하는 것</th><th class="sc">점수</th></tr></thead>
+        <tbody>
+          <tr><td>상대적 빈곤율은 변화가 없고 빈곤갭률은 감소했다<br><span class="lim" style="margin-left:0;">둘 중 하나만 쓰면 6점</span></td><td class="sc">12</td></tr>
+          <tr><td>교육, 의료, 고용서비스를 제공해 실질적 자유와 선택의 가능성을 주어 역량을 높였다<br><span class="lim" style="margin-left:0;">서비스로 역량을 높였다고만 쓰면 8점, 역량이 높아졌다고만 쓰면 4점</span></td><td class="sc">14</td></tr>
+          <tr><td>빈곤 개선 정책이 효과가 있었다</td><td class="sc">4</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">부분 점수와 0점</div>
+        <ul>
+          <li>요구한 내용의 일부만 있어도 그만큼 점수를 준다. 비워 두면 0점이다.</li>
+          <li>2025학년도 모의고사 채점 기준에는 맞춤법과 주술 호응에 따른 감점(0~5점)도 있었다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">16 / 23</div>
+  </section>
+
+
+  <!-- 17 -->
+  <section class="slide" style="--fs:1.69;">
+    <h2 class="slide-title">답안지<span class="qm">2026학년도 3-2 예시 답안 &middot; 50자 이내</span></h2>
+    <div class="body-area">
+      <div class="wg" data-n="50" data-text="능력이 부족한 학생에게 기회를 주는 일이 특정 집단에게 자주 일어나는 것" style="margin-bottom:1.6cqw;"></div>
+      <div class="emotion">
+        <div class="etag">답안지의 규칙</div>
+        <ul>
+          <li>한 줄이 <strong>35칸</strong>인 원고지다. 문항마다 제한 글자 수만큼만 칸이 있다.</li>
+          <li>칸을 벗어나 쓴 부분은 <strong>채점하지 않는다.</strong></li>
+          <li>글자 수는 <strong>띄어쓰기를 포함해</strong> 센다. 위 답안은 40자다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">17 / 23</div>
+  </section>
+
+
+  <!-- 18 -->
+  <section class="slide" style="--fs:1.19;">
+    <h2 class="slide-title">시험 당일<span class="qm">모집요강 62쪽 &middot; 문제지 유의 사항</span></h2>
+    <div class="body-area">
+      <table class="info-table">
+        <tr><th>입실</th><td>09:00까지. 고사장은 11. 24.에 공지한다</td></tr>
+        <tr><th>지참</th><td>수험표와 신분증(주민등록증, 여권, 학생증 등)</td></tr>
+        <tr><th>소지 금지</th><td>휴대전화와 전자기기</td></tr>
+        <tr><th>필기구</th><td>검정색 필기구 한 가지를 끝까지 쓴다</td></tr>
+        <tr><th>고칠 때</th><td>지우개나 수정테이프를 쓰거나, 두 줄을 긋고 다시 쓴다</td></tr>
+        <tr><th>0점</th><td>답안지에 신원을 드러내거나 문제와 관계없는 내용을 쓴 경우</td></tr>
+      </table>
+    </div>
+    <div class="page-num">18 / 23</div>
+  </section>
+
+
+  <!-- 19 -->
+  <section class="slide tight" style="--fs:1.03;">
+    <h2 class="slide-title">4개년 출제 &middot; 2023~2024학년도<span class="qm">대학 공개 문항카드의 과목과 핵심 개념</span></h2>
+    <div class="body-area">
+      <table class="cmp-table yrs">
+        <thead><tr><th style="width:3.2em;">문항</th><th>2023학년도</th><th>2024학년도</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td><b>문학</b> &middot; 공감과 타자 이해</td><td><b>문학</b> &middot; 사랑시와 의사소통</td></tr>
+          <tr><th>2</th><td><b>사회&middot;문화</b> &middot; 장애와 불평등</td><td><b>독서</b> &middot; 신호탐지이론</td></tr>
+          <tr><th>3</th><td><b>세계지리, 사회&middot;문화</b> &middot; 지구온난화와 산호</td><td><b>생활과 윤리</b> &middot; 불확실성 아래의 합리적 선택, 롤스</td></tr>
+          <tr><th>4</th><td><b>독서, 사회&middot;문화</b> &middot; 오리엔탈리즘과 동아시아의 발전</td><td><b>사회&middot;문화</b> &middot; 돌봄과 돌봄 정책</td></tr>
+          <tr><th>5</th><td><b>윤리와 사상</b> &middot; 인과 관계, 반사실적 조건문</td><td><b>경제, 사회&middot;문화</b> &middot; 경제성장, 복지, 불평등</td></tr>
+          <tr><th>6</th><td><b>생활과 윤리</b> &middot; 롤스의 차등의 원칙</td><td><b>생활과 윤리</b> &middot; 이중 결과의 원리</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">19 / 23</div>
+  </section>
+
+
+  <!-- 20 -->
+  <section class="slide tight" style="--fs:1.07;">
+    <h2 class="slide-title">4개년 출제 &middot; 2025~2026학년도<span class="qm">대학 공개 문항카드의 과목과 핵심 개념</span></h2>
+    <div class="body-area">
+      <table class="cmp-table yrs">
+        <thead><tr><th style="width:3.2em;">문항</th><th>2025학년도</th><th>2026학년도</th></tr></thead>
+        <tbody>
+          <tr><th>1</th><td><b>문학</b> &middot; 소수자 이해와 인간 존엄성</td><td><b>문학</b> &middot; 다문화 감수성, 타자 이해</td></tr>
+          <tr><th>2</th><td><b>경제</b> &middot; 승자독식시장과 합리적 선택</td><td><b>경제</b> &middot; 집값, 대출, 모기지 계약</td></tr>
+          <tr><th>3</th><td><b>정치와 법, 생활과 윤리</b> &middot; 보호출산제와 기본권</td><td><b>독서, 생활과 윤리</b> &middot; 인공지능의 공정성</td></tr>
+          <tr><th>4</th><td><b>정치와 법</b> &middot; 대의 민주주의와 선거제도</td><td><b>사회&middot;문화</b> &middot; 빈곤 지표와 역량</td></tr>
+          <tr><th>5</th><td><b>생활과 윤리</b> &middot; 신명론</td><td><b>생활과 윤리</b> &middot; 증언과 허위 정보</td></tr>
+          <tr><th>6</th><td><b>사회&middot;문화, 생활과 윤리</b> &middot; 인종주의</td><td><b>사회&middot;문화, 생활과 윤리</b> &middot; 능력주의와 기회 불평등</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">20 / 23</div>
+  </section>
+
+
+  <!-- 21 -->
+  <section class="slide" style="--fs:1.07;">
+    <h2 class="slide-title">어느 과목에서 나오는가<span class="qm">2023~2026학년도 24문항 &middot; 여러 과목에 걸친 문항은 과목마다 셈</span></h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th>과목</th><th style="width:4.2em;">문항 수</th><th>나온 자리</th></tr></thead>
+        <tbody>
+          <tr><th>생활과 윤리, 윤리와 사상</th><td>10</td><td>해마다 2~3문항</td></tr>
+          <tr><th>사회&middot;문화</th><td>8</td><td>해마다 1~3문항</td></tr>
+          <tr><th>독서</th><td>6</td><td>다른 과목과 함께 나온다</td></tr>
+          <tr><th>문학</th><td>4</td><td>4년 모두 1번</td></tr>
+          <tr><th>경제</th><td>3</td><td>2024학년도부터 해마다 1문항</td></tr>
+          <tr><th>정치와 법</th><td>2</td><td>2025학년도 3번, 4번</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">21 / 23</div>
+  </section>
+
+
+  <!-- 22 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">표와 수치를 읽는 문항</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.4cqw;">
+        <thead><tr><th style="width:7em;">학년도</th><th>문항과 자료</th></tr></thead>
+        <tbody>
+          <tr><th>2023</th><td>3-2 그림, 6번 &lt;표&gt;</td></tr>
+          <tr><th>2024</th><td>3-1 &lt;표&gt;, 5-2 지니계수 그래프</td></tr>
+          <tr><th>2025</th><td>2-2 임금과 시장 가치의 수치</td></tr>
+          <tr><th>2026</th><td>2-2 모기지 수치, 4-1 빈곤율 계산, 6-1 &lt;표&gt;</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">검토위원이 매긴 난이도</div>
+        <ul>
+          <li>2026학년도는 4번(빈곤율 계산)이 <strong>상</strong>, 2번과 3번이 중상이었다. 2024학년도는 5번(지니계수)만 중상이었다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">22 / 23</div>
+  </section>
+
+
+  <!-- 23 -->
+  <section class="slide" style="--fs:1.53;">
+    <h2 class="slide-title">이 수업에서 하는 것</h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.6cqw;">
+        <div class="flow-step"><div class="emo">써 본다</div><div class="desc">기출 문항을 시간을 재고 원고지 칸에 쓴다</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">맞춰 본다</div><div class="desc">내 답안을 채점 기준, 예시 답안과 견준다</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">정리한다</div><div class="desc">무엇이 빠졌고 어떻게 써야 했는지 강의로 정리한다</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="emo">다시 쓴다</div><div class="desc">다른 문항에 적용해 쓴다</div></div>
+      </div>
+      <div class="emotion">
+        <ul>
+          <li>2차시씩 묶어 세 번, 모두 6차시다.</li>
+          <li>쓴 답안은 수업 뒤에 개별로 피드백한다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">23 / 23</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 23</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
+</div>
+
+<script>
+  // 원고지 칸을 그린다
+  document.querySelectorAll('.wg').forEach(g => {
+    const n = +g.dataset.n, chars = Array.from(g.dataset.text || '');
+    for (let k = 0; k < n; k++) {
+      const c = document.createElement('i');
+      c.textContent = chars[k] && chars[k] !== ' ' ? chars[k] : '';
+      g.appendChild(c);
+    }
+    const t = document.createElement('span');
+    t.className = 'cnt'; t.textContent = '(' + n + '자)';
+    g.appendChild(t);
+  });
+
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  // 슬라이드 안에서 하나씩 띄울 요소들
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  // showAllSteps: 뒤로 돌아갈 때는 그 슬라이드의 단계가 모두 드러난 상태로 들어간다
+  function show(n, showAllSteps) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
