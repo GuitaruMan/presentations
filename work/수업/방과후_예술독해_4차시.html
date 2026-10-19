@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>(가)와 (나), 맞대어 읽는다 (방과후-4차시)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap');
+
+  :root {
+    --fs: 1;                  /* 슬라이드마다 style="--fs:…"로 본문 글자를 키운다 */
+    --paper: #f4f3f0;
+    --paper-edge: #e2ddd6;
+    --ink: #23262b;
+    --ink-soft: #55585e;
+    --ink-faint: #979490;
+    --key: #1c5675;
+    --key-soft: #5c8ba6;
+    --rule: #ded9d2;
+    --card: #fbfaf8;
+    --warn: #b0392c;
+    --warn-bg: #fbefed;
+    --warn-line: #e6c2bd;
+    --ok: #1d6b52;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #1b1f24;
+    font-family: "IBM Plex Sans KR", "Malgun Gothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+    word-break: keep-all; overflow-wrap: break-word;
+    text-wrap: pretty; letter-spacing: -0.012em;
+  }
+
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(27,31,36,0.94); z-index: 50;
+  }
+  .nav-top a { color: #b4c6d2; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #e6eff4; }
+  .nav-meta { color: #90a3b0; font-size: 0.78rem; }
+
+  .stage {
+    container-type: inline-size;
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    background: var(--paper);
+    background-image:
+      /* 종이 결 — 아주 옅은 사선 */
+      repeating-linear-gradient(112deg, rgba(120,108,92,0.030) 0 1px, transparent 1px 7px),
+      radial-gradient(ellipse at 14% 6%, rgba(255,253,249,0.9) 0%, transparent 62%),
+      radial-gradient(ellipse at 88% 94%, rgba(28,86,117,0.085) 0%, transparent 64%);
+    border: 1px solid var(--paper-edge); border-radius: 3px;
+    box-shadow: 0 14px 44px rgba(0,0,0,0.30);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: calc(var(--stage-w) * 0.038) calc(var(--stage-w) * 0.044);
+  }
+  /* 우측 상단 — 문단 덩어리와 첫 줄 */
+  .stage::before {
+    content: ""; position: absolute; top: 5%; right: -2%;
+    width: 19%; height: 44%; pointer-events: none; opacity: 0.07;
+    background: no-repeat right top / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%235b5348' stroke-linecap='round'><path stroke-width='6' d='M18 18 H150'/><path stroke-width='2.2' d='M18 38 H182 M18 54 H182 M18 70 H126'/><path stroke-width='6' d='M18 100 H150'/><path stroke-width='2.2' d='M18 120 H182 M18 136 H182 M18 152 H108'/></g></svg>");
+  }
+  .stage > .slide { position: relative; z-index: 1; }
+
+  .slide { display: none; flex-direction: column; height: 100%; animation: fade .28s ease; }
+  .slide.active { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+
+  h1.title-main {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.9rem, 4.9cqw, 5.88rem); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  h2.slide-title {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(1.35rem, 3.32cqw, 3.98rem); line-height: 1.24;
+    padding-bottom: 0.62cqw; margin-bottom: 1.65cqw;
+    border-bottom: 0.1cqw solid var(--rule);
+    align-self: flex-start; flex-shrink: 0; position: relative;
+  }
+  h2.slide-title::after {
+    content: ""; position: absolute; left: 0; bottom: -0.1cqw;
+    width: 2.6em; height: 0.26cqw; background: var(--key);
+  }
+  h2.slide-title .qm {
+    font-family: "IBM Plex Sans KR", sans-serif; font-weight: 400;
+    font-size: 0.44em; color: var(--ink-faint); letter-spacing: 0.02em;
+    margin-left: 0.8em; vertical-align: 0.18em;
+  }
+  h2.slide-title .ans-chip {
+    font-family: "IBM Plex Sans KR", sans-serif; font-weight: 700;
+    font-size: 0.46em; color: var(--paper); background: var(--key);
+    padding: 0.18em 0.7em; margin-left: 0.8em; vertical-align: 0.22em;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .kicker {
+    font-family: "Gowun Batang", serif; color: var(--key);
+    font-size: clamp(0.8rem, 1.68cqw, 2.02rem); letter-spacing: 0.32em;
+    margin-bottom: 1.9cqw;
+  }
+  .lead { font-size: clamp(1rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); color: var(--ink-soft); line-height: 1.8; }
+
+  .cover { justify-content: center; align-items: flex-start; }
+  .cover .rule { width: 6.3cqw; height: 0.26cqw; background: var(--key); margin: 2.3cqw 0 2cqw; }
+  .cover .sub { font-family: "Gowun Batang", serif; font-size: clamp(1rem, 2.5cqw, 3rem); color: var(--ink-soft); }
+  .cover .foot {
+    position: absolute; left: 0; right: 0; bottom: 1.4cqw;
+    display: flex; justify-content: space-between;
+    font-size: clamp(0.72rem, 1.46cqw, 1.76rem); color: var(--ink-faint);
+    border-top: 1px solid var(--rule); padding-top: 1.1cqw;
+  }
+  .cover .page-num { display: none; }
+
+  .body-area { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; justify-content: center; }
+
+  /* 줄글 — 설명을 이어서 하는 본문 */
+  .story-head {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.92rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    margin-bottom: 0.62em; padding-bottom: 0.38em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+  }
+  .story-head .rng { font-family: "IBM Plex Sans KR", sans-serif; font-weight: 400; color: var(--ink-faint); font-size: 0.78em; white-space: nowrap; }
+  .story {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(1rem, calc(2.34cqw * var(--fs)), calc(2.81rem * var(--fs)));
+    line-height: 1.88; color: var(--ink); text-align: justify;
+  }
+  .story + .story { margin-top: 0.55em; }
+
+  /* 기출 지문을 그대로 옮긴 자리 */
+  .cite {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.95rem, calc(2.18cqw * var(--fs)), calc(2.62rem * var(--fs)));
+    line-height: 1.86; color: var(--ink);
+    background: rgba(28,86,117,0.05);
+    border-left: 0.26em solid var(--rule);
+    padding: 0.65em 0.9em;
+  }
+  .cite .attr {
+    display: block; margin-top: 0.42em;
+    font-family: "IBM Plex Sans KR", sans-serif; font-size: 0.68em;
+    color: var(--ink-faint); letter-spacing: 0.03em;
+  }
+  /* 지문 안에서 눈여겨볼 대목 — 색을 바꾸지 않고 획만 더한다 */
+  .cite .hl, .story .hl { -webkit-text-stroke: 0.022em currentColor; color: var(--key); }
+  .cite .dim { color: var(--ink-faint); }
+
+  .emotion {
+    background: var(--card); border-left: 0.32cqw solid var(--key);
+    padding: 1.2cqw 1.55cqw; flex: 0 0 auto;
+    border-radius: 0 2px 2px 0;
+  }
+  .emotion .etag {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); color: var(--key);
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .emotion ul { list-style: none; }
+  .emotion li {
+    font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76;
+    color: var(--ink-soft); padding-left: 1.2em; position: relative;
+  }
+  .emotion li + li { margin-top: 0.45em; }
+  .emotion li::before { content: "\2022"; position: absolute; left: 0.15em; color: var(--key-soft); }
+  .emotion li.q { color: var(--ink); }
+  .emotion li.q::before { content: "?"; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); left: 0; }
+  .emotion strong { color: var(--key); }
+
+  .info-table { width: 100%; border-collapse: collapse; }
+  .info-table th, .info-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs))); line-height: 1.7;
+  }
+  .info-table th { width: 5.4em; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); white-space: nowrap; }
+  .info-table tr:last-child td, .info-table tr:last-child th { border-bottom: none; }
+
+  .cmp-table { width: 100%; border-collapse: collapse; }
+  .cmp-table th, .cmp-table td {
+    text-align: left; vertical-align: top;
+    padding: 0.6em 0.5em; border-bottom: 1px solid var(--rule);
+    font-size: clamp(0.9rem, calc(2.04cqw * var(--fs)), calc(2.45rem * var(--fs))); line-height: 1.7;
+  }
+  .cmp-table thead th {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    border-bottom: 0.15cqw solid var(--key); font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs)));
+  }
+  .cmp-table tbody th { font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink); white-space: nowrap; width: 5.2em; background: var(--card); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table strong { color: var(--key); }
+  .cmp-table caption {
+    caption-side: top; text-align: left; color: var(--ink-soft);
+    font-size: clamp(0.8rem, calc(1.8cqw * var(--fs)), calc(2.16rem * var(--fs)));
+    padding-bottom: 0.6em;
+  }
+
+  .num-list { list-style: none; }
+  .num-list li {
+    font-size: clamp(0.95rem, calc(2.2cqw * var(--fs)), calc(2.64rem * var(--fs))); line-height: 1.76;
+    padding-left: 1.7em; position: relative; margin-bottom: 0.62em;
+  }
+  .num-list li:last-child { margin-bottom: 0; }
+  .num-list li .n { position: absolute; left: 0; top: 0; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key); }
+  .num-list strong { color: var(--key); }
+
+  .def-box { background: var(--card); border: 1px solid var(--rule); padding: 1.4cqw 1.7cqw;   border-radius: 2px;
+  }
+  .def-box .dt {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .def-box p { font-size: clamp(0.92rem, calc(2.1cqw * var(--fs)), calc(2.52rem * var(--fs))); line-height: 1.82; color: var(--ink-soft); }
+  .def-box strong { color: var(--key); }
+
+  .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.9cqw; }
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5cqw; }
+  .c3 { background: var(--card); border-top: 0.26cqw solid var(--key); padding: 1.4cqw 1.4cqw;   border-radius: 0 0 2px 2px;
+  }
+  .c3 h3 {
+    font-family: "Gowun Batang", serif; font-size: clamp(0.95rem, calc(2.16cqw * var(--fs)), calc(2.59rem * var(--fs)));
+    margin-bottom: 0.5em; padding-bottom: 0.34em; border-bottom: 1px solid var(--rule);
+  }
+  .c3 .word { color: var(--key); }
+  .c3 p { font-size: clamp(0.9rem, calc(2.02cqw * var(--fs)), calc(2.42rem * var(--fs))); line-height: 1.76; color: var(--ink-soft); }
+  .c3 p + p { margin-top: 0.45em; }
+  .c3 strong { color: var(--key); }
+
+  /* 문단 흐름도 */
+  .flow { display: flex; align-items: stretch; gap: 0.7cqw; }
+  .flow-step {
+    flex: 1; background: var(--card); border-top: 0.26cqw solid var(--key);
+    padding: 1.3cqw 1.15cqw; display: flex; flex-direction: column;
+    border-radius: 0 0 2px 2px;
+  }
+  .flow-step .emo {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); margin-bottom: 0.42em;
+  }
+  .flow-step .desc { font-size: clamp(0.85rem, calc(1.94cqw * var(--fs)), calc(2.33rem * var(--fs))); line-height: 1.7; color: var(--ink-soft); }
+  .flow-arrow { display: flex; align-items: center; color: var(--key-soft); font-size: clamp(0.95rem, calc(2.14cqw * var(--fs)), calc(2.57rem * var(--fs))); }
+
+  /* 문단 첫 문장만 이어 읽기 */
+  .plines { display: flex; flex-direction: column; gap: 0.62em; }
+  .pline {
+    display: flex; gap: 0.9em; align-items: baseline;
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.5em;
+  }
+  .pline:last-child { border-bottom: none; }
+  .pline .pn {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    width: 3.4em; flex-shrink: 0; white-space: nowrap;
+  }
+  .pline .pt {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(0.9rem, calc(2.06cqw * var(--fs)), calc(2.47rem * var(--fs)));
+    line-height: 1.72; color: var(--ink);
+  }
+
+  /* 단계 공개 — opacity로만 숨겨 자리를 미리 잡아 둔다 */
+  .reveal { opacity: 0; transition: opacity .25s ease; }
+  .reveal.shown { opacity: 1; }
+
+  .quiz-list {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(2.6cqw * var(--fs)); flex: 1;
+  }
+  .body-area > .quiz-list { margin-bottom: 3.0cqw; }
+  .qq {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: max(1rem, calc(2.5cqw * var(--fs))); line-height: 1.6;
+    padding-left: calc(3.4cqw * var(--fs)); position: relative;
+  }
+  .qq .qn { position: absolute; left: 0; top: 0; color: var(--key); font-size: 1.05em; }
+  .qans {
+    margin: calc(1.0cqw * var(--fs)) 0 0 calc(3.4cqw * var(--fs));
+    background: var(--card); border-left: 0.34cqw solid var(--key);
+    padding: calc(1.1cqw * var(--fs)) calc(1.6cqw * var(--fs));
+    font-size: max(0.9rem, calc(2.1cqw * var(--fs))); line-height: 1.76; color: var(--ink-soft);
+  }
+  .qans .tag {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    margin-right: 0.7em;
+  }
+  .qans strong { color: var(--key); }
+
+  /* 지문 골격 — 문단마다 한 줄 요지와 한 줄 보충 */
+  .para-flow { display: flex; flex-direction: column; gap: 1.0cqw; }
+  .para-row { display: flex; align-items: stretch; gap: 1.25cqw; }
+  .para-no {
+    flex-shrink: 0; width: 5.6cqw;
+    background: var(--key); color: var(--paper);
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: calc(2.1cqw * var(--fs));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .para-body {
+    flex: 1; background: var(--card); border: 1px solid var(--rule); border-left: none;
+    border-radius: 0 2px 2px 0;
+    padding: 1.1cqw 1.5cqw; display: flex; flex-direction: column; justify-content: center;
+  }
+  .para-body .t { font-size: calc(2.2cqw * var(--fs)); font-weight: 700; line-height: 1.45; }
+  .para-body .t b { color: var(--key); }
+  .para-body .d {
+    font-size: calc(1.9cqw * var(--fs)); color: var(--ink-soft);
+    line-height: 1.55; margin-top: 0.35cqw;
+  }
+  .para-body .d b { color: var(--ink); }
+  .slide.tight .para-flow { gap: 0.75cqw; }
+  .slide.tight .para-body { padding: 0.85cqw 1.25cqw; }
+
+  /* 지문 인용 — 문단 번호를 붙여 여러 문단을 나란히 */
+  .passage { display: flex; flex-direction: column; gap: 1.0cqw; }
+  .pblock { display: flex; gap: 1.1cqw; align-items: flex-start; }
+  .pblock .pno {
+    flex-shrink: 0; width: 4.4em; padding-top: 0.2em;
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(1.94cqw * var(--fs));
+  }
+  .pblock .ptx {
+    font-family: "Gowun Batang", serif;
+    font-size: calc(2.06cqw * var(--fs)); line-height: 1.82; color: var(--ink);
+  }
+  .pblock .ptx b { color: var(--key); -webkit-text-stroke: 0.02em currentColor; font-weight: 400; }
+  .pblock .ptx .dim { color: var(--ink-faint); }
+  .sub-note { display: block; margin-top: 0.25em; color: var(--ink-faint); font-size: 0.84em; }
+
+  /* ── 문제 슬라이드 ── */
+  .choices { list-style: none; display: flex; flex-direction: column; gap: 0.45cqw; }
+  .choices li {
+    display: flex; gap: 1.0cqw; align-items: flex-start;
+    font-size: calc(2.06cqw * var(--fs)); line-height: 1.55;
+    padding: 0.55cqw 1.05cqw; border: 1px solid transparent;
+  }
+  .choices .n { flex-shrink: 0; font-weight: 700; color: var(--ink-faint); width: 1.5em; }
+  .choices li.ans { background: var(--warn-bg); border-color: var(--warn-line); border-radius: 2px; }
+  .choices li.ans .n { color: var(--warn); }
+  .choices li.ans .txt { font-weight: 700; }
+  .choices b { color: var(--warn); }
+  .choices .dim { color: var(--ink-faint); }
+  .bogi .dim { color: var(--ink-faint); }
+
+  /* 발문에 딸린 인용 — ㉯의 비판, ⓐ~ⓔ의 문맥 등 */
+  .bogi {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.1cqw 1.5cqw; font-size: calc(1.94cqw * var(--fs)); line-height: 1.68;
+    border-radius: 2px;
+  }
+  .bogi .tag {
+    display: block; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(1.66cqw * var(--fs)); letter-spacing: 0.12em; margin-bottom: 0.5cqw;
+  }
+  .bogi b { color: var(--key); }
+
+  /* ── 정답과 근거 ── */
+  .ans-banner {
+    display: flex; align-items: center; gap: 1.3cqw;
+    background: var(--warn); color: #fff;
+    padding: 1.1cqw 1.7cqw; margin-bottom: 1.5cqw; flex: 0 0 auto;
+  }
+  .ans-banner .lb { font-size: calc(1.8cqw * var(--fs)); letter-spacing: 0.22em; opacity: 0.85; }
+  .ans-banner .num { font-family: "Gowun Batang", serif; font-weight: 700; font-size: calc(4.1cqw * var(--fs)); line-height: 1; }
+  .ans-banner .why { font-size: calc(2.16cqw * var(--fs)); line-height: 1.45; }
+
+  .evi { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
+  .evi .box { background: var(--card); border: 1px solid var(--rule); padding: 1.3cqw 1.6cqw;   border-radius: 2px;
+  }
+  .evi .box .h {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: calc(1.98cqw * var(--fs)); letter-spacing: 0.06em;
+    padding-bottom: 0.5cqw; margin-bottom: 0.85cqw; border-bottom: 1px solid var(--rule);
+  }
+  .evi .box.src .h { color: var(--ok); }
+  .evi .box.opt .h { color: var(--warn); }
+  .evi .box p { font-size: calc(2.04cqw * var(--fs)); line-height: 1.7; color: var(--ink-soft); }
+  .evi .box p + p { margin-top: 0.8cqw; }
+  .evi .box b { color: var(--ink); }
+  .evi .box .verdict { color: var(--warn); font-weight: 700; }
+
+  /* 선택지별 확인 표 */
+  .otable { width: 100%; border-collapse: collapse; }
+  .otable th, .otable td {
+    border: 1px solid var(--rule); padding: 0.72cqw 1.0cqw;
+    font-size: calc(1.96cqw * var(--fs)); line-height: 1.55; text-align: left; vertical-align: top;
+    color: var(--ink-soft);
+  }
+  .otable th { width: 2.2em; text-align: center; font-family: "Gowun Batang", serif; font-weight: 700; color: var(--ink-faint); background: var(--card); }
+  .otable tr.ans th { color: var(--warn); background: var(--warn-bg); }
+  .otable tr.ans td { background: var(--warn-bg); color: var(--ink); }
+  .otable b { color: var(--ink); }
+  .otable .u-warn { color: var(--warn); }
+  .otable .u-key { color: var(--key); }
+
+  .trap {
+    margin-top: 1.4cqw; background: var(--card); border-radius: 0 2px 2px 0;
+    border-left: 0.4cqw solid var(--key); padding: 1.15cqw 1.6cqw; flex: 0 0 auto;
+  }
+  .trap .h {
+    font-family: "Gowun Batang", serif; font-weight: 700; color: var(--key);
+    font-size: calc(2.0cqw * var(--fs)); margin-bottom: 0.45cqw;
+  }
+  .trap p { font-size: calc(2.02cqw * var(--fs)); line-height: 1.68; color: var(--ink-soft); }
+  .trap b { color: var(--key); }
+
+  .page-num {
+    position: absolute; right: 0; bottom: -2.7cqw;
+    font-family: "Gowun Batang", serif; font-size: clamp(0.7rem, 1.32cqw, 1.58rem);
+    color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+  .cover .page-num { display: none; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #b4c6d2; font-size: 0.86rem; }
+  .controls button {
+    background: #23404f; color: #e6eff4; border: 1px solid #3c5f72;
+    padding: 0.42rem 1.05rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.86rem;
+  }
+  .controls button:hover { background: #2d5064; }
+  .controls button:disabled { opacity: 0.35; cursor: default; }
+  .hint { color: #869aa7; font-size: 0.78rem; }
+
+  body:fullscreen { padding: 0; justify-content: center; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage {
+    max-width: none; aspect-ratio: 16 / 9;
+    --stage-w: min(100vw, calc(100vh * 16 / 9));
+    width: var(--stage-w); height: min(100vh, calc(100vw * 9 / 16));
+    border: none; box-shadow: none;
+  }
+
+  @media (max-width: 720px) {
+    .cards2, .cards3, .evi { grid-template-columns: 1fr; gap: 1rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { justify-content: center; transform: rotate(90deg); }
+    .stage { aspect-ratio: auto; min-height: 78vh; }
+  }
+
+  /* 자리가 빠듯한 장 — 여백만 줄이고 글자 크기는 지킨다 */
+  .slide.tight .story { line-height: 1.74; }
+  .slide.tight .cite { line-height: 1.72; padding: 0.5em 0.75em; }
+  .slide.tight .emotion { padding: 0.95cqw 1.35cqw; }
+  .slide.tight .emotion .etag { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .emotion li + li { margin-top: 0.28em; }
+  .slide.tight .story-head { margin-bottom: 0.42em; padding-bottom: 0.26em; }
+  .slide.tight .c3 { padding: 1.1cqw 1.2cqw; }
+  .slide.tight .c3 h3 { margin-bottom: 0.32em; padding-bottom: 0.22em; }
+  .slide.tight .num-list li { margin-bottom: 0.4em; }
+  .slide.tight .info-table th, .slide.tight .info-table td { padding: 0.42em 0.45em; }
+  .slide.tight .cmp-table th, .slide.tight .cmp-table td { padding: 0.42em 0.42em; }
+  .slide.tight .pline { padding-bottom: 0.38em; }
+  .slide.tight .plines { gap: 0.44em; }
+  .slide.tight .otable th, .slide.tight .otable td { padding: 0.48cqw 0.8cqw; line-height: 1.46; }
+  .slide.tight .choices { gap: 0.22cqw; }
+  .slide.tight .choices li { padding: 0.32cqw 0.85cqw; line-height: 1.44; }
+  .slide.tight .bogi { padding: 0.8cqw 1.2cqw; line-height: 1.56; }
+  .slide.tight .bogi .tag { margin-bottom: 0.32cqw; }
+  .slide.tight .trap { margin-top: 0.95cqw; padding: 0.85cqw 1.3cqw; }
+  .slide.tight .trap p { line-height: 1.56; }
+  .slide.tight .evi { gap: 1.2cqw; }
+  .slide.tight .evi .box { padding: 1.0cqw 1.2cqw; }
+  .slide.tight .evi .box .h { padding-bottom: 0.35cqw; margin-bottom: 0.6cqw; }
+  .slide.tight .evi .box p { line-height: 1.58; }
+  .slide.tight .ans-banner { padding: 0.82cqw 1.4cqw; margin-bottom: 1.1cqw; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_방과후.html">&larr; 방과후</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">(가)와 (나), 맞대어 읽는다 &middot; 방과후 4차시 &middot; 업데이트 2026. 10. 19.</div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active cover">
+    <div class="kicker">방 과 후 　 독 서</div>
+    <h1 class="title-main">(가)와 (나),<br>맞대어 읽는다</h1>
+    <div class="rule"></div>
+    <div class="sub">주제 통합 지문 &middot; 예술과 미학 세 세트</div>
+    <div class="foot">
+      <span>2022학년도 수능 &middot; 2026 &middot; 2023학년도 9월 모의평가</span>
+      <span>방과후 &middot; 4차시 (블록 2시간)</span>
+    </div>
+    <div class="page-num">1 / 64</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">오늘 할 일</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:4.8em;">학습지</th><th>지문</th><th style="width:8.4em;">출처</th></tr></thead>
+        <tbody>
+          <tr><th>1&#12316;4번</th><td>기축 통화와 트리핀 딜레마 <span class="dim">&middot; 3차시에 이어서</span></td><td>2022학년도 수능</td></tr>
+          <tr><th>5&#12316;10번</th><td>(가) 영화와 사회 / (나) SF의 노붐과 인지적 낯섦</td><td>2026학년도 9월</td></tr>
+          <tr><th>11&#12316;16번</th><td>(가) 헤겔의 변증법적 미학 / (나) 그에 대한 비판</td><td>2022학년도 수능</td></tr>
+          <tr><th>17&#12316;22번</th><td>(가) 아도르노의 미학 / (나) 그 의의와 한계</td><td>2023학년도 9월</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.3cqw;">
+        <div class="etag">뒤의 세 세트</div>
+        <ul><li>모두 두 글을 묶은 <strong>주제 통합</strong>이다. 한 글씩 따로 읽지 않고, (나)가 (가)의 <strong>무엇을 이어받거나 겨누는지</strong>를 잡으며 읽는다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">2 / 64</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" style="--fs:1.24;">
+    <h2 class="slide-title">배경지식 &middot; 세계의 돈은 어떻게 맞춰졌나<span class="qm">2022학년도 수능 10&#12316;13번 &middot; 학습지 1&#12316;4번</span></h2>
+    <div class="body-area">
+      <div class="flow" style="margin-bottom:1.2cqw;">
+        <div class="flow-step">
+          <div class="emo">금 본위</div>
+          <div class="desc">각 통화를 <strong>금</strong>에 고정. 환율은 저절로 정해진다</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">브레턴우즈 1944</div>
+          <div class="desc"><strong>달러</strong>만 금에(1온스 = 35달러), 다른 통화는 달러에 고정</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">닉슨 쇼크 1971</div>
+          <div class="desc">달러의 금 태환 정지. 체제 붕괴, 변동 환율로</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="emo">플라자 합의 1985</div>
+          <div class="desc">달러 강세를 낮추기로 주요국이 합의. 4번 &lt;보기&gt;의 배경</div>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">지문이 다루는 범위</div>
+        <ul><li>앞의 셋을 지문이 설명하고, 넷째는 &lt;보기&gt;에 &lsquo;국제적 합의&rsquo;로만 나온다. 이름을 몰라도 지문의 환율 규칙으로 푼다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">3 / 64</div>
+  </section>
+  <!-- 4 -->
+  <section class="slide" style="--fs:1.12;">
+    <h2 class="slide-title">지문의 뼈대<span class="qm">2022학년도 수능 10&#12316;13번</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t"><b>기축 통화</b>의 정의 &mdash; 트리핀의 지적 (1960)</div>
+            <div class="d">미국이 경상 수지 적자를 안 내면 국제 유동성이 끊기고, 계속 내면 달러 신뢰가 떨어진다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t"><b>트리핀 딜레마</b> = 유동성 확보 vs 달러 신뢰 &mdash; <b>㉠ 금 본위</b>, <b>㉡ 브레턴우즈</b></div>
+            <div class="d">㉠ 각 통화를 금에 고정 &rarr; 환율 자동 / ㉡ 금 1온스 = 35달러, 다른 통화는 달러에 고정 &rarr; <b>교차 환율</b>이 자동</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3&middot;4</div>
+          <div class="para-body">
+            <div class="t">1970년대 초 &mdash; 적자 누적, 달러 과잉, 금 준비 급감 &rarr; <b>닉슨 쇼크</b> 1971</div>
+            <div class="d">해법은 달러 <b>평가 절하</b>(규정상 불가) 또는 독일 &middot; 일본의 <b>평가 절상</b>(거부). 마르크 &middot; 엔에 투기 수요 &rarr; 금 태환 정지</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">5</div>
+          <div class="para-body">
+            <div class="t">그래도 달러가 기축인 이유 &mdash; <b>규모의 경제</b> (<b>㉢</b> 기축 통화가 없는 경우와 비교)</div>
+            <div class="d">기축이 없으면 두 나라를 짝짓는 수만큼 환율이 생긴다. 하나를 중심에 두면 비용이 준다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">4 / 64</div>
+  </section>
+  <!-- 5 -->
+  <section class="slide" style="--fs:1.02;">
+    <h2 class="slide-title">방향어를 먼저 풀어 둔다</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.2cqw;">
+        <thead><tr><th style="width:11em;">지문의 말</th><th>풀어 쓰면</th></tr></thead>
+        <tbody>
+          <tr><th>달러에 대한 마르크의 환율 <strong>하락</strong></th><td>1달러를 사는 데 마르크가 <strong>덜</strong> 든다 = 마르크 가치 <strong>상승</strong> = 마르크 <strong>평가 절상</strong></td></tr>
+          <tr><th>달러 <strong>평가 절하</strong></th><td>달러 가치를 내림. 브레턴우즈에서는 <strong>규정상 불가</strong></td></tr>
+          <tr><th>경상 수지 <strong>적자</strong></th><td>수입 &gt; 수출. 자국 통화가 밖으로 더 나간다</td></tr>
+          <tr><th>국제 유동성</th><td>어디서나 통하는 지불 수단. 금 &rarr; 금 + 달러</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">기준이 붙은 환율</div>
+        <ul><li>&lsquo;A에 대한 B의 환율&rsquo;은 <strong>A 하나를 B 얼마로 사는가</strong>다. 하락하면 B가 비싸진 것이다. 2번과 4번이 이 한 줄로 갈린다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">5 / 64</div>
+  </section>
+  <!-- 6 -->
+  <section class="slide q-slide" style="--fs:1.44;">
+    <h2 class="slide-title">1번 &middot; 윗글을 통해 답을 찾을 수 <u>없는</u> 질문은?<span class="ans-chip">정답 &#9313;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">브레턴우즈 체제 붕괴 이후에도 달러화가 기축 통화로서 역할을 할 수 있었던 이유는 무엇인가?</span></li>
+        <li class="ans"><span class="n">&#9313;</span><span class="txt">브레턴우즈 체제 붕괴 이후의 세계 경제 위축에 대해 트리핀은 어떤 전망을 했는가?</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">브레턴우즈 체제에서 미국 중앙은행은 어떤 의무를 수행해야 했는가?</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">브레턴우즈 체제에서 국제 유동성의 역할을 한 것은 무엇인가?</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">브레턴우즈 체제에서 달러화 신뢰도 하락의 원인은 무엇인가?</span></li>
+      </ul>
+    </div>
+    <div class="page-num">6 / 64</div>
+  </section>
+  <!-- 7 -->
+  <section class="slide tight" style="--fs:1.16;">
+    <h2 class="slide-title">1번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">트리핀의 말은 1960년, 붕괴는 1971년이다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>5문단 &mdash; <b>규모의 경제</b></td></tr>
+        <tr class="ans"><th>&#9313;</th><td>1문단의 트리핀은 유동성 공급이 <b>중단되면</b> 세계 경제가 위축된다고 했다. 체제 <b>붕괴 이후</b>에 대한 전망은 어디에도 없다 &rarr; <b>답을 찾을 수 없음</b></td></tr>
+        <tr><th>&#9314;</th><td>2문단 &mdash; 금 1온스와 35달러를 언제나 <b>맞교환</b>해 줄 의무</td></tr>
+        <tr><th>&#9315;</th><td>2문단 &mdash; 금에 <b>달러가 추가</b>된 금 환 본위제</td></tr>
+        <tr><th>&#9316;</th><td>1 &middot; 3문단 &mdash; 적자가 지속돼 달러가 <b>과잉 공급</b></td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&lsquo;답을 찾을 수 없는&rsquo; 문항</div>
+        <p>네 선지는 지문 문장을 질문으로 바꾼 것이다. 하나만 지문의 <b>시점 밖</b>을 묻는다. 트리핀의 조건(&lsquo;중단되면&rsquo;)과 선지의 조건(&lsquo;붕괴 이후&rsquo;)이 다르다.</p>
+      </div>
+    </div>
+    <div class="page-num">7 / 64</div>
+  </section>
+  <!-- 8 -->
+  <section class="slide q-slide" style="--fs:1.20;">
+    <h2 class="slide-title">2번 &middot; 윗글을 바탕으로 추론한 내용으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">닉슨 쇼크가 단행된 이후 달러화의 고평가 문제를 해결할 수 있는 달러화의 평가 절하가 가능해졌다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">브레턴우즈 체제에서 마르크화와 엔화의 투기적 수요가 증가한 것은 이들 통화의 평가 절상을 예상했기 때문이다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">금의 생산량 증가를 통한 국제 유동성 공급량의 증가는 트리핀 딜레마 상황을 완화하는 한 가지 방법이 될 수 있다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">트리핀 딜레마는 달러화를 통한 국제 유동성 공급을 중단할 수도 없고 공급량을 무한정 늘릴 수도 없는 상황을 말한다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">브레턴우즈 체제에서 마르크화가 달러화에 대해 평가 절상되면, 같은 금액의 마르크화로 구입 가능한 금의 양은 감소한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">8 / 64</div>
+  </section>
+  <!-- 9 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">2번 &middot; 정답과 근거<span class="qm">정답률 36%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">마르크가 비싸지면 더 많은 달러를, 따라서 더 많은 금을 산다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">2문단의 규칙 두 개</div>
+          <p>금은 <b>달러로만</b> 살 수 있다. 금 1온스 = <b>35달러</b>로 고정.</p>
+          <p>마르크 평가 절상 = 같은 마르크로 <b>더 많은 달러</b>를 바꾼다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9316;</div>
+          <p>같은 금액의 마르크화로 구입 가능한 금의 양은 <b>감소</b>한다.</p>
+          <p class="verdict">더 많은 달러 &rarr; 달러당 금은 고정 &rarr; 더 많은 금. <b>증가</b>가 맞다. 두 단계를 거쳐야 해서 36%다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9312;과 &#9314;</div>
+        <p>&#9312; 평가 절하가 불가능했던 이유는 브레턴우즈의 <b>규정</b>이다. 체제가 무너지면 그 규정도 없다. &#9314; 트리핀 딜레마는 유동성을 달러 적자로만 공급하기 때문에 생긴다. 금이 늘어 유동성이 따로 공급되면 달러에 덜 기대도 된다.</p>
+      </div>
+    </div>
+    <div class="page-num">9 / 64</div>
+  </section>
+  <!-- 10 -->
+  <section class="slide q-slide" style="--fs:1.42;">
+    <h2 class="slide-title">3번 &middot; 세 국가가 각각 다른 통화를 사용할 때, ㉠&#12316;㉢에 대한 설명으로 적절한 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">㉠에서 자동적으로 결정되는 환율의 가짓수는 금에 자국 통화의 가치를 고정한 국가 수보다 하나 적다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">㉡이 붕괴된 이후에도 여전히 달러화가 기축 통화라면 ㉡에 비해 교차 환율의 가짓수는 적어진다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">㉢에서 국가 수가 하나씩 증가할 때마다 환율의 전체 가짓수도 하나씩 증가한다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">㉠에서 ㉡으로 바뀌면 자동적으로 결정되는 환율의 가짓수가 많아진다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">㉡에서 교차 환율의 가짓수는 ㉢에서 생기는 환율의 가짓수보다 적다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">10 / 64</div>
+  </section>
+  <!-- 11 -->
+  <section class="slide tight" style="--fs:1.12;">
+    <h2 class="slide-title">3번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">세 나라를 세어 보면 1 &lt; 3</span>
+      </div>
+      <div class="def-box" style="margin-bottom:1.0cqw;">
+        <div class="dt">세 나라(미국 포함)일 때</div>
+        <p>㉠ 금 본위 &mdash; 셋 다 금에 고정, 환율 <b>3개 모두 자동</b> &nbsp;/&nbsp; ㉡ 브레턴우즈 &mdash; 두 통화가 달러에 고정(2) + 그 둘 사이 <b>교차 환율 1개</b>만 자동 &nbsp;/&nbsp; ㉢ 기축 없음 &mdash; 짝의 수만큼, <b>3개</b>(네 나라면 6)</p>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>㉠ 3개 vs 국가 수 3 &minus; 1 = 2. <span class="u-warn">하나 적지 않다</span></td></tr>
+        <tr><th>&#9313;</th><td>달러가 여전히 기축이면 교차 환율은 그대로 1. <span class="u-warn">적어지지 않는다</span></td></tr>
+        <tr><th>&#9314;</th><td>3국 3개 &rarr; 4국 6개. <span class="u-warn">하나씩이 아니다</span></td></tr>
+        <tr><th>&#9315;</th><td>자동 결정 3 &rarr; 1. <span class="u-warn">적어진다</span></td></tr>
+        <tr class="ans"><th>&#9316;</th><td>㉡ 교차 환율 1 &lt; ㉢ 환율 3 &rarr; <b>정답</b></td></tr>
+      </table>
+    </div>
+    <div class="page-num">11 / 64</div>
+  </section>
+  <!-- 12 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">4번 &middot; &lt;보기&gt; [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.1cqw;">
+        <span class="tag">보기</span>
+        브레턴우즈 체제 붕괴 이후, 기축 통화국 <b>A국</b>은 석유 파동으로 금리가 오르고 통화 공급이 줄었다. 여기에 소득세 감면과 군비 증대가 금리를 더 올렸고, 높은 금리로 <b>외국 자본이 대량 유입</b>되었다. A국이 주도한 국제적 합의로 A &middot; B &middot; C 세 나라가 외환 시장에 개입했고, A국 통화에 대한 B국 통화의 환율은 <b>50%</b>, C국 통화의 환율은 <b>30%</b> 하락했다.
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:9em;">&lt;보기&gt;의 사건</th><th>풀어 쓰면</th></tr></thead>
+        <tbody>
+          <tr><th>자본 대량 유입</th><td>다들 A국 통화를 사려 함 &rarr; A국 통화 가치 <strong>상승</strong>(고평가)</td></tr>
+          <tr><th>B 환율 50% 하락</th><td>B국 통화가 A국 통화에 대해 <strong>절상</strong>. C는 30%만 절상</td></tr>
+          <tr><th>B가 C보다 더 절상</th><td>B국 통화에 대한 C국 통화의 환율은 <strong>상승</strong>. C 물건이 B에서 싸진다</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">12 / 64</div>
+  </section>
+  <!-- 13 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">4번 &middot; 윗글을 참고할 때, &lt;보기&gt;에 대한 반응으로 가장 적절한 것은?<span class="ans-chip">정답 &#9315;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">A국의 금리 인상과 통화 공급 감소로 인해 A국 통화의 신뢰도가 낮아진 것은 외국 자본이 대량으로 유입되었기 때문이겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">국제적 합의로 인한 A국 통화에 대한 B국 통화의 환율 하락으로 국제 유동성 공급량이 증가하여 A국 통화의 가치가 상승했겠군.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">다른 모든 조건이 변하지 않았다면, 국제적 합의로 인해 A국 통화에 대한 B국 통화의 환율과 B국 통화에 대한 C국 통화의 환율은 모두 하락했겠군.</span></li>
+        <li class="ans"><span class="n">&#9315;</span><span class="txt">다른 모든 조건이 변하지 않았다면, 국제적 합의로 인해 A국 통화에 대한 B국과 C국 통화의 환율이 하락하여, B국에 대한 C국의 경상 수지는 개선되었겠군.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">다른 모든 조건이 변하지 않았다면, A국의 소득세 감면과 군비 증대로 A국의 경상 수지가 악화되며, 그 완화 방안 중 하나는 A국 통화에 대한 B국 통화의 환율을 상승시키는 것이겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">13 / 64</div>
+  </section>
+  <!-- 14 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">4번 &middot; 정답과 근거<span class="qm">정답률 33%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9315;</span>
+        <span class="why">C국 통화가 B국 통화보다 덜 올랐으니 C의 물건이 B에서 싸진다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>자본이 유입되면 A국 통화는 <span class="u-warn">비싸진다</span>. 신뢰도 하락과 무관하다</td></tr>
+        <tr><th>&#9313;</th><td>환율 하락은 B국 통화 절상 = A국 통화 가치 <span class="u-warn">하락</span>. 유동성 공급량과도 상관없다</td></tr>
+        <tr><th>&#9314;</th><td>B가 50%, C가 30% 절상. B에 대한 C의 환율은 <span class="u-warn">상승</span>한다. 둘 다 하락이 아니다</td></tr>
+        <tr class="ans"><th>&#9315;</th><td>C국 통화가 B국 통화보다 상대적으로 싸졌다 &rarr; C의 수출이 B에서 유리 &rarr; B에 대한 C의 경상 수지 <b>개선</b> &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9316;</th><td>A의 적자를 줄이려면 A국 통화가 <b>싸져야</b> 한다. 그것은 A에 대한 B의 환율 <span class="u-warn">하락</span>이다. 상승이 아니다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&#9315;가 성립하는 두 단계</div>
+        <p>&lsquo;A에 대한 환율&rsquo;만 주어졌는데 묻는 것은 <b>B와 C 사이</b>다. 두 통화가 모두 절상됐으니 <b>차이</b>만 남는다. 50% &gt; 30%이므로 C가 B보다 덜 올랐고, 덜 오른 쪽의 물건이 상대국에서 싸진다. 5쪽의 한 줄을 두 번 적용하면 끝난다.</p>
+      </div>
+    </div>
+    <div class="page-num">14 / 64</div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" style="--fs:1.04;">
+    <h2 class="slide-title">도구 &#9312; &middot; 두 글의 관계부터 잡는다</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.3cqw;">
+        <thead><tr><th style="width:6.6em;">세트</th><th>(가)</th><th>(나)</th><th style="width:5.6em;">관계</th></tr></thead>
+        <tbody>
+          <tr><th>2026.9</th><td>영화로 사회를 읽는 두 방식</td><td>SF의 장르적 특징</td><td><strong>이어받기</strong></td></tr>
+          <tr><th>2022수능</th><td>헤겔의 변증법적 미학</td><td>그 체계의 흠결</td><td><strong>비판</strong></td></tr>
+          <tr><th>2023.9</th><td>아도르노의 미학</td><td>그 의의와 한계</td><td><strong>평가</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">이음매가 되는 문장</div>
+        <ul>
+          <li>(가)의 <strong>마지막 문장</strong>과 (나)의 <strong>첫 문장</strong>을 먼저 본다. 2026.9는 &lsquo;이러한 역사화는 SF의 경우에도 해당된다&rsquo;에서 (나)로 넘어간다.</li>
+          <li>(나)에 &lsquo;그런데&rsquo;, &lsquo;하지만&rsquo;, &lsquo;과연 &#12316;일까&rsquo;가 나오면 비판이다. 그 문장 앞까지가 (나)가 인정하는 부분이다.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-num">15 / 64</div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" style="--fs:1.18;">
+    <h2 class="slide-title">도구 &#9313; &middot; 개념은 짝으로 적는다</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.3cqw;">
+        <thead><tr><th style="width:6.6em;">세트</th><th>짝을 이루는 개념</th></tr></thead>
+        <tbody>
+          <tr><th>2026.9</th><td><strong>이미지 해석</strong>(크라카우어) &harr; <strong>서사의 역사화</strong>(제임슨) / <strong>노붐</strong> &harr; <strong>인지적 낯섦</strong></td></tr>
+          <tr><th>2022수능</th><td>직관 &middot; 표상 &middot; 사유 &harr; 예술 &middot; 종교 &middot; 철학 &harr; 외면성 &middot; 내면성 &middot; 종합</td></tr>
+          <tr><th>2023.9</th><td><strong>동일성</strong> &harr; <strong>비동일성</strong> / 대중 예술 &harr; 전위 예술 / 미메시스</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">왜 짝인가</div>
+        <ul><li>예술 지문의 개념은 혼자 정의되지 않는다. <strong>무엇과 다른가</strong>로 정의된다. 짝으로 적어 두면 선지가 둘을 바꿔 끼웠을 때 바로 걸린다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">16 / 64</div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide" style="--fs:1.22;">
+    <h2 class="slide-title">도구 &#9314; &middot; 비판은 겨냥한 문장을 찾는다</h2>
+    <div class="body-area">
+      <div class="cards2" style="margin-bottom:1.3cqw;">
+        <div class="c3">
+          <h3><span class="word">2022수능 (나)</span></h3>
+          <p><strong>겨냥</strong> &mdash; (가) &lsquo;예술의 객관성과 종교의 주관성은 철학에서 종합된다&rsquo;</p>
+          <p><strong>지적</strong> &mdash; 외관만 변증법이다. 객관성은 지워지고 주관성만 강화될 뿐 종합은 없다.</p>
+        </div>
+        <div class="c3">
+          <h3><span class="word">2023.9 (나)</span></h3>
+          <p><strong>겨냥</strong> &mdash; (가) &lsquo;전위 예술을 예술이 추구해야 할 바람직한 모습으로 제시&rsquo;</p>
+          <p><strong>지적</strong> &mdash; 동일화를 비판하면서 스스로 전위 예술로 예술을 동일화한다.</p>
+        </div>
+      </div>
+      <div class="emotion">
+        <div class="etag">비판 문항을 푸는 자리</div>
+        <ul><li>(나)의 비판 한 줄을 읽으면 바로 (가)로 돌아가 <strong>그 비판이 겨냥한 원문</strong>에 선을 긋는다. 문항은 두 문장 사이의 거리를 묻는다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">17 / 64</div>
+  </section>
+
+  <!-- 18 -->
+  <section class="slide" style="--fs:1.44;">
+    <h2 class="slide-title">읽는 순서</h2>
+    <div class="body-area">
+      <ul class="num-list">
+        <li><span class="n">1</span>(가)의 끝과 (나)의 처음을 보고 <strong>이어받기인지 비판인지</strong>를 정한다.</li>
+        <li><span class="n">2</span>(가)를 읽으며 개념을 <strong>짝으로</strong> 여백에 적는다.</li>
+        <li><span class="n">3</span>(나)에서 비판이 나오면 (가)의 <strong>겨냥된 문장</strong>에 선을 긋는다. (나)가 인정하는 부분도 따로 표시한다.</li>
+        <li><span class="n">4</span>&lt;보기&gt; 문항은 &lsquo;<strong>누구의 관점에서</strong>&rsquo;를 먼저 읽는다. (가)의 인물인가, (나)의 글쓴이인가.</li>
+      </ul>
+    </div>
+    <div class="page-num">18 / 64</div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide" style="--fs:1.02;">
+    <h2 class="slide-title">배경지식 &middot; 영화와 SF를 읽은 사람들<span class="qm">2026학년도 9월 4&#12316;9번 &middot; 학습지 5&#12316;10번</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.1cqw;">
+        <tr><th>크라카우어</th><td>독일의 영화 이론가. &#12302;칼리가리에서 히틀러까지&#12303;(1947)에서 1920년대 독일 영화의 밀실 &middot; 광인 &middot; 독재자 이미지로 나치 등장 전의 사회 심리를 읽었다. 지문의 예가 바로 이 책이다.</td></tr>
+        <tr><th>제임슨</th><td>미국의 문학 비평가. &lsquo;언제나 역사화하라&rsquo;는 말로 알려졌다. SF가 미래를 그리는 까닭은 <strong>현재를 과거처럼</strong> 보게 하려는 데 있다고 보았다.</td></tr>
+        <tr><th>수빈</th><td>SF 이론가. &lsquo;노붐&rsquo;과 &lsquo;인지적 낯섦&rsquo;이라는 말을 만들었다. 익숙한 것을 낯설게 만들어 다시 보게 한다는, 연극의 &lsquo;낯설게 하기&rsquo;에서 이어진 생각이다.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">공통점</div>
+        <ul><li>세 사람 모두 영화와 SF를 <strong>오락이 아니라 사회를 비추는 거울</strong>로 본다. 다만 무엇으로 비추는지(이미지, 서사, 낯섦)가 다르다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">19 / 64</div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide" style="--fs:1.44;">
+    <h2 class="slide-title">지문의 뼈대 &middot; (가)<span class="qm">2026학년도 9월</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">영화는 <b>대중의 취향</b>에 민감하다</div>
+            <div class="d">장르의 유행 &middot; 침체, 전형적 관습의 형성과 변형에 대중의 취향이 반영된다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t"><b>크라카우어</b> &mdash; 표면의 이미지를 해석해 <b>이면의 이념</b>을 읽는다</div>
+            <div class="d">영화는 드러내면서 숨긴다. 불순하거나 위험한 이념은 이면에. 밀실 &middot; 광인 &middot; 독재자 &rarr; 현실 도피 심리, 왕정복고 이념</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t"><b>제임슨</b> &mdash; 서사로 사회를 <b>총체적</b>으로 이해한다</div>
+            <div class="d">파편적인 현재는 역사가 된 뒤에야 보인다. 서사는 사건을 <b>완료된 과거처럼</b> 서술해 조망을 가능케 한다 = <b>㉠ 역사화</b>, SF에도 해당</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">20 / 64</div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide" style="--fs:1.18;">
+    <h2 class="slide-title">지문의 뼈대 &middot; (나)<span class="qm">2026학년도 9월</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">SF에서 중요한 것은 과학적 진위가 아니라 <b>개연성</b></div>
+            <div class="d">설정과 사건의 인과가 합리적으로 납득되느냐</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t"><b>노붐</b> &mdash; 당대를 뛰어넘어 경이로움을 주는 대상</div>
+            <div class="d">일회적 놀라움이 아니라 작품 전반의 <b>지배적 요소</b>, 현실과 허구의 <b>차이</b>를 드러냄, 세계관을 드러내는 장치</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t"><b>인지적 낯섦</b> &mdash; 현실을 닮았지만 다른 세계가 촉발</div>
+            <div class="d">다름을 인지 &rarr; 현실에 거리를 두고 비판적으로 봄. <b>감각적 충격을 통해 이성적 성찰에 도달</b>하는 체험</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">[A]</div>
+          <div class="para-body">
+            <div class="t"><b>유토피아</b>는 SF의 중요한 소재</div>
+            <div class="d">위기의 시대에 <b>현실 너머</b>의 이상 세계를 탐색하는 SF의 역할이 더 중요해졌다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">21 / 64</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide q-slide" style="--fs:1.22;">
+    <h2 class="slide-title">5번 &middot; (가), (나)에 대한 이해로 가장 적절한 것은?<span class="ans-chip">정답 &#9313;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">(가) : 영화에 나타나는 전형적인 모티브는 특정 시대의 대중이 공유하고 있는 이념을 투명하게 드러낸다.</span></li>
+        <li class="ans"><span class="n">&#9313;</span><span class="txt">(가) : 크라카우어는 독일 영화들에 쓰인 밀실, 광인, 독재자의 이미지에서 불순하다고 여겨지는 이념을 읽어 낼 수 있다고 본다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">(나) : SF 속 세계와 현실 세계 간의 &lsquo;다름&rsquo;은 SF의 허구적 설정을 통해 그 간격을 좁힐 수 있다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">(나) : 수빈은 당대에서 체험할 수 있는 범위를 넘어서는 상상은 SF의 소재로 부적절하다고 본다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">(나) : SF 작품의 허구적 세계가 현실 세계와 닮았다는 점을 깨달아야 현실에 대한 비판적 인식이 가능하다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">22 / 64</div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide" style="--fs:1.38;">
+    <h2 class="slide-title">5번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">불순한 이념은 이면에 감춰지고, 그것을 읽어 낸다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>이념은 영화에 <span class="u-warn">투명하게 드러나지 않는다</span>. 크라카우어의 출발점이 바로 이것이다</td></tr>
+        <tr class="ans"><th>&#9313;</th><td>(가) 2문단 &mdash; 불순하거나 위험한 이념은 이면에 감춰지고, 밀실 &middot; 광인 &middot; 독재자에서 <b>왕정복고의 이념</b>을 읽어 낸다 &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9314;</th><td>다름은 인지적 낯섦을 <b>촉발</b>하는 것이다. 허구적 설정이 간격을 <span class="u-warn">좁힌다</span>는 서술은 없다</td></tr>
+        <tr><th>&#9315;</th><td>노붐 자체가 <b>당대를 뛰어넘는</b> 대상이고, 유토피아도 SF의 소재로 받아들였다. <span class="u-warn">부적절하다고 보지 않는다</span></td></tr>
+        <tr><th>&#9316;</th><td>비판적 인식은 닮은 점이 아니라 <span class="u-warn">다름</span>을 인지할 때 생긴다</td></tr>
+      </table>
+    </div>
+    <div class="page-num">23 / 64</div>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">6번 &middot; &lsquo;제임슨&rsquo;의 견해를 바탕으로, ㉠의 의미를 추론한 내용으로 가장 적절한 것은?<span class="ans-chip">정답 &#9313;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">㉠</span>
+        이러한 <b>&lsquo;역사화&rsquo;</b>는 미래를 다룬 SF의 경우에도 해당된다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">SF는 현재 시점에서 미래를 묘사하여 사회의 발전 양상에 대한 총체적인 전망을 드러낸다.</span></li>
+        <li class="ans"><span class="n">&#9313;</span><span class="txt">SF는 미래를 완료된 과거처럼 바라보는 방식을 통해 오늘날의 사회를 총체적으로 이해하게 한다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">SF는 현재 진행되는 사건이 미래에 완료되는 내용을 담아 사회 변화를 통시적으로 고찰하게 한다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">SF는 미래에 일어날 법한 사건을 현재의 사건으로 재구성하여 보여 줌으로써 우리 사회의 지향점을 제시한다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">SF는 미래 시점에서 시작해서 현재 시점을 향해 전개되는 이야기를 통해 우리 사회의 총체적 면모에 주목하게 한다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">24 / 64</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide tight" style="--fs:1.12;">
+    <h2 class="slide-title">6번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">역사화 = 완료된 과거처럼 서술해 총체를 조망하기</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가) 3문단</div>
+          <p>서사는 사건을 회고적인 방식으로, <b>이미 완료된 과거처럼</b> 서술한다는 점에서 <b>총체적인 조망</b>을 가능하게 한다.</p>
+          <p>목표는 <b>현재</b> 우리가 속한 사회의 총체를 파악하는 것이다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">SF에 대면</div>
+          <p>미래 이야기를 <b>이미 끝난 일처럼</b> 들려준다 &rarr; 그 미래가 딛고 선 <b>오늘</b>이 한눈에 보인다.</p>
+          <p class="verdict">&#9312;은 전망, &#9314;&#9316;은 시간 순서, &#9315;는 지향점으로 바꿔 놓았다. &lsquo;완료된 과거처럼&rsquo;을 지닌 것은 &#9313;뿐이다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">개념은 짝으로</div>
+        <p>역사화는 크라카우어의 &lsquo;이면의 이념 읽기&rsquo;와 짝을 이룬다. 크라카우어는 <b>심층적</b>, 제임슨은 <b>총체적</b>. 이 두 낱말을 바꿔 쓴 선지가 나오면 곧바로 지운다.</p>
+      </div>
+    </div>
+    <div class="page-num">25 / 64</div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide q-slide" style="--fs:1.00;">
+    <h2 class="slide-title">7번 &middot; 다음의 입장에서 [A]를 평가한 내용으로 가장 적절한 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">다음의 입장</span>
+        SF의 유토피아는 대부분 &lsquo;봉쇄된 요새&rsquo;처럼 분리되어 안전해 보이지만, 결국 외부의 위협이나 내부의 갈등으로 <b>붕괴</b>된다. 이는 유토피아가 근본적으로 실현 불가능하며, <b>현실의 문제에 대한 해답이 현실 너머에는 존재하지 않는다</b>는 점을 말해 준다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">수빈은 현실의 부정적 양상에 대한 인식이 부재한 상황에서, SF에서 그리는 이상적 가치에 대한 탐색을 말하고 있다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">SF에서 이상적인 세계를 상정할 수 있다는 수빈의 생각은 유토피아의 근원적인 모순에 대한 인식에 기반한 것이다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">SF가 유토피아에 대한 동경을 계승한다는 수빈의 생각은 유토피아에 대한 인간의 갈망이 항구적임을 간과한 것이다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">수빈이 말하는 유토피아는 현실에서 실현될 수 없지만, 현실을 벗어나려는 욕망은 SF의 허구적 이야기를 통해 해소된다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">유토피아의 한계를 고려할 때, SF를 통해 현실 너머에서 대안을 모색하고자 하는 수빈의 생각은 수정될 필요가 있다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">26 / 64</div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide" style="--fs:1.04;">
+    <h2 class="slide-title">7번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">&lsquo;현실 너머&rsquo;를 수빈은 긍정하고, 이 입장은 부정한다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">[A] 수빈</div>
+          <p>위기의 시대에 <b>현실 너머</b>에 존재하는 이상적인 세계를 탐색하는 SF의 역할이 더욱 중요해졌다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">다음의 입장</div>
+          <p>현실의 문제에 대한 해답이 <b>현실 너머에는 존재하지 않는다</b>.</p>
+          <p class="verdict">두 문장이 정면으로 부딪친다. 이 입장에서 보면 수빈의 생각은 수정되어야 한다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">나머지가 어긋난 자리</div>
+        <p>&#9312; 수빈은 환경 오염 &middot; 전쟁이라는 위기를 <b>전제</b>했다. &#9313; 유토피아의 모순을 말한 것은 수빈이 아니라 <b>이 입장</b>이다. &#9314; 수빈도 인간이 예로부터 미지의 세계를 동경해 왔다고 했다. &#9315; 유토피아가 붕괴되니 욕망이 <b>해소된다</b>고 볼 수 없다.</p>
+      </div>
+    </div>
+    <div class="page-num">27 / 64</div>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide q-slide" style="--fs:1.40;">
+    <h2 class="slide-title">8번 &middot; 노붐, 인지적 낯섦에 대한 설명으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">노붐은 현실 세계와 작품 속 세계 간의 차이를 드러내는 요소이다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">노붐은 당대의 지식이나 기술로는 현실적으로 구현하기 어려운 새로운 대상이다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">노붐은 작품 전반에 영향을 미치는 요소이자, 작품의 세계관을 드러내는 장치이다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">인지적 낯섦은 친숙함을 주던 일상적인 대상이나 세계에 대해 낯섦을 느끼게 되는 경험이다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">인지적 낯섦은 작품에 표현된 세계에서 촉발되는 감각적 충격이 이성적 성찰에 수반되는 체험이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">28 / 64</div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">8번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">충격이 먼저, 성찰이 나중이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(나) 3문단</div>
+          <p>인지적 낯섦은 <b>감각적 충격을 통해 이성적 성찰에 도달</b>하는 정서적이고 지적인 체험이다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9316;</div>
+          <p>감각적 충격이 이성적 성찰에 <b>수반되는</b> 체험이다.</p>
+          <p class="verdict">&lsquo;A를 통해 B에 도달&rsquo;은 A &rarr; B다. &lsquo;A가 B에 수반&rsquo;은 B가 중심이고 A가 따라붙는다. 선후가 뒤집혔다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">표현만 바꾼 선지는 화살표로</div>
+        <p>&lsquo;통해 &#12316;에 도달&rsquo;, &lsquo;&#12316;에 수반되는&rsquo;, &lsquo;&#12316;로 이어지는&rsquo;은 모두 순서를 담은 말이다. 원문 옆에 충격 &rarr; 성찰로 적어 두면 뒤집은 선지가 그대로 보인다.</p>
+      </div>
+    </div>
+    <div class="page-num">29 / 64</div>
+  </section>
+
+  <!-- 30 -->
+  <section class="slide tight" style="--fs:1.04;">
+    <h2 class="slide-title">9번 &middot; &lt;보기&gt; [3점]</h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.1cqw;">
+        <span class="tag">보기 &middot; 영화 비평</span>
+        SF 영화 &#12300;○○&#12301;의 미래 세계는 첨단 기술이 집약된 <b>허공의 도시</b>와 무너진 콘크리트 잔해로 뒤덮인 <b>지상</b>으로 나뉜다. 은빛 허공의 도시는 가히 <b>압도적</b>이다. 몇몇 장면은 <b>물리 법칙에 어긋나 보이지만</b> 인과가 설득력 있어 문제없다. 두 구역의 갈등을 다룬 서사는 <b>우리 사회를 조망</b>하게 한다. 다만 <b>갑작스러운 화해</b>로 맺는 결말은 요즘 SF의 경향에서 벗어나지 못했다.
+      </div>
+      <table class="cmp-table">
+        <thead><tr><th style="width:9.6em;">&lt;보기&gt;의 표현</th><th>지문의 어디에 대는가</th></tr></thead>
+        <tbody>
+          <tr><th>콘크리트 잔해의 지상</th><td>(가) 2문단 &middot; 크라카우어의 <strong>표면</strong>의 이미지 (이면이 아니다)</td></tr>
+          <tr><th>압도적</th><td>(나) 2문단 &middot; 경이로움, SF의 장르적 특징</td></tr>
+          <tr><th>물리 법칙 어긋남</th><td>(나) 1문단 &middot; 진위가 아니라 <strong>개연성</strong></td></tr>
+          <tr><th>사회를 조망 / 유행하는 결말</th><td>(가) 3문단 제임슨의 총체적 조망 / (가) 1문단 대중의 취향</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="page-num">30 / 64</div>
+  </section>
+
+  <!-- 31 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">9번 &middot; (가), (나)를 바탕으로 &lt;보기&gt;를 이해한 내용으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9312;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li class="ans"><span class="n">&#9312;</span><span class="txt">&lsquo;지상&rsquo;을 &lsquo;콘크리트 건물의 잔해로 뒤덮인 공간&rsquo;이라고 언급한 것은, (가)에 따르면 이미지의 이면을 읽어 내어 사회를 심층적으로 이해한 결과에 해당하겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">&lsquo;허공의 도시&rsquo;와 관련해 언급한 &lsquo;압도적&rsquo;인 느낌은, (나)에 따르면 SF의 장르적 특징에 해당하는 것이라고 할 수 있겠군.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">&lsquo;몇몇 장면&rsquo;의 과학적 오류를 문제 삼지 않은 것은, (나)에 따르면 SF에서 과학적 진위가 아니라 개연성이 중요하다는 점과 관련 있겠군.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">두 구역의 갈등을 다룬 서사가 &lsquo;우리 사회를 조망하게 한다&rsquo;라고 언급한 것은, (가)에 따르면 분산적이고 파편적인 사회를 종합적으로 통찰한 것이라고 할 수 있겠군.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">최근 &lsquo;SF 영화의 경향&rsquo;이라고 간주한 &lsquo;갑작스러운 화해&rsquo;는, (가)에 따르면 대중의 취향이 영화에 반영된 것이라고 할 수 있겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">31 / 64</div>
+  </section>
+
+  <!-- 32 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">9번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9312;</span>
+        <span class="why">화면에 보이는 것을 적었을 뿐, 이면을 읽은 것이 아니다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가) 2문단</div>
+          <p>영화의 <b>표면</b>에 가시적으로 드러난 모티브나 이미지가 암시하는 것을 해석함으로써 그 <b>이면</b>에 감추어진 이념을 읽어 낸다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9312;</div>
+          <p>&lsquo;콘크리트 잔해로 뒤덮인 공간&rsquo; = 이면을 읽어 낸 <b>결과</b></p>
+          <p class="verdict">잔해로 뒤덮인 지상은 화면에 그대로 보이는 <b>표면의 이미지</b>다. 그것이 무엇을 암시하는지까지 말해야 이면을 읽은 것이다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">표면과 이면을 짝으로 적었다면</div>
+        <p>크라카우어의 방법은 <b>표면 &rarr; 해석 &rarr; 이면</b>의 세 단계다. 비평은 첫 단계만 적었는데 선지는 셋째 단계라고 했다. 짝으로 적어 둔 사람은 &lsquo;결과&rsquo;라는 낱말에서 바로 멈춘다.</p>
+      </div>
+    </div>
+    <div class="page-num">32 / 64</div>
+  </section>
+
+  <!-- 33 -->
+  <section class="slide q-slide" style="--fs:1.30;">
+    <h2 class="slide-title">10번 &middot; ⓐ, ⓑ의 의미로 쓰인 예가 바르게 짝지어진 것은?<span class="ans-chip">정답 &#9312;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">문맥</span>
+        ⓐ 과학적 지식에 기반을 <b>둔다고</b> &rarr; 근거로 삼다 &nbsp;/&nbsp; ⓑ 현실에 거리를 <b>두고</b> &rarr; 간격을 유지하다
+      </div>
+      <ul class="choices">
+        <li class="ans"><span class="n">&#9312;</span><span class="txt">ⓐ 실화에 근거를 두고 있었다. / ⓑ 그와 두었던 거리는 멀어지기만 했다. &nbsp;<span class="dim">&mdash; 둘 다 맞다</span></span></li>
+        <li><span class="n">&#9313;</span><span class="txt">ⓐ 큰 미련을 두지 마라. / ⓑ 산 아래 두었던 본진을 포기했다. &nbsp;<span class="dim">&mdash; 마음을 가지다 / 설치하다</span></span></li>
+        <li><span class="n">&#9314;</span><span class="txt">ⓐ 뜻을 어디에 두느냐 / ⓑ 체력 증진을 목표로 두려고 &nbsp;<span class="dim">&mdash; 생각을 가지다 / 목표로 삼다</span></span></li>
+        <li><span class="n">&#9315;</span><span class="txt">ⓐ 누이를 뒤에 두고도 / ⓑ 큰언니와 거리를 두게 되었다. &nbsp;<span class="dim">&mdash; ⓐ는 남겨 놓다</span></span></li>
+        <li><span class="n">&#9316;</span><span class="txt">ⓐ 최고의 가치를 두었다. / ⓑ 결승선을 6미터 앞에 두고 &nbsp;<span class="dim">&mdash; ⓑ는 사이에 놓다</span></span></li>
+      </ul>
+    </div>
+    <div class="page-num">33 / 64</div>
+  </section>
+
+  <!-- 34 -->
+  <section class="slide" style="--fs:1.02;">
+    <h2 class="slide-title">배경지식 &middot; 헤겔과 변증법<span class="qm">2022학년도 수능 4&#12316;9번 &middot; 학습지 11&#12316;16번</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.1cqw;">
+        <tr><th>헤겔</th><td>19세기 독일 철학자. 세계 전체를 하나의 체계로 설명하려 했다. &#12302;미학 강의&#12303;에서 예술을 철학 체계 안에 자리매김했다.</td></tr>
+        <tr><th>변증법</th><td>대립하는 두 항이 부딪쳐 <strong>둘을 모두 살리면서 한 단계 높은</strong> 셋째 항으로 나아가는 운동. 흔히 정립 &middot; 반정립 &middot; 종합으로 부른다.</td></tr>
+        <tr><th>예술의 종언</th><td>헤겔은 예술이 진리를 드러내는 최고의 방식이던 시대는 지나갔다고 보았다. 지문의 &lsquo;머나먼 과거로 한정된다&rsquo;가 이 생각이다.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">(나)가 문제 삼는 것</div>
+        <ul><li>변증법의 핵심은 &lsquo;종합&rsquo;인데, 헤겔의 예술 &rarr; 종교 &rarr; 철학은 한쪽(주관성)이 <strong>이기기만</strong> 한다. 헤겔이 자기 방법을 자기 미학에 지키지 못했다는 비판이다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">34 / 64</div>
+  </section>
+
+  <!-- 35 -->
+  <section class="slide" style="--fs:1.32;">
+    <h2 class="slide-title">지문의 뼈대 &middot; (가)<span class="qm">2022학년도 수능</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t"><b>㉠ 정립-반정립-종합</b> &mdash; 대립하는 두 범주가 조화로운 통일로 가는 <b>수렴적 상향성</b></div>
+            <div class="d">헤겔에게 변증법은 논증의 방식이자 <b>논증 대상의 존재 방식</b>. 이념과 현실은 하나의 체계</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">예술 &middot; 종교 &middot; 철학 = <b>절대정신</b>의 세 형태. 내용은 같고 <b>형식</b>이 다르다</div>
+            <div class="d">형식은 직관 &middot; 표상 &middot; 사유. 직관의 외면성 + 표상의 내면성 &rarr; 사유에서 종합 / 예술의 객관성 + 종교의 주관성 &rarr; 철학에서 종합</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">형식 차이 &rarr; 인식 수준 차이 &rarr; <b>㉡ 예술-종교-철학</b> 순의 등급</div>
+            <div class="d">예술은 초보, 종교는 성장, 철학은 완숙. 명실상부한 절대정신은 <b>철학뿐</b>, 예술은 머나먼 과거에만</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">35 / 64</div>
+  </section>
+
+  <!-- 36 -->
+  <section class="slide" style="--fs:1.00;">
+    <h2 class="slide-title">개념을 짝으로 놓으면<span class="qm">2022학년도 수능 (가) 2문단</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.2cqw;">
+        <thead><tr><th style="width:5.4em;">&nbsp;</th><th>정립</th><th>반정립</th><th>종합</th></tr></thead>
+        <tbody>
+          <tr><th>지성 형식</th><td><strong>직관</strong> &middot; 주어진 물질적 대상을 감각으로 지각</td><td><strong>표상</strong> &middot; 대상 유무와 무관하게 내면에서 심상을 떠올림</td><td><strong>사유</strong> &middot; 개념으로 파악하는 논리적 지성</td></tr>
+          <tr><th>절대정신</th><td>예술</td><td>종교</td><td>철학</td></tr>
+          <tr><th>성격</th><td>외면성 &middot; 객관성</td><td>내면성 &middot; 주관성</td><td>둘의 종합</td></tr>
+          <tr><th>단계</th><td>초보</td><td>성장</td><td>완숙</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">이 표가 답하는 문항</div>
+        <ul><li>13번은 첫째 줄로, 14번은 셋째 줄로, 15번은 첫째 칸과 셋째 칸의 자리바꿈으로 푼다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">36 / 64</div>
+  </section>
+
+  <!-- 37 -->
+  <section class="slide" style="--fs:1.32;">
+    <h2 class="slide-title">지문의 뼈대 &middot; (나)<span class="qm">2022학년도 수능</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t">변증법의 매력은 <b>종합</b></div>
+            <div class="d">한쪽의 일방적 승리도, 둘 다 사라지는 중화도 안 된다. 양쪽 본질이 살아 질적으로 고양되어야 한다</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">헤겔 미학은 <b>외관만</b> 변증법 &mdash; 진정한 종합이 없다</div>
+            <div class="d">외면성 &middot; 객관성은 점차 <b>지워지고</b> 내면성 &middot; 주관성만 <b>강화</b>된다. 예술의 본질인 <b>감각적 지각성</b>이 종합 단계에서 소거</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t">철학의 주관성이 <b>재객관화</b>되는 단계를 추가했어야 &mdash; 예술은 <b>&lsquo;철학 이후&rsquo;</b>의 후보</div>
+            <div class="d">많은 예술 작품은 &lsquo;사유&rsquo;를 매개로 해서만 설명된다. 헤겔 자신도 알았을 것</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">37 / 64</div>
+  </section>
+
+  <!-- 38 -->
+  <section class="slide q-slide" style="--fs:1.20;">
+    <h2 class="slide-title">11번 &middot; (가)와 (나)에 대한 설명으로 가장 적절한 것은?<span class="ans-chip">정답 &#9312;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li class="ans"><span class="n">&#9312;</span><span class="txt">(가)와 (나)는 모두 특정한 철학적 방법에 기반한 체계를 바탕으로 예술의 상대적 위상을 제시하고 있다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">(가)와 (나)는 모두 특정한 철학적 방법에 대한 상반된 평가를 바탕으로 더 설득력 있는 미학 이론을 모색하고 있다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">(가)와 달리 (나)는 특정한 철학적 방법의 시대적 한계를 지적하고 이에 맞서는 혁신적 방법을 제안하고 있다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">(가)와 달리 (나)는 특정한 철학적 방법에서 파생된 미학 이론을 바탕으로 예술 장르를 범주적으로 유형화하고 있다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">(나)와 달리 (가)는 특정한 철학적 방법의 통시적인 변화 과정을 적용하여 철학사를 단계적으로 설명하고 있다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">38 / 64</div>
+  </section>
+
+  <!-- 39 -->
+  <section class="slide" style="--fs:1.04;">
+    <h2 class="slide-title">11번 &middot; 정답과 근거<span class="qm">정답률 52%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9312;</span>
+        <span class="why">둘 다 변증법 위에서 예술의 자리를 매긴다</span>
+      </div>
+      <table class="otable">
+        <tr class="ans"><th>&#9312;</th><td>(가)는 변증법 체계에서 예술을 <b>초보 단계</b>에, (나)는 같은 변증법에 충실하자며 예술을 <b>&lsquo;철학 이후&rsquo;</b>에 놓는다 &rarr; <b>정답</b></td></tr>
+        <tr><th>&#9313;</th><td>(가)에는 변증법에 대한 <span class="u-warn">평가가 없다</span>. 설명만 한다</td></tr>
+        <tr><th>&#9314;</th><td>(나)는 변증법을 버리지 않는다. 오히려 <span class="u-warn">변증법에 더 충실하라</span>고 한다. 혁신적 새 방법이 아니다</td></tr>
+        <tr><th>&#9315;</th><td>예술 <span class="u-warn">장르</span>를 나누는 대목이 없다</td></tr>
+        <tr><th>&#9316;</th><td>예술 &middot; 종교 &middot; 철학의 등급이지 <span class="u-warn">철학사</span>의 변화가 아니다</td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&#9314;이 끌리는 이유</div>
+        <p>(나)가 &lsquo;비판&rsquo;이라는 것만 잡으면 &lsquo;한계를 지적하고 새 방법 제안&rsquo;이 맞아 보인다. 비판이 <b>방법</b>을 향하는지, 방법을 <b>잘못 쓴 것</b>을 향하는지 갈라야 한다. (나)는 후자다.</p>
+      </div>
+    </div>
+    <div class="page-num">39 / 64</div>
+  </section>
+
+  <!-- 40 -->
+  <section class="slide q-slide" style="--fs:1.44;">
+    <h2 class="slide-title">12번 &middot; (가)에서 알 수 있는 헤겔의 생각으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9314;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">예술 &middot; 종교 &middot; 철학 간에는 인식 내용의 동일성과 인식 형식의 상이성이 존재한다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">세계의 근원적 질서와 시 &middot; 공간적 현실은 하나의 변증법적 체계를 이룬다.</span></li>
+        <li class="ans"><span class="n">&#9314;</span><span class="txt">절대정신의 세 가지 형태는 지성의 세 가지 형식이 인식하는 대상이다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">변증법은 철학적 논증의 방법이자 논증 대상의 존재 방식이다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">절대정신의 내용은 본질적으로 논리적이고 이성적인 것이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">40 / 64</div>
+  </section>
+
+  <!-- 41 -->
+  <section class="slide" style="--fs:1.42;">
+    <h2 class="slide-title">12번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">형식은 대상을 인식하는 쪽이 아니라 형태에 대응하는 쪽이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가) 2문단</div>
+          <p>절대정신은 절대적 진리인 <b>&lsquo;이념&rsquo;을 인식하는</b> 인간 정신의 영역이다.</p>
+          <p>절대정신의 세 형태에 각각 <b>대응하는</b> 형식은 직관 &middot; 표상 &middot; 사유다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9314;</div>
+          <p>세 형태는 세 형식이 <b>인식하는 대상</b>이다.</p>
+          <p class="verdict">인식의 대상은 <b>이념</b>이다. 예술은 이념을 직관으로, 종교는 표상으로, 철학은 사유로 인식한다. 형태와 형식은 짝이지 대상과 주체가 아니다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">41 / 64</div>
+  </section>
+
+  <!-- 42 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">13번 &middot; (가)에 따라 직관 &middot; 표상 &middot; 사유의 개념을 적용한 것으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9315;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">먼 타향에서 밤하늘의 별들을 바라보는 것은 직관을 통해, 같은 곳에서 고향의 하늘을 상기하는 것은 표상을 통해 이루어지겠군.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">타임머신을 타고 미래로 가는 자신의 모습을 상상하는 것과, 그 후 판타지 영화의 장면을 떠올려 보는 것은 모두 표상을 통해 이루어지겠군.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">초현실적 세계가 묘사된 그림을 보는 것은 직관을 통해, 그 작품을 상상력 개념에 의거한 이론에 따라 분석하는 것은 사유를 통해 이루어지겠군.</span></li>
+        <li class="ans"><span class="n">&#9315;</span><span class="txt">예술의 새로운 개념을 설정하는 것은 사유를 통해, 이를 바탕으로 새로운 감각을 일깨우는 작품의 창작을 기획하는 것은 직관을 통해 이루어지겠군.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">도덕적 배려의 대상을 생물학적 상이성 개념에 따라 규정하는 것과, 이에 맞서 감수성 소유 여부를 새로운 기준으로 제시하는 것은 모두 사유를 통해 이루어지겠군.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">42 / 64</div>
+  </section>
+
+  <!-- 43 -->
+  <section class="slide" style="--fs:1.08;">
+    <h2 class="slide-title">13번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9315;</span>
+        <span class="why">기획에는 눈앞의 물질적 대상이 없다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">세 형식의 기준</div>
+          <p><b>직관</b> &mdash; <b>주어진</b> 물질적 대상을 감각으로 지각</p>
+          <p><b>표상</b> &mdash; 대상 <b>유무와 무관하게</b> 내면에서 심상을 떠올림</p>
+          <p><b>사유</b> &mdash; <b>개념</b>을 통해 파악</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9315; 뒷부분</div>
+          <p>새로운 작품의 창작을 <b>기획</b>하는 것은 직관을 통해</p>
+          <p class="verdict">아직 없는 작품을 머릿속에 그리는 일이다. 주어진 물질적 대상이 없으니 직관일 수 없다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">물어볼 것은 하나</div>
+        <p>&lsquo;지금 <b>눈앞에 있는가</b>(직관), <b>머릿속에 그리는가</b>(표상), <b>개념으로 따지는가</b>(사유)&rsquo;. 선지마다 이 셋 중 하나로 답해 보면 &#9315;의 뒷부분만 틀린다.</p>
+      </div>
+    </div>
+    <div class="page-num">43 / 64</div>
+  </section>
+
+  <!-- 44 -->
+  <section class="slide q-slide" style="--fs:1.22;">
+    <h2 class="slide-title">14번 &middot; (나)의 글쓴이의 관점에서 ㉠과 ㉡에 대한 헤겔의 이론을 분석한 것으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9314;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">기호</span>
+        <b>㉠</b> 정립-반정립-종합 &nbsp;/&nbsp; <b>㉡</b> 예술-종교-철학
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">㉠과 ㉡ 모두에서 첫 번째와 두 번째의 범주는 서로 대립한다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">㉠과 ㉡ 모두에서 두 번째와 세 번째 범주 간에는 수준상의 차이가 존재한다.</span></li>
+        <li class="ans"><span class="n">&#9314;</span><span class="txt">㉠과 달리 ㉡에서는 범주 간 이행에서 첫 번째 범주의 특성이 갈수록 강해진다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">㉡과 달리 ㉠에서는 세 번째 범주에서 첫 번째와 두 번째 범주의 조화로운 통일이 이루어진다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">㉡과 달리 ㉠에서는 범주 간 이행에서 수렴적 상향성이 드러난다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">44 / 64</div>
+  </section>
+
+  <!-- 45 -->
+  <section class="slide" style="--fs:1.06;">
+    <h2 class="slide-title">14번 &middot; 정답과 근거<span class="qm">정답률 56%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">강해지는 것은 첫째(예술)가 아니라 둘째(종교)의 특성이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(나) 2문단</div>
+          <p>예술로부터 철학에 이르는 과정에서는 <b>객관성이 점차 지워지고 주관성이 점증적으로 강화</b> &middot; 완성된다.</p>
+          <p>객관성은 예술(첫째), 주관성은 종교(둘째)의 특성이다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9314;</div>
+          <p>㉡에서는 <b>첫 번째 범주의 특성</b>이 갈수록 강해진다.</p>
+          <p class="verdict">첫째의 특성은 갈수록 <b>약해져</b> 끝내 소거된다. 짝 표의 셋째 줄(외면 &middot; 객관 / 내면 &middot; 주관)을 대면 바로 갈린다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">&#9313;이 맞는 이유</div>
+        <p>㉠의 종합은 &lsquo;질적으로 고양된 최상의 범주&rsquo;이고, ㉡의 철학은 완숙, 종교는 성장 단계다. 둘 다 둘째와 셋째 사이에 수준 차이가 있다. (나)가 문제 삼는 것은 수준 차가 아니라 <b>종합이 없다</b>는 점이다.</p>
+      </div>
+    </div>
+    <div class="page-num">45 / 64</div>
+  </section>
+
+  <!-- 46 -->
+  <section class="slide q-slide" style="--fs:1.12;">
+    <h2 class="slide-title">15번 &middot; ㉮에 들어갈 내용으로 가장 적절한 것은? [3점]<span class="ans-chip">정답 &#9313;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">보기 &middot; 가상의 대화</span>
+        <b>헤겔</b>: 괴테와 실러도 인생의 <b>완숙기에 이르러서야</b> 최고의 지성적 통찰을 진정한 예술미로 승화시켰네. 초기 작품이 수준급이 아니었던 것은 아직 <b>지적으로 미성숙</b>했기 때문이지.<br>
+        <b>(나)의 글쓴이</b>: 그 말씀과 선생님의 기본 논증 방법을 연결하면 <b>㉮</b> 는 말이 됩니다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">이론에서는 대립적 범주들의 종합을 이루어야 하는 세 번째 단계가 현실에서는 그 범주들을 중화한다</span></li>
+        <li class="ans"><span class="n">&#9313;</span><span class="txt">이론에서는 외면성에 대응하는 예술이 현실에서는 내면성을 바탕으로 하는 절대정신일 수 있다</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">이론에서는 반정립 단계에 위치하는 예술이 현실에서는 정립 단계에 있는 것으로 나타난다</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">이론에서는 객관성을 본질로 하는 예술이 현실에서는 객관성이 사라진 주관성을 지닌다</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">이론에서는 절대정신으로 규정되는 예술이 현실에서는 진리의 인식을 수행할 수 없다</span></li>
+      </ul>
+    </div>
+    <div class="page-num">46 / 64</div>
+  </section>
+
+  <!-- 47 -->
+  <section class="slide tight" style="--fs:1.06;">
+    <h2 class="slide-title">15번 &middot; 정답과 근거<span class="qm">정답률 35%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9313;</span>
+        <span class="why">헤겔 스스로 예술이 지성(내면)을 거쳐 완성된다고 말해 버렸다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">이론 &middot; (가)</div>
+          <p>예술은 <b>직관</b>, 곧 <b>외면성</b>에 대응하는 초보 단계의 절대정신이다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">현실 &middot; &lt;보기&gt;의 헤겔</div>
+          <p>최고의 <b>지성적 통찰</b>이 있어야 진정한 예술미가 나온다.</p>
+          <p class="verdict">지성이 완숙해진 뒤의 예술은 내면성(사유)을 바탕으로 한다. (나)의 &lsquo;많은 예술은 사유를 매개로 해서만 설명된다&rsquo;를 헤겔이 스스로 확인해 준 셈이다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">다른 선지가 어긋난 자리</div>
+        <p>&#9314; 예술은 반정립이 아니라 <b>정립</b>이다. &#9315; 지성적 통찰을 <b>예술미로 승화</b>했으니 객관성이 사라진 것이 아니다. &#9316; 완숙기의 예술은 최고의 통찰을 담았으니 진리 인식을 <b>수행한다</b>. 짝 표의 칸 위치를 정확히 기억해야 &#9314;을 걸러 낸다.</p>
+      </div>
+    </div>
+    <div class="page-num">47 / 64</div>
+  </section>
+
+  <!-- 48 -->
+  <section class="slide q-slide" style="--fs:1.38;">
+    <h2 class="slide-title">16번 &middot; 문맥상 ⓐ&#12316;ⓔ와 바꾸어 쓰기에 가장 적절한 것은?<span class="ans-chip">정답 &#9314;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">문맥</span>
+        ⓐ 체계성을 <b>지녀야</b> &nbsp;/&nbsp; ⓑ 정신의 영역을 <b>가리킨다</b> &nbsp;/&nbsp; ⓒ 일방적 승리로 <b>끝나도</b> 안 되고 &nbsp;/&nbsp; ⓓ 실질적 내용을 <b>보면</b> &nbsp;/&nbsp; ⓔ 종합은 <b>이루어지지</b> 않는다
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">ⓐ : 소지(所持)하여야 &nbsp;<span class="dim">&mdash; 물건을 가지고 있음. 성질을 지니는 것과 다르다</span></span></li>
+        <li><span class="n">&#9313;</span><span class="txt">ⓑ : 포착(捕捉)한다 &nbsp;<span class="dim">&mdash; 붙잡음. 문맥은 &lsquo;지칭하다&rsquo;</span></span></li>
+        <li class="ans"><span class="n">&#9314;</span><span class="txt">ⓒ : 귀결(歸結)되어도 &nbsp;<span class="dim">&mdash; 끝에 가서 어떤 결과에 이름. 문맥과 같다</span></span></li>
+        <li><span class="n">&#9315;</span><span class="txt">ⓓ : 간주(看做)하면 &nbsp;<span class="dim">&mdash; 그렇다고 여김. 문맥은 &lsquo;살펴보다&rsquo;</span></span></li>
+        <li><span class="n">&#9316;</span><span class="txt">ⓔ : 결성(結成)되지 &nbsp;<span class="dim">&mdash; 조직을 짜서 만듦. 문맥은 &lsquo;성립되다&rsquo;</span></span></li>
+      </ul>
+    </div>
+    <div class="page-num">48 / 64</div>
+  </section>
+
+  <!-- 49 -->
+  <section class="slide" style="--fs:1.02;">
+    <h2 class="slide-title">배경지식 &middot; 아도르노와 문화 산업<span class="qm">2023학년도 9월 4&#12316;9번 &middot; 학습지 17&#12316;22번</span></h2>
+    <div class="body-area">
+      <table class="info-table" style="margin-bottom:1.1cqw;">
+        <tr><th>아도르노</th><td>20세기 독일의 철학자이자 음악 이론가. 동료와 함께 쓴 &#12302;계몽의 변증법&#12303;(1947)에서 영화 &middot; 라디오 &middot; 대중음악을 <strong>&lsquo;문화 산업&rsquo;</strong>이라 부르며 비판했다.</td></tr>
+        <tr><th>쇤베르크</th><td>조성을 버린 <strong>무조 음악</strong>과 12음 기법을 만든 작곡가. 듣기 편한 화음이 없어 당대 청중을 불편하게 했다. 아도르노가 높이 평가한 전위 예술의 예다.</td></tr>
+        <tr><th>베냐민 &middot; 세잔</th><td>베냐민은 사진 &middot; 영화 같은 복제 예술에서 새 가능성을 본 비평가. 세잔은 사과 정물로 유명한 화가로, 대상을 색과 기하학적 형태로 다시 짰다.</td></tr>
+      </table>
+      <div class="emotion">
+        <div class="etag">(나)의 무기</div>
+        <ul><li>(나)는 아도르노가 무시한 쪽(세잔의 미메시스, 베냐민의 사진, 저항적 대중음악)을 <strong>반례</strong>로 든다. 반례가 나오면 그것이 아도르노의 <strong>어느 주장</strong>을 깨는지 짝지어 둔다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">49 / 64</div>
+  </section>
+
+  <!-- 50 -->
+  <section class="slide" style="--fs:1.38;">
+    <h2 class="slide-title">지문의 뼈대 &middot; (가)<span class="qm">2023학년도 9월</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t"><b>대중 예술</b> = 표준화된 상품 &mdash; 사회의 모순과 부조리를 <b>은폐</b></div>
+            <div class="d">규격성 &rarr; 감상 능력과 개성까지 표준화. 개인의 정체성마저 상품으로 전락시키는 기제</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t"><b>동일성</b>(하나로 통일) vs <b>비동일성</b>(환원 거부) &mdash; 예술은 비동일성을</div>
+            <div class="d">아름다운 상품을 거부하고 추하고 불쾌해야 한다. <b>비정형</b>의 모습으로 부조리를 체험하게 하는 매개</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3&middot;4</div>
+          <div class="para-body">
+            <div class="t"><b>전위 예술</b>(쇤베르크) &mdash; 저항을 <b>직접 드러내지 않는다</b></div>
+            <div class="d">저항 &middot; 계몽을 직접 표현하면 비동일성을 동일화하려는 폭력이 된다. 불쾌함으로 비동일성을 체험하게 하는 것이 바람직한 예술</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">50 / 64</div>
+  </section>
+
+  <!-- 51 -->
+  <section class="slide" style="--fs:1.18;">
+    <h2 class="slide-title">지문의 뼈대 &middot; (나)<span class="qm">2023학년도 9월</span></h2>
+    <div class="body-area">
+      <div class="para-flow">
+        <div class="para-row">
+          <div class="para-no">1</div>
+          <div class="para-body">
+            <div class="t"><b>의의</b> &mdash; 예술의 자율성 추구, 기존 예술에 대한 비판적 관점</div>
+            <div class="d">그 눈으로 보면 세잔의 사과는 사회와 유리된 &lsquo;아름다운 가상&rsquo;일 뿐</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">2</div>
+          <div class="para-body">
+            <div class="t">하지만 세잔은 <b>미메시스</b>일 수 있다</div>
+            <div class="d">미메시스 = 주체의 관념을 재현, <b>감각될 수 없는 것을 감각 가능한 것으로</b>. 세잔의 사과 = 예술가가 포착한 세계의 참모습</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">3</div>
+          <div class="para-body">
+            <div class="t"><b>한계 &#9312;</b> &mdash; ㉠ 주관의 재현인 미메시스를 부정</div>
+            <div class="d">미적 체험을 부조리에 국한, 진정한 예술을 <b>형태 자체의 비정형성</b>에 대한 체험으로 한정</div>
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-no">4</div>
+          <div class="para-body">
+            <div class="t"><b>한계 &#9313;</b> &mdash; ㉡ 전위 예술의 관점에서 예술을 <b>동일화</b></div>
+            <div class="d">동일화를 비판하면서 자신이 동일화한다. 반례: 베냐민의 우연한 사진, 저항적 대중음악</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-num">51 / 64</div>
+  </section>
+
+  <!-- 52 -->
+  <section class="slide tight q-slide" style="--fs:1.22;">
+    <h2 class="slide-title">17번 &middot; 독서 활동지의 Ⓐ&#12316;Ⓔ 중 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9314;</span></h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.0cqw;">
+        <thead><tr><th style="width:7.4em;">항목</th><th>(가)</th><th>(나)</th></tr></thead>
+        <tbody>
+          <tr><th>글의 화제</th><td colspan="2">아도르노의 예술관 &middot; <strong>Ⓐ</strong></td></tr>
+          <tr><th>서술 방식 공통점</th><td colspan="2">구체적인 예를 제시하고 그것에 담긴 의미를 설명함 &middot; <strong>Ⓑ</strong></td></tr>
+          <tr><th>서술 방식 차이점</th><td>(나)와 달리 화제와 관련된 개념을 정의하고 개념의 변화 과정을 제시함 &middot; <strong>Ⓒ</strong></td><td>(가)와 달리 논지를 강화하기 위해 다른 이의 견해를 인용함 &middot; <strong>Ⓓ</strong></td></tr>
+          <tr><th>내용 간의 관계</th><td colspan="2">(가)에서 소개한 이론에 대해 (나)에서 의의를 밝히고 한계를 지적함 &middot; <strong>Ⓔ</strong></td></tr>
+        </tbody>
+      </table>
+      <ul class="choices" style="flex-direction:row; flex-wrap:wrap; gap:1.2cqw;">
+        <li style="flex:1;"><span class="n">&#9312;</span><span class="txt">Ⓐ</span></li>
+        <li style="flex:1;"><span class="n">&#9313;</span><span class="txt">Ⓑ</span></li>
+        <li class="ans" style="flex:1;"><span class="n">&#9314;</span><span class="txt">Ⓒ</span></li>
+        <li style="flex:1;"><span class="n">&#9315;</span><span class="txt">Ⓓ</span></li>
+        <li style="flex:1;"><span class="n">&#9316;</span><span class="txt">Ⓔ</span></li>
+      </ul>
+    </div>
+    <div class="page-num">52 / 64</div>
+  </section>
+
+  <!-- 53 -->
+  <section class="slide" style="--fs:1.44;">
+    <h2 class="slide-title">17번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">개념은 정의했지만 그 개념이 변하는 과정은 없다</span>
+      </div>
+      <table class="otable">
+        <tr><th>Ⓐ</th><td>(가)는 아도르노의 예술관, (나)는 그 평가. 둘 다 <b>아도르노의 예술관</b>이 화제</td></tr>
+        <tr><th>Ⓑ</th><td>(가)는 <b>쇤베르크</b>, (나)는 <b>세잔</b>을 들고 의미를 설명</td></tr>
+        <tr class="ans"><th>Ⓒ</th><td>(가)가 동일성 &middot; 비동일성을 정의한 것은 맞다. 그러나 개념의 <span class="u-warn">변화 과정</span>은 없다. 게다가 (나)도 미메시스를 정의하므로 &lsquo;(나)와 달리&rsquo;도 어긋난다 &rarr; <b>정답</b></td></tr>
+        <tr><th>Ⓓ</th><td>(나) 4문단의 <b>베냐민</b> 인용. (가)에는 다른 이의 견해가 없다</td></tr>
+        <tr><th>Ⓔ</th><td>(나) 1문단 의의, 2&#12316;4문단 한계 &mdash; 도구 &#9312;의 &lsquo;평가&rsquo; 관계</td></tr>
+      </table>
+    </div>
+    <div class="page-num">53 / 64</div>
+  </section>
+
+  <!-- 54 -->
+  <section class="slide q-slide" style="--fs:1.44;">
+    <h2 class="slide-title">18번 &middot; 아도르노가 보는 대중 예술에 대한 이해로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9312;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li class="ans"><span class="n">&#9312;</span><span class="txt">문화 산업을 통해 상품화된 개인의 정체성과 대립적 관계를 형성한다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">일정한 규격에 맞춰 생산될 뿐 아니라 대중의 감상 능력을 표준화한다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">자본주의의 교환 가치 체계에 종속된 것으로서 예술로 포장된 상품에 불과하다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">모든 것을 상품의 교환 가치로 환원하려는 자본주의 사회의 속성을 은폐한다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">문화 산업의 이윤 극대화 과정에서 개인들이 지닌 개성의 차이를 상실시킨다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">54 / 64</div>
+  </section>
+
+  <!-- 55 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">18번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9312;</span>
+        <span class="why">대중 예술이 정체성을 상품으로 만든다. 둘은 같은 편이다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가) 1문단</div>
+          <p>대중 예술은 개인의 정체성마저 상품으로 <b>전락시키는 기제</b>로 작용한다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9312;</div>
+          <p>상품화된 개인의 정체성과 <b>대립적 관계</b>를 형성한다.</p>
+          <p class="verdict">정체성을 상품으로 만든 것이 대중 예술이다. 둘 다 교환 가치로 동일화되었으니 대립이 아니라 <b>동질</b>이다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">원인과 결과를 맞세운 선지</div>
+        <p>&lsquo;A가 B를 만든다&rsquo;를 &lsquo;A와 B는 대립한다&rsquo;로 바꾸었다. 동일성 &middot; 비동일성의 짝으로 보면 대중 예술과 상품화된 정체성은 모두 <b>동일성</b> 쪽이다.</p>
+      </div>
+    </div>
+    <div class="page-num">55 / 64</div>
+  </section>
+
+  <!-- 56 -->
+  <section class="slide q-slide" style="--fs:1.38;">
+    <h2 class="slide-title">19번 &middot; ㉠의 이유를 추론한 내용으로 가장 적절한 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">㉠</span>
+        아도르노의 미학에서는 <b>주관의 재현이라는 미메시스가 부정</b>되고 있다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">비정형적 형태뿐 아니라 정형적 형태 역시 재현되기 때문이다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">재현의 주체가 예술가로부터 예술 작품의 감상자로 전환되기 때문이다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">미적 체험의 대상이 사회의 부조리에서 세계의 본질로 변화되기 때문이다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">미적 체험의 과정에서 비정형적인 형태가 예술가의 주관으로 왜곡되기 때문이다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">예술가의 주관이 가려지고 작품에 나타난 형태에 대한 체험만이 강조되기 때문이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">56 / 64</div>
+  </section>
+
+  <!-- 57 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">19번 &middot; 정답과 근거<span class="qm">정답률 55%</span></h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">체험이 &lsquo;형태 그 자체&rsquo;로 한정되면 주관이 들어설 자리가 없다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(나) 2 &middot; 3문단</div>
+          <p>미메시스 = 예술가의 <b>주관</b>(관념)을 감각 가능한 것으로 재현.</p>
+          <p>아도르노는 진정한 예술을 감각적 대상인 <b>형태 그 자체의 비정형성</b>에 대한 체험으로 한정한다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">두 문장을 이으면</div>
+          <p>미메시스가 재현하는 것은 <b>주관</b>, 아도르노가 체험하라는 것은 <b>형태</b>.</p>
+          <p class="verdict">형태만 남으니 주관이 가려진다. 그래서 미메시스가 부정된다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">이유를 묻는 문항은 두 문장을 잇는다</div>
+        <p>&#9313; 재현의 주체가 감상자로 바뀌었다는 말은 없다. &#9314; 체험 대상은 부조리에 <b>국한</b>될 뿐 바뀌지 않는다. &#9315; 주관은 아예 재현되지 않으니 <b>왜곡</b>될 수도 없다.</p>
+      </div>
+    </div>
+    <div class="page-num">57 / 64</div>
+  </section>
+
+  <!-- 58 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">20번 &middot; (가)의 &lsquo;아도르노&rsquo;의 관점에서 ㉡에 대해 반박할 수 있는 말로 가장 적절한 것은?<span class="ans-chip">정답 &#9316;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">㉡</span>
+        <b>전위 예술의 관점에서 예술의 동일화를 시도</b>하고 있다.
+      </div>
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">동일화는 애초에 예술과 무관하므로 예술의 동일화는 실현 불가능하다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">전위 예술의 속성은 부조리 그 자체를 폭로하는 것이므로 비동일성은 결국 동일성으로 귀결된다.</span></li>
+        <li><span class="n">&#9314;</span><span class="txt">동일성으로 환원된 대중 예술에서도 비동일성을 발견할 수 있으므로 예술의 동일화는 무의미하다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">전위 예술은 동일성과 비동일성의 구분을 거부하므로 전위 예술로의 동일화는 새로운 차원의 비동일성으로 전환된다.</span></li>
+        <li class="ans"><span class="n">&#9316;</span><span class="txt">동일화를 거부하는 속성이 전위 예술의 본질이므로 전위 예술을 추구하는 것은 동일화가 아니라 비동일화를 지향하는 것이다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">58 / 64</div>
+  </section>
+
+  <!-- 59 -->
+  <section class="slide" style="--fs:1.02;">
+    <h2 class="slide-title">20번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9316;</span>
+        <span class="why">비동일성 자체를 추구하는 것은 동일화일 수 없다</span>
+      </div>
+      <table class="otable">
+        <tr><th>&#9312;</th><td>대중 예술이 바로 <span class="u-warn">동일화된</span> 예술이다. 예술과 무관하지 않다</td></tr>
+        <tr><th>&#9313;</th><td>비동일성이 동일성으로 귀결된다면 아도르노가 <span class="u-warn">스스로 ㉡을 인정</span>하는 셈이다</td></tr>
+        <tr><th>&#9314;</th><td>아도르노에게 대중 예술은 교환 가치로 환원된 <span class="u-warn">동일성</span>이다. 거기서 비동일성을 찾을 수 있다는 것은 (나)의 말이다</td></tr>
+        <tr><th>&#9315;</th><td>전위 예술은 구분을 거부하는 것이 아니라 <span class="u-warn">비동일성 그 자체</span>를 속성으로 한다</td></tr>
+        <tr class="ans"><th>&#9316;</th><td>(가) 4문단 &mdash; 전위 예술은 <b>비동일성 그 자체</b>를 속성으로 한다. 그것을 추구하는 것은 비동일화를 지향하는 것 &rarr; <b>정답</b></td></tr>
+      </table>
+      <div class="trap">
+        <div class="h">&lsquo;누구의 관점에서&rsquo;</div>
+        <p>반박은 <b>아도르노</b>가 한다. 그러니 (나)의 무기(대중 예술에서도 가치 발견)를 빌려 온 &#9314;은 아도르노의 입에서 나올 수 없다.</p>
+      </div>
+    </div>
+    <div class="page-num">59 / 64</div>
+  </section>
+
+  <!-- 60 -->
+  <section class="slide tight" style="--fs:1.10;">
+    <h2 class="slide-title">21번 &middot; &lt;보기&gt; 학생의 감상문 [3점]</h2>
+    <div class="body-area">
+      <table class="cmp-table" style="margin-bottom:1.1cqw;">
+        <thead><tr><th style="width:5.6em;">작품</th><th>감상문</th><th style="width:10em;">지문의 어디에 대는가</th></tr></thead>
+        <tbody>
+          <tr><th>첫째</th><td>&#12300;자화상&#12301;인데 얼굴이 없는 <strong>기괴한</strong> 모습, 흩어진 형태와 색채가 <strong>불편</strong>했다</td><td>(가) 비정형 &middot; 불쾌 / (나) 베냐민의 사진</td></tr>
+          <tr><th>둘째</th><td>사회 비판적인 연예인의 얼굴, <strong>대량 복제</strong>, 광고처럼 <strong>익숙해서</strong> 좋았다</td><td>(가) 문화 산업 / (나) 저항적 대중음악</td></tr>
+          <tr><th>셋째</th><td>시골 풍경을 사실적으로, <strong>색감과 조형미</strong>가 뛰어났다</td><td>(가) &lsquo;아름다운 상품&rsquo;의 거부</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion">
+        <div class="etag">A와 B를 먼저 가른다</div>
+        <ul><li>A(아도르노)는 <strong>비정형 &middot; 불쾌 &middot; 간접적 저항</strong>을, B는 <strong>전위 예술 밖의 가치</strong>를 본다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">60 / 64</div>
+  </section>
+
+  <!-- 61 -->
+  <section class="slide q-slide" style="--fs:1.08;">
+    <h2 class="slide-title">21번 &middot; A(아도르노)와 B((나)의 글쓴이)의 관점에서 설명한 내용으로 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9314;</span></h2>
+    <div class="body-area">
+      <ul class="choices">
+        <li><span class="n">&#9312;</span><span class="txt">A : 첫 번째 작품에서 학생이 기괴함과 불편함을 느낀 것은 부조리한 사회에 대한 예술적 체험의 충격 때문일 수 있습니다.</span></li>
+        <li><span class="n">&#9313;</span><span class="txt">A : 두 번째 작품에서 학생이 느낀 익숙함은 현대 사회의 모순에 대한 무감각과 같은 것일 수 있습니다. 이는 문화 산업의 논리에 동일화되어 감각이 무뎌진 결과라 할 수 있습니다.</span></li>
+        <li class="ans"><span class="n">&#9314;</span><span class="txt">A : 세 번째 작품에 표현된 서정성과 조형미는 부조리에 대한 저항과는 괴리가 있습니다. 사회에 대한 저항을 직접적으로 드러낸 예술이어야 진정한 예술이라고 할 수 있습니다.</span></li>
+        <li><span class="n">&#9315;</span><span class="txt">B : 첫 번째 작품의 흩어져 있는 형태와 색채가 예술가의 표현 의도를 담고 있지 않더라도 그 작품에서 예술적 가치를 발견할 수 있습니다.</span></li>
+        <li><span class="n">&#9316;</span><span class="txt">B : 두 번째 작품은 대량 생산을 통해 제작된 것이지만 그 연예인의 사회 비판적 이미지를 이용해 현대 사회의 문제점을 고발하는 것일 수 있습니다.</span></li>
+      </ul>
+    </div>
+    <div class="page-num">61 / 64</div>
+  </section>
+
+  <!-- 62 -->
+  <section class="slide" style="--fs:1.10;">
+    <h2 class="slide-title">21번 &middot; 정답과 근거</h2>
+    <div class="body-area">
+      <div class="ans-banner">
+        <span class="lb">정답</span>
+        <span class="num">&#9314;</span>
+        <span class="why">아도르노는 저항을 직접 드러내는 것을 오히려 경계했다</span>
+      </div>
+      <div class="evi">
+        <div class="box src">
+          <div class="h">(가) 3문단</div>
+          <p>전위 예술이 저항이나 계몽을 <b>직접적으로 드러내지 않는다</b>는 것을 높게 평가한다. 직접 표현하는 것에는 비동일성을 동일화하려는 <b>폭력적 의도</b>가 내재되어 있다.</p>
+        </div>
+        <div class="box opt">
+          <div class="h">선택지 &#9314; 뒷부분</div>
+          <p>저항을 <b>직접적으로 드러낸</b> 예술이어야 진정한 예술이다.</p>
+          <p class="verdict">앞부분(서정성은 저항과 괴리)은 A가 할 수 있는 말이다. 뒷부분이 A의 생각을 뒤집었다.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <div class="h">절반만 맞는 선지</div>
+        <p>&#9314;은 첫 문장이 맞아서 끌린다. 두 문장으로 된 선지는 <b>문장마다</b> 따로 판정한다. 뒤 문장 하나가 &lsquo;직접 &middot; 간접&rsquo;의 짝을 바꿔 놓았다.</p>
+      </div>
+    </div>
+    <div class="page-num">62 / 64</div>
+  </section>
+
+  <!-- 63 -->
+  <section class="slide q-slide" style="--fs:1.38;">
+    <h2 class="slide-title">22번 &middot; 문맥상 ⓐ&#12316;ⓔ와 바꿔 쓰기에 적절하지 <u>않은</u> 것은?<span class="ans-chip">정답 &#9312;</span></h2>
+    <div class="body-area">
+      <div class="bogi" style="margin-bottom:1.0cqw;">
+        <span class="tag">문맥</span>
+        ⓐ 정체성마저 상품으로 <b>전락시키는</b> &nbsp;/&nbsp; ⓑ 사회의 본질과 <b>유리된</b> &nbsp;/&nbsp; ⓒ 이를 <b>응시하는</b> &nbsp;/&nbsp; ⓓ 기회를 <b>박탈한다</b> &nbsp;/&nbsp; ⓔ 예술 정신을 <b>발견하는</b>
+      </div>
+      <ul class="choices">
+        <li class="ans"><span class="n">&#9312;</span><span class="txt">ⓐ : 맞바꾸는 &nbsp;<span class="dim">&mdash; 주고 다른 것을 받음. &lsquo;나쁜 상태로 떨어뜨리다&rsquo;와 다르다</span></span></li>
+        <li><span class="n">&#9313;</span><span class="txt">ⓑ : 동떨어진 &nbsp;<span class="dim">&mdash; 따로 떨어지다</span></span></li>
+        <li><span class="n">&#9314;</span><span class="txt">ⓒ : 바라보는 &nbsp;<span class="dim">&mdash; 눈길을 모아 바라보다</span></span></li>
+        <li><span class="n">&#9315;</span><span class="txt">ⓓ : 빼앗는다 &nbsp;<span class="dim">&mdash; 권리 &middot; 자격을 빼앗다</span></span></li>
+        <li><span class="n">&#9316;</span><span class="txt">ⓔ : 찾아내는 &nbsp;<span class="dim">&mdash; 알려지지 않은 것을 찾아내다</span></span></li>
+      </ul>
+    </div>
+    <div class="page-num">63 / 64</div>
+  </section>
+
+  <!-- 64 -->
+  <section class="slide" style="--fs:1.02;">
+    <h2 class="slide-title">세 세트를 풀고 나서</h2>
+    <div class="body-area">
+      <table class="cmp-table">
+        <thead><tr><th style="width:6.2em;">세트</th><th>두 글의 관계</th><th>오답이 만들어진 방식</th></tr></thead>
+        <tbody>
+          <tr><th>2026.9</th><td>(가)의 역사화가 (나)의 SF로 이어진다</td><td>표면과 이면, 충격과 성찰의 <strong>순서</strong>를 뒤집었다</td></tr>
+          <tr><th>2022수능</th><td>(나)가 (가)의 종합을 겨눈다</td><td>짝 표의 <strong>칸</strong>(정립 &middot; 반정립, 첫째 &middot; 둘째)을 바꿔 끼웠다</td></tr>
+          <tr><th>2023.9</th><td>(나)가 (가)의 의의와 한계를 밝힌다</td><td>(나)의 반례를 <strong>아도르노의 입</strong>에 넣거나, 직접 &middot; 간접을 바꿨다</td></tr>
+        </tbody>
+      </table>
+      <div class="emotion" style="margin-top:1.2cqw;">
+        <div class="etag">정답률이 낮았던 문항</div>
+        <ul><li>15번 35%, 11번 52%, 19번 55%, 14번 56%. 모두 (가)와 (나)의 문장을 <strong>하나씩 꺼내 맞대야</strong> 풀린다. 한 글만 읽고 판정하면 틀리게 만든 문항들이다.</li></ul>
+      </div>
+    </div>
+    <div class="page-num">64 / 64</div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span id="counter">1 / 64</span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">스페이스 &middot; 좌우 방향키 &middot; 클릭으로 한 단계씩 &middot; 위아래 방향키로 장 넘김 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+
+  let syncingHash = false;
+
+  // 슬라이드 안에서 하나씩 띄울 요소들
+  function revealsOf(i) { return Array.from(slides[i].querySelectorAll('.reveal')); }
+
+  function updateButtons() {
+    const r = revealsOf(idx);
+    prevBtn.disabled = idx === 0 && !r.some(el => el.classList.contains('shown'));
+    nextBtn.disabled = idx === slides.length - 1 && !r.some(el => !el.classList.contains('shown'));
+  }
+
+  // showAllSteps: 뒤로 돌아갈 때는 그 슬라이드의 단계가 모두 드러난 상태로 들어간다
+  function show(n, showAllSteps) {
+    idx = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    revealsOf(idx).forEach(el => el.classList.toggle('shown', !!showAllSteps));
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    updateButtons();
+    if (location.hash !== '#' + (idx + 1)) {
+      syncingHash = true;
+      location.hash = idx + 1;
+    }
+  }
+
+  function next() {
+    const hidden = revealsOf(idx).find(el => !el.classList.contains('shown'));
+    if (hidden) { hidden.classList.add('shown'); updateButtons(); return; }
+    if (idx < slides.length - 1) show(idx + 1);
+  }
+
+  function prev() {
+    const shown = revealsOf(idx).filter(el => el.classList.contains('shown'));
+    if (shown.length) { shown[shown.length - 1].classList.remove('shown'); updateButtons(); return; }
+    if (idx > 0) show(idx - 1, true);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width / 2) prev(); else next();
+  });
+
+  const fsBtn = document.getElementById('fs');
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.body.requestFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (['ArrowDown'].includes(e.key)) { e.preventDefault(); show(idx + 1); }
+    else if (['ArrowUp'].includes(e.key)) { e.preventDefault(); show(idx - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (syncingHash) { syncingHash = false; return; }
+    const n = parseInt(location.hash.replace('#', ''), 10);
+    if (!isNaN(n) && n - 1 !== idx) show(n - 1);
+  });
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>
