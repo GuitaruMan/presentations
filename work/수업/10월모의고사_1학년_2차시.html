@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10월 학력평가 독서 풀이 (1학년-2차시)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #14223a;
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2vh 2vw;
+  }
+  .nav-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 1.2rem; font-size: 0.82rem;
+    background: rgba(20, 34, 58, 0.94); z-index: 50;
+  }
+  .nav-top a { color: #a9c3e8; text-decoration: none; margin-right: 1rem; }
+  .nav-top a:hover { color: #eaf1fb; }
+  .nav-meta { color: #8aa6cf; font-size: 0.78rem; }
+  .stage {
+    --stage-w: min(100%, 1180px, (100vh - 8.5rem) * 16 / 9);
+    width: var(--stage-w); aspect-ratio: 16 / 9;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+    background: #fff; overflow: hidden;
+  }
+  .stage iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .controls { margin-top: 1rem; display: flex; align-items: center; gap: 1.1rem; color: #a9c3e8; font-size: 0.86rem; }
+  .controls button {
+    font: inherit; color: #eaf1fb; background: #24406b; border: 1px solid #3a5f95;
+    padding: 0.45rem 1rem; border-radius: 8px; cursor: pointer;
+  }
+  .controls button:hover { background: #2f5d9a; }
+  .hint { color: #7d97bd; font-size: 0.78rem; }
+  .pager input {
+    width: 3.2rem; font: inherit; text-align: center; color: #eaf1fb;
+    background: #1b2f50; border: 1px solid #3a5f95; border-radius: 6px; padding: 0.3rem 0.2rem;
+  }
+  .pager input:focus { outline: 2px solid #3fb6a8; }
+  .pager input.typing { outline: 2px solid #3fb6a8; }
+  body:fullscreen { padding: 0; background: #000; }
+  body:fullscreen .nav-top, body:fullscreen .controls { display: none; }
+  body:fullscreen .stage { --stage-w: min(100vw, 100vh * 16 / 9); box-shadow: none; }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div>
+    <a href="../수업_1학년.html">&larr; 1학년</a>
+    <a href="../수업.html">수업</a>
+    <a href="../../index.html">홈</a>
+  </div>
+  <div class="nav-meta">독서 15~23번 · 인문·사회</div>
+</div>
+
+<div class="stage"><iframe id="deck" src="slidev/10월모의고사_1학년_2차시.html#/1?embedded=true" allow="fullscreen" title="10월 학력평가 독서 풀이 (1학년-2차시)"></iframe></div>
+
+<div class="controls">
+  <button id="prev">&larr; 이전</button>
+  <span class="pager"><input id="page" type="text" inputmode="numeric" value="1" title="쪽 번호를 입력하고 Enter"> / <span id="total">1</span></span>
+  <button id="next">다음 &rarr;</button>
+  <button id="fs">전체화면</button>
+  <span class="hint">방향키 &middot; 스페이스 &middot; 숫자+Enter 쪽 이동 &middot; F 전체화면</span>
+</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const pageInput = document.getElementById('page');
+  const totalEl = document.getElementById('total');
+  const fsBtn = document.getElementById('fs');
+  const nav = () => deck.contentWindow && deck.contentWindow.__deck__;
+
+  function goTo(text) {
+    const n = nav(), no = parseInt(text, 10);
+    if (n && no >= 1 && no <= n.total.value) n.go(no);
+    pageInput.classList.remove('typing');
+    deck.focus();
+  }
+  pageInput.addEventListener('focus', () => pageInput.select());
+  pageInput.addEventListener('keydown', (e) => {
+    e.stopPropagation();
+    if (e.key === 'Enter') { e.preventDefault(); goTo(pageInput.value); }
+    if (e.key === 'Escape') { pageInput.blur(); deck.focus(); }
+  });
+
+  // 어디서든 숫자를 치면 쪽 번호 칸에 모이고, Enter로 이동한다(2초 안에 Enter가 없으면 취소)
+  let typed = '', typedTimer = null;
+  function digitKeys(e) {
+    if (e.target === pageInput) return;
+    if (/^[0-9]$/.test(e.key)) {
+      e.preventDefault(); e.stopImmediatePropagation();
+      typed += e.key; pageInput.value = typed; pageInput.classList.add('typing');
+      clearTimeout(typedTimer); typedTimer = setTimeout(() => { typed = ''; pageInput.classList.remove('typing'); }, 2000);
+    } else if (e.key === 'Enter' && typed) {
+      e.preventDefault(); e.stopImmediatePropagation();
+      clearTimeout(typedTimer); goTo(typed); typed = '';
+    }
+  }
+
+  function move(dir) {
+    const n = nav(); if (!n) return;
+    dir > 0 ? n.next() : n.prev();
+    deck.focus();
+  }
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.body.requestFullscreen().catch(() => {});
+    deck.focus();
+  }
+  document.getElementById('prev').addEventListener('click', () => move(-1));
+  document.getElementById('next').addEventListener('click', () => move(1));
+  fsBtn.addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '전체화면 해제' : '전체화면';
+  });
+
+  // 덱 안에서 F를 누르면 덱 문서만 전체화면이 되므로, 바깥 페이지 전체화면으로 바꿔 준다
+  function hookKeys(win) {
+    win.addEventListener('keydown', digitKeys, true);
+    win.addEventListener('keydown', (e) => {
+      if (e.target !== pageInput && (e.key === 'f' || e.key === 'F')) { e.preventDefault(); e.stopImmediatePropagation(); toggleFullscreen(); }
+    }, true);
+  }
+  hookKeys(window);
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); move(1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); move(-1); }
+  });
+  deck.addEventListener('load', () => { try { hookKeys(deck.contentWindow); } catch (e) {} deck.focus(); });
+
+  setInterval(() => {
+    const n = nav(); if (!n) return;
+    totalEl.textContent = n.total.value;
+    if (document.activeElement !== pageInput && !typed) pageInput.value = n.currentPage.value;
+  }, 250);
+</script>
+</body>
+</html>
