@@ -131,7 +131,15 @@
     if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); move(1); }
     if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); move(-1); }
   });
-  deck.addEventListener('load', () => { try { hookKeys(deck.contentWindow); } catch (e) {} deck.focus(); });
+  // 옛 덱처럼 슬라이드 왼쪽 절반을 클릭하면 이전, 오른쪽 절반을 클릭하면 다음으로 간다
+  function hookClicks(win) {
+    win.document.addEventListener('click', (e) => {
+      if (e.button !== 0 || e.target.closest('a, button, input, select, textarea')) return;
+      if (win.getSelection && String(win.getSelection())) return;
+      move(e.clientX < win.innerWidth / 2 ? -1 : 1);
+    });
+  }
+  deck.addEventListener('load', () => { try { hookKeys(deck.contentWindow); hookClicks(deck.contentWindow); } catch (e) {} deck.focus(); });
 
   setInterval(() => {
     const n = nav(); if (!n) return;
