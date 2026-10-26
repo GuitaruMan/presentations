@@ -125,6 +125,12 @@
     win.addEventListener('keydown', (e) => {
       if (e.target !== pageInput && (e.key === 'f' || e.key === 'F')) { e.preventDefault(); e.stopImmediatePropagation(); toggleFullscreen(); }
     }, true);
+    // 프레젠터 리모컨은 다음·이전 버튼에 ↓·↑를 보내기도 한다. Slidev는 ↓·↑로 빈칸을 건너뛰고 장을 넘기므로, 이전·다음 버튼처럼 빈칸부터 채우게 한다
+    win.addEventListener('keydown', (e) => {
+      if (e.target === pageInput) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); e.stopImmediatePropagation(); move(1); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); e.stopImmediatePropagation(); move(-1); }
+    }, true);
   }
   hookKeys(window);
   document.addEventListener('keydown', (e) => {
