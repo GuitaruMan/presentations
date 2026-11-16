@@ -259,7 +259,8 @@ function render() {
   // 공
   for (const b of balls) {
     const sp = Math.hypot(b.vx, b.vy);
-    drawBall(b.x, b.y, b.r, colorOf(b.n), b.n, Math.max(0, Math.min(1, 1 - (sp - 4) / 6)));
+    // 후보 공이 나와 있는 동안엔 남은 공 번호를 숨김(내 번호가 후보인지 알 수 없게)
+    drawBall(b.x, b.y, b.r, colorOf(b.n), b.n, cand ? 0 : Math.max(0, Math.min(1, 1 - (sp - 4) / 6)));
   }
   // 유리 테두리와 반사광
   ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
