@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>랜덤 번호 뽑기</title>
+<style>
+  :root { --bg: #f5f6f8; --card: #ffffff; --ink: #1c2230; --ink-soft: #5b6270; --accent: #3a5ba0; --line: #d6dae2; --bad: #d64545; --shadow: rgba(28, 34, 48, 0.10); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8; --accent: #7fa2e0; --line: #353b48; --bad: #ff7070; --shadow: rgba(0,0,0,0.4); } }
+  :root[data-theme="dark"] { --bg: #14161c; --card: #1f232c; --ink: #eceef2; --ink-soft: #a3aab8; --accent: #7fa2e0; --line: #353b48; --bad: #ff7070; --shadow: rgba(0,0,0,0.4); }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif; display: flex; flex-direction: column; align-items: center; padding: 4vh 16px 4vh; }
+  .top { width: 100%; max-width: 1040px; margin-bottom: 1rem; display: flex; justify-content: space-between; }
+  a.back { color: var(--ink-soft); text-decoration: none; font-size: 0.9rem; }
+  a.back:hover { color: var(--accent); }
+  h1 { font-size: 1.6rem; margin: 0.3rem 0 1.5rem; }
+
+  .wrap { width: 100%; max-width: 1040px; display: grid; grid-template-columns: 260px 1fr; gap: 1.5rem; align-items: start; }
+  @media (max-width: 780px) { .wrap { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--card); border-radius: 16px; padding: 1.3rem 1.2rem; box-shadow: 0 4px 16px var(--shadow); display: flex; flex-direction: column; gap: 0.9rem; }
+  .row { display: flex; gap: 0.6rem; }
+  .row > label { flex: 1; }
+  label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; color: var(--ink-soft); font-weight: 600; }
+  input { width: 100%; padding: 0.6rem 0.7rem; font: inherit; font-size: 1.15rem; color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; outline: none; }
+  input:focus { border-color: var(--accent); }
+  .hint { font-size: 0.78rem; color: var(--ink-soft); font-weight: 400; }
+  .msg { font-size: 0.85rem; color: var(--bad); min-height: 1.2em; margin: 0; }
+  .count { font-size: 0.95rem; margin: 0; }
+  .count b { font-size: 1.15rem; color: var(--accent); }
+  button.reset { padding: 0.6rem; font: inherit; font-size: 0.9rem; color: var(--ink); background: transparent; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; }
+  button.reset:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* 추첨기 무대 */
+  .stage { background: radial-gradient(ellipse at 50% 20%, #34406a 0%, #1a2140 55%, #0d1122 100%); border-radius: 20px; padding: 1.2rem 1rem 1.4rem; box-shadow: 0 6px 24px var(--shadow); display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 1rem; align-items: center; color: #fff; }
+  @media (max-width: 620px) { .stage { grid-template-columns: 1fr; } }
+  .machine { display: flex; flex-direction: column; align-items: center; }
+  canvas { width: 100%; max-width: 440px; aspect-ratio: 1 / 1.12; display: block; }
+  .side { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .now-label { font-size: 0.95rem; letter-spacing: 0.15em; color: #c9d3f5; }
+  .result { width: 170px; height: 170px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.06); border: 2px dashed rgba(255,255,255,0.25); }
+  .result .ball { width: 160px; height: 160px; font-size: 4.2rem; }
+  .result .ball.pop { animation: pop 0.75s cubic-bezier(.2,1.4,.4,1) both; }
+  @keyframes pop { 0% { transform: translateY(-60px) scale(0.2); opacity: 0; } 60% { transform: translateY(6px) scale(1.06); opacity: 1; } 100% { transform: none; } }
+  .result .ball.hidden { --c: #c7ccd6; cursor: pointer; animation: pop 0.75s cubic-bezier(.2,1.4,.4,1) both, shake 1.6s ease-in-out 0.9s infinite; }
+  .result .ball.hidden:hover { filter: brightness(1.1); }
+  @keyframes shake { 0%, 70%, 100% { transform: rotate(0); } 75% { transform: rotate(-7deg); } 85% { transform: rotate(7deg); } 92% { transform: rotate(-3deg); } }
+  .result .ball.reveal { animation: reveal 0.6s ease-out both; }
+  @keyframes reveal { 0% { transform: rotateY(90deg) scale(0.9); } 60% { transform: rotateY(0) scale(1.12); } 100% { transform: none; } }
+  .result-text { font-size: 1.5rem; font-weight: 700; min-height: 1.6em; }
+  button.draw { width: 100%; padding: 0.9rem 1rem; font: inherit; font-size: 1.25rem; font-weight: 800; color: #3a2600; background: linear-gradient(#ffd75a, #f5a623); border: none; border-radius: 999px; cursor: pointer; box-shadow: 0 5px 0 #b06d00, 0 8px 18px rgba(0,0,0,0.35); transition: transform 0.08s, box-shadow 0.08s; }
+  button.draw:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 #b06d00, 0 3px 8px rgba(0,0,0,0.35); }
+  button.draw:disabled { filter: grayscale(0.8) brightness(0.8); cursor: default; }
+  .key-hint { font-size: 0.75rem; color: #9aa6cc; text-align: center; }
+
+  /* 공 */
+  .ball { --c: #f7c325; position: relative; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: #1c2230; background: radial-gradient(circle at 32% 28%, #fff 0%, var(--c) 32%, color-mix(in srgb, var(--c) 70%, #000) 100%); box-shadow: inset -4px -6px 10px rgba(0,0,0,0.25); }
+  .ball span { background: rgba(255,255,255,0.92); border-radius: 50%; width: 64%; height: 64%; display: flex; align-items: center; justify-content: center; }
+
+  /* 뽑힌 번호 */
+  .tray { grid-column: 1 / -1; background: rgba(255,255,255,0.06); border-radius: 14px; padding: 0.8rem 0.9rem; }
+  .tray h2 { margin: 0 0 0.6rem; font-size: 0.9rem; font-weight: 600; color: #c9d3f5; }
+  .tray-list { display: flex; flex-wrap: wrap; gap: 0.55rem; min-height: 54px; }
+  .tray-item { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+  .tray-item .ball { width: 46px; height: 46px; font-size: 1.05rem; }
+  .tray-item small { font-size: 0.68rem; color: #9aa6cc; }
+  .tray-empty { color: #7f8ab0; font-size: 0.85rem; align-self: center; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <a class="back" href="../../수업_수행평가.html">&larr; 수행평가</a>
+    <a class="back" href="../../../index.html">홈으로</a>
+  </div>
+  <h1>🎱 랜덤 번호 뽑기</h1>
+
+  <div class="wrap">
+    <div class="panel">
+      <div class="row">
+        <label>시작 번호<input id="start" type="number" inputmode="numeric" min="0" value="1"></label>
+        <label>끝 번호<input id="end" type="number" inputmode="numeric" min="0" value="30"></label>
+      </div>
+      <label>뺄 번호
+        <input id="excl" type="text" inputmode="numeric" placeholder="예: 3, 7, 12" autocomplete="off">
+        <span class="hint">쉼표나 띄어쓰기로 구분해서 여러 개 적을 수 있어요.</span>
+      </label>
+      <p class="msg" id="msg"></p>
+      <p class="count">남은 번호 <b id="left">0</b>개 · 뽑은 번호 <b id="done">0</b>개</p>
+      <button class="reset" id="reset" type="button">처음부터 다시 (뽑은 번호 비우기)</button>
+    </div>
+
+    <div class="stage">
+      <div class="machine"><canvas id="cv"></canvas></div>
+      <div class="side">
+        <div class="now-label">이번 번호</div>
+        <div class="result" id="result"></div>
+        <div class="result-text" id="resultText"></div>
+        <button class="draw" id="drawBtn" type="button">번호 뽑기</button>
+        <div class="key-hint">스페이스바나 Enter로도 뽑고 확인할 수 있어요</div>
+      </div>
+      <div class="tray">
+        <h2>뽑힌 순서</h2>
+        <div class="tray-list" id="tray"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const $ = id => document.getElementById(id);
+const COLORS = ['#f7c325', '#4c8dff', '#f05454', '#9aa3b2', '#35c27a']; // 로또 공 색(1~10, 11~20, …)
+const colorOf = n => COLORS[Math.floor((((n - 1) % 50) + 50) % 50 / 10)];
+const MAX_COUNT = 300;
+
+let drawn = [];   // 뽑힌 번호(순서대로)
+let balls = [];   // 추첨기 안의 공
+let exiting = null; // 나오는 중인 공
+let mixing = false, busy = false;
+let pending = null; // 뽑혔지만 아직 가려 둔 번호
+
+// ---------- 번호 계산 ----------
+function compute() {
+  const s = parseInt($('start').value, 10), e = parseInt($('end').value, 10);
+  if (isNaN(s) || isNaN(e)) return { ok: false, msg: '시작 번호와 끝 번호를 적어 주세요.', list: [] };
+  if (s < 0 || e < 0) return { ok: false, msg: '0 이상의 번호만 쓸 수 있어요.', list: [] };
+  if (s > e) return { ok: false, msg: '시작 번호가 끝 번호보다 커요.', list: [] };
+  if (e - s + 1 > MAX_COUNT) return { ok: false, msg: `한 번에 ${MAX_COUNT}개까지 넣을 수 있어요.`, list: [] };
+  const excl = new Set(($('excl').value.match(/\d+/g) || []).map(Number));
+  const used = new Set(drawn);
+  const list = [];
+  for (let n = s; n <= e; n++) if (!excl.has(n) && !used.has(n)) list.push(n);
+  return { ok: true, msg: '', list };
+}
+
+function randInt(max) { // 0 ~ max-1, 치우침 없는 난수
+  const a = new Uint32Array(1), lim = Math.floor(0x100000000 / max) * max;
+  do crypto.getRandomValues(a); while (a[0] >= lim);
+  return a[0] % max;
+}
+
+// ---------- 캔버스·물리 ----------
+const cv = $('cv'), ctx = cv.getContext('2d');
+let W = 0, H = 0, G = {};
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  W = cv.clientWidth; H = cv.clientHeight;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const R = W * 0.44;
+  G = { R, cx: W / 2, cy: W * 0.04 + R, neckTop: W * 0.04 + 2 * R - 6, neckBot: W * 1.0, baseTop: W * 0.985 };
+  setRadius();
+}
+
+function setRadius() {
+  const n = Math.max(balls.length, 1);
+  const r = Math.max(8, Math.min(G.R * 0.16, G.R * Math.sqrt(0.5 / n)));
+  balls.forEach(b => b.r = r);
+  G.r = r;
+}
+
+function sync() {
+  const st = compute();
+  $('msg').textContent = st.msg;
+  const want = new Set(st.list);
+  balls = balls.filter(b => want.has(b.n));
+  const have = new Set(balls.map(b => b.n));
+  for (const n of st.list) if (!have.has(n)) {
+    const a = Math.random() * Math.PI * 2, d = Math.random() * G.R * 0.5;
+    balls.push({ n, x: G.cx + Math.cos(a) * d, y: G.cy - G.R * 0.3 + Math.sin(a) * d * 0.5, vx: (Math.random() - 0.5) * 2, vy: 0, r: 10 });
+  }
+  setRadius();
+  updateUI(st);
+}
+
+function step() {
+  const { R, cx, cy } = G;
+  for (let k = 0; k < 2; k++) {
+    for (const b of balls) {
+      b.vy += 0.18;
+      if (mixing) {
+        if (b.y > cy + R * 0.15) b.vy -= Math.random() * 1.6;  // 아래에서 바람
+        b.vx += (Math.random() - 0.5) * 0.9;
+      }
+      b.vx *= 0.995; b.vy *= 0.995;
+      const sp = Math.hypot(b.vx, b.vy);
+      if (sp > 14) { b.vx *= 14 / sp; b.vy *= 14 / sp; }
+      b.x += b.vx * 0.5; b.y += b.vy * 0.5;
+      // 유리 돔 벽
+      const dx = b.x - cx, dy = b.y - cy, d = Math.hypot(dx, dy), lim = R - b.r - 3;
+      if (d > lim) {
+        const nx = dx / d, ny = dy / d;
+        b.x = cx + nx * lim; b.y = cy + ny * lim;
+        const vn = b.vx * nx + b.vy * ny;
+        if (vn > 0) { b.vx -= 1.75 * vn * nx; b.vy -= 1.75 * vn * ny; }
+        b.vx *= 0.98; b.vy *= 0.98;
+      }
+    }
+    // 공끼리 부딪힘
+    for (let i = 0; i < balls.length; i++) for (let j = i + 1; j < balls.length; j++) {
+      const a = balls[i], c = balls[j];
+      const dx = c.x - a.x, dy = c.y - a.y, min = a.r + c.r, d2 = dx * dx + dy * dy;
+      if (d2 >= min * min || d2 === 0) continue;
+      const d = Math.sqrt(d2), nx = dx / d, ny = dy / d, ov = (min - d) / 2;
+      a.x -= nx * ov; a.y -= ny * ov; c.x += nx * ov; c.y += ny * ov;
+      const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny;
+      if (rv < 0) { const j2 = -rv * 0.9; a.vx -= j2 * nx; a.vy -= j2 * ny; c.vx += j2 * nx; c.vy += j2 * ny; }
+    }
+  }
+}
+
+function drawBall(x, y, r, n, hidden) {
+  const c = hidden ? '#c7ccd6' : colorOf(n);
+  const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
+  g.addColorStop(0, '#ffffff'); g.addColorStop(0.3, c); g.addColorStop(1, shade(c));
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+  if (r >= 10) {
+    ctx.beginPath(); ctx.arc(x, y, r * 0.62, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.fill();
+    const s = hidden ? '?' : String(n);
+    ctx.fillStyle = '#1c2230';
+    ctx.font = `800 ${r * (s.length >= 3 ? 0.62 : 0.8)}px "Malgun Gothic", sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(s, x, y + r * 0.05);
+  }
+}
+function shade(hex) {
+  const v = parseInt(hex.slice(1), 16);
+  const f = x => Math.round(x * 0.62);
+  return `rgb(${f(v >> 16)},${f((v >> 8) & 255)},${f(v & 255)})`;
+}
+
+function render() {
+  const { R, cx, cy, neckTop, neckBot, baseTop } = G;
+  ctx.clearRect(0, 0, W, H);
+  // 받침대
+  const bg = ctx.createLinearGradient(0, baseTop, 0, H);
+  bg.addColorStop(0, '#c9ced8'); bg.addColorStop(1, '#5d6474');
+  ctx.beginPath();
+  ctx.moveTo(cx - R * 0.45, baseTop); ctx.lineTo(cx + R * 0.45, baseTop);
+  ctx.lineTo(cx + R * 0.8, H - 2); ctx.lineTo(cx - R * 0.8, H - 2); ctx.closePath();
+  ctx.fillStyle = bg; ctx.fill();
+  // 출구 관
+  const nw = Math.max(G.r * 2 + 10, 26);
+  ctx.fillStyle = 'rgba(255,255,255,0.10)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 2;
+  ctx.fillRect(cx - nw / 2, neckTop, nw, neckBot - neckTop);
+  ctx.strokeRect(cx - nw / 2, neckTop, nw, neckBot - neckTop);
+  // 돔 안쪽
+  const dg = ctx.createRadialGradient(cx, cy - R * 0.3, R * 0.1, cx, cy, R);
+  dg.addColorStop(0, 'rgba(160,190,255,0.16)'); dg.addColorStop(1, 'rgba(120,150,230,0.06)');
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = dg; ctx.fill();
+  // 공
+  for (const b of balls) drawBall(b.x, b.y, b.r, b.n);
+  // 유리 테두리와 반사광
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(220,232,255,0.7)'; ctx.lineWidth = 4; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy, R * 0.86, Math.PI * 1.08, Math.PI * 1.42);
+  ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = R * 0.05; ctx.lineCap = 'round'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy, R * 0.86, Math.PI * 1.5, Math.PI * 1.56);
+  ctx.stroke(); ctx.lineCap = 'butt';
+  // 나오는 공
+  if (exiting) drawBall(exiting.x, exiting.y, exiting.r, exiting.n, true);
+}
+
+function loop() { step(); render(); requestAnimationFrame(loop); }
+
+// ---------- 뽑기 ----------
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function tween(b, tx, ty, ms) {
+  const sx = b.x, sy = b.y, t0 = performance.now();
+  return new Promise(done => {
+    (function f(now) {
+      const t = Math.min(1, (now - t0) / ms), e = t * t * (3 - 2 * t);
+      b.x = sx + (tx - sx) * e; b.y = sy + (ty - sy) * e;
+      t < 1 ? requestAnimationFrame(f) : done();
+    })(t0);
+  });
+}
+
+async function draw() {
+  if (busy || pending !== null) return;
+  const st = compute();
+  if (!st.ok || !st.list.length) return;
+  busy = true; updateUI();
+  $('result').innerHTML = ''; $('resultText').textContent = '';
+  mixing = true;
+  await sleep(1800);
+  mixing = false;
+  const n = st.list[randInt(st.list.length)];
+  const b = balls.find(x => x.n === n);
+  balls = balls.filter(x => x !== b);
+  exiting = { n, x: b.x, y: b.y, r: b.r };
+  await tween(exiting, G.cx, G.cy + G.R - b.r - 4, 450);
+  await tween(exiting, G.cx, G.neckBot - b.r, 350);
+  exiting = null;
+  drawn.push(n);
+  pending = n;
+  showHidden();
+  busy = false;
+  sync();
+}
+
+function showHidden() {
+  const el = document.createElement('div');
+  el.className = 'ball hidden'; el.title = '눌러서 번호 확인';
+  const s = document.createElement('span'); s.textContent = '?'; el.appendChild(s);
+  el.addEventListener('click', reveal);
+  $('result').innerHTML = ''; $('result').appendChild(el);
+  $('resultText').textContent = '눌러서 확인!';
+}
+function reveal() {
+  if (pending === null) return;
+  const n = pending; pending = null;
+  const el = ballEl(n); el.classList.add('reveal');
+  $('result').innerHTML = ''; $('result').appendChild(el);
+  $('resultText').textContent = n + '번';
+  renderTray(); updateUI();
+}
+
+function ballEl(n) {
+  const el = document.createElement('div');
+  el.className = 'ball'; el.style.setProperty('--c', colorOf(n));
+  const s = document.createElement('span'); s.textContent = n;
+  if (String(n).length >= 3) s.style.fontSize = '0.75em';
+  el.appendChild(s);
+  return el;
+}
+function renderTray() {
+  const t = $('tray'); t.innerHTML = '';
+  const shown = drawn.filter(n => n !== pending);
+  if (!shown.length) { t.innerHTML = '<span class="tray-empty">아직 뽑은 번호가 없어요.</span>'; return; }
+  shown.forEach((n, i) => {
+    const it = document.createElement('div'); it.className = 'tray-item';
+    it.appendChild(ballEl(n));
+    const s = document.createElement('small'); s.textContent = (i + 1) + '번째'; it.appendChild(s);
+    t.appendChild(it);
+  });
+}
+
+function updateUI(st = compute()) {
+  $('left').textContent = st.ok ? st.list.length : 0;
+  $('done').textContent = drawn.length;
+  const btn = $('drawBtn');
+  btn.disabled = busy || pending !== null || !st.ok || !st.list.length;
+  btn.textContent = busy ? '섞는 중…' : pending !== null ? '공을 눌러 확인' : (st.ok && !st.list.length && drawn.length ? '모두 뽑았어요' : '번호 뽑기');
+}
+
+// ---------- 이벤트 ----------
+['start', 'end', 'excl'].forEach(id => $(id).addEventListener('input', () => { if (!busy) sync(); }));
+$('drawBtn').addEventListener('click', draw);
+$('reset').addEventListener('click', () => {
+  if (busy) return;
+  drawn = []; pending = null; renderTray();
+  $('result').innerHTML = ''; $('resultText').textContent = '';
+  sync();
+});
+document.addEventListener('keydown', e => {
+  if (e.target !== document.body) return;
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); pending !== null ? reveal() : draw(); }
+});
+window.addEventListener('resize', resize);
+
+resize(); sync(); renderTray(); loop();
+</script>
+</body>
+</html>
