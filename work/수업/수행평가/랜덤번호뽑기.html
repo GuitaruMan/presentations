@@ -42,11 +42,17 @@
   .result .ball { width: 160px; height: 160px; font-size: 4.2rem; }
   .result .ball.pop { animation: pop 0.75s cubic-bezier(.2,1.4,.4,1) both; }
   @keyframes pop { 0% { transform: translateY(-60px) scale(0.2); opacity: 0; } 60% { transform: translateY(6px) scale(1.06); opacity: 1; } 100% { transform: none; } }
-  .result .ball.hidden { --c: #c7ccd6; cursor: pointer; animation: pop 0.75s cubic-bezier(.2,1.4,.4,1) both, shake 1.6s ease-in-out 0.9s infinite; }
-  .result .ball.hidden:hover { filter: brightness(1.1); }
+  .cands .ball.closed { cursor: pointer; animation: pop 0.6s cubic-bezier(.2,1.4,.4,1) both, shake 1.6s ease-in-out 0.7s infinite; }
+  .cands .ball.closed:hover { filter: brightness(1.12); }
   @keyframes shake { 0%, 70%, 100% { transform: rotate(0); } 75% { transform: rotate(-7deg); } 85% { transform: rotate(7deg); } 92% { transform: rotate(-3deg); } }
-  .result .ball.reveal { animation: reveal 0.6s ease-out both; }
+  .cands .ball.reveal { animation: reveal 0.6s ease-out both; }
   @keyframes reveal { 0% { transform: rotateY(90deg) scale(0.9); } 60% { transform: rotateY(0) scale(1.12); } 100% { transform: none; } }
+  .cands { display: none; gap: 10px; height: 170px; align-items: center; }
+  .cands.show { display: flex; }
+  .cands .ball { --c: #c7ccd6; width: 62px; height: 62px; font-size: 1.7rem; transition: scale 0.12s, translate 0.4s, box-shadow 0.12s, opacity 0.4s; animation: pop 0.6s cubic-bezier(.2,1.4,.4,1) both; }
+  .cands .ball.on { scale: 1.18; box-shadow: 0 0 0 4px #ffd75a, 0 0 26px 6px rgba(255,215,90,0.8); }
+  .cands .ball.out { opacity: 0; translate: 0 -30px; scale: 0.6; }
+  .result.off { display: none; }
   .result-text { font-size: 1.5rem; font-weight: 700; min-height: 1.6em; }
   button.draw { width: 100%; padding: 0.9rem 1rem; font: inherit; font-size: 1.25rem; font-weight: 800; color: #3a2600; background: linear-gradient(#ffd75a, #f5a623); border: none; border-radius: 999px; cursor: pointer; box-shadow: 0 5px 0 #b06d00, 0 8px 18px rgba(0,0,0,0.35); transition: transform 0.08s, box-shadow 0.08s; }
   button.draw:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 #b06d00, 0 3px 8px rgba(0,0,0,0.35); }
@@ -93,10 +99,11 @@
       <div class="machine"><canvas id="cv"></canvas></div>
       <div class="side">
         <div class="now-label">이번 번호</div>
+        <div class="cands" id="cands"></div>
         <div class="result" id="result"></div>
         <div class="result-text" id="resultText"></div>
         <button class="draw" id="drawBtn" type="button">번호 뽑기</button>
-        <div class="key-hint">스페이스바나 Enter로도 뽑고 확인할 수 있어요</div>
+        <div class="key-hint">공 3개가 나오면 눌러서 번호를 확인하고,<br>그중 1개를 골라요 · 스페이스바/Enter도 돼요</div>
       </div>
       <div class="tray">
         <h2>뽑힌 순서</h2>
@@ -113,9 +120,9 @@ const MAX_COUNT = 300;
 
 let drawn = [];   // 뽑힌 번호(순서대로)
 let balls = [];   // 추첨기 안의 공
-let exiting = null; // 나오는 중인 공
-let mixing = false, busy = false;
-let pending = null; // 뽑혔지만 아직 가려 둔 번호
+let exiting = []; // 나오는 중인 공
+let mixing = false, busy = false, busyText = '';
+let cand = null;  // 나온 후보 공 { nums, els, opened }
 
 // ---------- 번호 계산 ----------
 function compute() {
@@ -125,7 +132,7 @@ function compute() {
   if (s > e) return { ok: false, msg: '시작 번호가 끝 번호보다 커요.', list: [] };
   if (e - s + 1 > MAX_COUNT) return { ok: false, msg: `한 번에 ${MAX_COUNT}개까지 넣을 수 있어요.`, list: [] };
   const excl = new Set(($('excl').value.match(/\d+/g) || []).map(Number));
-  const used = new Set(drawn);
+  const used = new Set(drawn.concat(cand ? cand.nums : []));
   const list = [];
   for (let n = s; n <= e; n++) if (!excl.has(n) && !used.has(n)) list.push(n);
   return { ok: true, msg: '', list };
@@ -177,13 +184,15 @@ function step() {
   for (let k = 0; k < 2; k++) {
     for (const b of balls) {
       b.vy += 0.18;
-      if (mixing) {
-        if (b.y > cy + R * 0.15) b.vy -= Math.random() * 1.6;  // 아래에서 바람
-        b.vx += (Math.random() - 0.5) * 0.9;
+      if (mixing) { // 소용돌이 바람 + 마구 흔들기(눈으로 못 따라가게 빠르게)
+        const dx = b.x - cx, dy = b.y - cy, d = Math.hypot(dx, dy) || 1;
+        b.vx += -dy / d * 0.8; b.vy += dx / d * 0.8;
+        b.vx += (Math.random() - 0.5) * 3.2; b.vy += (Math.random() - 0.5) * 3.2;
+        if (b.y > cy) b.vy -= Math.random() * 1.2;
       }
       b.vx *= 0.995; b.vy *= 0.995;
-      const sp = Math.hypot(b.vx, b.vy);
-      if (sp > 14) { b.vx *= 14 / sp; b.vy *= 14 / sp; }
+      const sp = Math.hypot(b.vx, b.vy), cap = mixing ? 26 : 14;
+      if (sp > cap) { b.vx *= cap / sp; b.vy *= cap / sp; }
       b.x += b.vx * 0.5; b.y += b.vy * 0.5;
       // 유리 돔 벽
       const dx = b.x - cx, dy = b.y - cy, d = Math.hypot(dx, dy), lim = R - b.r - 3;
@@ -208,15 +217,14 @@ function step() {
   }
 }
 
-function drawBall(x, y, r, n, hidden) {
-  const c = hidden ? '#c7ccd6' : colorOf(n);
+function drawBall(x, y, r, c, label, sharp = 1) { // label이 없으면 번호 없는 공, sharp는 번호 선명도(빠르면 흐림)
   const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
   g.addColorStop(0, '#ffffff'); g.addColorStop(0.3, c); g.addColorStop(1, shade(c));
   ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
-  if (r >= 10) {
-    ctx.beginPath(); ctx.arc(x, y, r * 0.62, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.fill();
-    const s = hidden ? '?' : String(n);
-    ctx.fillStyle = '#1c2230';
+  if (label != null && r >= 10 && sharp > 0) {
+    ctx.beginPath(); ctx.arc(x, y, r * 0.62, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,255,255,${0.92 * sharp})`; ctx.fill();
+    const s = String(label);
+    ctx.fillStyle = `rgba(28,34,48,${sharp})`;
     ctx.font = `800 ${r * (s.length >= 3 ? 0.62 : 0.8)}px "Malgun Gothic", sans-serif`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(s, x, y + r * 0.05);
@@ -249,7 +257,10 @@ function render() {
   dg.addColorStop(0, 'rgba(160,190,255,0.16)'); dg.addColorStop(1, 'rgba(120,150,230,0.06)');
   ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = dg; ctx.fill();
   // 공
-  for (const b of balls) drawBall(b.x, b.y, b.r, b.n);
+  for (const b of balls) {
+    const sp = Math.hypot(b.vx, b.vy);
+    drawBall(b.x, b.y, b.r, colorOf(b.n), b.n, Math.max(0, Math.min(1, 1 - (sp - 4) / 6)));
+  }
   // 유리 테두리와 반사광
   ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
   ctx.strokeStyle = 'rgba(220,232,255,0.7)'; ctx.lineWidth = 4; ctx.stroke();
@@ -258,7 +269,7 @@ function render() {
   ctx.beginPath(); ctx.arc(cx, cy, R * 0.86, Math.PI * 1.5, Math.PI * 1.56);
   ctx.stroke(); ctx.lineCap = 'butt';
   // 나오는 공
-  if (exiting) drawBall(exiting.x, exiting.y, exiting.r, exiting.n, true);
+  for (const b of exiting) drawBall(b.x, b.y, b.r, '#c7ccd6', '?');
 }
 
 function loop() { step(); render(); requestAnimationFrame(loop); }
@@ -276,44 +287,106 @@ function tween(b, tx, ty, ms) {
   });
 }
 
-async function draw() {
-  if (busy || pending !== null) return;
-  const st = compute();
-  if (!st.ok || !st.list.length) return;
-  busy = true; updateUI();
-  $('result').innerHTML = ''; $('resultText').textContent = '';
-  mixing = true;
-  await sleep(1800);
-  mixing = false;
-  const n = st.list[randInt(st.list.length)];
-  const b = balls.find(x => x.n === n);
-  balls = balls.filter(x => x !== b);
-  exiting = { n, x: b.x, y: b.y, r: b.r };
-  await tween(exiting, G.cx, G.cy + G.R - b.r - 4, 450);
-  await tween(exiting, G.cx, G.neckBot - b.r, 350);
-  exiting = null;
-  drawn.push(n);
-  pending = n;
-  showHidden();
-  busy = false;
-  sync();
+// 효과음(띠리리리~)
+let ac = null;
+function beep(freq, dur, vol = 0.07) {
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime;
+    o.type = 'square'; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(ac.destination); o.start(t); o.stop(t + dur);
+  } catch (e) {}
 }
 
-function showHidden() {
-  const el = document.createElement('div');
-  el.className = 'ball hidden'; el.title = '눌러서 번호 확인';
-  const s = document.createElement('span'); s.textContent = '?'; el.appendChild(s);
-  el.addEventListener('click', reveal);
-  $('result').innerHTML = ''; $('result').appendChild(el);
-  $('resultText').textContent = '눌러서 확인!';
+async function draw() {
+  if (busy || cand) return;
+  const st = compute();
+  if (!st.ok || !st.list.length) return;
+  busy = true; busyText = '섞는 중…'; updateUI();
+  const cands = $('cands');
+  $('result').innerHTML = ''; $('result').classList.add('off');
+  cands.innerHTML = ''; cands.classList.add('show');
+  $('resultText').textContent = '섞는 중…';
+  mixing = true;
+  await sleep(3000);
+  mixing = false;
+  busyText = '나오는 중…'; updateUI();
+  // 후보 공(최대 3개)을 겹치지 않게 고르기
+  const pool = st.list.slice(), picks = [];
+  const k = Math.min(3, pool.length);
+  for (let i = 0; i < k; i++) picks.push(pool.splice(randInt(pool.length), 1)[0]);
+  // 하나씩 굴러 나오기(번호는 가린 채)
+  const els = [];
+  cand = { nums: picks, els, opened: new Set() };
+  for (const n of picks) {
+    const b = balls.find(x => x.n === n);
+    balls = balls.filter(x => x !== b);
+    const e = { n, x: b.x, y: b.y, r: b.r };
+    exiting.push(e);
+    await tween(e, G.cx, G.cy + G.R - b.r - 4, 380);
+    await tween(e, G.cx, G.neckBot - b.r, 280);
+    exiting = exiting.filter(x => x !== e);
+    const el = document.createElement('div');
+    el.className = 'ball closed'; el.title = '눌러서 번호 확인'; el.innerHTML = '<span>?</span>';
+    const j = els.length;
+    el.addEventListener('click', () => openCand(j));
+    cands.appendChild(el); els.push(el);
+    $('resultText').textContent = `후보 ${els.length}개`;
+    await sleep(250);
+  }
+  busy = false;
+  $('resultText').textContent = '공을 눌러 번호 확인';
+  updateUI();
 }
-function reveal() {
-  if (pending === null) return;
-  const n = pending; pending = null;
-  const el = ballEl(n); el.classList.add('reveal');
-  $('result').innerHTML = ''; $('result').appendChild(el);
-  $('resultText').textContent = n + '번';
-  renderTray(); updateUI();
+
+// 후보 공 하나 열기
+function openCand(j) {
+  if (busy || !cand || cand.opened.has(j)) return;
+  cand.opened.add(j);
+  const n = cand.nums[j], el = cand.els[j];
+  el.classList.remove('closed'); el.classList.add('reveal');
+  el.style.setProperty('--c', colorOf(n));
+  el.innerHTML = '';
+  const s = document.createElement('span'); s.textContent = n;
+  if (String(n).length >= 3) s.style.fontSize = '0.75em';
+  el.appendChild(s);
+  beep(1200, 0.08);
+  if (cand.opened.size === cand.nums.length)
+    $('resultText').textContent = cand.nums.length > 1 ? '누가 뽑힐까?' : '';
+  updateUI();
+}
+
+// 3개 중 1개 고르기: 불빛이 띠리리리 돌다가 멈춤
+async function pickOne() {
+  if (busy || !cand || cand.opened.size < cand.nums.length) return;
+  busy = true; busyText = '고르는 중…'; updateUI();
+  const { nums, els } = cand, k = nums.length, target = randInt(k);
+  if (k > 1) {
+    $('resultText').textContent = '띠리리리~';
+    let i = 0, delay = 60;
+    while (true) {
+      els.forEach((el, j) => el.classList.toggle('on', j === i % k));
+      beep(880 + (i % k) * 110, 0.05);
+      await sleep(delay);
+      if (delay > 430 && i % k === target) break;
+      delay *= 1.09; i++;
+    }
+    beep(660, 0.12); setTimeout(() => beep(990, 0.45, 0.09), 130);
+    await sleep(700);
+    els.forEach((el, j) => { if (j !== target) el.classList.add('out'); });
+    $('resultText').textContent = '나머지는 다시 들어가요';
+    await sleep(900);
+  }
+  const n = nums[target];
+  $('cands').classList.remove('show'); $('cands').innerHTML = '';
+  const el = ballEl(n); el.classList.add('pop');
+  $('result').innerHTML = ''; $('result').appendChild(el); $('result').classList.remove('off');
+  $('resultText').textContent = n + '번!';
+  drawn.push(n);
+  cand = null; busy = false;
+  renderTray();
+  sync(); // 뽑히지 않은 공은 유리 공으로 되돌아감
 }
 
 function ballEl(n) {
@@ -326,9 +399,8 @@ function ballEl(n) {
 }
 function renderTray() {
   const t = $('tray'); t.innerHTML = '';
-  const shown = drawn.filter(n => n !== pending);
-  if (!shown.length) { t.innerHTML = '<span class="tray-empty">아직 뽑은 번호가 없어요.</span>'; return; }
-  shown.forEach((n, i) => {
+  if (!drawn.length) { t.innerHTML = '<span class="tray-empty">아직 뽑은 번호가 없어요.</span>'; return; }
+  drawn.forEach((n, i) => {
     const it = document.createElement('div'); it.className = 'tray-item';
     it.appendChild(ballEl(n));
     const s = document.createElement('small'); s.textContent = (i + 1) + '번째'; it.appendChild(s);
@@ -340,22 +412,34 @@ function updateUI(st = compute()) {
   $('left').textContent = st.ok ? st.list.length : 0;
   $('done').textContent = drawn.length;
   const btn = $('drawBtn');
-  btn.disabled = busy || pending !== null || !st.ok || !st.list.length;
-  btn.textContent = busy ? '섞는 중…' : pending !== null ? '공을 눌러 확인' : (st.ok && !st.list.length && drawn.length ? '모두 뽑았어요' : '번호 뽑기');
+  if (busy) { btn.disabled = true; btn.textContent = busyText; return; }
+  if (cand) {
+    const all = cand.opened.size === cand.nums.length;
+    btn.disabled = !all;
+    btn.textContent = all ? (cand.nums.length > 1 ? '1개 고르기!' : '이 번호로!') : '공을 눌러 번호 확인';
+    return;
+  }
+  btn.disabled = !st.ok || !st.list.length;
+  btn.textContent = st.ok && !st.list.length && drawn.length ? '모두 뽑았어요' : '번호 뽑기';
 }
 
 // ---------- 이벤트 ----------
 ['start', 'end', 'excl'].forEach(id => $(id).addEventListener('input', () => { if (!busy) sync(); }));
-$('drawBtn').addEventListener('click', draw);
+$('drawBtn').addEventListener('click', () => cand ? pickOne() : draw());
 $('reset').addEventListener('click', () => {
   if (busy) return;
-  drawn = []; pending = null; renderTray();
-  $('result').innerHTML = ''; $('resultText').textContent = '';
+  drawn = []; cand = null; renderTray();
+  $('cands').classList.remove('show'); $('cands').innerHTML = '';
+  $('result').innerHTML = ''; $('result').classList.remove('off'); $('resultText').textContent = '';
   sync();
 });
 document.addEventListener('keydown', e => {
   if (e.target !== document.body) return;
-  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); pending !== null ? reveal() : draw(); }
+  if (e.key !== ' ' && e.key !== 'Enter') return;
+  e.preventDefault();
+  if (!cand) return draw();
+  const next = cand.nums.findIndex((_, j) => !cand.opened.has(j));
+  next >= 0 ? openCand(next) : pickOne();
 });
 window.addEventListener('resize', resize);
 
